@@ -1,25 +1,26 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Leandro Nini
-# This file is distributed under the same license as the musiqt package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# translation of it.po to Italiano
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 #
-#, fuzzy
+# Leandro Nini <drfiemost@users.sourceforge.net>, 2010, 2011, 2012, 2013, 2015, 2017.
 msgid ""
 msgstr ""
-"Project-Id-Version: musiqt 0.0.1\n"
+"Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
 "POT-Creation-Date: 2017-03-19 21:48+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2017-03-19 21:50+0100\n"
+"Last-Translator: \n"
+"Language-Team: Italian <kde-i18n-it@kde.org>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/gui/aboutDialog.cpp:46
 msgid "About %1"
-msgstr ""
+msgstr "Informazioni su %1"
 
 #: src/gui/aboutDialog.cpp:50
 msgid ""
@@ -29,6 +30,11 @@ msgid ""
 "\n"
 "Copyright %3 %4"
 msgstr ""
+"%1\n"
+"\n"
+"Versione %2\n"
+"\n"
+"Copyright %3 %4"
 
 #: src/gui/aboutDialog.cpp:61
 msgid "Bugs: <a href=\"%1\">%1</a>"
@@ -40,383 +46,383 @@ msgstr ""
 
 #: src/gui/aboutDialog.cpp:104 src/gui/mainWindow.cpp:304
 msgid "&Info"
-msgstr ""
+msgstr "&Info"
 
 #: src/gui/aboutDialog.cpp:105
 msgid "&Contact"
-msgstr ""
+msgstr "C&ontatti"
 
 #: src/gui/aboutDialog.cpp:106
 msgid "&Credits"
-msgstr ""
+msgstr "Ri&conoscimenti"
 
 #: src/gui/aboutDialog.cpp:107
 msgid "&Qt"
-msgstr ""
+msgstr "&Qt"
 
 #: src/gui/aboutDialog.cpp:108
 msgid "&License"
-msgstr ""
+msgstr "&Licenza"
 
 #: src/gui/bookmark.cpp:108
 msgid "No item selected"
-msgstr ""
+msgstr "Nessun elemento selezionato"
 
 #: src/gui/bookmark.cpp:116
 msgid "Delete"
-msgstr ""
+msgstr "Rimuovi"
 
 #: src/gui/bookmark.cpp:117
 msgid "Delete selected bookmark"
-msgstr ""
+msgstr "Rimuovi il segnalibro selezionato"
 
 #: src/gui/bookmark.cpp:120
 msgid "Clear"
-msgstr ""
+msgstr "Cancella"
 
 #: src/gui/bookmark.cpp:121
 msgid "Clear all bookmarks"
-msgstr ""
+msgstr "Cancella tutti i segnalibri"
 
 #: src/gui/bookmark.cpp:139
 msgid "Clear bookmarks"
-msgstr ""
+msgstr "Cancella i segnalibri"
 
 #: src/gui/bookmark.cpp:140
 msgid "Are you sure you want to delete all bookmarks?"
-msgstr ""
+msgstr "Sei sicuro di voler cancellare tutti i segnalibri?"
 
 #: src/gui/centralFrame.cpp:110 src/gui/mainWindow.cpp:193
 msgid "Playlist"
-msgstr ""
+msgstr "Playlist"
 
 #: src/gui/centralFrame.cpp:116
 msgid "Bookmarks"
-msgstr ""
+msgstr "Segnalibri"
 
 #: src/gui/centralFrame.cpp:134
 msgid "Edit"
-msgstr ""
+msgstr "Modifica"
 
 #: src/gui/centralFrame.cpp:135
 msgid "Edit playlist"
-msgstr ""
+msgstr "Modifica la playlist"
 
 #: src/gui/centralFrame.cpp:141
 msgid "Save"
-msgstr ""
+msgstr "Salva"
 
 #: src/gui/centralFrame.cpp:142 src/gui/centralFrame.cpp:775
 msgid "Save playlist"
-msgstr ""
+msgstr "Salva la playlist"
 
 #: src/gui/centralFrame.cpp:147
 msgid "Current playlist"
-msgstr ""
+msgstr "Playlist corrente"
 
 #: src/gui/centralFrame.cpp:148
 msgid "Return to current playlist"
-msgstr ""
+msgstr "Ritorna alla playlist corrente"
 
 #: src/gui/centralFrame.cpp:153 src/gui/centralFrame.cpp:154
 msgid "Home"
-msgstr ""
+msgstr "Home"
 
 #: src/gui/centralFrame.cpp:688
 msgid "Add to playlist"
-msgstr ""
+msgstr "Modifica la playlist"
 
 #: src/gui/centralFrame.cpp:689
 msgid "Add song to the playlist"
-msgstr ""
+msgstr "Aggiungi il brano alla playlist"
 
 #: src/gui/centralFrame.cpp:693
 msgid "Add to bookmarks"
-msgstr ""
+msgstr "Aggiungi ai segnalibri"
 
 #: src/gui/centralFrame.cpp:694
 msgid "Add directory to the bookmarks"
-msgstr ""
+msgstr "Aggiungi la cartella ai segnalibri"
 
 #: src/gui/centralFrame.cpp:780
 msgid "Warning"
-msgstr ""
+msgstr "Attenzione"
 
 #: src/gui/centralFrame.cpp:780
 msgid "File exists, owerwrite?"
-msgstr ""
+msgstr "Il file esiste, sovrascrivere?"
 
 #: src/gui/centralFrame.cpp:784
 msgid "Error"
-msgstr ""
+msgstr "Errore"
 
 #: src/gui/centralFrame.cpp:784
 msgid "Error saving playlist"
-msgstr ""
+msgstr "Errore nel salvataggio della playlist"
 
 #: src/gui/infoDialog.cpp:93
 msgid "&Close"
-msgstr ""
+msgstr "&Chiudi"
 
 #: src/gui/infoDialog.cpp:120
 msgid "No song loaded"
-msgstr ""
+msgstr "Nessun brano caricato"
 
 #: src/gui/infoDialog.cpp:238 src/gui/infoLabel.cpp:61
 msgid "No info"
-msgstr ""
+msgstr "Nessuna informazione"
 
 #: src/gui/mainWindow.cpp:166 src/gui/mainWindow.cpp:167
 #: src/gui/mainWindow.cpp:343
 msgid "Compact"
-msgstr ""
+msgstr "Modalità compatta"
 
 #: src/gui/mainWindow.cpp:168 src/gui/mainWindow.cpp:344
 msgid "Switch to compact view"
-msgstr ""
+msgstr "Passa alla modalità interfaccia compatta"
 
 #: src/gui/mainWindow.cpp:172 src/gui/settings.cpp:41
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 #: src/gui/mainWindow.cpp:173
 msgid "Program settings"
-msgstr ""
+msgstr "Impostazioni del programma"
 
 #: src/gui/mainWindow.cpp:183 src/gui/mainWindow.cpp:184
 #: src/gui/mainWindow.cpp:289
 msgid "Previous"
-msgstr ""
+msgstr "Precedente"
 
 #: src/gui/mainWindow.cpp:185
 msgid "Go to previous subtune"
-msgstr ""
+msgstr "Vai alla sottotraccia precedente"
 
 #: src/gui/mainWindow.cpp:188 src/gui/mainWindow.cpp:189
 #: src/gui/mainWindow.cpp:293
 msgid "Next"
-msgstr ""
+msgstr "Successivo"
 
 #: src/gui/mainWindow.cpp:190
 msgid "Go to next subtune"
-msgstr ""
+msgstr "Vai alla sottotraccia successiva"
 
 #: src/gui/mainWindow.cpp:202
 msgid "Subtunes"
-msgstr ""
+msgstr "Sottotraccie"
 
 #: src/gui/mainWindow.cpp:207
 msgid "Songs"
-msgstr ""
+msgstr "Brani"
 
 #: src/gui/mainWindow.cpp:212 src/gui/mainWindow.cpp:319
 #: src/gui/mainWindow.cpp:431
 msgid "Stopped"
-msgstr ""
+msgstr "Interrotto"
 
 #: src/gui/mainWindow.cpp:220
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #: src/gui/mainWindow.cpp:283
 msgid "&About"
-msgstr ""
+msgstr "&Informazioni"
 
 #: src/gui/mainWindow.cpp:284 src/gui/mainWindow.cpp:285
 msgid "About"
-msgstr ""
+msgstr "Informazioni programma"
 
 #: src/gui/mainWindow.cpp:288
 msgid "P&revious"
-msgstr ""
+msgstr "P&recedente"
 
 #: src/gui/mainWindow.cpp:290
 msgid "Go to previous song"
-msgstr ""
+msgstr "Vai al brano precedente"
 
 #: src/gui/mainWindow.cpp:292
 msgid "&Next"
-msgstr ""
+msgstr "&Successivo"
 
 #: src/gui/mainWindow.cpp:294
 msgid "Go to next song"
-msgstr ""
+msgstr "Vai al brano successivo"
 
 #: src/gui/mainWindow.cpp:296
 msgid "&Play"
-msgstr ""
+msgstr "&Riproduci"
 
 #: src/gui/mainWindow.cpp:297 src/gui/mainWindow.cpp:412
 msgid "Play"
-msgstr ""
+msgstr "Riproduci"
 
 #: src/gui/mainWindow.cpp:298
 msgid "Play song"
-msgstr ""
+msgstr "Riproduci brano"
 
 #: src/gui/mainWindow.cpp:300
 msgid "&Stop"
-msgstr ""
+msgstr "&Ferma"
 
 #: src/gui/mainWindow.cpp:301 src/gui/mainWindow.cpp:302
 msgid "Stop"
-msgstr ""
+msgstr "Ferma"
 
 #: src/gui/mainWindow.cpp:305
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: src/gui/mainWindow.cpp:306
 msgid "Song info"
-msgstr ""
+msgstr "Informazioni sul brano"
 
 #: src/gui/mainWindow.cpp:309
 msgid "&Quit"
-msgstr ""
+msgstr "$Esci"
 
 #: src/gui/mainWindow.cpp:310 src/gui/mainWindow.cpp:311
 msgid "Exit"
-msgstr ""
+msgstr "Esci"
 
 #: src/gui/mainWindow.cpp:354
 msgid "Full mode"
-msgstr ""
+msgstr "Modalità completa"
 
 #: src/gui/mainWindow.cpp:355
 msgid "Switch to full UI mode"
-msgstr ""
+msgstr "Passa alla modalità interfaccia completa"
 
 #: src/gui/mainWindow.cpp:417
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: src/gui/mainWindow.cpp:435
 msgid "Playing"
-msgstr ""
+msgstr "Riproduzione"
 
 #: src/gui/mainWindow.cpp:439
 msgid "Paused"
-msgstr ""
+msgstr "Pausa"
 
 #: src/gui/mainWindow.cpp:478
 msgid "Loading..."
-msgstr ""
+msgstr "Caricamento..."
 
 #: src/gui/mainWindow.cpp:508
 msgid "Song mode"
-msgstr ""
+msgstr "Modalità brano"
 
 #: src/gui/mainWindow.cpp:509
 msgid "Switch to song mode"
-msgstr ""
+msgstr "Passa alla modalità singolo brano"
 
 #: src/gui/mainWindow.cpp:514
 msgid "Playlist mode"
-msgstr ""
+msgstr "Modalità playlist"
 
 #: src/gui/mainWindow.cpp:515
 msgid "Switch to playlist mode"
-msgstr ""
+msgstr "Passa alla modalità playlist"
 
 #: src/gui/playlist.cpp:103
 msgid "Remove item"
-msgstr ""
+msgstr "Rimuovi elemento"
 
 #: src/gui/playlist.cpp:104
 msgid "Remove selected item from playlist"
-msgstr ""
+msgstr "Rimuovi elemento selezionato dalla playlist"
 
 #: src/gui/playlist.cpp:108 src/gui/playlist.cpp:110
 msgid "Sort ascending"
-msgstr ""
+msgstr "Ordinamento ascendente"
 
 #: src/gui/playlist.cpp:113 src/gui/playlist.cpp:115
 msgid "Sort descending"
-msgstr ""
+msgstr "Ordinamento discendente"
 
 #: src/gui/playlist.cpp:118
 msgid "Shuffle"
-msgstr ""
+msgstr "Shuffle"
 
 #: src/gui/playlist.cpp:121
 msgid "Sort randomly"
-msgstr ""
+msgstr "Ordinamento casuale"
 
 #: src/gui/playlist.cpp:129
 msgid "Sorting"
-msgstr ""
+msgstr "Ordinamento"
 
 #: src/gui/settings.cpp:63
 msgid "General settings"
-msgstr ""
+msgstr "Impostazioni generali"
 
 #: src/gui/settings.cpp:72
 msgid "&Play subtunes"
-msgstr ""
+msgstr "Ri&produci sottotracce"
 
 #: src/gui/settings.cpp:73
 msgid "Play all subtune"
-msgstr ""
+msgstr "Ri&produci tutte le sottotracce"
 
 #: src/gui/settings.cpp:78
 msgid "&Auto backend"
-msgstr ""
+msgstr "&Auto backend"
 
 #: src/gui/settings.cpp:79
 msgid "Automatic backend selection"
-msgstr ""
+msgstr "Selezione automatica backend"
 
 #: src/gui/settings.cpp:85
 msgid "&Bauer stereophonic-to-binaural DSP"
-msgstr ""
+msgstr "&Bauer DSP da stereo a binaurale"
 
 #: src/gui/settings.cpp:86
 msgid "Bauer stereophonic-to-binaural DSP"
-msgstr ""
+msgstr "Bauer DSP da stereo a binaurale"
 
 #: src/gui/settings.cpp:92
 msgid "&Album art HQ resizing"
-msgstr ""
+msgstr "Ridimensionamento HQ copertine"
 
 #: src/gui/settings.cpp:93
 msgid "High quality album art resizing"
-msgstr ""
+msgstr "Ridimensionamento ad alta qualità delle copertine"
 
 #: src/gui/settings.cpp:99
 msgid "Replaygain"
-msgstr ""
+msgstr "Replaygain"
 
 #: src/gui/settings.cpp:101
 msgid "Enable replaygain loudness normalization"
-msgstr ""
+msgstr "Abilita replaygain"
 
 #: src/gui/settings.cpp:108
 msgid "Album gain"
-msgstr ""
+msgstr "Album"
 
 #: src/gui/settings.cpp:109
 msgid "Preserve album dynamics"
-msgstr ""
+msgstr "Preserva la dinamica dell'album"
 
 #: src/gui/settings.cpp:113
 msgid "Track gain"
-msgstr ""
+msgstr "Traccia"
 
 #: src/gui/settings.cpp:114
 msgid "All tracks equal loudness"
-msgstr ""
+msgstr "Tutte le tracce alla stessa intensità"
 
 #: src/gui/settings.cpp:130
 msgid "General"
-msgstr ""
+msgstr "Generali"
 
 #: src/gui/settings.cpp:131
 msgid "General setting"
-msgstr ""
+msgstr "Impostazioni generali"
 
 #: src/gui/settings.cpp:143
 msgid "Interface settings"
-msgstr ""
+msgstr "Impostazioni interfaccia"
 
 #: src/gui/settings.cpp:156
 msgid "Alt. color"
@@ -428,51 +434,53 @@ msgstr ""
 
 #: src/gui/settings.cpp:170
 msgid "Interface"
-msgstr ""
+msgstr "Interfaccia"
 
 #: src/gui/settings.cpp:182
 msgid "Audio settings"
-msgstr ""
+msgstr "Impostazioni audio"
 
 #: src/gui/settings.cpp:197
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: src/gui/settings.cpp:198
 msgid "Audio setting"
-msgstr ""
+msgstr "Impostazioni audio"
 
 #: src/gui/settings.cpp:209
 msgid "Backend settings"
-msgstr ""
+msgstr "Impostazioni backend"
 
 #: src/gui/settings.cpp:225
 msgid "Backend"
-msgstr ""
+msgstr "Backend"
 
 #: src/gui/settings.cpp:226
 msgid "Backend setting"
-msgstr ""
+msgstr "Impostazioni backend"
 
 #: src/gui/settings.cpp:242
 msgid "&OK"
-msgstr ""
+msgstr "&OK"
 
 #: src/gui/settings.cpp:244
 msgid "&Cancel"
-msgstr ""
+msgstr "&Annulla"
 
 #: src/audio/audio.cpp:365
 msgid "API"
-msgstr ""
+msgstr "API"
 
 #: src/audio/audio.cpp:383
 msgid "Card"
-msgstr ""
+msgstr "Scheda"
 
 #: src/audio/audio.cpp:389
 msgid "Default bitdepth"
 msgstr ""
+"Profondità bit\n"
+"di default"
 
 #: src/audio/input/metaData.cpp:27
 msgid "location"
@@ -480,23 +488,23 @@ msgstr ""
 
 #: src/audio/input/metaData.cpp:28
 msgid "title"
-msgstr ""
+msgstr "titolo"
 
 #: src/audio/input/metaData.cpp:29
 msgid "artist"
-msgstr ""
+msgstr "artista"
 
 #: src/audio/input/metaData.cpp:30
 msgid "album"
-msgstr ""
+msgstr "album"
 
 #: src/audio/input/metaData.cpp:31
 msgid "track"
-msgstr ""
+msgstr "traccia"
 
 #: src/audio/input/metaData.cpp:32
 msgid "time"
-msgstr ""
+msgstr "durata"
 
 #: src/audio/input/metaData.cpp:33
 msgid "mtime"
@@ -504,11 +512,11 @@ msgstr ""
 
 #: src/audio/input/metaData.cpp:34
 msgid "genre"
-msgstr ""
+msgstr "genere"
 
 #: src/audio/input/metaData.cpp:35
 msgid "comment"
-msgstr ""
+msgstr "commento"
 
 #: src/audio/input/metaData.cpp:36
 msgid "rating"
@@ -516,7 +524,7 @@ msgstr ""
 
 #: src/audio/input/metaData.cpp:37
 msgid "year"
-msgstr ""
+msgstr "anno"
 
 #: src/audio/input/metaData.cpp:38
 msgid "arturl"
@@ -525,79 +533,79 @@ msgstr ""
 #: src/audio/input/ffmpegBackend.cpp:388 src/audio/input/gmeBackend.cpp:169
 #: src/audio/input/sndBackend.cpp:105
 msgid "copyright"
-msgstr ""
+msgstr "copyright"
 
 #: src/audio/input/ffmpegBackend.cpp:473 src/audio/input/mpcBackend.cpp:284
 #: src/audio/input/sndBackend.cpp:145 src/audio/input/ttaBackend.cpp:252
 #: src/audio/input/wvBackend.cpp:226
 msgid "No settings available"
-msgstr ""
+msgstr "Nessuna impostazione disponibile"
 
 #: src/audio/input/gmeBackend.cpp:170
 msgid "system"
-msgstr ""
+msgstr "sistema"
 
 #: src/audio/input/gmeBackend.cpp:171
 msgid "game"
-msgstr ""
+msgstr "gioco"
 
 #: src/audio/input/gmeBackend.cpp:172
 msgid "dumper"
-msgstr ""
+msgstr "dumper"
 
 #: src/audio/input/gmeBackend.cpp:243 src/audio/input/hvlBackend.cpp:171
 msgid "Samplerate"
-msgstr ""
+msgstr "Frequenza di campionamento"
 
 #: src/audio/input/gmeBackend.cpp:274
 msgid "ASMA path:"
-msgstr ""
+msgstr "Percorso ASMA:"
 
 #: src/audio/input/gmeBackend.cpp:277 src/audio/input/sidBackend.cpp:742
 #: src/audio/input/sidBackend.cpp:751 src/audio/input/sidBackend.cpp:760
 #: src/audio/input/sidBackend.cpp:769
 msgid "&Browse"
-msgstr ""
+msgstr "&Sfoglia"
 
 #: src/audio/input/gmeBackend.cpp:303
 msgid "Select ASMA directory"
-msgstr ""
+msgstr "Seleziona la cartella ASMA"
 
 #: src/audio/input/mpcBackend.cpp:153 src/audio/input/ttaBackend.cpp:168
 msgid "publisher"
-msgstr ""
+msgstr "editore"
 
 #: src/audio/input/mpg123Backend.cpp:404
 msgid "Decoder"
-msgstr ""
+msgstr "Decoder"
 
 #: src/audio/input/mpg123Backend.cpp:424
 msgid "Fast scan"
-msgstr ""
+msgstr "Scan veloce"
 
 #: src/audio/input/oggBackend.cpp:253
 msgid "Bits"
-msgstr ""
+msgstr "Bit"
 
 #: src/audio/input/openmptBackend.cpp:252 src/audio/input/sidBackend.cpp:503
 msgid "Frequency"
-msgstr ""
+msgstr "Frequenza"
 
 #: src/audio/input/openmptBackend.cpp:280 src/audio/input/sidBackend.cpp:531
 msgid "Channels"
-msgstr ""
+msgstr "Canali"
 
 #: src/audio/input/openmptBackend.cpp:292
 msgid "Resampling"
-msgstr ""
+msgstr "Ricampionamento"
 
 #: src/audio/input/openmptBackend.cpp:332
 msgid "Master Gain"
-msgstr ""
+msgstr "Guadagno"
 
 #: src/audio/input/openmptBackend.cpp:345
 msgid "Stereo Separation"
-msgstr ""
+msgstr "Separazione Stereo"
 
 #: src/audio/input/openmptBackend.cpp:358
 msgid "Volume Ramping"
@@ -605,104 +613,228 @@ msgstr ""
 
 #: src/audio/input/sidBackend.cpp:348
 msgid "released"
-msgstr ""
+msgstr "pubblicato"
 
 #: src/audio/input/sidBackend.cpp:394
 msgid "speed"
-msgstr ""
+msgstr "velocità"
 
 #: src/audio/input/sidBackend.cpp:395
 msgid "file format"
-msgstr ""
+msgstr "formato file"
 
 #: src/audio/input/sidBackend.cpp:396
 msgid "song clock"
-msgstr ""
+msgstr "clock brano"
 
 #: src/audio/input/sidBackend.cpp:398 src/audio/input/sidBackend.cpp:412
 msgid "SID model"
-msgstr ""
+msgstr "Modello SID"
 
 #: src/audio/input/sidBackend.cpp:401 src/audio/input/sidBackend.cpp:415
 msgid "2nd SID model"
-msgstr ""
+msgstr "Modello secondo SID"
 
 #: src/audio/input/sidBackend.cpp:402 src/audio/input/sidBackend.cpp:416
 msgid "2nd SID address"
-msgstr ""
+msgstr "Indirizzo secondo SID"
 
 #: src/audio/input/sidBackend.cpp:406
 msgid "3rd SID model"
-msgstr ""
+msgstr "Modello terzo SID"
 
 #: src/audio/input/sidBackend.cpp:407
 msgid "3rd SID address"
-msgstr ""
+msgstr "Indirizzo terzo SID"
 
 #: src/audio/input/sidBackend.cpp:543
 msgid "Engine"
-msgstr ""
+msgstr "Motore"
 
 #: src/audio/input/sidBackend.cpp:568
 msgid "Sampling method"
-msgstr ""
+msgstr "Metodo di campionamento"
 
 #: src/audio/input/sidBackend.cpp:590
 msgid "C64 model"
-msgstr ""
+msgstr "Modello C64"
 
 #: src/audio/input/sidBackend.cpp:618
 msgid "Force C64 model"
-msgstr ""
+msgstr "Forza modello C64"
 
 #: src/audio/input/sidBackend.cpp:621
 msgid "SID Model"
-msgstr ""
+msgstr "Modello SID"
 
 #: src/audio/input/sidBackend.cpp:643
 msgid "Force SID model"
-msgstr ""
+msgstr "Forza modello SID"
 
 #: src/audio/input/sidBackend.cpp:646
 msgid "Second SID address"
-msgstr ""
+msgstr "Indirizzo secondo SID"
 
 #: src/audio/input/sidBackend.cpp:663
 msgid "Third SID address"
-msgstr ""
+msgstr "Indirizzo terzo SID"
 
 #: src/audio/input/sidBackend.cpp:687
 msgid "Fast sampling\tFaster but inaccurate sampling"
-msgstr ""
+msgstr "Campionamento Veloce\tPiù veloce ma meno accurato"
 
 #: src/audio/input/sidBackend.cpp:688
 msgid "Filter\tEmulate SID filter"
-msgstr ""
+msgstr "Filtro\tEmula il filtro SID"
 
 #: src/audio/input/sidBackend.cpp:692
 msgid "DAC Bias for reSID"
-msgstr ""
+msgstr "Distorsione DAC per reSID"
 
 #: src/audio/input/sidBackend.cpp:708
 msgid "Filter curves for reSIDfp"
-msgstr ""
+msgstr "Curva dei filtri per reSIDfp"
 
 #: src/audio/input/sidBackend.cpp:739
 msgid "HVSC path:"
-msgstr ""
+msgstr "Percorso HVSC:"
 
 #: src/audio/input/sidBackend.cpp:746
 msgid "Kernal Rom:"
-msgstr ""
+msgstr "Rom Kernal:"
 
 #: src/audio/input/sidBackend.cpp:755
 msgid "BASIC Rom:"
-msgstr ""
+msgstr "Rom BASIC:"
 
 #: src/audio/input/sidBackend.cpp:764
 msgid "Chargen Rom:"
-msgstr ""
+msgstr "Rom caratteri:"
 
 #: src/audio/input/sidBackend.cpp:872
 msgid "Select HVSC directory"
-msgstr ""
+msgstr "Seleziona la cartella HVSC"
+
+#~ msgid "Using the Qt C++ GUI Library"
+#~ msgstr "Basato sulla libreria Qt"
+
+#~ msgid "Version"
+#~ msgstr "Versione"
+
+#~ msgid "&Fox"
+#~ msgstr "&Fox"
+
+#~ msgid "Copyright"
+#~ msgstr "Copyright"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
+
+#~ msgid "General\tGeneral settings\tGeneral settings"
+#~ msgstr "Generale\tImpostazioni generali\tImpostazioni generali"
+
+#~ msgid "Alt. color\tAlternate color for lists"
+#~ msgstr "Colore alternato\tColore alternato nelle liste"
+
+#~ msgid "Interface\tInterface settings\tInterface settings"
+#~ msgstr "Interfaccia\tImpostazioni interfaccia\tImpostazioni interfaccia"
+
+#~ msgid "Audio\tAudio settings\tAudio settings"
+#~ msgstr "Audio\tImpostazioni audio\tImpostazioni audio"
+
+#~ msgid "Backend\tBackend settings\tBackend settings"
+#~ msgstr "Backend\tImpostazioni backend\tImpostazioni backend"
+
+#~ msgid "Clear\t\tClear all bookmarks"
+#~ msgstr "Pulisci\t\tElimina tutti i segnalibri"
+
+#~ msgid "\tStop\tStop playing"
+#~ msgstr "\tStop\tInterrompi la riproduzione"
+
+#~ msgid "\tPlay\tPlay selected song"
+#~ msgstr "\tPlay\tRiproduci il brano selezionato"
+
+#~ msgid "\tAbout\tAbout"
+#~ msgstr "\tInformazioni programma\tInformazioni programma"
+
+#~ msgid "\tExit\tExit"
+#~ msgstr "\tEsci\tEsci"
+
+#~ msgid "\t\tSave playlist"
+#~ msgstr "\t\tSalva la playlist"
+
+#~ msgid "&Dirlist"
+#~ msgstr "&Cartelle"
+
+#~ msgid "&Browse\tSelect ASMA directory"
+#~ msgstr "&Sfoglia\tSeleziona la cartella ASMA"
+
+#~ msgid ""
+#~ "Fast scan\tScan only few frame of file, time detection may be inaccurate"
+#~ msgstr "Scan veloce\tEffettua una scansione veloce ma inaccurata"
+
+#~ msgid "Oversampling"
+#~ msgstr "Sovracampionamento"
+
+#~ msgid "Noise reduction"
+#~ msgstr "Riduzione rumore"
+
+#~ msgid "Reverb"
+#~ msgstr "Riverbero"
+
+#~ msgid "Depth"
+#~ msgstr "Profondità"
+
+#~ msgid "Delay"
+#~ msgstr "Ritardo"
+
+#~ msgid "Bass exp"
+#~ msgstr "Espansione bassi"
+
+#~ msgid "Amount"
+#~ msgstr "Quantità"
+
+#~ msgid "Range"
+#~ msgstr "Range"
+
+#~ msgid "Surround"
+#~ msgstr "Surround"
+
+#~ msgid "&Browse\tSelect HVSC directory"
+#~ msgstr "&Sfoglia\tSeleziona la cartella HVSC"
+
+#~ msgid "&Browse\tSelect Kernal Rom file"
+#~ msgstr "&Sfoglia\tSeleziona il file della rom Kernal"
+
+#~ msgid "&Browse\tSelect BASIC Rom file"
+#~ msgstr "&Sfoglia\tSeleziona il file della rom BASIC"
+
+#~ msgid "&Browse\tSelect Chargen Rom file"
+#~ msgstr "&Sfoglia\tSeleziona il file della rom caratteri"
+
+#~ msgid "MSN Messenger Now Playing"
+#~ msgstr "MSN Messenger Now Playing"
+
+#~ msgid "Live Messenger"
+#~ msgstr "Live Messenger"
+
+#~ msgid "Cancel\t\tCancel action"
+#~ msgstr "Annulla\t\tAnnulla l'azione"
+
+#~ msgid "info"
+#~ msgstr "info"
+
+#~ msgid "Environment"
+#~ msgstr "Ambiente"
+
+#~ msgid "Clock"
+#~ msgstr "Clock"
+
+#~ msgid "Optimisation\tFaster but inaccurate emulation"
+#~ msgstr "Ottimizzazione\tPiù veloce ma meno accurato"
+
+#~ msgid "Filter ini:"
+#~ msgstr "Filtro ini:"
+
+#~ msgid "Select filter ini file"
+#~ msgstr "Seleziona il file ini del filtro"

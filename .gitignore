@@ -1,4 +1,9 @@
 configure
 Makefile.in
+Makefile
 *.o
 config
+*moc.cpp
+*rcc.cpp
+.deps
+.dirstamp
