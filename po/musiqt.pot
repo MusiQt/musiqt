@@ -1,0 +1,123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Leandro Nini
+# This file is distributed under the same license as the musiqt package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: musiqt 0.0.1\n"
+"Report-Msgid-Bugs-To: https://sourceforge.net/p/foxaudioplayer/tickets/\n"
+"POT-Creation-Date: 2017-03-19 16:58+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/audio/input/metaData.cpp:27
+msgid "location"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:28
+msgid "title"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:29
+msgid "artist"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:30
+msgid "album"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:31
+msgid "track"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:32
+msgid "time"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:33
+msgid "mtime"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:34
+msgid "genre"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:35
+msgid "comment"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:36
+msgid "rating"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:37
+msgid "year"
+msgstr ""
+
+#: src/audio/input/metaData.cpp:38
+msgid "arturl"
+msgstr ""
+
+#: src/audio/input/ffmpegBackend.cpp:388 src/audio/input/gmeBackend.cpp:169
+#: src/audio/input/sndBackend.cpp:105
+msgid "copyright"
+msgstr ""
+
+#: src/audio/input/gmeBackend.cpp:170
+msgid "system"
+msgstr ""
+
+#: src/audio/input/gmeBackend.cpp:171
+msgid "game"
+msgstr ""
+
+#: src/audio/input/gmeBackend.cpp:172
+msgid "dumper"
+msgstr ""
+
+#: src/audio/input/mpcBackend.cpp:153 src/audio/input/ttaBackend.cpp:168
+msgid "publisher"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:348
+msgid "released"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:394
+msgid "speed"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:395
+msgid "file format"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:396
+msgid "song clock"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:398 src/audio/input/sidBackend.cpp:412
+msgid "SID model"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:401 src/audio/input/sidBackend.cpp:415
+msgid "2nd SID model"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:402 src/audio/input/sidBackend.cpp:416
+msgid "2nd SID address"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:406
+msgid "3rd SID model"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:407
+msgid "3rd SID address"
+msgstr ""

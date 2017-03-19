@@ -1,0 +1,47 @@
+/*
+ *  Copyright (C) 2009-2017 Leandro Nini
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+#ifndef CFACTORY_H
+#define CFACTORY_H
+
+#include "converter.h"
+#include "inputTypes.h"
+
+#define CFACTORY cFactory::instance()
+
+class cFactory
+{
+protected:
+    cFactory() {}
+    cFactory(const cFactory&);
+    cFactory& operator= (const cFactory&);
+    ~cFactory() {}
+
+public:
+    /// Get singleton instance
+    static cFactory* instance();
+
+    /// Instantiate backend
+    converter* get(const unsigned int srIn, const unsigned int srOut,
+        const size_t size, const unsigned int channels,
+        const sample_t inputPrecision, const sample_t outputPrecision,
+        const unsigned int fract);
+
+};
+
+#endif
