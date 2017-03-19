@@ -36,7 +36,7 @@
 #include <QScrollArea>
 
 #define AUTHOR  "Leandro Nini"
-#define WEBSITE "https://sourceforge.net/p/foxaudioplayer/"
+#define WEBSITE "https://github.com/drfiemost/musiqt/"
 #define YEAR    "2006-2017"
 
 aboutDialog::aboutDialog(QWidget *parent) :
@@ -82,10 +82,9 @@ aboutDialog::aboutDialog(QWidget *parent) :
     creditsArea->setAlignment(Qt::AlignCenter);
 
     // Qt
-    QLabel* qtWidget = new QLabel(/*GET_ICON(icon_foxbig), */
-        QString("%1<br><br>%2 %3<br><br><a href=\"http://qt.io/\">http://qt.io/</a>")
-            .arg(tr("Using the Qt C++ GUI Library"))
-            .arg(tr("Version")).arg(qVersion())
+    QLabel* qtWidget = new QLabel(/*GET_ICON(icon_qtbig), */
+        QString("This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt.io/</a>")
+            .arg(qVersion())
         );
     qtWidget->setAlignment(Qt::AlignCenter);
     qtWidget->setOpenExternalLinks(true);

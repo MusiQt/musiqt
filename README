@@ -1,4 +1,4 @@
-MusiQt - http://foxaudioplayer.sourceforge.net/
+MusiQt - https://github.com/drfiemost/musiqt/
 Leandro Nini (aka Dr. Fiemost) - drfiemost@users.sourceforge.net
 
 ####################################################################
@@ -78,7 +78,7 @@ The program is tested on Linux x86 (ALSA, OSS) and Windows XP (WMM)
 
 It should work also on other UNIX with OSS support
 
-Please report problems, suggestions and patches at http://www.sourceforge.net/foxaudioplayer/
+Please report problems, suggestions and patches at https://github.com/drfiemost/musiqt/
 
 ####################################################################
 

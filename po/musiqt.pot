@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: musiqt 0.0.1\n"
-"Report-Msgid-Bugs-To: https://sourceforge.net/p/foxaudioplayer/tickets/\n"
+"Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
 "POT-Creation-Date: 2017-03-19 16:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
