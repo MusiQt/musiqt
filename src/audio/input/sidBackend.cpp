@@ -176,16 +176,16 @@ void sidBackend::loadSettings()
     _settings.samplerate=load("Frequency", 44100);
     _settings.channels=load("Channels", 1);
     _settings.samplingMethod=(SidConfig::sampling_method_t)load("Sampling method", SidConfig::INTERPOLATE);
-    _settings.fastSampling=load("Fast sampling", FALSE);
+    _settings.fastSampling=load("Fast sampling", false);
     _settings.bias=load("DAC Bias", 0);
     _settings.filter6581Curve=load("Filter 6581 Curve", 500);
     _settings.filter8580Curve=load("Filter 8580 Curve", 12500);
     _settings.c64Model=(SidConfig::c64_model_t)load("C64 Model", SidConfig::PAL);
     _settings.sidModel=(SidConfig::sid_model_t)load("SID model", SidConfig::MOS6581);
-    _settings.forceC64Model=load("Force C64 Model", FALSE);
-    _settings.forceSidModel=load("Force SID Model", FALSE);
+    _settings.forceC64Model=load("Force C64 Model", false);
+    _settings.forceSidModel=load("Force SID Model", false);
     _settings.engine=load("Engine", engines[0]);
-    _settings.filter=load("Filter", TRUE);
+    _settings.filter=load("Filter", true);
     _settings.hvscPath=load("HVSC", QString::null);
     _settings.secondSidAddress=load("Second SID address", 0);
 #ifdef ENABLE_3SID
