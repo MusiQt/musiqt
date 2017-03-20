@@ -32,7 +32,11 @@ public:
     translator(QObject* parent=0);
     ~translator();
 
+#if QT_VERSION >= 0x050000
+    QString translate(const char* context, const char* sourceText, const char* disambiguation=Q_NULLPTR, int n=-1) const override;
+#else
     QString translate(const char* context, const char* sourceText, const char* disambiguation=0) const override;
+#endif
 };
 
 #endif

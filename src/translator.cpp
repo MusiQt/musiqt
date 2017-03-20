@@ -40,7 +40,7 @@ translator::translator(QObject* parent) :
 #ifndef _WIN32
     bindtextdomain(PACKAGE, LOCALEDIR);
 #else
-    QString cmd = QString(QCoreApplication::applicationDirPath()).append("\\locale");
+    QString cmd = QString(QCoreApplication::applicationDirPath()).append("/locale");
     qDebug() << "localedir: " << cmd;
     bindtextdomain(PACKAGE, cmd.toLocal8Bit().constData());
 #endif
@@ -50,7 +50,11 @@ translator::translator(QObject* parent) :
 
 translator::~translator() {}
 
+#if QT_VERSION >= 0x050000
+QString translator::translate(const char* context, const char* sourceText, const char* disambiguation, int n) const
+#else
 QString translator::translate(const char* context, const char* sourceText, const char* disambiguation) const
+#endif
 {
     return gettext(sourceText);
 }
