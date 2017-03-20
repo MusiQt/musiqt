@@ -42,8 +42,7 @@ class audioThread;
 
 /*****************************************************************/
 
-enum state_t { STOP, PLAY, PAUSE };
-enum msg_t { PRELOAD_SONG, SONG_ENDED, UPD_TIME, OUTPUT_ERROR };
+enum class state_t { STOP, PLAY, PAUSE };
 
 class audio : public QObject
 {

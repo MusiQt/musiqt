@@ -393,7 +393,7 @@ done:
 
 void centralFrame::onCmdPlayPauseSong()
 {
-    if (_audio->state()!=STOP)
+    if (_audio->state() != state_t::STOP)
     {
         _audio->pause();
     }
@@ -603,7 +603,7 @@ void centralFrame::onCmdSongSelected(int currentRow)
 void centralFrame::onUpdateTime()
 {
     // Playing may have stopped while message was in queue
-    if (_audio->state()!=STOP)
+    if (_audio->state() != state_t::STOP)
     {
         emit updateTime(_audio->seconds());
     }

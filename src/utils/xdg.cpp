@@ -110,5 +110,5 @@ const QString xdg::getMusicDir()
 
 bool xdg::open(const QString& link)
 {
-    QDesktopServices::openUrl(QUrl(link));
+    return QDesktopServices::openUrl(QUrl(link));
 }

@@ -188,7 +188,7 @@ PROFILE_END
 audio::audio() :
     _input(0),
     _preload(0),
-    _state(STOP),
+    _state(state_t::STOP),
     _playing(false),
     _seconds(0)
 #ifdef HAVE_BS2B
@@ -212,7 +212,7 @@ audio::~audio()
 
 bool audio::play(input* i, int pos)
 {
-    if ((!_output) || (i->songLoaded().isEmpty()) || (_state==PLAY))
+    if ((!_output) || (i->songLoaded().isEmpty()) || (_state == state_t::PLAY))
         return false;
 
     qDebug() << "audio::play";
@@ -270,7 +270,7 @@ bool audio::play(input* i, int pos)
     _thread = new audioThread(this);
 
     _playing = true;
-    _state = PLAY;
+    _state = state_t::PLAY;
     _thread->start();
 
     return true;
@@ -280,25 +280,25 @@ void audio::pause()
 {
     switch (_state)
     {
-    case PLAY:
+    case state_t::PLAY:
         qDebug() << "Pause";
         _playing = false;
         _output->pause();
         _thread->wait();
-        _state = PAUSE;
+        _state = state_t::PAUSE;
         break;
-    case PAUSE:
+    case state_t::PAUSE:
         qDebug() << "Unpause";
         _playing = true;
         _thread->start();
-        _state = PLAY;
+        _state = state_t::PLAY;
         break;
     }
 }
 
 bool audio::stop()
 {
-    if ((!_output) || (_state==STOP))
+    if ((!_output) || (_state == state_t::STOP))
         return false;
 
     qDebug() << "audio::stop";
@@ -314,7 +314,7 @@ bool audio::stop()
     delete _thread;
 
     _seconds = 0;
-    _state = STOP;
+    _state = state_t::STOP;
 #ifdef HAVE_BS2B
     if (_bs2bdp)
     {

@@ -406,7 +406,7 @@ void mainWindow::setPlayButton(state_t state)
     {
         const char* icon;
 
-        if (state != PLAY)
+        if (state != state_t::PLAY)
         {
             icon = icon_mediaplaybackstart;
             label = tr("Play");
@@ -426,15 +426,15 @@ void mainWindow::setPlayButton(state_t state)
         const char** icon;
         switch (state)
         {
-        case STOP:
+        case state_t::STOP:
             icon = ledRed;
             label = tr("Stopped");
             break;
-        case PLAY:
+        case state_t::PLAY:
             icon = ledGreen;
             label = tr("Playing");
             break;
-        case PAUSE:
+        case state_t::PAUSE:
             icon = ledYellow;
             label = tr("Paused");
             break;

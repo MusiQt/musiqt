@@ -173,27 +173,27 @@ sidBackend::~sidBackend()
 
 void sidBackend::loadSettings()
 {
-    _settings.samplerate=load("Frequency", 44100);
-    _settings.channels=load("Channels", 1);
-    _settings.samplingMethod=(SidConfig::sampling_method_t)load("Sampling method", SidConfig::INTERPOLATE);
-    _settings.fastSampling=load("Fast sampling", false);
-    _settings.bias=load("DAC Bias", 0);
-    _settings.filter6581Curve=load("Filter 6581 Curve", 500);
-    _settings.filter8580Curve=load("Filter 8580 Curve", 12500);
-    _settings.c64Model=(SidConfig::c64_model_t)load("C64 Model", SidConfig::PAL);
-    _settings.sidModel=(SidConfig::sid_model_t)load("SID model", SidConfig::MOS6581);
-    _settings.forceC64Model=load("Force C64 Model", false);
-    _settings.forceSidModel=load("Force SID Model", false);
-    _settings.engine=load("Engine", engines[0]);
-    _settings.filter=load("Filter", true);
-    _settings.hvscPath=load("HVSC", QString::null);
-    _settings.secondSidAddress=load("Second SID address", 0);
+    _settings.samplerate = load("Frequency", 44100);
+    _settings.channels = load("Channels", 1);
+    _settings.samplingMethod = (SidConfig::sampling_method_t)load("Sampling method", SidConfig::INTERPOLATE);
+    _settings.fastSampling = load("Fast sampling", false);
+    _settings.bias = load("DAC Bias", 0);
+    _settings.filter6581Curve = load("Filter 6581 Curve", 500);
+    _settings.filter8580Curve = load("Filter 8580 Curve", 12500);
+    _settings.c64Model = (SidConfig::c64_model_t)load("C64 Model", SidConfig::PAL);
+    _settings.sidModel = (SidConfig::sid_model_t)load("SID model", SidConfig::MOS6581);
+    _settings.forceC64Model = load("Force C64 Model", false);
+    _settings.forceSidModel = load("Force SID Model", false);
+    _settings.engine = load("Engine", engines[0]);
+    _settings.filter = load("Filter", true);
+    _settings.hvscPath = load("HVSC", QString::null);
+    _settings.secondSidAddress = load("Second SID address", 0);
 #ifdef ENABLE_3SID
-    _settings.thirdSidAddress=load("Third SID address", 0);
+    _settings.thirdSidAddress = load("Third SID address", 0);
 #endif
-    _settings.kernalPath=load("Kernal Rom", QString::null);
-    _settings.basicPath=load("BASIC Rom", QString::null);
-    _settings.chargenPath=load("Chargen Rom", QString::null);
+    _settings.kernalPath = load("Kernal Rom", QString::null);
+    _settings.basicPath = load("BASIC Rom", QString::null);
+    _settings.chargenPath = load("Chargen Rom", QString::null);
 }
 
 void sidBackend::saveSettings()
@@ -631,10 +631,10 @@ sidConfig::sidConfig(QWidget* win) :
     {
     default:
     case SidConfig::MOS6581:
-        val=0;
+        val = 0;
         break;
     case SidConfig::MOS8580:
-        val=1;
+        val = 1;
         break;
     }
     modelBox->setCurrentIndex(val);
@@ -776,23 +776,23 @@ void sidConfig::onCmdFrequency(int val)
     switch (val)
     {
     case 0:
-        SIDSETTINGS.samplerate=11025;
+        SIDSETTINGS.samplerate = 11025;
         break;
     case 1:
-        SIDSETTINGS.samplerate=22050;
+        SIDSETTINGS.samplerate = 22050;
         break;
     case 2:
-        SIDSETTINGS.samplerate=44100;
+        SIDSETTINGS.samplerate = 44100;
         break;
     case 3:
-        SIDSETTINGS.samplerate=48000;
+        SIDSETTINGS.samplerate = 48000;
         break;
     }
 }
 
 void sidConfig::onCmdChannels(int val)
 {
-    SIDSETTINGS.channels=val+1;
+    SIDSETTINGS.channels = val+1;
 }
 
 void sidConfig::onCmdSampling(int val)
@@ -800,10 +800,10 @@ void sidConfig::onCmdSampling(int val)
     switch (val)
     {
     case 0:
-        SIDSETTINGS.samplingMethod=SidConfig::INTERPOLATE;
+        SIDSETTINGS.samplingMethod = SidConfig::INTERPOLATE;
         break;
     case 1:
-        SIDSETTINGS.samplingMethod=SidConfig::RESAMPLE_INTERPOLATE;
+        SIDSETTINGS.samplingMethod = SidConfig::RESAMPLE_INTERPOLATE;
         break;
     }
 }
@@ -835,16 +835,16 @@ void sidConfig::onCmdClock(int val)
     switch (val)
     {
     case 0:
-        SIDSETTINGS.c64Model=SidConfig::PAL;
+        SIDSETTINGS.c64Model = SidConfig::PAL;
         break;
     case 1:
-        SIDSETTINGS.c64Model=SidConfig::NTSC;
+        SIDSETTINGS.c64Model = SidConfig::NTSC;
         break;
     case 2:
-        SIDSETTINGS.c64Model=SidConfig::OLD_NTSC;
+        SIDSETTINGS.c64Model = SidConfig::OLD_NTSC;
         break;
     case 3:
-        SIDSETTINGS.c64Model=SidConfig::DREAN;
+        SIDSETTINGS.c64Model = SidConfig::DREAN;
         break;
     }
 }

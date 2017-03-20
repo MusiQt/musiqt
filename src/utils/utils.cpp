@@ -55,7 +55,7 @@ void runCmd(const QString& cmd)
 #ifdef UNICODE
     wchar_t* command = const_cast<wchar_t*>(convertUtf(cmd));
 #else
-    char* command = const_cast<char*>(cmd.text()); //FIXME
+    char* command = cmd.toLocal8Bit().data();
 #endif //UNICODE
 
     if (CreateProcess(0, command, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
@@ -77,9 +77,9 @@ void runCmd(const QString& cmd)
 
 QString shrink(const QString& string)
 {
-    return (string.count() > MAX_CHARS) ?
-        QString("...%1").arg(string.right(MAX_CHARS)) :
-        string;
+    return (string.count() > MAX_CHARS)
+        ? QString("...%1").arg(string.right(MAX_CHARS))
+        : string;
 }
 
 /// Get gray value from RGBA color

@@ -56,5 +56,5 @@ QString translator::translate(const char* context, const char* sourceText, const
 QString translator::translate(const char* context, const char* sourceText, const char* disambiguation) const
 #endif
 {
-    return gettext(sourceText);
+    return QString::fromUtf8(gettext(sourceText));
 }
