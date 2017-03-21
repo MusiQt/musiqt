@@ -37,10 +37,10 @@ ov_callbacks oggBackend::vorbis_callbacks =
 
 #define EXT "ogg"
 
-#define CREDITS	 "OggVorbis\nCopyright \302\251 Xiph.org Foundation"
-#define LINK     "http://www.xiph.org/"
+#define CREDITS "OggVorbis\nCopyright \302\251 Xiph.org Foundation"
+#define LINK    "http://www.xiph.org/"
 
-const char oggBackend::name[]="Ogg-Vorbis";
+const char oggBackend::name[] = "Ogg-Vorbis";
 
 oggConfig_t oggBackend::_settings;
 
@@ -48,14 +48,14 @@ oggConfig_t oggBackend::_settings;
 
 size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
-    size_t n=0;
+    size_t n = 0;
     long read;
     do {
         int current_section;
-        read=ov_read(_vf, (char*)buffer+n, bufferSize-n, 0,
-                (_settings.precision==S16)?2:1, (_settings.precision!=U8), &current_section);
-        n+=read;
-    } while (read && n<bufferSize);
+        read = ov_read(_vf, (char*)buffer+n, bufferSize-n, 0,
+                (_settings.precision == S16) ? 2 : 1, (_settings.precision != U8), &current_section);
+        n += read;
+    } while (read && (n < bufferSize));
 
     return n;
 }
@@ -86,12 +86,12 @@ oggBackend::~oggBackend()
 
 void oggBackend::loadSettings()
 {
-    _settings.precision=(load("Bits", 16)==16)?S16:U8;
+    _settings.precision=(load("Bits", 16) == 16) ? S16 : U8;
 }
 
 void oggBackend::saveSettings()
 {
-    save("Bits", (_settings.precision==S16)?16:8);
+    save("Bits", (_settings.precision == S16) ? 16 : 8);
 }
 
 bool oggBackend::open(const QString& fileName)
@@ -102,15 +102,15 @@ bool oggBackend::open(const QString& fileName)
     if (!_file.open(QIODevice::ReadOnly))
         return false;
 
-    _vf=new OggVorbis_File;
-    if (ov_open_callbacks(&_file, _vf, NULL, 0, vorbis_callbacks)<0)
+    _vf = new OggVorbis_File;
+    if (ov_open_callbacks(&_file, _vf, NULL, 0, vorbis_callbacks) < 0)
     {
         delPtr(_vf);
         _file.close();
         return false;
     }
 
-    _vi=ov_info(_vf, -1);
+    _vi = ov_info(_vf, -1);
 
     time((int)ov_time_total(_vf, -1));
 
@@ -121,7 +121,7 @@ bool oggBackend::open(const QString& fileName)
     QString genre = QString::null;
     QString comment = QString::null;
 
-    char **ptr=ov_comment(_vf,-1)->user_comments;
+    char **ptr = ov_comment(_vf,-1)->user_comments;
     while (*ptr)
     {
         qDebug() << *ptr;
@@ -218,16 +218,16 @@ int oggBackend::seek_func(void *datasource, ogg_int64_t offset, int whence) {
     switch (whence)
     {
     case SEEK_SET:
-            pos = offset;
-            break;
+        pos = offset;
+        break;
     case SEEK_CUR:
-            pos = file->pos() + offset;
-            break;
+        pos = file->pos() + offset;
+        break;
     case SEEK_END:
-            pos = file->size() + offset;
-            break;
+        pos = file->size() + offset;
+        break;
     default:
-            return -1;
+        return -1;
     }
     return file->seek(pos);
 }
@@ -263,11 +263,11 @@ oggConfig::oggConfig(QWidget* win) :
     switch (OGGSETTINGS.precision)
     {
     case U8:
-        val=0;
+        val = 0;
         break;
     default:
     case S16:
-        val=1;
+        val = 1;
         break;
     }
     _bitBox->setCurrentIndex(val);

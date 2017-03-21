@@ -77,13 +77,6 @@ private:
     QVBoxLayout* _biasFrame;
     QVBoxLayout* _filterCurveFrame;
 
-    enum
-    {
-        ID_KERNAL,
-        ID_BASIC,
-        ID_CHARGEN
-    };
-
 private:
     sidConfig() {}
     sidConfig(const sidConfig&);
@@ -100,9 +93,16 @@ private slots:
     void onCmdEngine(int val);
     void onCmdClock(int val);
     void onCmdModel(int val);
-    void onCmdAddress(int val);
+    void onCmdAddress2(int val);
+#ifdef ENABLE_3SID
+    void onCmdAddress3(int val);
+#endif
     void onCmdHvsc();
     void onCmdRom(int val);
+    void onCmdForceSidModel(bool val);
+    void onCmdForceC64Model(bool val);
+    void onCmdFastSampling(bool val);
+    void onCmdFilter(bool val);
 };
 
 /*****************************************************************/

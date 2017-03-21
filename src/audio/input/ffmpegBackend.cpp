@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2015 Leandro Nini
+ *  Copyright (C) 2006-2017 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,19 +23,19 @@
 
 #include <QDebug>
 
-#define CREDITS		"ffmpeg"
-#define LINK		"http://www.ffmpeg.org/"
+#define CREDITS "ffmpeg"
+#define LINK    "http://www.ffmpeg.org/"
 
 const char ffmpegBackend::name[]="Ffmpeg";
 
 #ifdef _WIN32
-# define AVFORMATLIB	"avformat-" AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR) ".dll"
-# define AVCODECLIB	"avcodec-" AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR) ".dll"
-# define AVUTILLIB	"avutil-" AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR) ".dll"
+# define AVFORMATLIB "avformat-" AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR) ".dll"
+# define AVCODECLIB  "avcodec-" AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR) ".dll"
+# define AVUTILLIB   "avutil-" AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR) ".dll"
 #else
-# define AVFORMATLIB	"libavformat.so." AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)
-# define AVCODECLIB	"libavcodec.so." AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)
-# define AVUTILLIB	"libavutil.so." AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)
+# define AVFORMATLIB "libavformat.so." AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)
+# define AVCODECLIB  "libavcodec.so." AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)
+# define AVUTILLIB   "libavutil.so." AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)
 #endif
 
 const AutoDLL ffmpegBackend::_avformat(AVFORMATLIB);

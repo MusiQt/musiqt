@@ -120,7 +120,7 @@ bool mpcBackend::supports(const QString& fileName)
 inline QStringList mpcBackend::ext() const { return QStringList(EXT); }
 
 mpcBackend::mpcBackend() :
-    inputBackend(name, iconMpc)
+    inputBackend(name, iconMpc, 417)
 {
     _mpcReader.read = mpcBackend::read_func;
     _mpcReader.seek = mpcBackend::seek_func;
@@ -165,7 +165,7 @@ bool mpcBackend::open(const QString& fileName)
     mpc_demux_get_info(_demux, &_si);
 #else
     mpc_streaminfo_init(&_si);
-    if (mpc_streaminfo_read(&_si, &_mpcReader)!=ERROR_CODE_OK)
+    if (mpc_streaminfo_read(&_si, &_mpcReader) != ERROR_CODE_OK)
         goto error;
 
     mpc_decoder_setup(&_decoder, &_mpcReader);
@@ -187,21 +187,14 @@ bool mpcBackend::open(const QString& fileName)
         const double referenceLevel=89.0;
 #ifdef SV8
         mpc_set_replay_level(_demux, referenceLevel, MPC_TRUE,
-                (SETTINGS->replayGainMode()==0)?MPC_FALSE:MPC_TRUE,
+                (SETTINGS->replayGainMode() == 0) ? MPC_FALSE : MPC_TRUE,
                 MPC_TRUE);
 #else
-        float peak=SETTINGS->replayGainMode()?_si.peak_album:_si.peak_title;
-        float gain=SETTINGS->replayGainMode()?_si.gain_album:_si.gain_title;
+        float peak = SETTINGS->replayGainMode() ? _si.peak_album : _si.peak_title;
+        float gain = SETTINGS->replayGainMode() ? _si.gain_album : _si.gain_title;
 
-        if(!peak)
-                peak=1.;
-        else
-                peak=(1<<15)/pow(10, peak/(20*256));
-
-        if(!gain)
-                gain=1.;
-        else
-                gain=pow(10, (referenceLevel-gain/256)/20);
+        peak = peak == 0. ? 1. : (1<<15)/pow(10, peak/(20*256));
+        gain = gain == 0. ? 1. : pow(10, (referenceLevel-gain/256)/20);
 
         qDebug() << "peak: " << peak << " - gain: " << gain;
 

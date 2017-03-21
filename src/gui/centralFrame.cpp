@@ -466,7 +466,7 @@ void centralFrame::onCmdChangeSong(dir_t dir)
 void centralFrame::setBackend(int val, bool refresh)
 {
     qDebug() << "setBackend " << val;
-    if (val<0 || val>_fileTypes->count())
+    if ((val < 0) || val>_fileTypes->count())
         return;
 
     _fileTypes->setCurrentIndex(val);

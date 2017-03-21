@@ -273,10 +273,13 @@ gmeConfig::gmeConfig(QWidget* win) :
 
     hf->addWidget(new QLabel(tr("ASMA path:"), this));
     QLineEdit* line = new QLineEdit(this);
+    line->setText(GMESETTINGS.asmaPath);
     hf->addWidget(line);
+    //connect(line, SIGNAL(textEdited(const QString &)), this, SLOT());
     QPushButton* button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select ASMA directory");
     hf->addWidget(button);
+    connect(button, SIGNAL(clicked()), this, SLOT(onCmdAsma()));
 }
 
 void gmeConfig::onCmdSamplerate(int val)

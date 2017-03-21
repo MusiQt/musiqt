@@ -76,7 +76,7 @@ size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsign
             {
                 return n;
             }
-            _bufOffset=0;
+            _bufOffset = 0;
         }
         const size_t size = qMin((size_t)(_bufSize-_bufOffset), (bufferSize-n) / sampleSize);
         copyBuffer((char*)buffer+n, _decodeBuf+_bufOffset, size);
@@ -119,7 +119,7 @@ bool wvBackend::supports(const QString& fileName)
 inline QStringList wvBackend::ext() const { return QStringList(EXT); }
 
 wvBackend::wvBackend() :
-    inputBackend(name, iconWv),
+    inputBackend(name, iconWv, 375),
     _wvContext(0) {}
 
 wvBackend::~wvBackend()

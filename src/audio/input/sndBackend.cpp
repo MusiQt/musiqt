@@ -28,7 +28,7 @@
 
 QStringList sndBackend::_ext;
 
-const char sndBackend::name[]="Sndfile";
+const char sndBackend::name[] = "Sndfile";
 
 /*****************************************************************/
 
@@ -78,7 +78,7 @@ bool sndBackend::open(const QString& fileName)
 {
     close();
 
-    _si.format=0;
+    _si.format = 0;
 #if defined (_WIN32) && defined (UNICODE)
     wchar_t *buffer = convertUtf(fileName);
 
@@ -105,8 +105,8 @@ bool sndBackend::open(const QString& fileName)
     _metaData.addInfo(gettext("copyright"), sf_get_string(_sf, SF_STR_COPYRIGHT));
     _metaData.addInfo(metaData::COMMENT, sf_get_string(_sf, SF_STR_COMMENT));
 
-    const int seconds=_si.frames/_si.samplerate;
-    time((seconds>0x7FFFFFFF)?0:seconds);
+    const int seconds = _si.frames / _si.samplerate;
+    time((seconds>0x7FFFFFFF) ? 0 : seconds);
 
     songLoaded(fileName);
     return true;

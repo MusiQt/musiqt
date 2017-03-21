@@ -46,7 +46,7 @@ private:
 private slots:
     void setSubtunes(int val);
     void setAutobk(int val);
-#ifdef HAVE_BS2B
+#ifdef HAVE_BS2B // FIXME moc ignores this
     void setBs2b(int val);
 #endif
     void setReplaygain(bool val);

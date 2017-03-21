@@ -143,7 +143,7 @@ bool ttaBackend::supports(const QString& fileName)
 inline QStringList ttaBackend::ext() const { return QStringList(EXT); }
 
 ttaBackend::ttaBackend() :
-    inputBackend(name, iconTta) {}
+    inputBackend(name, iconTta, 612) {}
 
 ttaBackend::~ttaBackend()
 {

@@ -24,7 +24,7 @@
 #include <QDebug>
 #include <QComboBox>
 
-#define EXT "ahx|hvl" // FIXME support as prefix too
+#define EXT "ahx|hvl" // FIXME support as prefix (Amiga style) too
 
 #define CREDITS "HivelyTracker\nDexter/Abyss, Xeron/IRIS, and Pieknyman"
 #define LINK    "https://github.com/pete-gordon/hivelytracker"
@@ -204,16 +204,16 @@ void hvlConfig::onCmdSamplerate(int val)
     switch (val)
     {
     case 0:
-        HVLSETTINGS.samplerate=11025;
+        HVLSETTINGS.samplerate = 11025;
         break;
     case 1:
-        HVLSETTINGS.samplerate=22050;
+        HVLSETTINGS.samplerate = 22050;
         break;
     case 2:
-        HVLSETTINGS.samplerate=44100;
+        HVLSETTINGS.samplerate = 44100;
         break;
     case 3:
-        HVLSETTINGS.samplerate=48000;
+        HVLSETTINGS.samplerate = 48000;
         break;
     }
 }

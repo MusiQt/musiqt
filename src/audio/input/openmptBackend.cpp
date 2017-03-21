@@ -44,7 +44,7 @@
 #define CREDITS "libopenmpt"
 #define LINK    "http://lib.openmpt.org/"
 
-const char openmptBackend::name[]="Openmpt";
+const char openmptBackend::name[] = "Openmpt";
 
 openmptConfig_t openmptBackend::_settings;
 
@@ -206,11 +206,9 @@ bool openmptBackend::open(const QString& fileName)
         qDebug() << (*it).c_str();
         if ((*it).compare("title") == 0)
             _metaData.addInfo(metaData::TITLE, _module->get_metadata("title").c_str());
-        else
-        if ((*it).compare("artist") == 0)
+        else if ((*it).compare("artist") == 0)
             _metaData.addInfo(metaData::ARTIST, _module->get_metadata("artist").c_str());
-        else
-        if ((*it).compare("message") == 0)
+        else if ((*it).compare("message") == 0)
             _metaData.addInfo(metaData::COMMENT, _module->get_metadata("message").c_str());
     }
 
