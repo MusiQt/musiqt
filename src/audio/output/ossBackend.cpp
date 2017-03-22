@@ -36,7 +36,7 @@
 
 #define MAX_DEVICES 8
 
-const char ossBackend::name[]="OSS";
+const char ossBackend::name[] = "OSS";
 
 /*****************************************************************/
 
@@ -45,15 +45,15 @@ ossBackend::ossBackend() :
     _audioHandle(0),
     _buffer(nullptr)
 {
-	// Check devices
-	const char devBase[]="/dev/dsp";
+    // Check devices
+    const char devBase[] = "/dev/dsp";
 
-	testDevice(devBase);
-	for (int num=0; num<MAX_DEVICES; num++)
-        {
-		const QString tmp=QString("%1%2").arg(devBase).arg(num);
-		testDevice(tmp.toStdString().c_str());
-	}
+    testDevice(devBase);
+    for (int num=0; num<MAX_DEVICES; num++)
+    {
+        const QString tmp = QString("%1%2").arg(devBase).arg(num);
+        testDevice(tmp.toLocal8Bit().constData());
+    }
 }
 
 void ossBackend::testDevice(const char* devName)
@@ -66,24 +66,24 @@ size_t ossBackend::open(const unsigned int card, unsigned int &sampleRate,
                         const unsigned int channels, const unsigned int prec)
 {
     // Open card
-    const QString devName=device(card);
-    _audioHandle=::open(devName.toStdString().c_str(), O_WRONLY, 0);
-    if (_audioHandle==-1)
+    const QString devName = device(card);
+    _audioHandle = ::open(devName.toLocal8Bit().constData(), O_WRONLY, 0);
+    if (_audioHandle == -1)
     {
         qWarning() << "Error: " << strerror(errno);
         return 0;
     }
 
     // Set parameters
-    const int bufSize=setParams(sampleRate, channels, prec);
+    const int bufSize = setParams(sampleRate, channels, prec);
     if (!bufSize)
     {
         ::close(_audioHandle);
-        _audioHandle=0;
+        _audioHandle = 0;
         return 0;
     }
 
-    int mask=0;
+    int mask = 0;
     if (ioctl(_audioHandle, SOUND_MIXER_READ_DEVMASK, &mask) == -1)
     {
         qDebug() << "No mixer available";
@@ -100,7 +100,7 @@ size_t ossBackend::open(const unsigned int card, unsigned int &sampleRate,
 void ossBackend::close()
 {
     ::close(_audioHandle);
-    _audioHandle=0;
+    _audioHandle = 0;
 
     free(_buffer);
 }
@@ -108,19 +108,19 @@ void ossBackend::close()
 size_t ossBackend::setParams(unsigned int &sampleRate, const unsigned int channels, const unsigned int prec)
 {
     // Format
-    int format=0;
+    int format = 0;
     switch (prec)
     {
     case 1:
-            format=AFMT_U8;
+            format = AFMT_U8;
             break;
     case 2:
-            format=AFMT_S16_LE;
+            format = AFMT_S16_LE;
             break;
 #ifdef AFMT_S32_LE
     case 3:
     case 4:
-            format=AFMT_S32_LE;
+            format = AFMT_S32_LE;
             break;
 #endif
     default:
@@ -128,41 +128,46 @@ size_t ossBackend::setParams(unsigned int &sampleRate, const unsigned int channe
         return 0;
     }
 
-    if (ioctl(_audioHandle, SNDCTL_DSP_SETFMT, &format)==-1) {
+    if (ioctl(_audioHandle, SNDCTL_DSP_SETFMT, &format) == -1)
+    {
         qWarning() << "Error: " << strerror(errno);
         return 0;
     }
     //TODO check returned format
 
     // Channels
-    int chn=channels;
-    if (ioctl(_audioHandle, SNDCTL_DSP_CHANNELS, &chn)==-1) {
+    int chn = channels;
+    if (ioctl(_audioHandle, SNDCTL_DSP_CHANNELS, &chn) == -1)
+    {
         qWarning() << "Error: " << strerror(errno);
         return 0;
     }
 
-    if (chn!=channels) {
+    if (chn != channels)
+    {
         qWarning() << "Unsupported number of channels";
         return 0;
     }
 
     // Samplerate
-    if (ioctl(_audioHandle, SNDCTL_DSP_SPEED, &sampleRate)==-1) {
+    if (ioctl(_audioHandle, SNDCTL_DSP_SPEED, &sampleRate) == -1)
+    {
         qWarning() << "Error: " << strerror(errno);
         return 0;
     }
 
     // Block size
     int bufferSize;
-    if (ioctl(_audioHandle, SNDCTL_DSP_GETBLKSIZE, &bufferSize)==-1) {
+    if (ioctl(_audioHandle, SNDCTL_DSP_GETBLKSIZE, &bufferSize) == -1)
+    {
         qWarning() << "Error: " << strerror(errno);
         return false;
     }
     qDebug() << "Buffer size=" << bufferSize << " bytes";
 
-    _buffer=malloc(bufferSize);
+    _buffer = malloc(bufferSize);
 
-    return (_buffer)?bufferSize:0;
+    return _buffer ? bufferSize : 0;
 }
 
 void ossBackend::pause()
@@ -173,20 +178,20 @@ void ossBackend::pause()
 bool ossBackend::write(void* buffer, size_t bufferSize)
 {
 loop:
-    const int n=::write(_audioHandle, buffer, bufferSize);
-    if (n<0)
+    const int n = ::write(_audioHandle, buffer, bufferSize);
+    if (n < 0)
     {
-        if (errno==EINTR)
+        if (errno == EINTR)
             goto loop;
         else
             return false;
     }
 
-    bufferSize-=n;
+    bufferSize -= n;
     if (!bufferSize)
         return true;
 
-    buffer=(char*)buffer+n;
+    buffer = (char*)buffer+n;
     goto loop;
 }
 
@@ -198,22 +203,22 @@ void ossBackend::stop()
 void ossBackend::volume(int vol)
 {
     vol |= (vol<<8);
-    if (ioctl(_audioHandle, MIXER_WRITE(SOUND_MIXER_PCM), &vol)==-1)
+    if (ioctl(_audioHandle, MIXER_WRITE(SOUND_MIXER_PCM), &vol) == -1)
     {
         qDebug() << "Error: " << strerror(errno);
     }
 }
 
-int ossBackend::volume()
+int ossBackend::volume() const
 {
     int vol = -1;
-    if (ioctl(_audioHandle, MIXER_READ(SOUND_MIXER_PCM), &vol)==-1)
+    if (ioctl(_audioHandle, MIXER_READ(SOUND_MIXER_PCM), &vol) == -1)
     {
         qDebug() << "Error: " << strerror(errno);
     }
     else
     {
-        vol&=0xFF;
+        vol &= 0xFF;
     }
     qDebug() << "vol: " << vol;
     return vol;

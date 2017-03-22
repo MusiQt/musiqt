@@ -94,7 +94,7 @@ private slots:
     void onCmdClock(int val);
     void onCmdModel(int val);
     void onCmdAddress2(int val);
-#ifdef ENABLE_3SID
+#ifdef ENABLE_3SID //FIXME
     void onCmdAddress3(int val);
 #endif
     void onCmdHvsc();
@@ -103,6 +103,9 @@ private slots:
     void onCmdForceC64Model(bool val);
     void onCmdFastSampling(bool val);
     void onCmdFilter(bool val);
+    void setBias(int val);
+    void setFilter6581Curve(int val);
+    void setFilter8580Curve(int val);
 };
 
 /*****************************************************************/
@@ -158,10 +161,10 @@ public:
     bool rewind() override;
 
     /// Number of subtunes
-    unsigned int subtunes() const override { return _tune?_tune->getInfo()->songs():0; }
+    unsigned int subtunes() const override { return _tune ? _tune->getInfo()->songs() : 0; }
 
     /// Current subtune
-    unsigned int subtune() const override { return _tune?_tune->getInfo()->currentSong():0; }
+    unsigned int subtune() const override { return _tune ? _tune->getInfo()->currentSong() : 0; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;
@@ -173,7 +176,7 @@ public:
     unsigned int channels() const override { return _tune?_settings.channels:0; }
 
     /// Get precision
-    sample_t precision() const override { return S16; }
+    sample_t precision() const override { return sample_t::S16; }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override;

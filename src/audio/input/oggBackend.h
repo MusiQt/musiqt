@@ -106,10 +106,10 @@ public:
     bool rewind() override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _vi?_vi->rate:0; }
+    unsigned int samplerate() const override { return _vi ? _vi->rate : 0; }
 
     /// Get channels
-    unsigned int channels() const override { return _vi?_vi->channels:0; }
+    unsigned int channels() const override { return _vi ? _vi->channels : 0; }
 
     /// Get precision
     sample_t precision() const override { return _settings.precision; }

@@ -94,7 +94,7 @@ public:
     virtual void volume(int vol) override {}
 
     /// Get volume
-    virtual int volume() override { return -1; }
+    virtual int volume() const override { return -1; }
 };
 
 #endif

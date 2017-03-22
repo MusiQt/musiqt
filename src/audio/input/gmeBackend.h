@@ -122,7 +122,7 @@ public:
     unsigned int channels() const override { return 2; }
 
     /// Get precision
-    sample_t precision() const override { return S16; }
+    sample_t precision() const override { return sample_t::S16; }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override;

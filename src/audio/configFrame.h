@@ -46,7 +46,7 @@ protected:
     QVBoxLayout* extraBottom() const { return _extraBottom; }
 
 public:
-    configFrame(QWidget* p, const char* title, const char* credits=0, const char* link=0);
+    configFrame(QWidget* p, const char* title, const char* credits=nullptr, const char* link=nullptr);
     virtual ~configFrame() {}
 };
 

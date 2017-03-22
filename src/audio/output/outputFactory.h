@@ -46,7 +46,7 @@ private:
 protected:
     oFactory();
     oFactory(const oFactory&);
-    oFactory& operator= (const oFactory&);
+    oFactory& operator=(const oFactory&);
     ~oFactory() {}
 
 public:

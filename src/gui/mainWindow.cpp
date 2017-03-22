@@ -395,7 +395,15 @@ void mainWindow::onInfo()
 {
     _infoDialog = new infoDialog(this);
     _infoDialog->setInfo(cFrame->getInput()->getMetaData());
-    _infoDialog->exec();
+    _infoDialog->setAttribute(Qt::WA_QuitOnClose, false);
+    _infoDialog->show();
+    connect(_infoDialog, SIGNAL(accepted()), this, SLOT(onCloseInfo()));
+}
+
+void mainWindow::onCloseInfo()
+{
+    qDebug("onCloseInfo");
+    // FIXME not called
     delPtr(_infoDialog);
 }
 

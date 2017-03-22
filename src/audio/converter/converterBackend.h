@@ -24,15 +24,15 @@
 class resamplerBackend : public converter
 {
 protected:
-    unsigned int	_channels;
-    unsigned int	_sampleSize;
+    unsigned int _channels;
+    unsigned int _sampleSize;
 
-    unsigned int	_rate;
+    unsigned int _rate;
 
-    unsigned int	_data;
+    unsigned int _data;
 
-    char		*_buffer;
-    size_t		_bufsize;
+    char *_buffer;
+    size_t _bufsize;
 
 private:
     resamplerBackend();
@@ -47,10 +47,10 @@ public:
     virtual ~resamplerBackend();
 
     /// Get pointer to buffer
-    void* buffer() override { return _buffer+_data; }
+    void* buffer() const override { return _buffer+_data; }
 
     /// Get buffer size
-    size_t bufSize() override { return _bufsize-_data; }
+    size_t bufSize() const override { return _bufsize-_data; }
 };
 
 /******************************************************************************/
@@ -58,11 +58,11 @@ public:
 class converterBackend : public converter
 {
 protected:
-    unsigned int	_channels;
-    unsigned int	_sampleSize;
+    unsigned int _channels;
+    unsigned int _sampleSize;
 
-    char		*_buffer;
-    size_t		_bufsize;
+    char *_buffer;
+    size_t _bufsize;
 
 private:
     converterBackend();
@@ -76,10 +76,10 @@ public:
     virtual ~converterBackend();
 
     /// Get pointer to buffer
-    void* buffer() override { return _buffer; }
+    void* buffer() const override { return _buffer; }
 
     /// Get buffer size
-    size_t bufSize() override { return _bufsize; }
+    size_t bufSize() const override { return _bufsize; }
 };
 
 #endif

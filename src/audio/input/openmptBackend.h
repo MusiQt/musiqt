@@ -136,7 +136,7 @@ public:
     unsigned int channels() const override { return _settings.channels; }
 
     /// Get precision
-    sample_t precision() const override { return SAMPLE_FLOAT; }
+    sample_t precision() const override { return sample_t::SAMPLE_FLOAT; }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override;

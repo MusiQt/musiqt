@@ -28,7 +28,7 @@
  * FLOAT - 32 bit float
  * FIXED - 32 bit fixed point
 */
-enum sample_t
+enum class sample_t
 {
     U8 = 1,
     S16,

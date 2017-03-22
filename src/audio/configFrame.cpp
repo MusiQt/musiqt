@@ -30,7 +30,7 @@ configFrame::configFrame(QWidget* p, const char* title, const char* credits, con
     QVBoxLayout* main = new QVBoxLayout();
     setLayout(main);
 
-    if (credits)
+    if (credits != nullptr)
     {
         QLabel* cred = new QLabel(credits, this);
         cred->setAlignment(Qt::AlignCenter);
@@ -38,7 +38,7 @@ configFrame::configFrame(QWidget* p, const char* title, const char* credits, con
         main->addWidget(cred);
     }
 
-    if (link)
+    if (link != nullptr)
     {
         QString text = QString("<a href=\"%1\">%1</a>").arg(link);
         QLabel* lnk = new QLabel(text, this);

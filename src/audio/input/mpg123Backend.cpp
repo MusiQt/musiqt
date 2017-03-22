@@ -68,14 +68,13 @@ extern const unsigned char iconMpg123[560] =
     0x4f,0x52,0x06,0x51,0x98,0x70,0xe8,0xca,0xa3,0x83,0x08,0x0d,0x05,0x02,0x00,0x3b
 };
 
-
 // mp3|mp2
 #define EXT "mp3"
 
 #define CREDITS "MPEG Audio Decoder library\ncopyright 1995-2008 by the mpg123 project"
 #define LINK    "http://mpg123.org/"
 
-const char mpg123Backend::name[]="Mpg123";
+const char mpg123Backend::name[] = "Mpg123";
 
 #ifdef _WIN32
 # define MPG123LIB	"libmpg123-0.dll"
@@ -164,11 +163,11 @@ mpg123Backend::mpg123Backend() :
 {
     loadSettings();
 
-    if (++_status>1)
+    if (++_status > 1)
         return;
 
-    const int err=dl_mpg123_init();
-    if (err==MPG123_OK)
+    const int err = dl_mpg123_init();
+    if (err == MPG123_OK)
     {
         _decoders << "auto";
         const char** decoders=dl_mpg123_supported_decoders();
@@ -182,7 +181,7 @@ mpg123Backend::mpg123Backend() :
     else
     {
         qWarning() << dl_mpg123_plain_strerror(err);
-        _status=0;
+        _status = 0;
     }
 }
 
@@ -190,7 +189,7 @@ mpg123Backend::~mpg123Backend()
 {
     close();
 
-    if (--_status==0)
+    if (--_status == 0)
         dl_mpg123_exit();
 }
 
@@ -258,7 +257,7 @@ bool mpg123Backend::open(const QString& fileName)
     err = dl_mpg123_length(_handle);
     time(err/_samplerate);
 
-    err=dl_mpg123_param(_handle, MPG123_RVA,
+    err = dl_mpg123_param(_handle, MPG123_RVA,
         SETTINGS->replayGain()
             ? (SETTINGS->replayGainMode()==0) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
             : MPG123_RVA_OFF,

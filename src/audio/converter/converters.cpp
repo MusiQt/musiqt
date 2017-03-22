@@ -21,35 +21,35 @@
 template <typename I, typename O>
 size_t resampler<I, O>::convert(const void* buf, const size_t len)
 {
-    I* const in=(I*)_buffer;
-    O* const out=(O*)buf;
+    I* const in = (I*)_buffer;
+    O* const out = (O*)buf;
 
-    size_t idx=0;
-    unsigned int error=0;
-    const size_t m=len/sizeof(O);
+    size_t idx = 0;
+    unsigned int error = 0;
+    const size_t m = len/sizeof(O);
     for (size_t j=0; j<m; j+=_channels)
     {
         for (unsigned int c=0; c<_channels; c++)
         {
-            const I val=in[idx+c];
-            out[j+c]=_quantizer->get(val+(I)(((unsigned int)(in[idx+c+_channels]-val)*error)>>16), c);
+            const I val = in[idx+c];
+            out[j+c] = _quantizer->get(val+(I)(((unsigned int)(in[idx+c+_channels]-val)*error)>>16), c);
         }
-        error+=_rate;
-        while (error>=0x10000)
+        error += _rate;
+        while (error >= 0x10000)
         {
-            error-=0x10000;
-            idx+=_channels;
+            error -= 0x10000;
+            idx += _channels;
         }
     }
 
-    const size_t l=_bufsize/sizeof(I);
+    const size_t l = _bufsize/sizeof(I);
     qDebug() << "resamplerDecimal idx: " << static_cast<int>(idx) << "; l: " << static_cast<int>(l);
 
-    _data=(l<idx)?(l-idx)*sizeof(I):0;
+    _data = (l < idx) ? (l-idx)*sizeof(I) : 0;
     for (size_t j=idx; j<l; j+=_channels)
     {
         for (unsigned int c=0; c<_channels; c++)
-            in[c]=in[j+c];
+            in[c] = in[j+c];
     }
 
     return len;
@@ -67,15 +67,15 @@ template size_t resampler<float, short>::convert(const void* buf, const size_t l
 template <typename I, typename O>
 size_t converterDecimal<I, O>::convert(const void* buf, const size_t len)
 {
-    I* const in=(I*)_buffer;
-    O* const out=(O*)buf;
+    I* const in = (I*)_buffer;
+    O* const out = (O*)buf;
 
-    const size_t m=len/sizeof(O);
+    const size_t m = len/sizeof(O);
     for (size_t j=0; j<m; j+=_channels)
     {
         for (unsigned int c=0; c<_channels; c++)
         {
-            out[j+c]=_quantizer->get(in[j+c], c);
+            out[j+c] = _quantizer->get(in[j+c], c);
         }
     }
 

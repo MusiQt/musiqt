@@ -54,8 +54,7 @@ centralFrame::centralFrame(QWidget *parent) :
     _audio(new audio),
     playing(false),
     preloaded(QString::null),
-    playDir(QString::null)/*,
-    _loadThread(nullptr)*/
+    playDir(QString::null)
 {
     connect(_audio, SIGNAL(outputError()), this, SLOT(onCmdStopSong()));
     connect(_audio, SIGNAL(updateTime()), this, SLOT(onUpdateTime()));
@@ -613,7 +612,7 @@ void centralFrame::preloadSong()
 {
     if (playMode && _input->gapless() && !playDir.compare(fsm->fileName(_dirlist->currentIndex())))
     {
-        const int nextSong=_playlist->currentRow()+1;
+        const int nextSong = _playlist->currentRow()+1;
         if (nextSong<_playlist->count())
         {
                 preloaded = _playlist->getLocation(nextSong);
@@ -639,7 +638,7 @@ void centralFrame::songEnded()
             item = _playlist->currentRow() + 1;
         }
 
-        if (item>=0 && item<_playlist->count())
+        if ((item >= 0) && (item < _playlist->count()))
         {
             _playlist->setCurrentRow(item);
             updateSongs(); 
@@ -717,7 +716,7 @@ void centralFrame::onCmdBmAdd()
 
 void centralFrame::changeSubtune(dir_t dir)
 {
-    if (_input->subtunes()<=1)
+    if (_input->subtunes() <= 1)
         return;
 
     unsigned int i = _input->subtune();

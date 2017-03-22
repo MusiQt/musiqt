@@ -76,7 +76,7 @@ public:
     void volume(int vol) override;
 
     /// Get volume
-    int volume() override;
+    int volume() const override;
 };
 
 #endif

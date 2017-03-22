@@ -106,7 +106,7 @@ void bookmark::contextMenuEvent(QContextMenuEvent * event)
 
     QMenu pane(this);
     QString dirName = (item != nullptr) ? item->text() : tr("No item selected");
-    if (dirName.count()>20)
+    if (dirName.count() > 20)
         dirName = dirName.left(10) + "..." + dirName.right(10);
 
     QWidgetAction *wa = new QWidgetAction(&pane);

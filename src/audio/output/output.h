@@ -63,7 +63,7 @@ public:
     virtual void volume(int vol) =0;
 
     /// Get volume
-    virtual int volume() =0;
+    virtual int volume() const =0;
 };
 
 #endif

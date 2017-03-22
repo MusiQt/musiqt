@@ -29,16 +29,16 @@ resamplerBackend::resamplerBackend(const unsigned int srIn, const unsigned int s
     qDebug() << "Conversion ratio " << (float)(srIn/srOut);
     qDebug() << "Sample size " << _sampleSize;
 
-    _rate=(((unsigned int)srIn)<<16)/srOut;
+    _rate = (((unsigned int)srIn)<<16)/srOut;
     qDebug() << "_rate " << _rate;
 
-    unsigned long tmp=((unsigned long)frames*(unsigned long)_rate);
-    if (tmp&0xFFFFll)
-        tmp+=0x10000ll;
+    unsigned long tmp = ((unsigned long)frames * (unsigned long)_rate);
+    if (tmp & 0xFFFFll)
+        tmp += 0x10000ll;
 
-    _bufsize=(tmp>>16)*_sampleSize;
+    _bufsize = (tmp>>16) * _sampleSize;
     qDebug() << "input size: " << static_cast<int>(frames) << "; output size " << static_cast<int>(_bufsize/_sampleSize);
-    _buffer=new char[_bufsize];
+    _buffer = new char[_bufsize];
 }
 
 resamplerBackend::~resamplerBackend()
@@ -54,9 +54,9 @@ converterBackend::converterBackend(const size_t frames, const unsigned int chann
 {
     qDebug() << "Sample size " << _sampleSize;
 
-    _bufsize=frames*_sampleSize;
+    _bufsize = frames * _sampleSize;
     qDebug() << "input size: " << static_cast<int>(frames) << "; output size " << static_cast<int>(_bufsize/_sampleSize);
-    _buffer=new char[_bufsize];
+    _buffer = new char[_bufsize];
 }
 
 converterBackend::~converterBackend()

@@ -49,14 +49,14 @@ void audioThread::run()
 {
     switch (_audio->outputPrecision())
     {
-    case U8:
+    case sample_t::U8:
         _audio->loop<quint8>();
         break;
-    case S16:
+    case sample_t::S16:
         _audio->loop<qint16>();
         break;
-    case S24:
-    case S32:
+    case sample_t::S24:
+    case sample_t::S32:
         qWarning() << "Not supported yet";
         break;
     }
@@ -68,19 +68,19 @@ inline sample_t audio::outputPrecision()
 {
     switch (_input->precision())
     {
-    case U8:
-    case S16:
-    case S24:
-    case S32:
+    case sample_t::U8:
+    case sample_t::S16:
+    case sample_t::S24:
+    case sample_t::S32:
         return _input->precision();
-    case SAMPLE_FLOAT:
-    case SAMPLE_FIXED:
+    case sample_t::SAMPLE_FLOAT:
+    case sample_t::SAMPLE_FIXED:
         switch (SETTINGS->bits())
         {
         case 8:
-            return U8;
+            return sample_t::U8;
         case 16:
-            return S16;
+            return sample_t::S16;
         }
     }
 }
@@ -102,10 +102,10 @@ template<> inline void audio::process<short>(size_t size)
     {
         //Swap bytes on big endian machines
         qint16 *buf = (qint16*)_output->buffer();
-        const short *end=buf+(size/2);
+        const short *end = buf+(size/2);
         do {
-            const qint16 tmp=*buf;
-            *buf++ = ((tmp&0x00FF)<<8) & ((tmp&0xFF00)>>8);
+            const qint16 tmp = *buf;
+            *buf++ = ((tmp & 0x00FF)<<8) & ((tmp & 0xFF00)>>8);
         } while (buf<end);
     }
 #endif
@@ -122,7 +122,7 @@ template<> inline void audio::process<short>(size_t size)
         do {
             bs2b_cross_feed_16(_bs2bdp, buf);
             buf += 2;
-        } while (buf<end);
+        } while (buf < end);
 #endif
     }
 #endif
@@ -136,8 +136,8 @@ void audio::loop()
     {
 PROFILE_START
         size_t size = _input->fillBuffer(
-            _converter ? _converter->buffer() : _output->buffer(),
-            _converter ? _converter->bufSize() : _bufferSize,
+            _converter != nullptr ? _converter->buffer() : _output->buffer(),
+            _converter != nullptr ? _converter->bufSize() : _bufferSize,
             _seconds);
 
         if (!size)
@@ -169,12 +169,12 @@ PROFILE_END
         }
 
         _buffers -= (1<<DECIMALS);
-        if (_buffers<0)
+        if (_buffers < 0)
         {
             do {
                 _buffers += _bufPerSec;
                 _seconds++;
-            } while (_buffers<0);
+            } while (_buffers < 0);
             if (_seconds != _input->time()-5)
                 emit updateTime();
             else
@@ -186,8 +186,8 @@ PROFILE_END
 /*****************************************************************/
 
 audio::audio() :
-    _input(0),
-    _preload(0),
+    _input(nullptr),
+    _preload(nullptr),
     _state(state_t::STOP),
     _playing(false),
     _seconds(0)
@@ -219,7 +219,7 @@ bool audio::play(input* i, int pos)
 
     _input = i;
 
-    unsigned int _card=0;
+    unsigned int _card = 0;
     QString card = SETTINGS->card();
     for (unsigned int i=0; i<_output->devices(); i++)
     {
@@ -233,7 +233,7 @@ bool audio::play(input* i, int pos)
     unsigned int sampleRate = _input->samplerate();
 
     // FIXME only supports 8/16 bits
-    const unsigned int precision=(outputPrecision()==U8)?1:2;
+    const unsigned int precision = (outputPrecision() == sample_t::U8) ? 1 : 2;
     qDebug() << "Setting parameters " << sampleRate << ":" << _input->channels() << ":" << precision;
     _bufferSize = _output->open(_card, sampleRate, _input->channels(), precision);
     if (!_bufferSize)
@@ -245,12 +245,12 @@ bool audio::play(input* i, int pos)
     _converter = CFACTORY->get(_input->samplerate(), sampleRate, _bufferSize,
         _input->channels(), _input->precision(), outputPrecision(), _input->fract());
 
-    _bufPerSec = ((sampleRate<<DECIMALS)*_input->channels()*precision)/_bufferSize;
+    _bufPerSec = ((sampleRate << DECIMALS) * _input->channels() * precision) / _bufferSize;
     _buffers = _bufPerSec;
 #ifdef HAVE_BS2B
-    if (SETTINGS->bs2b() && (_input->channels()==2)
+    if (SETTINGS->bs2b() && (_input->channels() == 2)
 #if BS2B_VERSION_MAJOR == 2
-        && (outputPrecision()==S16)
+        && (outputPrecision() == sample_t::S16)
 #endif
     )
     {
@@ -319,7 +319,7 @@ bool audio::stop()
     if (_bs2bdp)
     {
         bs2b_close(_bs2bdp);
-        _bs2bdp=0;
+        _bs2bdp = 0;
     }
 #endif
     if (_converter != nullptr)
@@ -346,7 +346,7 @@ bool audio::gapless(input* const i)
     }
     else
     {
-        _preload = 0;
+        _preload = nullptr;
         return false;
     }
 }
@@ -387,7 +387,7 @@ audioConfig::audioConfig(QWidget* win) :
     connect(_cardList, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCmdCard(const QString &)));
 
     matrix()->addWidget(new QLabel(tr("Default bitdepth"), this));
-    QComboBox *bitBox=new QComboBox(this);
+    QComboBox *bitBox = new QComboBox(this);
     matrix()->addWidget(bitBox);
     QStringList items;
     items << "8" << "16";

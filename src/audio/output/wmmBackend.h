@@ -40,8 +40,8 @@ class wmmBackend : public outputBackend
 private:
     HWAVEOUT _wHandle;
     WAVEHDR _wHdr[2];
-    HANDLE		_event[2];
-    unsigned int	_idx;
+    HANDLE _event[2];
+    unsigned int _idx;
 
 private:
     static void CALLBACK waveOutProc(HWAVEOUT waveOut, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
@@ -80,7 +80,7 @@ public:
     void volume(int vol) override;
 
     /// Get volume
-    int volume() override;
+    int volume() const override;
 };
 
 #endif

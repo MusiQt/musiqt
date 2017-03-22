@@ -119,8 +119,8 @@ public:
     sample_t precision() const override
     {
         return !songLoaded().isNull()
-            ? (_info.bps == 16) ? S16 : U8
-            : S16;
+            ? (_info.bps == 16) ? sample_t::S16 : sample_t::U8
+            : sample_t::S16;
     }
 
     /// Callback function

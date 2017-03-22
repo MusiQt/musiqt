@@ -70,8 +70,8 @@ private:
     sample_t _precision;
 
 #if LIBAVCODEC_VERSION_MAJOR >= 54
-    int		_planar;
-    int		_sampleSize;
+    int _planar;
+    int _sampleSize;
 #endif
 
     static const AutoDLL _avformat;

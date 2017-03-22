@@ -37,8 +37,8 @@ void oFactory::regBackend()
 {
     outputs_t temp;
 
-    temp.name=backend::name;
-    temp.factory=&backend::factory;
+    temp.name = backend::name;
+    temp.factory = &backend::factory;
     _outputs.append(temp);
 }
 

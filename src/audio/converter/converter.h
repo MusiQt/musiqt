@@ -27,10 +27,10 @@ public:
     virtual ~converter() {}
 
     /// Get pointer to buffer
-    virtual void* buffer() =0;
+    virtual void* buffer() const =0;
 
     /// Get buffer size
-    virtual size_t bufSize() =0;
+    virtual size_t bufSize() const =0;
 
     /// Do the conversion
     virtual size_t convert(const void* out, const size_t len) =0;

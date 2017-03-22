@@ -20,7 +20,7 @@
 #define INFODIALOG_H
 
 #include <QDialog>
-#include <QGridLayout>
+#include <QWidget>
 #include <QImage>
 #include <QLabel>
 #include <QThread>
@@ -58,7 +58,7 @@ class infoDialog : public QDialog
 private:
     imageLoader *_imageLoader;
     QLabel *_imgFrame;
-    QGridLayout *_matrix;
+    QWidget *matrix;
     QPlainTextEdit *_text;
 
 private:

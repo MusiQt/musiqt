@@ -29,15 +29,15 @@ unsigned int random(unsigned int val)
 template<typename O>
 quantizerFixed<O>::quantizerFixed(const unsigned int fract)
 {
-    _random[0][0]=3686734;
-    _random[0][1]=86526882;
-    _random[1][0]=268268;
-    _random[1][1]=7628932;
+    _random[0][0] = 3686734;
+    _random[0][1] = 86526882;
+    _random[1][0] = 268268;
+    _random[1][1] = 7628932;
 
     qDebug() << "quantizerFixed " << static_cast<int>(sizeof(O)) << " bytes";
-    _scalebits=fract+1-(sizeof(O)<<3);
-    _mask=(1L<<_scalebits)-1;
-    _clip=(1L<<fract);
+    _scalebits = fract+1-(sizeof(O)<<3);
+    _mask = (1L<<_scalebits)-1;
+    _clip = (1L<<fract);
 }
 
 template quantizerFixed<unsigned char>::quantizerFixed(const unsigned int fract);
@@ -46,19 +46,19 @@ template quantizerFixed<short>::quantizerFixed(const unsigned int fract);
 template<typename O>
 inline int quantizerFixed<O>::get32(const int sample, const unsigned int channel)
 {
-    const unsigned int r1=random(_random[channel][0])&_mask;
-    const unsigned int r2=random(_random[channel][1])&_mask;
+    const unsigned int r1 = random(_random[channel][0])&_mask;
+    const unsigned int r2 = random(_random[channel][1])&_mask;
 
     // Dither
-    int output=sample+
+    int output = sample+
         r1+r2+
         (1L<<(_scalebits-1));
 
     // Clip
-    if (output>_clip-1)
-        output=_clip-1;
-    else if (output<-_clip)
-        output=-_clip;
+    if (output > _clip-1)
+        output = _clip-1;
+    else if (output < -_clip)
+        output = -_clip;
 
     return output;
 }
@@ -80,10 +80,10 @@ short quantizerFixed<short>::get(const int sample, const unsigned int channel)
 template<typename O>
 quantizerFloat<O>::quantizerFloat()
 {
-    _random[0][0]=3686734;
-    _random[0][1]=86526882;
-    _random[1][0]=268268;
-    _random[1][1]=7628932;
+    _random[0][0] = 3686734;
+    _random[0][1] = 86526882;
+    _random[1][0] = 268268;
+    _random[1][1] = 7628932;
 
     qDebug() << "quantizerFloat " << static_cast<int>(sizeof(O)) << " bytes";
 }
@@ -94,19 +94,19 @@ template quantizerFloat<short>::quantizerFloat();
 template<typename O>
 inline int quantizerFloat<O>::get32(const float sample, const unsigned int channel, const int max)
 {
-    const float r1=(float)random(_random[channel][0])/(float)std::numeric_limits<unsigned int>::max();
-    const float r2=(float)random(_random[channel][1])/(float)std::numeric_limits<unsigned int>::max();
+    const float r1 = (float)random(_random[channel][0])/(float)std::numeric_limits<unsigned int>::max();
+    const float r2 = (float)random(_random[channel][1])/(float)std::numeric_limits<unsigned int>::max();
 
     // Dither
-    int output=(int)(sample*(float)max+
-        r1+r2+
-        0.5f);
+    int output = (int)(sample*(float)max
+        + r1 + r2
+        + 0.5f);
 
     // Clip
-    if (output>max-1)
-        output=max-1;
-    else if (output<-max)
-        output=-max;
+    if (output > max-1)
+        output = max-1;
+    else if (output < -max)
+        output = -max;
 
     return output;
 }

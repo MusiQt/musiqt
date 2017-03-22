@@ -23,19 +23,34 @@
 
 #include <QDebug>
 
+extern const unsigned char iconFfmpeg[86] =
+{
+    0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x10, 0x00,
+    0x10, 0x00, 0xa1, 0x02, 0x00, 0x4c, 0xad, 0x4c,
+    0x4c, 0xae, 0x4c, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x21, 0xf9, 0x04, 0x01, 0x0a, 0x00, 0x02,
+    0x00, 0x2c, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00,
+    0x10, 0x00, 0x00, 0x02, 0x27, 0x8c, 0x6f, 0x22,
+    0xa9, 0x8b, 0x0f, 0xa3, 0x74, 0x12, 0xb5, 0x7a,
+    0x1a, 0x0d, 0x00, 0xae, 0x5b, 0x39, 0x20, 0x16,
+    0x8c, 0x98, 0x19, 0x6e, 0x46, 0xe7, 0x69, 0x59,
+    0xe4, 0xb6, 0x99, 0x02, 0xab, 0xa5, 0x6a, 0x33,
+    0xda, 0x7e, 0x09, 0x05, 0x00, 0x3b
+};
+
 #define CREDITS "ffmpeg"
 #define LINK    "http://www.ffmpeg.org/"
 
-const char ffmpegBackend::name[]="Ffmpeg";
+const char ffmpegBackend::name[] = "Ffmpeg";
 
 #ifdef _WIN32
-# define AVFORMATLIB "avformat-" AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR) ".dll"
-# define AVCODECLIB  "avcodec-" AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR) ".dll"
-# define AVUTILLIB   "avutil-" AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR) ".dll"
+#  define AVFORMATLIB "avformat-" AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR) ".dll"
+#  define AVCODECLIB  "avcodec-" AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR) ".dll"
+#  define AVUTILLIB   "avutil-" AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR) ".dll"
 #else
-# define AVFORMATLIB "libavformat.so." AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)
-# define AVCODECLIB  "libavcodec.so." AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)
-# define AVUTILLIB   "libavutil.so." AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)
+#  define AVFORMATLIB "libavformat.so." AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)
+#  define AVCODECLIB  "libavcodec.so." AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)
+#  define AVUTILLIB   "libavutil.so." AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)
 #endif
 
 const AutoDLL ffmpegBackend::_avformat(AVFORMATLIB);
@@ -87,27 +102,27 @@ QStringList ffmpegBackend::_ext;
 
 size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
-    size_t n=_decodeBufOffset;
-    unsigned char* buf=_decodeBuf;
+    size_t n = _decodeBufOffset;
+    unsigned char* buf = _decodeBuf;
 
     while (n<=bufferSize)
     {
         while (!_packet.data)
         {
-            if (dl_av_read_frame(_formatContext, &_packet)<0)
+            if (dl_av_read_frame(_formatContext, &_packet) < 0)
             {
                 qDebug() << "Last frame: " << static_cast<int>(n);
                 memcpy(buffer, buf, n);
-                _decodeBufOffset=0;
+                _decodeBufOffset = 0;
                 return n;
             }
             if (_packet.stream_index!=_audioStreamIndex)
             {
                 dl_av_free_packet(&_packet);
-                _packet.data=0;
+                _packet.data = 0;
             }
             else
-                _packetOffset=0;
+                _packetOffset = 0;
         }
         int frame_size = MAX_AUDIO_FRAME_SIZE*2 - n;
 
@@ -120,8 +135,8 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
 #else
         AVFrame *frame = dl_av_frame_alloc();
         int got_frame = 0;
-        const int used=dl_avcodec_decode_audio4(_audioStream->codec, frame, &got_frame, &avpkt);
-        if (used >= 0 && got_frame)
+        const int used = dl_avcodec_decode_audio4(_audioStream->codec, frame, &got_frame, &avpkt);
+        if ((used >= 0) && got_frame)
         {
             int plane_size;
             int data_size = dl_av_samples_get_buffer_size(&plane_size, _audioStream->codec->channels,
@@ -134,21 +149,21 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
                 return 0;
             }
 
-            if (_planar && _audioStream->codec->channels > 1)
+            if (_planar && (_audioStream->codec->channels > 1))
             {
                 // Interleave channels
                 uint8_t *out = (uint8_t*)(buf+n);
-                int idx=0;
-                const int samples=plane_size/_sampleSize;
+                int idx = 0;
+                const int samples = plane_size/_sampleSize;
 
                 for (int j=0; j<samples; j++)
                 {
                     for (int ch=0; ch<_audioStream->codec->channels; ch++)
                     {
                         memcpy(out, frame->extended_data[ch]+idx, _sampleSize);
-                        out+=_sampleSize;
+                        out += _sampleSize;
                     }
-                    idx+=_sampleSize;
+                    idx += _sampleSize;
                 }
             } else {
                     memcpy(buf+n, frame->extended_data[0], plane_size);
@@ -162,20 +177,20 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
         dl_av_frame_free(&frame);
 #endif
         qDebug() << "frame_size: " << frame_size;
-        if (used>=0)
+        if (used >= 0)
         {
-            n+=frame_size;
-            _packetOffset+=used;
+            n += frame_size;
+            _packetOffset += used;
         }
-        if ((used<0) || (_packet.size<=_packetOffset))
+        if ((used < 0) || (_packet.size <= _packetOffset))
         {
             dl_av_free_packet(&_packet);
-            _packet.data=0;
+            _packet.data = 0;
         }
     }
 
     memcpy(buffer, buf, bufferSize);
-    _decodeBufOffset=n-bufferSize;
+    _decodeBufOffset = n-bufferSize;
     memcpy(buf, buf+bufferSize, _decodeBufOffset);
 
     return bufferSize;
@@ -185,7 +200,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
 
 bool ffmpegBackend::init()
 {
-	if (!_avformat.loaded() || !_avcodec.loaded() || !_avutil.loaded())
+    if (!_avformat.loaded() || !_avcodec.loaded() || !_avutil.loaded())
             return false;
 
 #if LIBAVCODEC_VERSION_MAJOR < 54
@@ -279,9 +294,9 @@ bool ffmpegBackend::supports(const QString& fileName)
 inline QStringList ffmpegBackend::ext() const { return _ext; }
 
 ffmpegBackend::ffmpegBackend() :
-    inputBackend(name),
-    _audioStream(0),
-    _formatContext(0) {}
+    inputBackend(name, iconFfmpeg, 86),
+    _audioStream(nullptr),
+    _formatContext(nullptr) {}
 
 ffmpegBackend::~ffmpegBackend()
 {
@@ -309,7 +324,7 @@ bool ffmpegBackend::open(const QString& fileName)
 {
     close();
 
-    AVFormatContext *fc = 0;
+    AVFormatContext *fc = nullptr;
 #if LIBAVFORMAT_VERSION_MAJOR < 54
     if (dl_av_open_input_file(&fc, fileName.toLocal8Bit().constData(), 0, 0, 0))
 #else
@@ -317,11 +332,11 @@ bool ffmpegBackend::open(const QString& fileName)
 #endif
         return false;
 
-    int audioStream=-1;
+    int audioStream = -1;
 #if LIBAVFORMAT_VERSION_MAJOR < 54
-    if (dl_av_find_stream_info(fc)<0)
+    if (dl_av_find_stream_info(fc) < 0)
 #else
-    if (dl_avformat_find_stream_info(fc, 0)<0)
+    if (dl_avformat_find_stream_info(fc, 0) < 0)
 #endif
         goto error;
 
@@ -350,28 +365,28 @@ bool ffmpegBackend::open(const QString& fileName)
     case AV_SAMPLE_FMT_U8P:
         _sampleSize = 1;
 #endif
-        _precision=U8;
+        _precision = sample_t::U8;
         break;
     case AV_SAMPLE_FMT_S16:
 #if LIBAVFORMAT_VERSION_MAJOR >= 54
     case AV_SAMPLE_FMT_S16P:
         _sampleSize = 2;
 #endif
-        _precision=S16;
+        _precision = sample_t::S16;
         break;
     case AV_SAMPLE_FMT_S32:
 #if LIBAVFORMAT_VERSION_MAJOR >= 54
     case AV_SAMPLE_FMT_S32P:
         _sampleSize = 4;
 #endif
-        _precision=S32;
+        _precision = sample_t::S32;
         break;
     case AV_SAMPLE_FMT_FLT:
 #if LIBAVFORMAT_VERSION_MAJOR >= 54
     case AV_SAMPLE_FMT_FLTP:
         _sampleSize = 4;
 #endif
-        _precision=SAMPLE_FLOAT;
+        _precision = sample_t::SAMPLE_FLOAT;
         break;
     default:
         goto error;
@@ -397,11 +412,11 @@ bool ffmpegBackend::open(const QString& fileName)
 
 error:
 #if LIBAVFORMAT_VERSION_MAJOR < 54
-	dl_av_close_input_file(fc);
+    dl_av_close_input_file(fc);
 #else
-	dl_avformat_close_input(&fc);
+    dl_avformat_close_input(&fc);
 #endif
-	return false;
+    return false;
 }
 
 void ffmpegBackend::close()
@@ -447,18 +462,18 @@ bool ffmpegBackend::seek(const int pos)
 
 bool ffmpegBackend::openStream(AVFormatContext* fc, const int streamIndex)
 {
-    if ((streamIndex<0) || (streamIndex>=fc->nb_streams))
+    if ((streamIndex < 0) || (streamIndex >= fc->nb_streams))
         return false;
 
     AVCodecContext* dec = fc->streams[streamIndex]->codec;
     AVCodec* codec = dl_avcodec_find_decoder(dec->codec_id);
-    if (!codec)
+    if (codec == nullptr)
         return false;
 
 #if LIBAVCODEC_VERSION_MAJOR < 54
-    if (dl_avcodec_open(dec, codec)<0)
+    if (dl_avcodec_open(dec, codec) < 0)
 #else
-    if (dl_avcodec_open2(dec, codec, 0)<0)
+    if (dl_avcodec_open2(dec, codec, 0) < 0)
 #endif
         return false;
 

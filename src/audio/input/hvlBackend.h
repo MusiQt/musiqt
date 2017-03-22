@@ -98,10 +98,10 @@ public:
     bool rewind() override;
 
     /// Get number of subtunes
-    unsigned int subtunes() const override { return _tune?_tune->ht_SubsongNr:0; }
+    unsigned int subtunes() const override { return _tune ? _tune->ht_SubsongNr : 0; }
 
     /// Get current subtune
-    unsigned int subtune() const override { return _tune?_tune->ht_SongNum:0; }
+    unsigned int subtune() const override { return _tune ? _tune->ht_SongNum : 0; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;
@@ -113,7 +113,7 @@ public:
     unsigned int channels() const override { return 2; }
 
     /// Get precision
-    sample_t precision() const override { return S16; }
+    sample_t precision() const override { return sample_t::S16; }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override;

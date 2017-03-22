@@ -120,9 +120,9 @@ public:
     sample_t precision() const override
     {
 #ifdef MPC_FIXED_POINT
-        return SAMPLE_FIXED;
+        return sample_t::SAMPLE_FIXED;
 #else
-        return SAMPLE_FLOAT;
+        return sample_t::SAMPLE_FLOAT;
 #endif
     }
 

@@ -37,16 +37,17 @@ converter* cFactory::get(const unsigned int srIn, const unsigned int srOut,
 {
     switch (inputPrecision)
     {
-    case U8:
-        return (srIn!=srOut)?new resampler<unsigned char, unsigned char>(srIn, srOut, size, channels, new quantizerVoid<unsigned char>()):0;
-    case S16:
-        return (srIn!=srOut)?new resampler<short, short>(srIn, srOut, size, channels, new quantizerVoid<short>()):0;
-    case S24:
-    case S32:
-        return 0;
-    case SAMPLE_FLOAT:
-        if (srIn!=srOut) {
-            if (outputPrecision==U8)
+    case sample_t::U8:
+        return (srIn != srOut) ? new resampler<unsigned char, unsigned char>(srIn, srOut, size, channels, new quantizerVoid<unsigned char>()) : nullptr;
+    case sample_t::S16:
+        return (srIn != srOut) ? new resampler<short, short>(srIn, srOut, size, channels, new quantizerVoid<short>()) : nullptr;
+    case sample_t::S24:
+    case sample_t::S32:
+        return nullptr;
+    case sample_t::SAMPLE_FLOAT:
+        if (srIn != srOut)
+        {
+            if (outputPrecision == sample_t::U8)
             {
                 qDebug() << "resampler float->U8";
                 return (converter*)new resampler<float, unsigned char>(srIn, srOut, size, channels, new quantizerFloat<unsigned char>());
@@ -59,7 +60,7 @@ converter* cFactory::get(const unsigned int srIn, const unsigned int srOut,
         }
         else
         {
-            if (outputPrecision==U8)
+            if (outputPrecision == sample_t::U8)
             {
                 qDebug() << "converter float->U8";
                 return (converter*)new converterDecimal<float, unsigned char>(size, channels, new quantizerFloat<unsigned char>());
@@ -70,10 +71,10 @@ converter* cFactory::get(const unsigned int srIn, const unsigned int srOut,
                 return (converter*)new converterDecimal<float, short>(size, channels, new quantizerFloat<short>());
             }
         }
-    case SAMPLE_FIXED:
-        if (srIn!=srOut)
+    case sample_t::SAMPLE_FIXED:
+        if (srIn != srOut)
         {
-            if (outputPrecision==U8)
+            if (outputPrecision == sample_t::U8)
             {
                 qDebug() << "resampler fixed->U8";
                 return (converter*)new resampler<int, unsigned char>(srIn, srOut, size, channels, new quantizerFixed<unsigned char>(fract));
@@ -86,7 +87,7 @@ converter* cFactory::get(const unsigned int srIn, const unsigned int srOut,
         }
         else
         {
-            if (outputPrecision==U8)
+            if (outputPrecision == sample_t::U8)
             {
                 qDebug() << "converter fixed->U8";
                 return (converter*)new converterDecimal<int, unsigned char>(size, channels, new quantizerFixed<unsigned char>(fract));

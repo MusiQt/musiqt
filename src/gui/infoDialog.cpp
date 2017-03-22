@@ -31,6 +31,7 @@
 #include <QImageReader>
 #include <QSize>
 #include <QPushButton>
+#include <QGridLayout>
 
 #define IMAGESIZE 150
 
@@ -71,8 +72,10 @@ infoDialog::infoDialog(QWidget* w) :
     _imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
     container->addWidget(_imgFrame);
 
-    _matrix = new QGridLayout();
-    container->addLayout(_matrix);
+    matrix = new QWidget(this);
+    QGridLayout* gLayout = new QGridLayout();
+    matrix->setLayout(gLayout);
+    container->addWidget(matrix);
 
     QFont font("monospace");
     font.setStyleHint(QFont::TypeWriter);
@@ -103,8 +106,6 @@ infoDialog::~infoDialog()
         delete _imageLoader;
         QApplication::restoreOverrideCursor();
     }
-
-    //setNewImage(QImage());
 }
 
 void infoDialog::setInfo(const metaData* mtd)
@@ -112,18 +113,18 @@ void infoDialog::setInfo(const metaData* mtd)
     _text->clear();
     //_text->setVisibleRows(0);
     //_text->setVisibleColumns(0);
-    //_text->hide();
 
-    QString folder = mtd->getInfo(metaData::LOCATION);
-    if (folder.isEmpty())
+    // remove old widgets
+    while (QWidget* w = matrix->findChild<QWidget*>())
+        delete w;
+
+    QGridLayout* gLayout = (QGridLayout*)matrix->layout();
+
+    QString location = mtd->getInfo(metaData::LOCATION);
+    if (location.isEmpty())
     {
-        _matrix->addWidget(new QLabel(tr("No song loaded"), this));
+        gLayout->addWidget(new QLabel(tr("No song loaded"), matrix));
         return;
-    }
-
-    for (int i = 0; i<_matrix->count(); i++)
-    {
-        _matrix->removeWidget(_matrix->itemAt(i)->widget());
     }
 
     int j = -1;
@@ -138,7 +139,7 @@ void infoDialog::setInfo(const metaData* mtd)
         unsigned int cnt = 0;
         int pos = 0;
         const int len = temp.length();
-        const char* s = temp.toStdString().c_str();
+        const char* s = temp.toLocal8Bit().constData();
         while (pos < len)
         {
             // Convert Mac and Windows EOLs to Unix
@@ -153,11 +154,11 @@ void infoDialog::setInfo(const metaData* mtd)
                 cnt = 0;
             } else
                 cnt++;
-            //pos+=QString::utfBytes[(unsigned char)s[pos]];
+            //pos += QString::utfBytes[(unsigned char)s[pos]];
             pos++;
         }
-        if (cnt>cols)
-            cols=cnt;
+        if (cnt > cols)
+            cols = cnt;
 
         qDebug() << "Rows: " << rows;
         qDebug() << "Cols: " << cols;
@@ -167,29 +168,29 @@ void infoDialog::setInfo(const metaData* mtd)
             _text->setPlainText(temp);
             //_text->setVisibleRows((rows<20)?rows:20);
             //_text->setLineWrapColumnOrWidth((cols<80)?cols+2:80);
-            //_text->show();
         }
         else
         {
-            const QString info=mtd->getKey(j);
+            const QString info = mtd->getKey(j);
             if (QString::compare(info, "location")) // FIXME
             {
-                QLabel *lbl = new QLabel(QString("<i>%1</i>:").arg(info), this);
-                _matrix->addWidget(lbl, j, 0);
+                QLabel *lbl = new QLabel(QString("<i>%1</i>:").arg(info), matrix);
+                gLayout->addWidget(lbl, j, 0);
                 QPalette palette = lbl->palette();
                 QColor color = palette.color(lbl->foregroundRole());
                 color.setAlpha(128);
                 palette.setColor(lbl->foregroundRole(), color);
                 lbl->setPalette(palette);
 
-                _matrix->addWidget(new QLabel(temp, this), j, 1);
+                gLayout->addWidget(new QLabel(temp, matrix), j, 1);
             }
         }
     }
 
     // Display album art
     QImage newimg;
-    if (imageData *img=mtd->getImage())
+    imageData *img = mtd->getImage();
+    if (img != nullptr)
     {
         QByteArray ba(img->data(), img->size());
         QBuffer buffer(&ba);
@@ -210,12 +211,12 @@ void infoDialog::setInfo(const metaData* mtd)
     }
     else
     {
-        _imageLoader=new imageLoader();
+        _imageLoader = new imageLoader();
         
         connect(_imageLoader, SIGNAL(loaded(const QImage*)), this, SLOT(onImgLoaded(const QImage*)));
 
-        QDir dir = QFileInfo(folder).dir();
-        folder = dir.path();
+        QDir dir = QFileInfo(location).dir();
+        QString folder = dir.path();
         QStringList filters;
         filters << "cover.*" << "front.*" << "folder.*";
         QStringList _files = dir.entryList(filters, QDir::Files);
@@ -228,14 +229,12 @@ void infoDialog::setInfo(const metaData* mtd)
             _imageLoader->load(file);
             QApplication::setOverrideCursor(Qt::WaitCursor); // setCursor(Qt::WaitCursor); ???
         }
-        else
-        {
-            _imgFrame->hide();
-        }
+
+        _imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
     }
 
-    if (_matrix->count() == 0)
-        _matrix->addWidget(new QLabel(tr("No info"), this));
+    if (gLayout->count() == 0)
+        gLayout->addWidget(new QLabel(tr("No info"), matrix));
 
     if (_text->document()->characterCount() > 1) // ???
     {
@@ -247,8 +246,8 @@ void infoDialog::setInfo(const metaData* mtd)
         _text->hide();
     }
 
-    //this->resize(this->getDefaultWidth(), this->getDefaultHeight());
-    update();
+    gLayout->update();
+    adjustSize();
 }
 
 void infoDialog::onImgLoaded(const QImage* img)
@@ -259,10 +258,6 @@ void infoDialog::onImgLoaded(const QImage* img)
     {
         _imgFrame->setPixmap(QPixmap::fromImage(*img));
         delete img;
-    }
-    else
-    {
-        _imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
     }
 
     QApplication::restoreOverrideCursor();

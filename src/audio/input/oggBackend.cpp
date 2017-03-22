@@ -53,7 +53,8 @@ size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
     do {
         int current_section;
         read = ov_read(_vf, (char*)buffer+n, bufferSize-n, 0,
-                (_settings.precision == S16) ? 2 : 1, (_settings.precision != U8), &current_section);
+                (_settings.precision == sample_t::S16) ? 2 : 1,
+                (_settings.precision != sample_t::U8), &current_section);
         n += read;
     } while (read && (n < bufferSize));
 
@@ -86,12 +87,12 @@ oggBackend::~oggBackend()
 
 void oggBackend::loadSettings()
 {
-    _settings.precision=(load("Bits", 16) == 16) ? S16 : U8;
+    _settings.precision=(load("Bits", 16) == 16) ? sample_t::S16 : sample_t::U8;
 }
 
 void oggBackend::saveSettings()
 {
-    save("Bits", (_settings.precision == S16) ? 16 : 8);
+    save("Bits", (_settings.precision == sample_t::S16) ? 16 : 8);
 }
 
 bool oggBackend::open(const QString& fileName)
@@ -121,7 +122,7 @@ bool oggBackend::open(const QString& fileName)
     QString genre = QString::null;
     QString comment = QString::null;
 
-    char **ptr = ov_comment(_vf,-1)->user_comments;
+    char **ptr = ov_comment(_vf, -1)->user_comments;
     while (*ptr)
     {
         qDebug() << *ptr;
@@ -211,8 +212,8 @@ size_t oggBackend::read_func(void *ptr, size_t size, size_t nmemb, void *datasou
     return ((QFile*)datasource)->read((char*)ptr, size*nmemb);
 }
 
-int oggBackend::seek_func(void *datasource, ogg_int64_t offset, int whence) {
-
+int oggBackend::seek_func(void *datasource, ogg_int64_t offset, int whence)
+{
     QFile* file = static_cast<QFile*>(datasource);
     qint64 pos;
     switch (whence)
@@ -253,20 +254,20 @@ oggConfig::oggConfig(QWidget* win) :
     matrix()->addWidget(new QLabel(tr("Bits"), this));
     QComboBox* _bitBox = new QComboBox(this);
     matrix()->addWidget(_bitBox);
-    
+
     QStringList items;
     items << "8" << "16";
     _bitBox->addItems(items);
     _bitBox->setMaxVisibleItems(2);
-    
+
     int val;
     switch (OGGSETTINGS.precision)
     {
-    case U8:
+    case sample_t::U8:
         val = 0;
         break;
     default:
-    case S16:
+    case sample_t::S16:
         val = 1;
         break;
     }
@@ -279,10 +280,10 @@ void oggConfig::onCmdBits(int val)
     switch (val)
     {
     case 0:
-        OGGSETTINGS.precision = U8;
+        OGGSETTINGS.precision = sample_t::U8;
         break;
     case 1:
-        OGGSETTINGS.precision = S16;
+        OGGSETTINGS.precision = sample_t::S16;
         break;
     }
 }

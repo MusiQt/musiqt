@@ -58,6 +58,7 @@ private slots:
     void onAbout();
     void onConfig();
     void onInfo();
+    void onCloseInfo();
     void setPlayButton(state_t state);
 
     void setDisplay(input* i);

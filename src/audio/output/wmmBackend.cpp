@@ -29,7 +29,7 @@ const char wmmBackend::name[]="WMM";
 
 void CALLBACK wmmBackend::waveOutProc(HWAVEOUT waveOut, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
-    if (uMsg==MM_WOM_DONE)
+    if (uMsg == MM_WOM_DONE)
         SetEvent(*(HANDLE*)((WAVEHDR*)dwParam1)->dwUser);
 }
 
@@ -40,13 +40,13 @@ wmmBackend::wmmBackend() :
 {
     // Check devices
     WAVEOUTCAPS woc;
-    const int n=waveOutGetNumDevs();
+    const int n = waveOutGetNumDevs();
 
     for (int i=0; i<n; i++)
     {
-        if (waveOutGetDevCaps(i, &woc, sizeof(WAVEOUTCAPS))==MMSYSERR_NOERROR)
+        if (waveOutGetDevCaps(i, &woc, sizeof(WAVEOUTCAPS)) == MMSYSERR_NOERROR)
 #ifdef UNICODE
-        addDevice(QString::fromWCharArray(woc.szPname).toStdString().c_str());
+        addDevice(QString::fromWCharArray(woc.szPname).toLocal8Bit().constData());
 #else
         addDevice(woc.szPname);
 #endif
@@ -59,16 +59,16 @@ size_t wmmBackend::open(const unsigned int card, unsigned int &sampleRate, const
 
     memset(&wfm, 0, sizeof(WAVEFORMATEX));
 
-    wfm.wFormatTag=WAVE_FORMAT_PCM;
-    wfm.nSamplesPerSec=sampleRate;
-    wfm.nChannels=channels;
-    wfm.wBitsPerSample=prec<<3;
-    wfm.nBlockAlign=channels*prec;
-    wfm.nAvgBytesPerSec=wfm.nSamplesPerSec*wfm.nBlockAlign;
+    wfm.wFormatTag = WAVE_FORMAT_PCM;
+    wfm.nSamplesPerSec = sampleRate;
+    wfm.nChannels = channels;
+    wfm.wBitsPerSample = prec<<3;
+    wfm.nBlockAlign = channels * prec;
+    wfm.nAvgBytesPerSec = wfm.nSamplesPerSec * wfm.nBlockAlign;
     //wfm.cbSize=0;
 
     MMRESULT err=waveOutOpen(&_wHandle, card, &wfm, (DWORD_PTR)waveOutProc, 0, CALLBACK_FUNCTION);
-    if (err!=MMSYSERR_NOERROR)
+    if (err != MMSYSERR_NOERROR)
     {
         qWarning() << "Error opening device " << device(card);
         errorMessage(err);
@@ -76,23 +76,23 @@ size_t wmmBackend::open(const unsigned int card, unsigned int &sampleRate, const
     }
 
     // Set buffer to contain 1 second of data
-    const int bufferSize=wfm.nAvgBytesPerSec;
+    const int bufferSize = wfm.nAvgBytesPerSec;
     qDebug() << "blocksize=" << bufferSize;
 
-    _event[0]=CreateEvent(0, FALSE, FALSE, 0);
-    _event[1]=CreateEvent(0, FALSE, FALSE, 0);
+    _event[0] = CreateEvent(0, FALSE, FALSE, 0);
+    _event[1] = CreateEvent(0, FALSE, FALSE, 0);
 
     memset(&_wHdr[0], 0, sizeof(WAVEHDR));
-    _wHdr[0].lpData=new CHAR[bufferSize<<1];
-    _wHdr[0].dwUser=(DWORD_PTR)&_event[0];
+    _wHdr[0].lpData = new CHAR[bufferSize<<1];
+    _wHdr[0].dwUser = (DWORD_PTR)&_event[0];
 
     memset(&_wHdr[1], 0, sizeof(WAVEHDR));
-    _wHdr[1].lpData=_wHdr[0].lpData+bufferSize;
-    _wHdr[1].dwUser=(DWORD_PTR)&_event[1];
+    _wHdr[1].lpData = _wHdr[0].lpData+bufferSize;
+    _wHdr[1].dwUser = (DWORD_PTR)&_event[1];
 
     SetEvent(_event[1]);
 
-    _idx=0;
+    _idx = 0;
 
     return bufferSize;
 }
@@ -102,7 +102,7 @@ void wmmBackend::close()
     CloseHandle(_event[0]);
     CloseHandle(_event[1]);
 
-    while (waveOutUnprepareHeader(_wHandle, &_wHdr[1-_idx], sizeof(WAVEHDR))!=MMSYSERR_NOERROR)
+    while (waveOutUnprepareHeader(_wHandle, &_wHdr[1-_idx], sizeof(WAVEHDR)) != MMSYSERR_NOERROR)
         QThread::usleep(10);
 
     waveOutClose(_wHandle);
@@ -123,13 +123,13 @@ void wmmBackend::errorMessage(const MMRESULT err)
 
 bool wmmBackend::write(void* buffer, size_t bufferSize)
 {
-    _wHdr[_idx].dwBufferLength=bufferSize;
-    _wHdr[_idx].dwFlags=0;
+    _wHdr[_idx].dwBufferLength = bufferSize;
+    _wHdr[_idx].dwFlags = 0;
 
     MMRESULT err;
 
-    err=waveOutPrepareHeader(_wHandle, &_wHdr[_idx], sizeof(WAVEHDR));
-    if (err!=MMSYSERR_NOERROR)
+    err = waveOutPrepareHeader(_wHandle, &_wHdr[_idx], sizeof(WAVEHDR));
+    if (err != MMSYSERR_NOERROR)
     {
         qWarning() << "waveOutPrepareHeader:";
         errorMessage(err);
@@ -138,15 +138,15 @@ bool wmmBackend::write(void* buffer, size_t bufferSize)
 
     ResetEvent(_event[_idx]);
 
-    err=waveOutWrite(_wHandle, &_wHdr[_idx], sizeof(WAVEHDR));
-    if (err!=MMSYSERR_NOERROR)
+    err = waveOutWrite(_wHandle, &_wHdr[_idx], sizeof(WAVEHDR));
+    if (err != MMSYSERR_NOERROR)
     {
         qWarning() << "waveOutWrite:";
         errorMessage(err);
         return false;
     }
 
-    _idx=1-_idx;
+    _idx = 1-_idx;
 
     if (WaitForSingleObject(_event[_idx], INFINITE)!=WAIT_OBJECT_0)
     {
@@ -154,8 +154,8 @@ bool wmmBackend::write(void* buffer, size_t bufferSize)
         return false;
     }
 
-    err=waveOutUnprepareHeader(_wHandle, &_wHdr[_idx], sizeof(WAVEHDR));
-    if (err!=MMSYSERR_NOERROR)
+    err = waveOutUnprepareHeader(_wHandle, &_wHdr[_idx], sizeof(WAVEHDR));
+    if (err != MMSYSERR_NOERROR)
     {
         qWarning() << "waveOutUnprepareHeader:";
         errorMessage(err);
@@ -172,12 +172,12 @@ void wmmBackend::stop()
 
 void wmmBackend::volume(int vol)
 {
-    vol=(vol*65535)/100;
-    vol|=(vol<<16);
+    vol = (vol*65535)/100;
+    vol |= (vol<<16);
     waveOutSetVolume(_wHandle, vol);
 }
 
-int wmmBackend::volume()
+int wmmBackend::volume() const
 {
     DWORD vol;
     waveOutGetVolume(_wHandle, &vol);

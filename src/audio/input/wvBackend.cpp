@@ -66,7 +66,8 @@ const char wvBackend::name[] = "Wavpack";
 size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
     size_t n = 0;
-    const unsigned int sampleSize=(_precision == U8) ? 1 : (_precision == S16) ? 2 : 4;
+    const unsigned int sampleSize =
+        (_precision == sample_t::U8) ? 1 : (_precision == sample_t::S16) ? 2 : 4;
 
     do {
         if (_bufOffset >= _bufSize)
@@ -91,11 +92,11 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
 {
     switch (_precision)
     {
-    case U8:
+    case sample_t::U8:
         for (size_t i=0; i<length; i++)
             dest[i] = 128 + (char)(src[i]);
         break;
-    case S16:
+    case sample_t::S16:
         for (size_t i=0; i<length; i++)
         {
             dest[i<<1] = (char)(src[i]);
@@ -145,41 +146,62 @@ bool wvBackend::open(const QString& fileName)
 
     _decodeBuf = new int[BUFFER_LENGTH*_channels];
 
-    if (mode&MODE_FLOAT)
+    if (mode & MODE_FLOAT)
     {
-        _precision=SAMPLE_FLOAT;
+        _precision = sample_t::SAMPLE_FLOAT;
     }
     else
     {
         switch (_bps)
         {
         case 1:
-            _precision = U8;
+            _precision = sample_t::U8;
             break;
         case 2:
-            _precision = S16;
+            _precision = sample_t::S16;
             break;
         default:
-            _precision = SAMPLE_FIXED;
+            _precision = sample_t::SAMPLE_FIXED;
         }
     }
 
-    if (mode&MODE_VALID_TAG)
+    if (mode & MODE_VALID_TAG)
     {
-        if (WavpackGetTagItem(_wvContext, "title", tmp, 255))
-            _metaData.addInfo(metaData::TITLE, tmp);
-        if (WavpackGetTagItem(_wvContext, "artist", tmp, 255))
-            _metaData.addInfo(metaData::ARTIST, tmp);
-        if (WavpackGetTagItem(_wvContext, "album", tmp, 255))
-            _metaData.addInfo(metaData::ALBUM, tmp);
-        if (WavpackGetTagItem(_wvContext, "year", tmp, 255))
-            _metaData.addInfo(metaData::YEAR, tmp);
-        if (WavpackGetTagItem(_wvContext, "track", tmp, 255))
-            _metaData.addInfo(metaData::TRACK, tmp);
-        if (WavpackGetTagItem(_wvContext, "comment", tmp, 255))
-            _metaData.addInfo(metaData::COMMENT, tmp);
+        if (mode & MODE_APETAG)
+        {
+            // TODO APEv2 text tags can have multiple (NULL separated) strings for a single value
+            if (WavpackGetTagItem(_wvContext, "Title", tmp, 255))
+                _metaData.addInfo(metaData::TITLE, QString::fromUtf8(tmp));
+            if (WavpackGetTagItem(_wvContext, "Artist", tmp, 255))
+                _metaData.addInfo(metaData::ARTIST, QString::fromUtf8(tmp));
+            if (WavpackGetTagItem(_wvContext, "Album", tmp, 255))
+                _metaData.addInfo(metaData::ALBUM, QString::fromUtf8(tmp));
+            if (WavpackGetTagItem(_wvContext, "Year", tmp, 255))
+                _metaData.addInfo(metaData::YEAR, tmp);
+            if (WavpackGetTagItem(_wvContext, "Track", tmp, 255))
+                _metaData.addInfo(metaData::TRACK, tmp);
+            if (WavpackGetTagItem(_wvContext, "Comment", tmp, 255))
+                _metaData.addInfo(metaData::COMMENT, QString::fromUtf8(tmp));
+            if (WavpackGetTagItem(_wvContext, "Genre", tmp, 255))
+                _metaData.addInfo(metaData::GENRE, QString::fromUtf8(tmp));
+        }
+        else
+        {
+            // ID3v1
+            if (WavpackGetTagItem(_wvContext, "title", tmp, 255))
+                _metaData.addInfo(metaData::TITLE, tmp);
+            if (WavpackGetTagItem(_wvContext, "artist", tmp, 255))
+                _metaData.addInfo(metaData::ARTIST, tmp);
+            if (WavpackGetTagItem(_wvContext, "album", tmp, 255))
+                _metaData.addInfo(metaData::ALBUM, tmp);
+            if (WavpackGetTagItem(_wvContext, "year", tmp, 255))
+                _metaData.addInfo(metaData::YEAR, tmp);
+            if (WavpackGetTagItem(_wvContext, "track", tmp, 255))
+                _metaData.addInfo(metaData::TRACK, tmp);
+            if (WavpackGetTagItem(_wvContext, "comment", tmp, 255))
+                _metaData.addInfo(metaData::COMMENT, tmp);
+        }
     }
-    //TODO check for APE tag - MODE_APETAG
 
     time(WavpackGetNumSamples(_wvContext) / WavpackGetSampleRate(_wvContext));
 

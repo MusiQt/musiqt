@@ -39,14 +39,14 @@
 class alsaBackend : public outputBackend
 {
 private:
-    snd_pcm_t		*_pcmHandle;
-    snd_mixer_t		*_mixer;
-    snd_mixer_elem_t	*_mixerHandle;
+    snd_pcm_t *_pcmHandle;
+    snd_mixer_t *_mixer;
+    snd_mixer_elem_t *_mixerHandle;
 
-    void		*_buffer;
+    void *_buffer;
 
 #if SND_LIB_VERSION >= 0x010014
-    QStringList	_devs;
+    QStringList _devs;
 #endif
 
 private:
@@ -84,7 +84,7 @@ public:
     void volume(int vol) override;
 
     /// Get volume
-    int volume() override;
+    int volume() const override;
 };
 
 #endif

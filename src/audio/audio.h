@@ -52,26 +52,26 @@ class audio : public QObject
 
 private:
     QSettings   settings;
-    input	*_input;
-    input	*_preload;
-    output	*_output;
+    input *_input;
+    input *_preload;
+    output *_output;
 
-    state_t	_state;
-    bool	_playing;
+    state_t _state;
+    bool _playing;
 
-    audioThread	*_thread;
+    audioThread *_thread;
 
-    size_t	_bufferSize;
+    size_t _bufferSize;
 
-    int 	_buffers;
-    int 	_bufPerSec;
-    int		_seconds;
+    int _buffers;
+    int _bufPerSec;
+    int _seconds;
 
-    int		_volume;
+    int _volume;
 
-    converter	*_converter;
+    converter *_converter;
 #ifdef HAVE_BS2B
-    t_bs2bdp	_bs2bdp;
+    t_bs2bdp _bs2bdp;
 #endif
 private:
     audio(const audio&);
@@ -118,7 +118,7 @@ public:
     void volume(const int vol);
 
     /// Get volume
-    int volume() { return _volume; }
+    int volume() const { return _volume; }
 
     /// Check if gapless playback is supported
     bool gapless(input* const i);

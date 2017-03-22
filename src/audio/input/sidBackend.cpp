@@ -636,7 +636,7 @@ sidConfig::sidConfig(QWidget* win) :
         items << "MOS 6581" << "MOS 8580" << "Drean";
         modelBox->addItems(items);
     }
-    modelBox->setMaxVisibleItems(2);
+    modelBox->setMaxVisibleItems(3);
     switch (SIDSETTINGS.sidModel)
     {
     default:
@@ -711,15 +711,15 @@ sidConfig::sidConfig(QWidget* win) :
     //label->setAlignment(Qt::AlignCenter);
     QHBoxLayout *hBox = new QHBoxLayout();
     _biasFrame->addLayout(hBox);
-    QDial* knob = new QDial(this); // &SIDSETTINGS.bias
+    QDial* knob = new QDial(this);
     knob->setRange(-500, 500);
     //knob->setNotchTarget(100);
     hBox->addWidget(knob);
-    QLabel *tf = new QLabel(this); // &SIDSETTINGS.bias
+    QLabel *tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
     hBox->addWidget(tf);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setBias(int)));
 
     _filterCurveFrame = new QVBoxLayout();
     vert->addLayout(_filterCurveFrame);
@@ -729,25 +729,25 @@ sidConfig::sidConfig(QWidget* win) :
     mat->addWidget(new QLabel("6581", this), 0, 0);
     mat->addWidget(new QLabel("8580", this), 0, 1);
 
-    knob = new QDial(this); // &SIDSETTINGS.filter6581Curve
+    knob = new QDial(this);
     knob->setRange(0, 1000);
     //knob->setTickDelta(100);
     mat->addWidget(knob, 1, 0);
-    tf = new QLabel(this); // &SIDSETTINGS.filter6581Curve
+    tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
     mat->addWidget(tf, 2, 0);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setFilter6581Curve(int)));
 
-    knob = new QDial(this); // &SIDSETTINGS.filter8580Curve
+    knob = new QDial(this);
     knob->setRange(8000, 16000);
     //knob->setTickDelta(500);
     mat->addWidget(knob, 1, 1);
-    tf = new QLabel(this); // &SIDSETTINGS.filter8580Curve
+    tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
     mat->addWidget(tf, 2, 1);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setFilter8580Curve(int)));
 
     QGridLayout *frame = new QGridLayout(); // 3
     extraBottom()->addLayout(frame);
@@ -954,4 +954,19 @@ void sidConfig::onCmdFastSampling(bool val)
 void sidConfig::onCmdFilter(bool val)
 {
     SIDSETTINGS.filter = val;
+}
+
+void sidConfig::setBias(int val)
+{
+    SIDSETTINGS.bias = val;
+}
+
+void sidConfig::setFilter6581Curve(int val)
+{
+    SIDSETTINGS.filter6581Curve = val;
+}
+
+void sidConfig::setFilter8580Curve(int val)
+{
+    SIDSETTINGS.filter8580Curve = val;
 }

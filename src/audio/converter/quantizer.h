@@ -67,7 +67,7 @@ private:
 
 public:
     quantizerFixed(const unsigned int fract);
-    virtual ~quantizerFixed() {};
+    virtual ~quantizerFixed() {}
 
     /// Get dithered sample
     O get(const int sample, const unsigned int channel) override;
