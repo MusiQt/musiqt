@@ -41,6 +41,8 @@ typedef struct
 
 #include "configFrame.h"
 
+class QLineEdit;
+
 class gmeConfig : public configFrame
 {
     Q_OBJECT
@@ -54,9 +56,13 @@ public:
     gmeConfig(QWidget* win);
     virtual ~gmeConfig() {}
 
-public:
+private:
+    QLineEdit* asmaPath;
+
+private slots:
     void onCmdSamplerate(int val);
     void onCmdAsma();
+    void onCmdAsmaEdited();
 };
 
 /*****************************************************************/

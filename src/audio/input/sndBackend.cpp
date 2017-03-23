@@ -106,7 +106,7 @@ bool sndBackend::open(const QString& fileName)
     _metaData.addInfo(metaData::COMMENT, sf_get_string(_sf, SF_STR_COMMENT));
 
     const int seconds = _si.frames / _si.samplerate;
-    time((seconds>0x7FFFFFFF) ? 0 : seconds);
+    time((seconds > 0x7FFFFFFF) ? 0 : seconds);
 
     songLoaded(fileName);
     return true;
@@ -125,10 +125,10 @@ void sndBackend::close()
 
 bool sndBackend::rewind()
 {
-    if (!_sf)
+    if (_sf == nullptr)
         return false;
 
-    if (sf_seek(_sf, 0, SEEK_SET)<0)
+    if (sf_seek(_sf, 0, SEEK_SET) < 0)
     {
         qWarning() << sf_strerror(_sf);
         return false;

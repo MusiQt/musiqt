@@ -49,7 +49,7 @@ public:
     hvlConfig(QWidget* win);
     virtual ~hvlConfig() {}
 
-public:
+private slots:
     void onCmdSamplerate(int val);
 };
 

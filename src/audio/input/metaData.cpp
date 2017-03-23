@@ -22,7 +22,7 @@
 
 #define gettext(x) x
 
-const char* metaDataImpl::mprisTags[LAST_ID]=
+const char* metaDataImpl::mprisTags[LAST_ID] =
 {
     gettext("location"),
     gettext("title"),

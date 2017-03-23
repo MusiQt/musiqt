@@ -35,9 +35,9 @@
 #if defined(PROFILE) && QT_VERSION >= 0x040700
 #  include <QElapsedTimer>
 
-#  define PROFILE_START	QElapsedTimer timer; \
+#  define PROFILE_START QElapsedTimer timer; \
     timer.start();
-#  define PROFILE_END	qDebug() << "Elapsed " << timer.elapsed();
+#  define PROFILE_END   qDebug() << "Elapsed " << timer.elapsed();
 #else
 #  define PROFILE_START
 #  define PROFILE_END
@@ -362,9 +362,9 @@ void audio::setOpts()
 audioConfig::audioConfig(QWidget* win) :
     configFrame(win, "Audio")
 {
-    matrix()->addWidget(new QLabel(tr("API"), this));
+    matrix()->addWidget(new QLabel(tr("API"), this), 0, 0);
     _apiList = new QComboBox(this);
-    matrix()->addWidget(_apiList);
+    matrix()->addWidget(_apiList, 0, 1);
     const int apis = OFACTORY->num();
     for (int i=0; i<apis; i++)
         _apiList->addItem(OFACTORY->name(i));
@@ -380,7 +380,7 @@ audioConfig::audioConfig(QWidget* win) :
     _apiList->setCurrentIndex(item);
     connect(_apiList, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdApi(int)));
 
-    matrix()->addWidget(new QLabel(tr("Card")));
+    matrix()->addWidget(new QLabel(tr("Card"), this));
     _cardList = new QComboBox(this);
     matrix()->addWidget(_cardList);
     setCards(OFACTORY->get(SETTINGS->_apiName));
@@ -443,7 +443,7 @@ void audioConfig::setCards(const output* const audio)
 
     delete audio;
 
-    _cardList->setMaxVisibleItems((devices>5)?5:devices);
+    _cardList->setMaxVisibleItems((devices > 5) ? 5 : devices);
 
     int val = _cardList->findText(SETTINGS->card());
     if (val >= 0)

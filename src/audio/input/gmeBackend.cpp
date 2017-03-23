@@ -27,6 +27,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QMessageBox>
 
 #ifdef HAVE_LIBZ
 #  define EXT "ay|gbs|gym|hes|kss|nsfe|nsf|sap|spc|vgm|vgz"
@@ -240,9 +241,10 @@ gmeConfig::gmeConfig(QWidget* win) :
 {
     int val;
 
-    matrix()->addWidget(new QLabel(tr("Samplerate"), this));
+    matrix()->addWidget(new QLabel(tr("Samplerate"), this), 0, 0);
     QComboBox *freqBox = new QComboBox(this);
-    matrix()->addWidget(freqBox);
+    //label->setBuddy(freqBox);
+    matrix()->addWidget(freqBox, 0, 1);
     {
         QStringList items;
         items << "11025" << "22050" << "44100" << "48000";
@@ -272,10 +274,10 @@ gmeConfig::gmeConfig(QWidget* win) :
     extraBottom()->addLayout(hf);
 
     hf->addWidget(new QLabel(tr("ASMA path:"), this));
-    QLineEdit* line = new QLineEdit(this);
-    line->setText(GMESETTINGS.asmaPath);
-    hf->addWidget(line);
-    //connect(line, SIGNAL(textEdited(const QString &)), this, SLOT());
+    asmaPath = new QLineEdit(this);
+    asmaPath->setText(GMESETTINGS.asmaPath);
+    hf->addWidget(asmaPath);
+    connect(asmaPath, SIGNAL(editingFinished()), this, SLOT(onCmdAsmaEdited()));
     QPushButton* button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select ASMA directory");
     hf->addWidget(button);
@@ -304,6 +306,21 @@ void gmeConfig::onCmdSamplerate(int val)
 void gmeConfig::onCmdAsma()
 {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Select ASMA directory"), GMESETTINGS.asmaPath);
-     if (!dir.isNull())
+    if (!dir.isNull())
         GMESETTINGS.asmaPath = dir;
+
+    asmaPath->setText(GMESETTINGS.asmaPath);
+}
+
+void gmeConfig::onCmdAsmaEdited()
+{
+    QString val = asmaPath->text();
+    if (!QFileInfo(val).exists())
+    {
+        QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
+    }
+    else
+    {
+        GMESETTINGS.asmaPath = val;
+    }
 }

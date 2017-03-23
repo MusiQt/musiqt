@@ -26,7 +26,7 @@
 extern "C" {
 #ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
 #  include <libavformat/avformat.h>
-#  if LIBAVFORMAT_VERSION_INT <= (52<<16 | 31<<8)
+#  if LIBAVFORMAT_VERSION_INT <= (56<<16 | 40<<8)
 #    error LIBAVFORMAT too old
 #  endif
 #endif
@@ -69,10 +69,8 @@ private:
     int _packetOffset;
     sample_t _precision;
 
-#if LIBAVCODEC_VERSION_MAJOR >= 54
     int _planar;
     int _sampleSize;
-#endif
 
     static const AutoDLL _avformat;
     static const AutoDLL _avcodec;
@@ -81,34 +79,19 @@ private:
     static QStringList _ext;
 
 private:
-#if LIBAVFORMAT_VERSION_MAJOR < 54
-    static int (*dl_av_open_input_file)(AVFormatContext**, const char*, AVInputFormat*, int, AVFormatParameters*);
-    static void (*dl_av_close_input_file)(AVFormatContext*);
-    static int (*dl_av_find_stream_info)(AVFormatContext*);
-#else
     static int (*dl_avformat_open_input)(AVFormatContext**, const char*, AVInputFormat*, AVDictionary**);
     static void (*dl_avformat_close_input)(AVFormatContext **);
     static int (*dl_avformat_find_stream_info)(AVFormatContext*, AVDictionary**);
-#endif
-#if LIBAVCODEC_VERSION_MAJOR < 54
-    static int (*dl_avcodec_open)(AVCodecContext*, AVCodec*);
-    static int (*dl_avcodec_decode_audio3)(AVCodecContext*, int16_t*, int*, AVPacket*);
-#else
     static int (*dl_avcodec_open2)(AVCodecContext*, const AVCodec*, AVDictionary**);
     static int (*dl_avcodec_decode_audio4)(AVCodecContext*, AVFrame*, int*, const AVPacket*);
     static AVFrame* (*dl_av_frame_alloc)();
     static void (*dl_av_frame_free)(AVFrame**);
     static int (*dl_av_sample_fmt_is_planar)(enum AVSampleFormat);
     static int (*dl_av_samples_get_buffer_size)(int*, int, int, enum AVSampleFormat, int);
-#endif
     static int (*dl_av_read_frame)(AVFormatContext*, AVPacket*);
     static int (*dl_av_seek_frame)(AVFormatContext*, int, int64_t, int);
     static AVDictionaryEntry* (*dl_av_dict_get)(AVDictionary*, const char*, const AVDictionaryEntry*, int);
-#if LIBAVCODEC_VERSION_MAJOR < 55
-    static AVCodec* (*dl_avcodec_find_decoder)(enum CodecID);
-#else
     static AVCodec* (*dl_avcodec_find_decoder)(enum AVCodecID);
-#endif
     static void (*dl_av_init_packet)(AVPacket*);
     static void (*dl_avcodec_flush_buffers)(AVCodecContext*);
     static int (*dl_avcodec_close)(AVCodecContext*);
@@ -151,16 +134,16 @@ public:
     /// Get samplerate
     unsigned int samplerate() const
     {
-        return _audioStream
-            ? _audioStream->codec->sample_rate
+        return _audioStream ?
+            _audioStream->codec->sample_rate // TODO replace codec with codecpar
             : 0;
     }
 
     /// Get channels
     unsigned int channels() const
     {
-        return _audioStream
-            ? _audioStream->codec->channels
+        return _audioStream ?
+            _audioStream->codec->channels
             : 0;
     }
 

@@ -71,7 +71,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
     size_t n = 0;
 
     do {
-        if (_bufIndex>=_bufLen)
+        if (_bufIndex >= _bufLen)
         {
 #ifdef SV8
             mpc_frame_info frame;
@@ -184,7 +184,7 @@ bool mpcBackend::open(const QString& fileName)
     if (SETTINGS->replayGain())
     {
         // Replaigain reference level (is this correct?)
-        const double referenceLevel=89.0;
+        const double referenceLevel = 89.0;
 #ifdef SV8
         mpc_set_replay_level(_demux, referenceLevel, MPC_TRUE,
                 (SETTINGS->replayGainMode() == 0) ? MPC_FALSE : MPC_TRUE,
@@ -193,7 +193,7 @@ bool mpcBackend::open(const QString& fileName)
         float peak = SETTINGS->replayGainMode() ? _si.peak_album : _si.peak_title;
         float gain = SETTINGS->replayGainMode() ? _si.gain_album : _si.gain_title;
 
-        peak = peak == 0. ? 1. : (1<<15)/pow(10, peak/(20*256));
+        peak = peak == 0. ? 1. : (1<<15) / pow(10, peak/(20*256));
         gain = gain == 0. ? 1. : pow(10, (referenceLevel-gain/256)/20);
 
         qDebug() << "peak: " << peak << " - gain: " << gain;

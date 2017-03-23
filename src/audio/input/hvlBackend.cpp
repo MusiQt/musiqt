@@ -37,7 +37,7 @@ hvlConfig_t hvlBackend::_settings;
 
 size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
-    size_t offset=0;
+    size_t offset = 0;
 
     if (_left)
     {
@@ -52,7 +52,7 @@ size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
         offset += _size;
     } while (offset<bufferSize-_size);
 
-    size_t left=bufferSize-offset;
+    size_t left = bufferSize-offset;
     if (left)
     {
         hvl_DecodeFrame(_tune, (int8*)_buffer, ((int8*)_buffer)+2, 4);
@@ -79,8 +79,8 @@ inline QStringList hvlBackend::ext() const { return QString(EXT).split("|"); }
 
 hvlBackend::hvlBackend() :
     inputBackend(name),
-    _tune(0),
-    _buffer(0)
+    _tune(nullptr),
+    _buffer(nullptr)
 {
     loadSettings();
 

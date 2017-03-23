@@ -64,7 +64,7 @@ class mpcBackend : public inputBackend
 
 private:
 #ifdef SV8
-    mpc_demux* 	_demux;
+    mpc_demux* _demux;
 #else
     mpc_decoder _decoder;
 #endif

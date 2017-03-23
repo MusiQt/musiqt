@@ -440,9 +440,9 @@ off_t mpg123Backend::seek_func(int fd, off_t offset, int whence)
 mpg123Config::mpg123Config(QWidget* win) :
     configFrame(win, mpg123Backend::name, CREDITS, LINK)
 {
-    matrix()->addWidget(new QLabel(tr("Decoder"), this));
+    matrix()->addWidget(new QLabel(tr("Decoder"), this), 0, 0);
     QComboBox *decBox = new QComboBox(this);
-    matrix()->addWidget(decBox);
+    matrix()->addWidget(decBox, 0, 1);
     decBox->addItems(mpg123Backend::_decoders);
     const int numItems = decBox->count();
     decBox->setMaxVisibleItems(std::min(numItems, 5));

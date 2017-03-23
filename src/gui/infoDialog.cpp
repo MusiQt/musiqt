@@ -124,6 +124,7 @@ void infoDialog::setInfo(const metaData* mtd)
     if (location.isEmpty())
     {
         gLayout->addWidget(new QLabel(tr("No song loaded"), matrix));
+        _text->hide();
         return;
     }
 

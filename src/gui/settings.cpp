@@ -43,8 +43,8 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     QVBoxLayout* main = new QVBoxLayout();
     setLayout(main);
 
-    QSizePolicy sizePol(QSizePolicy::Minimum, QSizePolicy::Expanding);
-    QSizePolicy sizeMin(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    QSizePolicy sizePol(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    //QSizePolicy sizeMin(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
     QHBoxLayout *horizontal = new QHBoxLayout();
     main->addLayout(horizontal);
@@ -122,6 +122,8 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     }
     switcher->addWidget(optionpane);
 
+    optionLayout->addStretch();
+
     int section = 0;
 
     QToolButton* button = new QToolButton(this);
@@ -164,6 +166,8 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     connect(colorButton, SIGNAL(clicked()), this, SLOT(setColor()));
     switcher->addWidget(interfacepane);
 
+    interfaceLayout->addStretch();
+
     button = new QToolButton(this);
     button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     button->setIcon(GET_ICON(icon_guioptions));
@@ -202,6 +206,8 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     buttonGroup->addButton(button, section++);
     buttons->addWidget(button);
 
+    audioLayout->addStretch();
+
     // Backend settings
     QWidget* backendpane = new QWidget();
     QVBoxLayout* backendLayout = new QVBoxLayout();
@@ -216,6 +222,8 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     }
 
     backendLayout->addWidget(i->config(backendpane));
+
+    backendLayout->addStretch();
 
     switcher->addWidget(backendpane);
 
@@ -237,7 +245,7 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
         main->addWidget(line);
     }
 
-    QHBoxLayout* bottom=new QHBoxLayout();
+    QHBoxLayout* bottom = new QHBoxLayout();
     main->addLayout(bottom);
     QPushButton* initial = new QPushButton(GET_ICON(icon_dialogok), tr("&OK"), this);
     bottom->addWidget(initial);
@@ -246,6 +254,8 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     initial->setFocus();
     connect(b, SIGNAL(clicked()), this, SLOT(reject()));
     connect(initial, SIGNAL(clicked()), this, SLOT(accept()));
+
+    buttons->addStretch();
 }
 
 void settingsWindow::setSubtunes(int val)
@@ -285,15 +295,15 @@ settings* SETTINGS
 
 void settings::load(const QSettings& appSettings)
 {
-    _apiName=appSettings.value("Audio Settings/api", OFACTORY->name(0)).toString();
-    _card=appSettings.value("Audio Settings/card").toString();
-    _bits=appSettings.value("Audio Settings/bits", 16).toInt();
+    _apiName = appSettings.value("Audio Settings/api", OFACTORY->name(0)).toString();
+    _card = appSettings.value("Audio Settings/card").toString();
+    _bits = appSettings.value("Audio Settings/bits", 16).toInt();
 
-    _subtunes=appSettings.value("General Settings/play subtunes", false).toBool();
-    _autoBk=appSettings.value("General Settings/auto backend", true).toBool();
-    _replayGain=appSettings.value("General Settings/Replaygain", false).toBool();
+    _subtunes = appSettings.value("General Settings/play subtunes", false).toBool();
+    _autoBk = appSettings.value("General Settings/auto backend", true).toBool();
+    _replayGain = appSettings.value("General Settings/Replaygain", false).toBool();
     QString replayGainMode=appSettings.value("General Settings/Replaygain mode", "Album").toString();
-    _replayGainMode=(!replayGainMode.compare("Track")) ? 1 : 0;
+    _replayGainMode = (!replayGainMode.compare("Track")) ? 1 : 0;
 
 #ifdef HAVE_BS2B
     _bs2b=appSettings.value("General Settings/Bauer DSP", false).toBool();
@@ -309,7 +319,7 @@ void settings::save(QSettings& appSettings)
     appSettings.setValue("General Settings/play subtunes", _subtunes);
     appSettings.setValue("General Settings/auto backend", _autoBk);
     appSettings.setValue("General Settings/Replaygain", _replayGain);
-    appSettings.setValue("General Settings/Replaygain mode", _replayGainMode==0?"Album":"Track");
+    appSettings.setValue("General Settings/Replaygain mode", (_replayGainMode == 0) ? "Album" : "Track");
 #ifdef HAVE_BS2B
     appSettings.setValue("General Settings/Bauer DSP", _bs2b);
 #endif

@@ -119,17 +119,17 @@ const char* ttaBackend::getError(const TTA_CODEC_STATUS e)
 {
     switch(e)
     {
-    case TTA_OPEN_ERROR: return "Can't open file\n";
-    case TTA_FORMAT_ERROR: return "Not compatible file format\n";
-    case TTA_FILE_ERROR: return "File is corrupted\n";
-    case TTA_READ_ERROR: return "Can't read from input file\n";
-    case TTA_WRITE_ERROR: return "Can't write to output file\n";
-    case TTA_MEMORY_ERROR: return "Insufficient memory available\n";
-    case TTA_SEEK_ERROR: return "File seek error\n";
+    case TTA_OPEN_ERROR:     return "Can't open file\n";
+    case TTA_FORMAT_ERROR:   return "Not compatible file format\n";
+    case TTA_FILE_ERROR:     return "File is corrupted\n";
+    case TTA_READ_ERROR:     return "Can't read from input file\n";
+    case TTA_WRITE_ERROR:    return "Can't write to output file\n";
+    case TTA_MEMORY_ERROR:   return "Insufficient memory available\n";
+    case TTA_SEEK_ERROR:     return "File seek error\n";
     case TTA_PASSWORD_ERROR: return "Password protected file\n";
-    case TTA_NOT_SUPPORTED: return "Unsupported architecture\n";
+    case TTA_NOT_SUPPORTED:  return "Unsupported architecture\n";
     case TTA_NO_ERROR:
-    default: return "Unknown error\n";
+    default:                 return "Unknown error\n";
     }
 }
 
@@ -182,7 +182,7 @@ bool ttaBackend::open(const QString& fileName)
 
     try
     {
-            TTA->init_get_info(&_info, 0);
+        TTA->init_get_info(&_info, 0);
     }
     catch (tta_exception& ex)
     {
@@ -218,8 +218,8 @@ bool ttaBackend::rewind()
 {
     try
     {
-            TTAuint32 new_pos;
-            TTA->set_position(0, &new_pos);
+        TTAuint32 new_pos;
+        TTA->set_position(0, &new_pos);
     }
     catch (tta_exception& ex)
     {

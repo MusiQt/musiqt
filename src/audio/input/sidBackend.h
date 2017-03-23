@@ -69,6 +69,8 @@ typedef struct
 
 #include "configFrame.h"
 
+class QLineEdit;
+
 class sidConfig : public configFrame
 {
     Q_OBJECT
@@ -76,11 +78,18 @@ class sidConfig : public configFrame
 private:
     QVBoxLayout* _biasFrame;
     QVBoxLayout* _filterCurveFrame;
+    QLineEdit* hvscPath;
+    QLineEdit* kernalRomPath;
+    QLineEdit* basicRomPath;
+    QLineEdit* chargenRomPath;
 
 private:
     sidConfig() {}
     sidConfig(const sidConfig&);
     sidConfig& operator=(const sidConfig&);
+
+private:
+    bool checkPath(const QString& path);
 
 public:
     sidConfig(QWidget* win);
@@ -106,6 +115,10 @@ private slots:
     void setBias(int val);
     void setFilter6581Curve(int val);
     void setFilter8580Curve(int val);
+    void onCmdHvscEdited();
+    void onCmdKernalRomEdited();
+    void onCmdBasicRomEdited();
+    void onCmdChargenRomEdited();
 };
 
 /*****************************************************************/
@@ -122,7 +135,7 @@ private:
 
     STIL *_stil;
 
-    SidDatabase	*_db;
+    SidDatabase *_db;
     unsigned int _length;
     char _md5[SidTune::MD5_LENGTH+1];
 

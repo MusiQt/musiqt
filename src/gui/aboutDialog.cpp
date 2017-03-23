@@ -47,34 +47,35 @@ aboutDialog::aboutDialog(QWidget *parent) :
 
     // Info
     QPixmap iconAppLogo(":/icons/logo32.gif");
-    QLabel *infoLabel = new QLabel(QString(tr("%1\n\nVersion %2\n\nCopyright %3 %4")).arg(PACKAGE_NAME, PACKAGE_VERSION, YEAR, AUTHOR));
-    QLabel *iconAppLabel = new QLabel();
+    QLabel *infoLabel = new QLabel(QString(tr(u8"%1\n\nVersion %2\n\nCopyright %3 %4")).arg(PACKAGE_NAME, PACKAGE_VERSION, YEAR, AUTHOR), this);
+    QLabel *iconAppLabel = new QLabel(this);
     iconAppLabel->setPixmap(iconAppLogo);
 
-    QWidget *infoWidget = new QWidget();
+    QWidget *infoWidget = new QWidget(this);
     QHBoxLayout *infoLayout = new QHBoxLayout(infoWidget);
     infoLayout->addWidget(infoLabel);
     infoLayout->addStretch(1);
     infoLayout->addWidget(iconAppLabel);
 
     // Contact
-    QLabel *contactLabel = new QLabel(QString(tr("Bugs: <a href=\"%1\">%1</a>")).arg(PACKAGE_BUGREPORT));
+    QLabel *contactLabel = new QLabel(QString(tr("Bugs: <a href=\"%1\">%1</a>")).arg(PACKAGE_BUGREPORT), this);
     contactLabel->setOpenExternalLinks(true);
-    QLabel *websiteLabel = new QLabel(QString(tr("<a href=\"%1\">%1</a>")).arg(WEBSITE));
+    QLabel *websiteLabel = new QLabel(QString(tr("<a href=\"%1\">%1</a>")).arg(WEBSITE), this);
     websiteLabel->setOpenExternalLinks(true);
 
-    QWidget *contactWidget = new QWidget();
+    QWidget *contactWidget = new QWidget(this);
     QVBoxLayout *contactLayout = new QVBoxLayout(contactWidget);
     contactLayout->addWidget(websiteLabel);
     contactLayout->addWidget(contactLabel);
 
     // Credits
-    QLabel *creditsLabel = new QLabel();
+    QLabel *creditsLabel = new QLabel(this);
     creditsLabel->setAlignment(Qt::AlignCenter);
     {
         QFile file(":/resources/CREDITS");
         file.open(QFile::ReadOnly|QFile::Text);
         QTextStream ts(&file);
+        ts.setCodec("UTF-8");
         creditsLabel->setText(ts.readAll());
     }
     QScrollArea* creditsArea = new QScrollArea(this);
@@ -84,7 +85,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     // Qt
     QLabel* qtWidget = new QLabel(/*GET_ICON(icon_qtbig), */
         QString("This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt.io/</a>")
-            .arg(qVersion())
+            .arg(qVersion()), this
         );
     qtWidget->setAlignment(Qt::AlignCenter);
     qtWidget->setOpenExternalLinks(true);
@@ -100,21 +101,21 @@ aboutDialog::aboutDialog(QWidget *parent) :
         licenseLabel->setPlainText(ts.readAll());
     }
 
-    QTabWidget *tabWidget = new QTabWidget();
+    QTabWidget *tabWidget = new QTabWidget(this);
     tabWidget->addTab(infoWidget, tr("&Info"));
     tabWidget->addTab(contactWidget, tr("&Contact"));
     tabWidget->addTab(creditsArea, tr("&Credits"));
     tabWidget->addTab(qtWidget, tr("&Qt"));
     tabWidget->addTab(licenseLabel, tr("&License"));
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox();
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
     QPushButton *close = buttonBox->addButton(QDialogButtonBox::Close);
     connect(close, SIGNAL(clicked()), this, SLOT(close()));
 
-    QLabel *iconLabel = new QLabel();
+    QLabel *iconLabel = new QLabel(this);
     iconLabel->setPixmap(QPixmap(":/icons/drf.gif"));
     
-    QWidget *bottomWidget = new QWidget();
+    QWidget *bottomWidget = new QWidget(this);
     QHBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget);
     bottomLayout->addWidget(iconLabel);
     bottomLayout->addWidget(buttonBox);

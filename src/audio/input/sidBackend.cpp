@@ -45,6 +45,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QButtonGroup>
+#include <QMessageBox>
 
 // created by reswrap from file sid.gif
 extern const unsigned char iconSid[126] =
@@ -709,17 +710,21 @@ sidConfig::sidConfig(QWidget* win) :
     vert->addLayout(_biasFrame);
     _biasFrame->addWidget(new QLabel(tr("DAC Bias for reSID"), this));
     //label->setAlignment(Qt::AlignCenter);
-    QHBoxLayout *hBox = new QHBoxLayout();
-    _biasFrame->addLayout(hBox);
+    //QHBoxLayout *hBox = new QHBoxLayout();
+    //_biasFrame->addLayout(hBox);
     QDial* knob = new QDial(this);
     knob->setRange(-500, 500);
     //knob->setNotchTarget(100);
-    hBox->addWidget(knob);
+    knob->setValue(SIDSETTINGS.bias);
+    _biasFrame->addWidget(knob);
     QLabel *tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
-    hBox->addWidget(tf);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setBias(int)));
+    tf->setNum(SIDSETTINGS.bias);
+    _biasFrame->addWidget(tf);
+    knob->setMaximumSize(tf->height(), tf->height());
+    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setBias(int)));
+    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
 
     _filterCurveFrame = new QVBoxLayout();
     vert->addLayout(_filterCurveFrame);
@@ -732,22 +737,30 @@ sidConfig::sidConfig(QWidget* win) :
     knob = new QDial(this);
     knob->setRange(0, 1000);
     //knob->setTickDelta(100);
+    knob->setValue(SIDSETTINGS.filter6581Curve);
     mat->addWidget(knob, 1, 0);
     tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
+    tf->setNum(SIDSETTINGS.filter6581Curve);
     mat->addWidget(tf, 2, 0);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setFilter6581Curve(int)));
+    knob->setMaximumSize(tf->height(), tf->height());
+    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setFilter6581Curve(int)));
+    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
 
     knob = new QDial(this);
     knob->setRange(8000, 16000);
     //knob->setTickDelta(500);
+    knob->setValue(SIDSETTINGS.filter8580Curve);
     mat->addWidget(knob, 1, 1);
     tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
+    tf->setNum(SIDSETTINGS.filter8580Curve);
     mat->addWidget(tf, 2, 1);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setFilter8580Curve(int)));
+    knob->setMaximumSize(tf->height(), tf->height());
+    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setFilter8580Curve(int)));
+    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
 
     QGridLayout *frame = new QGridLayout(); // 3
     extraBottom()->addLayout(frame);
@@ -756,41 +769,43 @@ sidConfig::sidConfig(QWidget* win) :
     QButtonGroup* group = new QButtonGroup(this);
 
     frame->addWidget(new QLabel(tr("HVSC path:"), this), 0, 0);
-    QLineEdit* le = new QLineEdit(this);
-    frame->addWidget(le, 0, 1);
+    hvscPath = new QLineEdit(this);
+    hvscPath->setText(SIDSETTINGS.hvscPath);
+    frame->addWidget(hvscPath, 0, 1);
+    connect(hvscPath, SIGNAL(editingFinished()), this, SLOT(onCmdHvscEdited()));
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select HVSC directory");
     frame->addWidget(button, 0, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(onCmdHvsc()));
 
     frame->addWidget(new QLabel(tr("Kernal Rom:"), this));
-    le = new QLineEdit(this);
-    //le->setMaxLength(40);
-    le->setText(SIDSETTINGS.kernalPath);
-    //connect(le, SIGNAL(textEdited(const QString &)), this, SLOT());
-    frame->addWidget(le);
+    kernalRomPath = new QLineEdit(this);
+    //kernalRomPath->setMaxLength(40);
+    kernalRomPath->setText(SIDSETTINGS.kernalPath);
+    connect(kernalRomPath, SIGNAL(editingFinished()), this, SLOT(onCmdKernalRomEdited()));
+    frame->addWidget(kernalRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select Kernal Rom file");
     frame->addWidget(button);
     group->addButton(button, ID_KERNAL);
 
     frame->addWidget(new QLabel(tr("BASIC Rom:"), this));
-    le = new QLineEdit(this);
-    //le->setMaxLength(40);
-    le->setText(SIDSETTINGS.basicPath);
-    //connect(le, SIGNAL(textEdited(const QString &)), this, SLOT());
-    frame->addWidget(le);
+    basicRomPath = new QLineEdit(this);
+    //basicRomPath->setMaxLength(40);
+    basicRomPath->setText(SIDSETTINGS.basicPath);
+    connect(basicRomPath, SIGNAL(editingFinished()), this, SLOT(onCmdBasicRomEdited()));
+    frame->addWidget(basicRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select BASIC Rom file");
     frame->addWidget(button);
     group->addButton(button, ID_BASIC);
 
     frame->addWidget(new QLabel(tr("Chargen Rom:"), this));
-    le = new QLineEdit(this);
-    //le->setMaxLength(40);
-    le->setText(SIDSETTINGS.chargenPath);
-    //connect(le, SIGNAL(textEdited(const QString &)), this, SLOT());
-    frame->addWidget(le);
+    chargenRomPath = new QLineEdit(this);
+    //chargenRomPath->setMaxLength(40);
+    chargenRomPath->setText(SIDSETTINGS.chargenPath);
+    connect(chargenRomPath, SIGNAL(editingFinished()), this, SLOT(onCmdChargenRomEdited()));
+    frame->addWidget(chargenRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select Chargen Rom file");
     frame->addWidget(button);
@@ -907,6 +922,8 @@ void sidConfig::onCmdHvsc()
     QString dir = QFileDialog::getExistingDirectory(this, tr("Select HVSC directory"), SIDSETTINGS.hvscPath);
     if (!dir.isNull())
         SIDSETTINGS.hvscPath = dir;
+
+    hvscPath->setText(SIDSETTINGS.hvscPath);
 }
 
 void sidConfig::onCmdRom(int val)
@@ -969,4 +986,50 @@ void sidConfig::setFilter6581Curve(int val)
 void sidConfig::setFilter8580Curve(int val)
 {
     SIDSETTINGS.filter8580Curve = val;
+}
+
+bool sidConfig::checkPath(const QString& path)
+{
+    if (!path.isEmpty() && !QFileInfo(path).exists())
+    {
+        QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
+        return false;
+    }
+    return true;
+}
+
+void sidConfig::onCmdHvscEdited()
+{
+    QString val = hvscPath->text();
+    if (checkPath(val))
+    {
+        SIDSETTINGS.hvscPath = val;
+    }
+}
+
+void sidConfig::onCmdKernalRomEdited()
+{
+    QString val = kernalRomPath->text();
+    if (checkPath(val))
+    {
+        SIDSETTINGS.kernalPath = val;
+    }
+}
+
+void sidConfig::onCmdBasicRomEdited()
+{
+    QString val = basicRomPath->text();
+    if (checkPath(val))
+    {
+        SIDSETTINGS.basicPath = val;
+    }
+}
+
+void sidConfig::onCmdChargenRomEdited()
+{
+    QString val = chargenRomPath->text();
+    if (checkPath(val))
+    {
+        SIDSETTINGS.chargenPath = val;
+    }
 }
