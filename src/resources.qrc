@@ -34,6 +34,7 @@
      <file>icons/view-treelist.gif</file>
      <file>icons/drf.gif</file>
      <file>resources/cover_placeholder.png</file>
+     <file>icons/qt_icon32.png</file>
      <file>resources/CREDITS</file>
      <file>resources/GPL_TEXT</file>
  </qresource>

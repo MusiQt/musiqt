@@ -337,7 +337,7 @@ bool sidBackend::open(const QString& fileName)
 
     loadTune(0);
 
-    const SidTuneInfo* tuneInfo=_tune->getInfo();
+    const SidTuneInfo* tuneInfo = _tune->getInfo();
 
     /*
      * SID tunes have three info strings (title, artis, released)
@@ -439,7 +439,7 @@ void sidBackend::close()
 
 bool sidBackend::rewind()
 {
-    if (_sidplayfp)
+    if (_sidplayfp != nullptr)
     {
         _sidplayfp->stop();
         return true;
@@ -449,7 +449,7 @@ bool sidBackend::rewind()
 
 bool sidBackend::subtune(const unsigned int i)
 {
-    if (_tune && (i<=_tune->getInfo()->songs()))
+    if ((_tune != nullptr) && (i <= _tune->getInfo()->songs()))
     {
         loadTune(i);
         return true;
@@ -461,7 +461,7 @@ void sidBackend::loadTune(const int num)
 {
     _tune->selectSong(num);
     _sidplayfp->load(_tune);
-    _length=_db ? _db->length(_md5, _tune->getInfo()->currentSong()) : 0;
+    _length = _db ? _db->length(_md5, _tune->getInfo()->currentSong()) : 0;
     time(_length);
 }
 
@@ -483,8 +483,8 @@ void sidBackend::openHvsc(const QString& hvscPath)
         _db = new SidDatabase();
 
     if (!_db->open(
-        QString("%1%2DOCUMENTS%2Songlengths.txt").arg(hvscPath).arg(QDir::separator()).toLocal8Bit().constData())
-    )
+            QString("%1%2DOCUMENTS%2Songlengths.txt").arg(hvscPath).arg(QDir::separator()).toLocal8Bit().constData())
+        )
     {
         qWarning() << _db->error();
         delPtr(_db);
@@ -516,8 +516,8 @@ sidConfig::sidConfig(QWidget* win) :
         QStringList items;
         items << "11025" << "22050" << "44100" << "48000";
         freqBox->addItems(items);
+        freqBox->setMaxVisibleItems(items.size());
     }
-    freqBox->setMaxVisibleItems(4);
     switch (SIDSETTINGS.samplerate)
     {
     case 11025:
@@ -544,8 +544,8 @@ sidConfig::sidConfig(QWidget* win) :
         QStringList items;
         items << "Mono" << "Stereo";
         chanBox->addItems(items);
+        chanBox->setMaxVisibleItems(items.size());
     }
-    chanBox->setMaxVisibleItems(2);
     chanBox->setCurrentIndex(SIDSETTINGS.channels-1);
     connect(chanBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdChannels(int)));
 
@@ -581,8 +581,8 @@ sidConfig::sidConfig(QWidget* win) :
         QStringList items;
         items << "Interpolate" << "Resample Interpolate";
         resBox->addItems(items);
+        resBox->setMaxVisibleItems(items.size());
     }
-    resBox->setMaxVisibleItems(2);
     switch (SIDSETTINGS.samplingMethod)
     {
     default:
@@ -603,8 +603,8 @@ sidConfig::sidConfig(QWidget* win) :
         QStringList items;
         items << "PAL" << "NTSC" << "OLD NTSC" << "Drean";
         clockBox->addItems(items);
+        clockBox->setMaxVisibleItems(items.size());
     }
-    clockBox->setMaxVisibleItems(4);
     switch (SIDSETTINGS.c64Model)
     {
     default:
@@ -626,6 +626,7 @@ sidConfig::sidConfig(QWidget* win) :
 
     matrix()->addWidget(new QLabel(tr("Force C64 model"), this));
     QCheckBox *cBox = new QCheckBox(this);
+    cBox->setChecked(SIDSETTINGS.forceC64Model);
     matrix()->addWidget(cBox);
     connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdForceC64Model(bool)));
 
@@ -636,8 +637,8 @@ sidConfig::sidConfig(QWidget* win) :
         QStringList items;
         items << "MOS 6581" << "MOS 8580" << "Drean";
         modelBox->addItems(items);
+        modelBox->setMaxVisibleItems(items.size());
     }
-    modelBox->setMaxVisibleItems(3);
     switch (SIDSETTINGS.sidModel)
     {
     default:
@@ -653,6 +654,7 @@ sidConfig::sidConfig(QWidget* win) :
 
     matrix()->addWidget(new QLabel(tr("Force SID model"), this));
     cBox = new QCheckBox(this);
+    cBox->setChecked(SIDSETTINGS.forceSidModel);
     matrix()->addWidget(cBox);
     connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdForceSidModel(bool)));
 
@@ -698,25 +700,27 @@ sidConfig::sidConfig(QWidget* win) :
     QVBoxLayout *vert = new QVBoxLayout();
     extraLeft()->addLayout(vert);
     cBox = new QCheckBox(tr("Fast sampling"));
+    cBox->setChecked(SIDSETTINGS.fastSampling);
     cBox->setToolTip("Faster but inaccurate sampling");
     vert->addWidget(cBox);
     connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdFastSampling(bool)));
     cBox = new QCheckBox(tr("Filter"));
+    cBox->setChecked(SIDSETTINGS.filter);
     cBox->setToolTip("Emulate SID filter");
     vert->addWidget(cBox);
     connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdFilter(bool)));
 
     _biasFrame = new QVBoxLayout();
     vert->addLayout(_biasFrame);
-    _biasFrame->addWidget(new QLabel(tr("DAC Bias for reSID"), this));
-    //label->setAlignment(Qt::AlignCenter);
-    //QHBoxLayout *hBox = new QHBoxLayout();
-    //_biasFrame->addLayout(hBox);
+    QLabel *label = new QLabel(tr("DAC Bias for reSID"), this);
+    _biasFrame->addWidget(label);
+    _biasFrame->setAlignment(label, Qt::AlignHCenter);
     QDial* knob = new QDial(this);
     knob->setRange(-500, 500);
     //knob->setNotchTarget(100);
     knob->setValue(SIDSETTINGS.bias);
     _biasFrame->addWidget(knob);
+    _biasFrame->setAlignment(knob, Qt::AlignHCenter);
     QLabel *tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
@@ -731,14 +735,14 @@ sidConfig::sidConfig(QWidget* win) :
     _filterCurveFrame->addWidget(new QLabel(tr("Filter curves for reSIDfp"), this));
     QGridLayout* mat = new QGridLayout();
     _filterCurveFrame->addLayout(mat);
-    mat->addWidget(new QLabel("6581", this), 0, 0);
-    mat->addWidget(new QLabel("8580", this), 0, 1);
+    mat->addWidget(new QLabel("6581", this), 0, 0, 1, 1, Qt::AlignCenter);
+    mat->addWidget(new QLabel("8580", this), 0, 1, 1, 1, Qt::AlignCenter);
 
     knob = new QDial(this);
     knob->setRange(0, 1000);
     //knob->setTickDelta(100);
     knob->setValue(SIDSETTINGS.filter6581Curve);
-    mat->addWidget(knob, 1, 0);
+    mat->addWidget(knob, 1, 0, 1, 1, Qt::AlignCenter);
     tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
@@ -752,7 +756,7 @@ sidConfig::sidConfig(QWidget* win) :
     knob->setRange(8000, 16000);
     //knob->setTickDelta(500);
     knob->setValue(SIDSETTINGS.filter8580Curve);
-    mat->addWidget(knob, 1, 1);
+    mat->addWidget(knob, 1, 1, 1, 1, Qt::AlignCenter);
     tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
@@ -762,7 +766,7 @@ sidConfig::sidConfig(QWidget* win) :
     connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setFilter8580Curve(int)));
     connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
 
-    QGridLayout *frame = new QGridLayout(); // 3
+    QGridLayout *frame = new QGridLayout();
     extraBottom()->addLayout(frame);
 
     QPushButton* button;

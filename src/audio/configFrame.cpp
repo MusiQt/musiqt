@@ -32,7 +32,7 @@ configFrame::configFrame(QWidget* p, const char* title, const char* credits, con
 
     if (credits != nullptr)
     {
-        QLabel* cred = new QLabel(credits, this);
+        QLabel* cred = new QLabel(QString::fromUtf8(credits), this);
         cred->setAlignment(Qt::AlignCenter);
         cred->setStyleSheet("background-color : white;");
         main->addWidget(cred);

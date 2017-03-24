@@ -19,10 +19,6 @@
 #ifndef TAG_H
 #define TAG_H
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "imageData.h"
 
 #include <QFile>
@@ -108,28 +104,28 @@ public:
     int offsEnd() const { return _offsEnd; }
 
     /// Get title
-    const char* title() const { return _title.toStdString().c_str(); }
+    const QString& title() const { return _title; }
 
     /// Get author
-    const char* artist() const { return _artist.toStdString().c_str(); }
+    const QString& artist() const { return _artist; }
 
     /// Get publisher info
-    const char* publisher() const { return _publisher.toStdString().c_str(); }
+    const QString& publisher() const { return _publisher; }
 
     /// Get year info
-    const char* year() const { return _year.toStdString().c_str(); }
+    const QString& year() const { return _year; }
 
     /// Get album
-    const char* album() const { return _album.toStdString().c_str(); }
+    const QString& album() const { return _album; }
 
     /// Get genre
-    const char* genre() const { return _genre.toStdString().c_str(); }
+    const QString& genre() const { return _genre; }
 
     /// Get comment
-    const char* comment() const { return _comment.toStdString().c_str(); }
+    const QString& comment() const { return _comment; }
 
     /// Get track number
-    const char* track() const { return _track.toStdString().c_str(); }
+    const QString& track() const { return _track; }
 
     /// Get image
     imageData* image() const { return _img; }

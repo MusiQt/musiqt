@@ -6,10 +6,6 @@
 
 #include "blargg_common.h"
 
-#ifdef HAVE_ZLIB_H
-#  include "zlib.h"
-#endif
-
 // Supports reading and finding out how many bytes are remaining
 class Data_Reader {
 public:
@@ -133,6 +129,8 @@ private:
 };
 
 #ifdef HAVE_ZLIB_H
+#include <zlib.h>
+
 // Gzip compressed file reader
 class Gzip_File_Reader : public File_Reader {
 public:

@@ -40,8 +40,4 @@
 	#include "config.h"
 #endif
 
-#ifdef HAVE_LIBZ
-#  define HAVE_ZLIB_H
-#endif
-
 #endif

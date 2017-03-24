@@ -49,12 +49,12 @@ public:
 #else
         struct flock fl;
 
-        fl.l_type=F_WRLCK;
-        fl.l_whence=SEEK_SET;
-        fl.l_start=start;
-        fl.l_len=end-start;
+        fl.l_type = F_WRLCK;
+        fl.l_whence = SEEK_SET;
+        fl.l_start = start;
+        fl.l_len = end-start;
 
-        if (fcntl(handle(), F_SETLK, &fl)==-1)
+        if (fcntl(handle(), F_SETLK, &fl) == -1)
             return false;
 #endif
         return true;

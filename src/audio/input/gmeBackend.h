@@ -34,6 +34,9 @@
 typedef struct
 {
     int samplerate;
+    bool equalizer;
+    double treble_dB;
+    double bass_freq;
     QString asmaPath;
 } gmeConfig_t;
 
@@ -63,6 +66,9 @@ private slots:
     void onCmdSamplerate(int val);
     void onCmdAsma();
     void onCmdAsmaEdited();
+    void setEqualizer(bool);
+    void setTrebledB(int);
+    void setBassFreq(int);
 };
 
 /*****************************************************************/

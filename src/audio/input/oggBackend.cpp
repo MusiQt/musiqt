@@ -258,7 +258,7 @@ oggConfig::oggConfig(QWidget* win) :
     QStringList items;
     items << "8" << "16";
     _bitBox->addItems(items);
-    _bitBox->setMaxVisibleItems(2);
+    _bitBox->setMaxVisibleItems(items.size());
 
     int val;
     switch (OGGSETTINGS.precision)

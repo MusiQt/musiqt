@@ -35,7 +35,6 @@ class settingsWindow : public QDialog
     Q_OBJECT
 
 private:
-    QVBoxLayout	*_replayGainBox;
     QLabel *colorLabel;
 
 private:

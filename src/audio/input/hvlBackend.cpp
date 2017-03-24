@@ -174,7 +174,7 @@ hvlConfig::hvlConfig(QWidget* win) :
     QStringList items;
     items << "11025" << "22050" << "44100" << "48000";
     freqBox->addItems(items);
-    freqBox->setMaxVisibleItems(4);
+    freqBox->setMaxVisibleItems(items.size());
 
     int val;
     switch (HVLSETTINGS.samplerate)

@@ -95,12 +95,12 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
 #endif
 
     {
-        _replayGainBox = new QVBoxLayout();
+        QVBoxLayout *replayGainBox = new QVBoxLayout();
         QGroupBox *group = new QGroupBox(tr("Replaygain"));
         group->setCheckable(true);
         group->setToolTip(tr("Enable replaygain loudness normalization"));
         group->setChecked(SETTINGS->_replayGain);
-        group->setLayout(_replayGainBox);
+        group->setLayout(replayGainBox);
         connect(group, SIGNAL(toggled(bool)), this, SLOT(setReplaygain(bool)));
 
         QButtonGroup *radioGroup = new QButtonGroup(this);
@@ -108,14 +108,14 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
         QRadioButton* radio = new QRadioButton(tr("Album gain"), this);
         radio->setToolTip(tr("Preserve album dynamics"));
         radio->setChecked(SETTINGS->_replayGainMode==0);
-        _replayGainBox->layout()->addWidget(radio);
+        replayGainBox->layout()->addWidget(radio);
         radioGroup->addButton(radio, 0);
         radio = new QRadioButton(tr("Track gain"), this);
         radio->setToolTip(tr("All tracks equal loudness"));
         radio->setChecked(SETTINGS->_replayGainMode==1);
-        _replayGainBox->layout()->addWidget(radio);
+        replayGainBox->layout()->addWidget(radio);
         radioGroup->addButton(radio, 1);
-        _replayGainBox->addStretch(1);
+        replayGainBox->addStretch(1);
         optionLayout->addWidget(group);
 
         connect(radioGroup, SIGNAL(buttonClicked(int)), this, SLOT(setReplaygainMode(int)));

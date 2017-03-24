@@ -464,7 +464,7 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
     tagSize=getFrameSize(buf+6, true);
     qDebug() << "ID3v2 tag size: " << tagSize;
 
-    const bool unsynch=buf[5]&0x80;
+    const bool unsynch = buf[5] & 0x80;
     qDebug() << "ID3v2 unsynch: " << unsynch;
     if (unsynch)
         return false;

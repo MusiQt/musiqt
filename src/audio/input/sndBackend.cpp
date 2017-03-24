@@ -102,8 +102,12 @@ bool sndBackend::open(const QString& fileName)
 
     _metaData.addInfo(metaData::TITLE, sf_get_string(_sf, SF_STR_TITLE));
     _metaData.addInfo(metaData::ARTIST, sf_get_string(_sf, SF_STR_ARTIST));
+    _metaData.addInfo(metaData::ALBUM, sf_get_string(_sf, SF_STR_ALBUM));
+    _metaData.addInfo(metaData::YEAR, sf_get_string(_sf, SF_STR_DATE));
     _metaData.addInfo(gettext("copyright"), sf_get_string(_sf, SF_STR_COPYRIGHT));
     _metaData.addInfo(metaData::COMMENT, sf_get_string(_sf, SF_STR_COMMENT));
+    _metaData.addInfo(metaData::TRACK, sf_get_string(_sf, SF_STR_TRACKNUMBER));
+    _metaData.addInfo(metaData::GENRE, sf_get_string(_sf, SF_STR_GENRE));
 
     const int seconds = _si.frames / _si.samplerate;
     time((seconds > 0x7FFFFFFF) ? 0 : seconds);

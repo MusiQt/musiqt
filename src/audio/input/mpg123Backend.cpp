@@ -461,8 +461,8 @@ mpg123Config::mpg123Config(QWidget* win) :
     QVBoxLayout *vert = new QVBoxLayout();
     extraLeft()->addLayout(vert);
     QCheckBox *cBox = new QCheckBox(tr("Fast scan"));
+    cBox->setChecked(MPGSETTINGS.fastscan);
     cBox->setToolTip("Scan only few frame of file, time detection may be inaccurate");
-    cBox->setCheckState(MPGSETTINGS.fastscan ? Qt::Checked : Qt::Unchecked);
     vert->addWidget(cBox);
     connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(onCmdFastscan(int)));
 }

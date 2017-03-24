@@ -37,8 +37,8 @@ class inputBackend : public input
 {
 private:
     QSettings settings;
-    const char	*_name;
-    QIcon	_icon;
+    const char *_name;
+    QIcon _icon;
 
     unsigned int _time;
 

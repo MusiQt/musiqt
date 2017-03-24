@@ -23,11 +23,13 @@
 
 #include <QComboBox>
 #include <QDebug>
+#include <QDial>
 #include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QGroupBox>
 
 #ifdef HAVE_LIBZ
 #  define EXT "ay|gbs|gym|hes|kss|nsfe|nsf|sap|spc|vgm|vgz"
@@ -92,6 +94,9 @@ gmeBackend::~gmeBackend()
 void gmeBackend::loadSettings()
 {
     _settings.samplerate = load("Samplerate", 44100);
+    _settings.equalizer = load("Equalizer", false);
+    _settings.treble_dB = load("Treble dB", 0.0);
+    _settings.bass_freq = load("Bass freq", 15);
     _settings.asmaPath = load("ASMA", QString::null);
 }
 
@@ -104,6 +109,9 @@ void gmeBackend::saveSettings()
     }
 
     save("Samplerate", _settings.samplerate);
+    save("Equalizer", _settings.equalizer);
+    save("Treble dB", _settings.treble_dB);
+    save("Bass freq", _settings.bass_freq);
     save("ASMA", _settings.asmaPath);
 }
 
@@ -120,6 +128,11 @@ bool gmeBackend::open(const QString& fileName)
     _emu = fileType->new_emu();
     if (!check(_emu->set_sample_rate(_settings.samplerate)))
         return false;
+    if (_settings.equalizer)
+    {
+        gme_equalizer_t eq = { _settings.treble_dB, _settings.bass_freq };
+        gme_set_equalizer(_emu, &eq);
+    }
     if (!check(_emu->load_file(fileName.toLocal8Bit().constData())))
         return false;
     if (!check(_emu->start_track(0)))
@@ -134,11 +147,11 @@ bool gmeBackend::open(const QString& fileName)
     if (_hasStilInfo)
     {
         qDebug("Retrieving STIL info");
-        QString comment = QString(_stil->getAbsGlobalComment(fileName.toLocal8Bit().constData()));
+        QString comment = QString::fromLatin1(_stil->getAbsGlobalComment(fileName.toLocal8Bit().constData()));
         if (!comment.isEmpty())
             comment.append('\n');
-        comment.append(QString(_stil->getAbsEntry(fileName.toLocal8Bit().constData())));
-        QString bug = QString(_stil->getAbsBug(fileName.toLocal8Bit().constData()));
+        comment.append(QString::fromLatin1(_stil->getAbsEntry(fileName.toLocal8Bit().constData())));
+        QString bug = QString::fromLatin1(_stil->getAbsBug(fileName.toLocal8Bit().constData()));
         if (!bug.isEmpty())
         {
             comment.append('\n');
@@ -146,7 +159,6 @@ bool gmeBackend::open(const QString& fileName)
         }
         if (!comment.isEmpty())
         {
-            // codec 88591
             _metaData.addInfo(metaData::COMMENT, comment);
         }
     }
@@ -207,7 +219,7 @@ bool gmeBackend::rewind()
 
 bool gmeBackend::subtune(const unsigned int i)
 {
-    if ((_emu != nullptr) && (i>0) && (i<=_emu->track_count()))
+    if ((_emu != nullptr) && (i > 0) && (i <= _emu->track_count()))
     {
         _emu->start_track(i-1);
         getInfo();
@@ -243,14 +255,13 @@ gmeConfig::gmeConfig(QWidget* win) :
 
     matrix()->addWidget(new QLabel(tr("Samplerate"), this), 0, 0);
     QComboBox *freqBox = new QComboBox(this);
-    //label->setBuddy(freqBox);
     matrix()->addWidget(freqBox, 0, 1);
     {
         QStringList items;
         items << "11025" << "22050" << "44100" << "48000";
         freqBox->addItems(items);
+        freqBox->setMaxVisibleItems(items.size());
     }
-    freqBox->setMaxVisibleItems(4);
     switch (GMESETTINGS.samplerate)
     {
     case 11025:
@@ -269,6 +280,51 @@ gmeConfig::gmeConfig(QWidget* win) :
     }
     freqBox->setCurrentIndex(val);
     connect(freqBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdSamplerate(int)));
+
+    {
+        QVBoxLayout *equalizerBox = new QVBoxLayout();
+        QGroupBox *group = new QGroupBox(tr("Equalizer"));
+        group->setCheckable(true);
+        group->setToolTip(tr("Enable equalizer"));
+        group->setChecked(GMESETTINGS.equalizer);
+        group->setLayout(equalizerBox);
+        connect(group, SIGNAL(toggled(bool)), this, SLOT(setEqualizer(bool)));
+
+        QGridLayout* mat = new QGridLayout();
+        equalizerBox->addLayout(mat);
+        mat->addWidget(new QLabel("Treble DB", this), 0, 0, 1, 1, Qt::AlignCenter);
+        mat->addWidget(new QLabel("Bass frequency", this), 0, 1, 1, 1, Qt::AlignCenter);
+
+        QDial *knob = new QDial(this);
+        knob->setRange(-50, 5);
+        //knob->setTickDelta(100);
+        knob->setValue(GMESETTINGS.treble_dB);
+        mat->addWidget(knob, 1, 0, 1, 1, Qt::AlignCenter);
+        QLabel *tf = new QLabel(this);
+        tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
+        tf->setAlignment(Qt::AlignCenter);
+        tf->setNum(GMESETTINGS.treble_dB);
+        mat->addWidget(tf, 2, 0);
+        knob->setMaximumSize(tf->height(), tf->height());
+        connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setTrebledB(int)));
+        connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+
+        knob = new QDial(this);
+        knob->setRange(1, 16000);
+        //knob->setTickDelta(500);
+        knob->setValue(GMESETTINGS.bass_freq);
+        mat->addWidget(knob, 1, 1, 1, 1, Qt::AlignCenter);
+        tf = new QLabel(this);
+        tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
+        tf->setAlignment(Qt::AlignCenter);
+        tf->setNum(GMESETTINGS.bass_freq);
+        mat->addWidget(tf, 2, 1);
+        knob->setMaximumSize(tf->height(), tf->height());
+        connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setBassFreq(int)));
+        connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+
+        matrix()->addWidget(group);
+    }
 
     QHBoxLayout *hf = new QHBoxLayout();
     extraBottom()->addLayout(hf);
@@ -301,6 +357,21 @@ void gmeConfig::onCmdSamplerate(int val)
         GMESETTINGS.samplerate = 48000;
         break;
     }
+}
+
+void gmeConfig::setEqualizer(bool val)
+{
+    GMESETTINGS.equalizer = val;
+}
+
+void gmeConfig::setTrebledB(int val)
+{
+    GMESETTINGS.treble_dB = val;
+}
+
+void gmeConfig::setBassFreq(int val)
+{
+    GMESETTINGS.bass_freq = val;
 }
 
 void gmeConfig::onCmdAsma()

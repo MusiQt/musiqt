@@ -46,9 +46,9 @@ aboutDialog::aboutDialog(QWidget *parent) :
     setWindowTitle(QString(tr("About %1")).arg(PACKAGE_NAME));
 
     // Info
-    QPixmap iconAppLogo(":/icons/logo32.gif");
-    QLabel *infoLabel = new QLabel(QString(tr(u8"%1\n\nVersion %2\n\nCopyright %3 %4")).arg(PACKAGE_NAME, PACKAGE_VERSION, YEAR, AUTHOR), this);
+    QLabel *infoLabel = new QLabel(QString(tr("%1\n\nVersion %2\n\nCopyright %3 %4")).arg(PACKAGE_NAME, PACKAGE_VERSION, YEAR, AUTHOR), this);
     QLabel *iconAppLabel = new QLabel(this);
+    QPixmap iconAppLogo(":/icons/logo32.gif");
     iconAppLabel->setPixmap(iconAppLogo);
 
     QWidget *infoWidget = new QWidget(this);
@@ -60,7 +60,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     // Contact
     QLabel *contactLabel = new QLabel(QString(tr("Bugs: <a href=\"%1\">%1</a>")).arg(PACKAGE_BUGREPORT), this);
     contactLabel->setOpenExternalLinks(true);
-    QLabel *websiteLabel = new QLabel(QString(tr("<a href=\"%1\">%1</a>")).arg(WEBSITE), this);
+    QLabel *websiteLabel = new QLabel(QString("<a href=\"%1\">%1</a>").arg(WEBSITE), this);
     websiteLabel->setOpenExternalLinks(true);
 
     QWidget *contactWidget = new QWidget(this);
@@ -83,13 +83,22 @@ aboutDialog::aboutDialog(QWidget *parent) :
     creditsArea->setAlignment(Qt::AlignCenter);
 
     // Qt
-    QLabel* qtWidget = new QLabel(/*GET_ICON(icon_qtbig), */
-        QString("This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt.io/</a>")
+    QLabel* qtLabel = new QLabel(
+        QString(tr("This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt.io/</a>"))
             .arg(qVersion()), this
         );
-    qtWidget->setAlignment(Qt::AlignCenter);
-    qtWidget->setOpenExternalLinks(true);
-    qtWidget->setTextFormat(Qt::RichText);
+    qtLabel->setAlignment(Qt::AlignCenter);
+    qtLabel->setOpenExternalLinks(true);
+    qtLabel->setTextFormat(Qt::RichText);
+    QLabel *iconQtLabel = new QLabel(this);
+    QPixmap qtLogo(":/icons/qt_icon32.png");
+    iconQtLabel->setPixmap(qtLogo);
+
+    QWidget *qtWidget = new QWidget(this);
+    QHBoxLayout *qtLayout = new QHBoxLayout(qtWidget);
+    qtLayout->addWidget(qtLabel);
+    qtLayout->addStretch(1);
+    qtLayout->addWidget(iconQtLabel);
 
     // License
     QTextEdit *licenseLabel = new QTextEdit();
