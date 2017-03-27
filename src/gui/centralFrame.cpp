@@ -77,7 +77,7 @@ centralFrame::centralFrame(QWidget *parent) :
     _dirlist->setContextMenuPolicy(Qt::CustomContextMenu);
     QItemSelectionModel* selection = _dirlist->selectionModel();
 
-    setProperty("AutoBackend", QVariant(false));
+    setProperty("AutoBackend", QVariant(true));
 
     connect(selection, SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)),
             this, SLOT(onDirSelected(const QModelIndex&)));
@@ -195,6 +195,9 @@ centralFrame::~centralFrame()
 
 void centralFrame::onDirSelected(const QModelIndex& idx)
 {
+    bool autoBk = property("AutoBackend").toBool();
+    setProperty("AutoBackend", QVariant(true));
+
     if (_editMode->isChecked())
         return;
 
@@ -207,17 +210,16 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
     const QString mPath = fsm->fileInfo(idx).absoluteFilePath();
     qDebug() << mPath;
     int items = _playlist->load(mPath);
-    if (!items)
+    if (items == 0)
     {
         _playlist->clear();
         return;
     }
+
     items = (_input != nullptr) ? _playlist->filter(_input->ext()) : 0;
 
-    if (!items)
+    if (items == 0)
     {
-        bool autoBk = property("AutoBackend").toBool();
-        setProperty("AutoBackend", QVariant(false));
         if (playing || !SETTINGS->autoBk() || !autoBk)
             return;
         int bk = 0;
