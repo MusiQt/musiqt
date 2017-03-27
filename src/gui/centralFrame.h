@@ -119,7 +119,7 @@ private slots:
     void onHome();
     void onCmdPlBack();
     void onCmdFiletype(int val);
-    void setBackend(int val, bool refresh);
+    void setBackend(int val, int refresh);
     void gotoDir(const QString &dir);
     void onCmdSongLoaded(input* res);
     void onCmdSongSelected(int currentRow);

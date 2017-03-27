@@ -78,6 +78,9 @@ singleApp::singleApp(int & argc, char ** argv) :
     }
     else
     {
+        // delete stale fifo
+        QFile::remove(_fifoFileName);
+
         _fifoFile = new QLocalServer(this);
         if (_fifoFile->listen(_fifoFileName))
         {

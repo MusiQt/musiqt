@@ -77,6 +77,8 @@ centralFrame::centralFrame(QWidget *parent) :
     _dirlist->setContextMenuPolicy(Qt::CustomContextMenu);
     QItemSelectionModel* selection = _dirlist->selectionModel();
 
+    setProperty("AutoBackend", QVariant(false));
+
     connect(selection, SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)),
             this, SLOT(onDirSelected(const QModelIndex&)));
     connect(_dirlist, SIGNAL(customContextMenuRequested(const QPoint&)),
@@ -176,7 +178,7 @@ centralFrame::centralFrame(QWidget *parent) :
     hbox->addWidget(w2);
     hbox->addWidget(_dirlist);
 
-    setBackend(0, false);
+    setBackend(0, 0);
 }
 
 centralFrame::~centralFrame()
@@ -214,7 +216,9 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
 
     if (!items)
     {
-        if (playing || !SETTINGS->autoBk()) // || !autoBk)
+        bool autoBk = property("AutoBackend").toBool();
+        setProperty("AutoBackend", QVariant(false));
+        if (playing || !SETTINGS->autoBk() || !autoBk)
             return;
         int bk = 0;
         do {
@@ -226,7 +230,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
             }
         } while ((++bk < _fileTypes->count()) && (items == 0));
         if (items != 0)
-            setBackend(bk-1, false);
+            setBackend(bk-1, 0);
         else
             return;
     }
@@ -298,7 +302,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     // Check if requested file/directory exists
     if (!qfile.exists())
     {
-        if (curItem>=0) // ???
+        if (curItem >= 0) // ???
             onHome();
         return;
     }
@@ -356,7 +360,7 @@ void centralFrame::setFile(const QString& file, const bool play)
                 {
                     //emit stop();
 
-                    setBackend(i, dirSelected);
+                    setBackend(i, dirSelected ? 1 : 0);
                     items = _playlist->findItems(file, Qt::MatchExactly|Qt::MatchCaseSensitive);
                     val = items.empty() ? -1 : _playlist->row(items.at(0));
                     curItem = -1;
@@ -371,7 +375,7 @@ void centralFrame::setFile(const QString& file, const bool play)
 ok:
     if (dirSelected)
     {
-        if (val>=0)
+        if (val >= 0)
         {
             if (val == curItem)
             {
@@ -415,8 +419,8 @@ void centralFrame::onCmdStopSong()
         QModelIndex curr = _dirlist->currentIndex();
         if (playDir.compare(fsm->fileName(curr)))
         {
+            setProperty("AutoBackend", QVariant(true));
             onDirSelected(curr);
-            //handle(this, FXSEL(SEL_CHANGED, ID_DIRLIST), (void*)(FXival)1);
         }
         playDir = QString::null;
     }
@@ -462,7 +466,7 @@ void centralFrame::onCmdChangeSong(dir_t dir)
     }
 }
 
-void centralFrame::setBackend(int val, bool refresh)
+void centralFrame::setBackend(int val, int refresh)
 {
     qDebug() << "setBackend " << val;
     if ((val < 0) || val>_fileTypes->count())
@@ -484,12 +488,12 @@ void centralFrame::setBackend(int val, bool refresh)
 
     _bookmarkList->load(IFACTORY->name(val));
 
-    if (refresh)
+    if (refresh != 0)
     {
-        //    handle(this, FXSEL(SEL_CHANGED, ID_DIRLIST), (void*)(FXival)((refresh==2)?0:1));
         QModelIndex selected = _dirlist->currentIndex();
         qDebug() << "selected " << selected;
         if (selected.isValid())
+            setProperty("AutoBackend", QVariant((refresh != 2)));
             onDirSelected(selected);
             //_dirlist->selectionModel()->select(selected, QItemSelectionModel::ClearAndSelect);
     }
@@ -759,7 +763,7 @@ void centralFrame::onCmdPlEdit(bool checked)
         _playlist->setAcceptDrops(false);
         fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot);
         fsm->setNameFilters(TFACTORY->plExt());
-        //handle(this, FXSEL(SEL_CHANGED, ID_DIRLIST), 0);
+        setProperty("AutoBackend", QVariant(false));
         onDirSelected(_dirlist->currentIndex());
     }
 }
