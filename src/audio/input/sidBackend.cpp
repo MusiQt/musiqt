@@ -72,7 +72,7 @@ extern const unsigned char iconSid[126] =
 #define CREDITS "Sidplayfp\nCopyright \u00A9 Simon White, Antti Lankila, Leandro Nini"
 #define LINK    "http://sourceforge.net/projects/sidplay-residfp/"
 
-const char sidBackend::name[]="Sidplayfp";
+const char sidBackend::name[] = "Sidplayfp";
 
 const char engines[][8] =
 {
@@ -98,7 +98,7 @@ sidConfig_t sidBackend::_settings;
 
 size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
-    if (_length && (seconds>=_length))
+    if ((_length != 0) && (seconds >= _length))
         return 0;
 
     return _sidplayfp->play((short*)buffer, bufferSize/sizeof(short))*2;
@@ -320,7 +320,7 @@ bool sidBackend::open(const QString& fileName)
     cfg.forceC64Model = _settings.forceC64Model;
     cfg.defaultSidModel = _settings.sidModel;
     cfg.forceSidModel = _settings.forceSidModel;
-    cfg.playback = (_settings.channels==2)?SidConfig::STEREO:SidConfig::MONO;
+    cfg.playback = (_settings.channels == 2) ? SidConfig::STEREO : SidConfig::MONO;
     cfg.frequency = _settings.samplerate;
     cfg.secondSidAddress = _settings.secondSidAddress;
 #ifdef ENABLE_3SID
@@ -331,7 +331,7 @@ bool sidBackend::open(const QString& fileName)
     cfg.fastSampling = _settings.fastSampling;
     _sidplayfp->config(cfg);
 
-    _tune = new SidTune(fileName.toLocal8Bit().constData());
+    _tune = new SidTune(fileName.toUtf8().constData());
     _tune->createMD5(_md5);
     qDebug() << "Tune md5: " << _md5;
 
@@ -346,12 +346,12 @@ bool sidBackend::open(const QString& fileName)
      */
     switch (tuneInfo->numberOfInfoStrings())
     {
-    case 3:
-        _metaData.addInfo(gettext("released"), QString::fromLatin1(tuneInfo->infoString(2)));
+    case 1:
+        _metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));
     case 2:
         _metaData.addInfo(metaData::ARTIST, QString::fromLatin1(tuneInfo->infoString(1)));
-    case 1:
-        _metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));;
+    case 3:
+        _metaData.addInfo(gettext("released"), QString::fromLatin1(tuneInfo->infoString(2)));
     }
 
     /*
@@ -374,9 +374,9 @@ bool sidBackend::open(const QString& fileName)
         }
     }
 
-    if (_stil)
+    if (_stil != nullptr)
     {
-        const char* fName = fileName.toLocal8Bit().constData();
+        const char* fName = fileName.toUtf8().constData();
         qDebug() << "Retrieving STIL info";
         QString comment = QString(_stil->getAbsGlobalComment(fName));
         if (!comment.isEmpty())
@@ -425,7 +425,7 @@ bool sidBackend::open(const QString& fileName)
 
 void sidBackend::close()
 {
-    if (_sidplayfp)
+    if (_sidplayfp != nullptr)
     {
         const sidbuilder *emuSid = _sidplayfp->config().sidEmulation;
         delete emuSid;
@@ -483,7 +483,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
         _db = new SidDatabase();
 
     if (!_db->open(
-            QString("%1%2DOCUMENTS%2Songlengths.txt").arg(hvscPath).arg(QDir::separator()).toLocal8Bit().constData())
+            QString("%1%2DOCUMENTS%2Songlengths.txt").arg(hvscPath).arg(QDir::separator()).toUtf8().constData())
         )
     {
         qWarning() << _db->error();
@@ -587,11 +587,11 @@ sidConfig::sidConfig(QWidget* win) :
     {
     default:
     case SidConfig::INTERPOLATE:
-            val = 0;
-            break;
+        val = 0;
+        break;
     case SidConfig::RESAMPLE_INTERPOLATE:
-            val = 1;
-            break;
+        val = 1;
+        break;
     }
     resBox->setCurrentIndex(val);
     connect(resBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdSampling(int)));
@@ -937,22 +937,22 @@ void sidConfig::onCmdRom(int val)
     switch (val)
     {
     case ID_KERNAL:
-        text = "Select Kernal Rom file";
+        text = "Kernal";
         romPath = &SIDSETTINGS.kernalPath;
         break;
     case ID_BASIC:
-        text = "Select BASIC Rom file";
+        text = "BASIC";
         romPath = &SIDSETTINGS.basicPath;
         break;
     case ID_CHARGEN:
-        text = "Select Chargen Rom file";
+        text = "Chargen";
         romPath = &SIDSETTINGS.chargenPath;
         break;
     default:
         return;
     }
 
-    QString file = QFileDialog::getOpenFileName(this, tr(text), *romPath);
+    QString file = QFileDialog::getOpenFileName(this, QString(tr("Select %1 Rom file")).arg(text), *romPath);
     if (!file.isNull())
         *romPath = file;
 }

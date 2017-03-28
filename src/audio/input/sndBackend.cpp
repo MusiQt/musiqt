@@ -90,7 +90,7 @@ bool sndBackend::open(const QString& fileName)
 
     delete [] buffer;
 #else
-    _sf = sf_open(fileName.toLocal8Bit().constData(), SFM_READ, &_si);
+    _sf = sf_open(fileName.toUtf8().constData(), SFM_READ, &_si);
 #endif
     if (_sf == nullptr)
     {

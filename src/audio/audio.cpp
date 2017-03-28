@@ -392,7 +392,7 @@ audioConfig::audioConfig(QWidget* win) :
     QStringList items;
     items << "8" << "16";
     bitBox->addItems(items);
-    bitBox->setMaxVisibleItems(2);
+    bitBox->setMaxVisibleItems(items.size());
 
     unsigned int val;
     switch (SETTINGS->bits())

@@ -82,9 +82,6 @@ const char mpg123Backend::name[] = "Mpg123";
 # define MPG123LIB	"libmpg123.so"
 #endif
 
-int mpg123Backend::_status=0;
-const AutoDLL mpg123Backend::_dll(MPG123LIB);
-
 int (*mpg123Backend::dl_mpg123_init)(void)=0;
 void (*mpg123Backend::dl_mpg123_exit)(void)=0;
 mpg123_handle* (*mpg123Backend::dl_mpg123_new)(const char*, int*)=0;
@@ -102,10 +99,13 @@ const char** (*mpg123Backend::dl_mpg123_supported_decoders)(void)=0;
 int(*mpg123Backend::dl_mpg123_replace_reader)(mpg123_handle*, ssize_t(*)(int, void *, size_t), off_t(*)(int, off_t, int))=0;
 int (*mpg123Backend::dl_mpg123_param)(mpg123_handle*, enum mpg123_parms, long, double)=0;
 
-QStringList mpg123Backend::_decoders;
-
 QFile mpg123Backend::_file[2];
-int mpg123Backend::_count=0;
+
+int mpg123Backend::_count = 0;
+int mpg123Backend::_status = 0;
+const AutoDLL mpg123Backend::_dll(MPG123LIB);
+
+QStringList mpg123Backend::_decoders;
 
 mpg123Config_t mpg123Backend::_settings;
 
@@ -114,8 +114,8 @@ mpg123Config_t mpg123Backend::_settings;
 size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
     size_t n;
-    const int err=dl_mpg123_read(_handle, (unsigned char*)buffer, bufferSize, &n);
-    if (err!=MPG123_OK)
+    const int err = dl_mpg123_read(_handle, (unsigned char*)buffer, bufferSize, &n);
+    if (err != MPG123_OK)
         return 0;
 
     return n;
@@ -170,7 +170,7 @@ mpg123Backend::mpg123Backend() :
     if (err == MPG123_OK)
     {
         _decoders << "auto";
-        const char** decoders=dl_mpg123_supported_decoders();
+        const char** decoders = dl_mpg123_supported_decoders();
         while (*decoders)
         {
             qDebug() << "Decoder: " << *decoders;
@@ -195,8 +195,8 @@ mpg123Backend::~mpg123Backend()
 
 void mpg123Backend::loadSettings()
 {
-    _settings.fastscan=load("Fastscan", true);
-    _settings.decoder=load("Decoder", "auto");
+    _settings.fastscan = load("Fastscan", true);
+    _settings.decoder = load("Decoder", "auto");
 }
 
 void mpg123Backend::saveSettings()
@@ -210,9 +210,9 @@ bool mpg123Backend::open(const QString& fileName)
     if (!_status)
         return false;
 
+    _fd = _count&1;
     close();
 
-    _fd = _count&1;
     _file[_fd].setFileName(fileName);
     if (!_file[_fd].open(QIODevice::ReadOnly))
         return false;
@@ -220,7 +220,7 @@ bool mpg123Backend::open(const QString& fileName)
     int err;
     qDebug() << "Setting decoder: " << _settings.decoder;
     const char *decoder = QString::compare(_settings.decoder, "auto")
-        ? _settings.decoder.toStdString().c_str()
+        ? _settings.decoder.toLocal8Bit().constData()
         : nullptr;
     _handle = dl_mpg123_new(decoder, &err);
     if (_handle == nullptr)
@@ -240,7 +240,7 @@ bool mpg123Backend::open(const QString& fileName)
     if (!_settings.fastscan)
     {
         err = dl_mpg123_scan(_handle);
-        if (err!=MPG123_OK)
+        if (err != MPG123_OK)
         {
             qWarning() << dl_mpg123_plain_strerror(err);
         }
@@ -248,7 +248,7 @@ bool mpg123Backend::open(const QString& fileName)
 
     int encoding;
     err = dl_mpg123_getformat(_handle, &_samplerate, &_channels, &encoding);
-    if (err!=MPG123_OK)
+    if (err != MPG123_OK)
     {
         dl_mpg123_delete(_handle);
         goto error;
@@ -259,7 +259,7 @@ bool mpg123Backend::open(const QString& fileName)
 
     err = dl_mpg123_param(_handle, MPG123_RVA,
         SETTINGS->replayGain()
-            ? (SETTINGS->replayGainMode()==0) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
+            ? (SETTINGS->replayGainMode() == 0) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
             : MPG123_RVA_OFF,
         0.);
 
@@ -271,41 +271,53 @@ bool mpg123Backend::open(const QString& fileName)
         QString info;
 
         if (id3v2 && id3v2->title)
+        {
             info = QString::fromUtf8(id3v2->title->p);
+        }
         else if (id3v1)
         {
-            info = QString(id3v1->title);
-            info.resize(std::min<int>(strlen(id3v1->title), 30));
-            info = info.trimmed();
+            info = QString(id3v1->title).trimmed();
+            if (info.size() > 30)
+                info.resize(30);
         }
         else
-            info=QString::null;
+        {
+            info = QString::null;
+        }
         qDebug() << "TITLE: " << info;
         _metaData.addInfo(metaData::TITLE, info);
 
         if (id3v2 && id3v2->artist)
+        {
             info = QString::fromUtf8(id3v2->artist->p);
+        }
         else if (id3v1)
         {
-            info = QString(id3v1->artist);
-            info.resize(std::min<int>(strlen(id3v1->artist), 30));
-            info = info.trimmed();
+            info = QString(id3v1->artist).trimmed();
+            if (info.size() > 30)
+                info.resize(30);
         }
         else
+        {
             info = QString::null;
+        }
         qDebug() << "ARTIST: " << info;
         _metaData.addInfo(metaData::ARTIST, info);
 
         if (id3v2 && id3v2->album)
+        {
             info = QString::fromUtf8(id3v2->album->p);
+        }
         else if (id3v1)
         {
-            info = QString(id3v1->album);
-            info.resize(std::min<int>(strlen(id3v1->album), 30));
-            info = info.trimmed();
+            info = QString(id3v1->album).trimmed();
+            if (info.size() > 30)
+                info.resize(30);
         }
         else
-            info=QString::null;
+        {
+            info = QString::null;
+        }
         qDebug() << "ALBUM: " << info;
         _metaData.addInfo(metaData::ALBUM, info);
 
@@ -313,57 +325,69 @@ bool mpg123Backend::open(const QString& fileName)
         {
             info = QString::fromUtf8(id3v2->genre->p);
             int st = info.indexOf('(');
-            if (st>=0)
+            if (st >= 0)
             {
-                QStringRef tmp = info.midRef(st,info.indexOf(')')-st);
-                const unsigned int idx=tmp.string()->toInt();
-                if (idx<GENRES)
-                    info=QString(genre[idx]);
+                QStringRef tmp = info.midRef(st, info.indexOf(')')-st);
+                const unsigned int idx = tmp.string()->toInt();
+                if (idx < GENRES)
+                    info = QString(genre[idx]);
             }
         }
-        else if (id3v1 && id3v1->genre<GENRES)
+        else if (id3v1 && (id3v1->genre < GENRES))
+        {
             info = genre[id3v1->genre];
+        }
         else
-            info=QString::null;
+        {
+            info = QString::null;
+        }
         qDebug() << "GENRE: " << info;
         _metaData.addInfo(metaData::GENRE, info);
 
         if (id3v2 && id3v2->year)
+        {
             info = QString::fromUtf8(id3v2->year->p);
+        }
         else if (id3v1)
         {
-            info = QString(id3v1->year);
-            info.resize(std::min<int>(strlen(id3v1->year), 4));
-            info=info.trimmed();
+            info = QString(id3v1->year).trimmed();
+            if (info.size() > 4)
+                info.resize(4);
         }
         else
+        {
             info = QString::null;
+        }
         qDebug() << "YEAR: " << info;
         _metaData.addInfo(metaData::YEAR, info);
 
-        if (id3v1 && id3v1->comment[28]==0)
+        if (id3v1 && (id3v1->comment[28] == 0))
+        {
             info = QString::number(id3v1->comment[29]);
+        }
         else
+        {
             info = QString::null;
+        }
         qDebug() << "TRACK: " << info;
         _metaData.addInfo(metaData::TRACK, info);
 
-        info=QString::null;
+        info = QString::null;
         if (id3v2)
         {
             for (unsigned int i=0; i<id3v2->comments; i++)
             {
                 mpg123_text *entry = &id3v2->comment_list[i];
-                if (entry->description.fill==0 || entry->description.p[0]==0)
+                if ((entry->description.fill == 0) || (entry->description.p[0] == 0))
                     info = QString::fromUtf8(entry->text.p).trimmed();
             }
         }
 
         if (info.isEmpty() && id3v1)
         {
-            info = QString(id3v1->comment);
-            info.resize(std::min<int>(strlen(id3v1->comment), 30));
-            info = info.trimmed();
+            info = QString(id3v1->comment).trimmed();
+            if (info.size() > 30)
+                info.resize(30);
         }
 
         if (!info.isEmpty())
@@ -419,16 +443,16 @@ off_t mpg123Backend::seek_func(int fd, off_t offset, int whence)
     switch (whence)
     {
     case SEEK_SET:
-            pos = offset;
-            break;
+        pos = offset;
+        break;
     case SEEK_CUR:
-            pos = _file[fd].pos() + offset;
-            break;
+        pos = _file[fd].pos() + offset;
+        break;
     case SEEK_END:
-            pos = _file[fd].size() + offset;
-            break;
+        pos = _file[fd].size() + offset;
+        break;
     default:
-            return -1;
+        return -1;
     }
     return _file[fd].seek(pos) ? pos : -1;
 }

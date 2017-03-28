@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: musiqt 0.0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2017-03-24 20:37+0100\n"
+"POT-Creation-Date: 2017-03-28 21:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,72 +88,72 @@ msgstr ""
 msgid "Are you sure you want to delete all bookmarks?"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:109 src/gui/mainWindow.cpp:193
+#: src/gui/centralFrame.cpp:111 src/gui/mainWindow.cpp:193
 msgid "Playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:115
+#: src/gui/centralFrame.cpp:117
 msgid "Bookmarks"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:133
+#: src/gui/centralFrame.cpp:135
 msgid "Edit"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:134
+#: src/gui/centralFrame.cpp:136
 msgid "Edit playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:140
+#: src/gui/centralFrame.cpp:142
 msgid "Save"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:141 src/gui/centralFrame.cpp:774
+#: src/gui/centralFrame.cpp:143 src/gui/centralFrame.cpp:780
 msgid "Save playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:146
+#: src/gui/centralFrame.cpp:148
 msgid "Current playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:147
+#: src/gui/centralFrame.cpp:149
 msgid "Return to current playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:152 src/gui/centralFrame.cpp:153
+#: src/gui/centralFrame.cpp:154 src/gui/centralFrame.cpp:155
 msgid "Home"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:687
+#: src/gui/centralFrame.cpp:693
 msgid "Add to playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:688
+#: src/gui/centralFrame.cpp:694
 msgid "Add song to the playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:692
+#: src/gui/centralFrame.cpp:698
 msgid "Add to bookmarks"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:693
+#: src/gui/centralFrame.cpp:699
 msgid "Add directory to the bookmarks"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:779 src/audio/input/gmeBackend.cpp:391
+#: src/gui/centralFrame.cpp:785 src/audio/input/gmeBackend.cpp:392
 #: src/audio/input/sidBackend.cpp:999
 msgid "Warning"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:779
+#: src/gui/centralFrame.cpp:785
 msgid "File exists, owerwrite?"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:783
+#: src/gui/centralFrame.cpp:789
 msgid "Error"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:783
+#: src/gui/centralFrame.cpp:789
 msgid "Error saving playlist"
 msgstr ""
 
@@ -530,9 +530,9 @@ msgstr ""
 msgid "copyright"
 msgstr ""
 
-#: src/audio/input/ffmpegBackend.cpp:425 src/audio/input/mpcBackend.cpp:277
+#: src/audio/input/ffmpegBackend.cpp:424 src/audio/input/mpcBackend.cpp:277
 #: src/audio/input/sndBackend.cpp:149 src/audio/input/ttaBackend.cpp:252
-#: src/audio/input/wvBackend.cpp:248
+#: src/audio/input/wvBackend.cpp:250
 msgid "No settings available"
 msgstr ""
 
@@ -548,33 +548,33 @@ msgstr ""
 msgid "dumper"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:256 src/audio/input/hvlBackend.cpp:171
+#: src/audio/input/gmeBackend.cpp:257 src/audio/input/hvlBackend.cpp:171
 msgid "Samplerate"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:286
+#: src/audio/input/gmeBackend.cpp:287
 msgid "Equalizer"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:288
+#: src/audio/input/gmeBackend.cpp:289
 msgid "Enable equalizer"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:332
+#: src/audio/input/gmeBackend.cpp:333
 msgid "ASMA path:"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:337 src/audio/input/sidBackend.cpp:780
+#: src/audio/input/gmeBackend.cpp:338 src/audio/input/sidBackend.cpp:780
 #: src/audio/input/sidBackend.cpp:791 src/audio/input/sidBackend.cpp:802
 #: src/audio/input/sidBackend.cpp:813
 msgid "&Browse"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:379
+#: src/audio/input/gmeBackend.cpp:339 src/audio/input/gmeBackend.cpp:380
 msgid "Select ASMA directory"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:391 src/audio/input/sidBackend.cpp:999
+#: src/audio/input/gmeBackend.cpp:392 src/audio/input/sidBackend.cpp:999
 msgid "Path does not exists"
 msgstr ""
 
@@ -582,11 +582,11 @@ msgstr ""
 msgid "publisher"
 msgstr ""
 
-#: src/audio/input/mpg123Backend.cpp:443
+#: src/audio/input/mpg123Backend.cpp:467
 msgid "Decoder"
 msgstr ""
 
-#: src/audio/input/mpg123Backend.cpp:463
+#: src/audio/input/mpg123Backend.cpp:487
 msgid "Fast scan"
 msgstr ""
 
@@ -618,7 +618,7 @@ msgstr ""
 msgid "Volume Ramping"
 msgstr ""
 
-#: src/audio/input/sidBackend.cpp:350
+#: src/audio/input/sidBackend.cpp:354
 msgid "released"
 msgstr ""
 
@@ -720,4 +720,8 @@ msgstr ""
 
 #: src/audio/input/sidBackend.cpp:926
 msgid "Select HVSC directory"
+msgstr ""
+
+#: src/audio/input/sidBackend.cpp:955
+msgid "Select %1 Rom file"
 msgstr ""

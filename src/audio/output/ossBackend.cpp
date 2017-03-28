@@ -112,16 +112,16 @@ size_t ossBackend::setParams(unsigned int &sampleRate, const unsigned int channe
     switch (prec)
     {
     case 1:
-            format = AFMT_U8;
-            break;
+        format = AFMT_U8;
+        break;
     case 2:
-            format = AFMT_S16_LE;
-            break;
+        format = AFMT_S16_LE;
+        break;
 #ifdef AFMT_S32_LE
     case 3:
     case 4:
-            format = AFMT_S32_LE;
-            break;
+        format = AFMT_S32_LE;
+        break;
 #endif
     default:
         qWarning() << "Unsupported format";

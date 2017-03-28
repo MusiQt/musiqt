@@ -106,7 +106,7 @@ bool hvlBackend::open(const QString& fileName)
 {
     close();
 
-    _tune = hvl_LoadTune((TEXT*)fileName.toLocal8Bit().constData(), _settings.samplerate, 4);
+    _tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), _settings.samplerate, 4);
 
     if (_tune == nullptr)
         return false;

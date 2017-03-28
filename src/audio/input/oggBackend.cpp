@@ -87,7 +87,7 @@ oggBackend::~oggBackend()
 
 void oggBackend::loadSettings()
 {
-    _settings.precision=(load("Bits", 16) == 16) ? sample_t::S16 : sample_t::U8;
+    _settings.precision = (load("Bits", 16) == 16) ? sample_t::S16 : sample_t::U8;
 }
 
 void oggBackend::saveSettings()
@@ -141,17 +141,17 @@ bool oggBackend::open(const QString& fileName)
 
 //METADATA_BLOCK_PICTURE
 /*
-<32> 	 The picture type according to the ID3v2 APIC frame:
-<32> 	 The length of the MIME type string in bytes.
-<n*8> 	 The MIME type string
-<32> 	 The length of the description string in bytes.
-<n*8> 	 The description of the picture, in UTF-8. 
- <32> 	 The width of the picture in pixels. 
- <32> 	 The height of the picture in pixels. 
- <32> 	 The color depth of the picture in bits-per-pixel. 
- <32> 	 For indexed-color pictures (e.g. GIF), the number of colors used, or 0 for non-indexed pictures. 
- <32> 	 The length of the picture data in bytes. 
- <n*8> 	 The binary picture data.
+<32>   The picture type according to the ID3v2 APIC frame:
+<32>   The length of the MIME type string in bytes.
+<n*8>  The MIME type string
+<32>   The length of the description string in bytes.
+<n*8>  The description of the picture, in UTF-8. 
+<32>   The width of the picture in pixels.
+<32>   The height of the picture in pixels.
+<32>   The color depth of the picture in bits-per-pixel.
+<32>   For indexed-color pictures (e.g. GIF), the number of colors used, or 0 for non-indexed pictures.
+<32>   The length of the picture data in bytes.
+<n*8>  The binary picture data.
 */
 
 //deprecated:

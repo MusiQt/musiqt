@@ -148,7 +148,7 @@ bool wmmBackend::write(void* buffer, size_t bufferSize)
 
     _idx = 1-_idx;
 
-    if (WaitForSingleObject(_event[_idx], INFINITE)!=WAIT_OBJECT_0)
+    if (WaitForSingleObject(_event[_idx], INFINITE) != WAIT_OBJECT_0)
     {
         qWarning() << "Error waiting for sound to finish";
         return false;

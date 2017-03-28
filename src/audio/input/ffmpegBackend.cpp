@@ -289,7 +289,7 @@ bool ffmpegBackend::open(const QString& fileName)
     close();
 
     AVFormatContext *fc = nullptr;
-    if (dl_avformat_open_input(&fc, fileName.toLocal8Bit().constData(), 0, 0))
+    if (dl_avformat_open_input(&fc, fileName.toUtf8().constData(), 0, 0) != 0)
         return false;
 
     int audioStream = -1;
@@ -411,7 +411,6 @@ bool ffmpegBackend::openStream(AVFormatContext* fc, const int streamIndex)
         return false;
 
     if (dl_avcodec_open2(dec, codec, 0) < 0)
-
         return false;
 
     return true;

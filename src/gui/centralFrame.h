@@ -135,6 +135,7 @@ private slots:
 private:
     void load(const QString& filename);
     void onCmdChangeSong(dir_t);
+    void setDir(const QModelIndex& index);
 
 private:
     input *_input;

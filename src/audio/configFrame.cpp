@@ -32,7 +32,7 @@ configFrame::configFrame(QWidget* p, const char* title, const char* credits, con
 
     if (credits != nullptr)
     {
-        QLabel* cred = new QLabel(QString::fromUtf8(credits), this);
+        QLabel* cred = new QLabel(credits, this);
         cred->setAlignment(Qt::AlignCenter);
         cred->setStyleSheet("background-color : white;");
         main->addWidget(cred);
@@ -43,7 +43,7 @@ configFrame::configFrame(QWidget* p, const char* title, const char* credits, con
         QString text = QString("<a href=\"%1\">%1</a>").arg(link);
         QLabel* lnk = new QLabel(text, this);
         lnk->setAlignment(Qt::AlignCenter);
-        lnk->setStyleSheet("background-color : white;");
+        lnk->setStyleSheet("background-color: white;");
         lnk->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
         lnk->setOpenExternalLinks(true);
         main->addWidget(lnk);

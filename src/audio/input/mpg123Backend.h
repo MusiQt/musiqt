@@ -79,8 +79,8 @@ private:
     static int _status;
     static const AutoDLL _dll;
 
-    static ssize_t	read_func(int, void*, size_t);
-    static off_t	seek_func(int, off_t, int);
+    static ssize_t read_func(int, void*, size_t);
+    static off_t seek_func(int, off_t, int);
 
 public:
     static QStringList _decoders;

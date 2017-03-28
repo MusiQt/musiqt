@@ -207,10 +207,10 @@ bool openmptBackend::open(const QString& fileName)
         unzFile modZip = unzOpen2_64(tmpFileName, &ffunc);
         delete [] tmpFileName;
 #    else
-        unzFile modZip = unzOpen2_64(fileName.toLocal8Bit().constData(), &ffunc);
+        unzFile modZip = unzOpen2_64(fileName.toUtf8().constData(), &ffunc);
 #    endif // UNICODE
 #  else
-        unzFile modZip = unzOpen64(fileName.toLocal8Bit().constData());
+        unzFile modZip = unzOpen64(fileName.toUtf8().constData());
 #  endif // _WIN32
         if (unzGoToFirstFile(modZip) != UNZ_OK)
         {

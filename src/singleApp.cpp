@@ -50,7 +50,7 @@ singleApp::singleApp(int & argc, char ** argv) :
         _lockFile->close();
         delPtr(_lockFile);
         qWarning("Already running");
-        if (argc>1)
+        if (argc > 1)
         {
             QLocalSocket socket(this);
             qDebug() << _fifoFileName;

@@ -58,6 +58,8 @@ private:
 
 private:
     void copyBuffer(char* dest, const int* src, size_t length);
+    void getApeTag(const char* tag, metaData::mpris_t meta);
+    void getId3Tag(const char* tag, metaData::mpris_t meta);
 
 private:
     wvBackend();

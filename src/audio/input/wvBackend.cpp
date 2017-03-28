@@ -66,8 +66,7 @@ const char wvBackend::name[] = "Wavpack";
 size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
     size_t n = 0;
-    const unsigned int sampleSize =
-        (_precision == sample_t::U8) ? 1 : (_precision == sample_t::S16) ? 2 : 4;
+    const unsigned int sampleSize=(_precision == sample_t::U8) ? 1 : (_precision == sample_t::S16) ? 2 : 4;
 
     do {
         if (_bufOffset >= _bufSize)
@@ -121,7 +120,7 @@ inline QStringList wvBackend::ext() const { return QStringList(EXT); }
 
 wvBackend::wvBackend() :
     inputBackend(name, iconWv, 375),
-    _wvContext(0) {}
+    _wvContext(nullptr) {}
 
 wvBackend::~wvBackend()
 {
@@ -133,8 +132,8 @@ bool wvBackend::open(const QString& fileName)
     close();
 
     char tmp[255];
-    _wvContext = WavpackOpenFileInput(fileName.toLocal8Bit().constData(), tmp, OPEN_WVC|OPEN_TAGS|OPEN_2CH_MAX|OPEN_NORMALIZE, 0);
-    if (!_wvContext)
+    _wvContext = WavpackOpenFileInput(fileName.toUtf8().constData(), tmp, OPEN_WVC|OPEN_TAGS|OPEN_2CH_MAX|OPEN_NORMALIZE, 0);
+    if (_wvContext == nullptr)
     {
         qWarning() << "Error - " << tmp;
         return false;
@@ -169,37 +168,24 @@ bool wvBackend::open(const QString& fileName)
     {
         if (mode & MODE_APETAG)
         {
-            // TODO APEv2 text tags can have multiple (NULL separated) strings for a single value
-            if (WavpackGetTagItem(_wvContext, "Title", tmp, 255))
-                _metaData.addInfo(metaData::TITLE, QString::fromUtf8(tmp));
-            if (WavpackGetTagItem(_wvContext, "Artist", tmp, 255))
-                _metaData.addInfo(metaData::ARTIST, QString::fromUtf8(tmp));
-            if (WavpackGetTagItem(_wvContext, "Album", tmp, 255))
-                _metaData.addInfo(metaData::ALBUM, QString::fromUtf8(tmp));
-            if (WavpackGetTagItem(_wvContext, "Year", tmp, 255))
-                _metaData.addInfo(metaData::YEAR, tmp);
-            if (WavpackGetTagItem(_wvContext, "Track", tmp, 255))
-                _metaData.addInfo(metaData::TRACK, tmp);
-            if (WavpackGetTagItem(_wvContext, "Comment", tmp, 255))
-                _metaData.addInfo(metaData::COMMENT, QString::fromUtf8(tmp));
-            if (WavpackGetTagItem(_wvContext, "Genre", tmp, 255))
-                _metaData.addInfo(metaData::GENRE, QString::fromUtf8(tmp));
+            // APEv2
+            getApeTag("Title", metaData::TITLE);
+            getApeTag("Artist", metaData::ARTIST);
+            getApeTag("Album", metaData::ALBUM);
+            getApeTag("Year", metaData::YEAR);
+            getApeTag("Track", metaData::TRACK);
+            getApeTag("Comment", metaData::COMMENT);
+            getApeTag("Genre", metaData::GENRE);
         }
         else
         {
             // ID3v1
-            if (WavpackGetTagItem(_wvContext, "title", tmp, 255))
-                _metaData.addInfo(metaData::TITLE, tmp);
-            if (WavpackGetTagItem(_wvContext, "artist", tmp, 255))
-                _metaData.addInfo(metaData::ARTIST, tmp);
-            if (WavpackGetTagItem(_wvContext, "album", tmp, 255))
-                _metaData.addInfo(metaData::ALBUM, tmp);
-            if (WavpackGetTagItem(_wvContext, "year", tmp, 255))
-                _metaData.addInfo(metaData::YEAR, tmp);
-            if (WavpackGetTagItem(_wvContext, "track", tmp, 255))
-                _metaData.addInfo(metaData::TRACK, tmp);
-            if (WavpackGetTagItem(_wvContext, "comment", tmp, 255))
-                _metaData.addInfo(metaData::COMMENT, tmp);
+            getId3Tag("title", metaData::TITLE);
+            getId3Tag("artist", metaData::ARTIST);
+            getId3Tag("album", metaData::ALBUM);
+            getId3Tag("year", metaData::YEAR);
+            getId3Tag("track", metaData::TRACK);
+            getId3Tag("comment", metaData::COMMENT);
         }
     }
 
@@ -212,9 +198,25 @@ bool wvBackend::open(const QString& fileName)
     return true;
 }
 
+void wvBackend::getId3Tag(const char* tag, metaData::mpris_t meta)
+{
+    char tmp[255];
+    int size = WavpackGetTagItem(_wvContext, tag, tmp, 255);
+    if (size >= 0)
+        _metaData.addInfo(meta, QString::fromLocal8Bit(tmp, size));
+}
+
+void wvBackend::getApeTag(const char* tag, metaData::mpris_t meta)
+{
+    char tmp[1024];
+    int size = WavpackGetTagItem(_wvContext, tag, tmp, 1024);
+    if (size >= 0)
+        _metaData.addInfo(meta, QString::fromUtf8(tmp, size).replace('\0', ','));
+}
+
 void wvBackend::close()
 {
-    if (_wvContext)
+    if (_wvContext != nullptr)
     {
         _wvContext = WavpackCloseFile(_wvContext);
         delete [] _decodeBuf;
@@ -225,7 +227,7 @@ void wvBackend::close()
 
 bool wvBackend::rewind()
 {
-    if (!_wvContext)
+    if (_wvContext == nullptr)
         return false;
 
     if (!WavpackSeekSample(_wvContext, 0))

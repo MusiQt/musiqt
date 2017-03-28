@@ -120,7 +120,7 @@ bool gmeBackend::open(const QString& fileName)
     close();
 
     gme_type_t fileType;
-    if (!check(gme_identify_file(fileName.toLocal8Bit().constData(), &fileType)))
+    if (!check(gme_identify_file(fileName.toUtf8().constData(), &fileType)))
         return false;
 
     qDebug() << "System " << fileType->system;
@@ -133,7 +133,7 @@ bool gmeBackend::open(const QString& fileName)
         gme_equalizer_t eq = { _settings.treble_dB, _settings.bass_freq };
         gme_set_equalizer(_emu, &eq);
     }
-    if (!check(_emu->load_file(fileName.toLocal8Bit().constData())))
+    if (!check(_emu->load_file(fileName.toUtf8().constData())))
         return false;
     if (!check(_emu->start_track(0)))
         return false;
@@ -233,10 +233,11 @@ void gmeBackend::openAsma(const QString& asmaPath)
     if (asmaPath.isEmpty())
         return;
 
-    if (!_stil)
+    if (_stil == nullptr)
         _stil = new STIL(ASMA_STIL, ASMA_BUGLIST);
 
-    if (!_stil->setBaseDir(asmaPath.toLocal8Bit().constData())) {
+    if (!_stil->setBaseDir(asmaPath.toLocal8Bit().constData()))
+    {
         qWarning() << _stil->getErrorStr();
         delPtr(_stil);
     }
@@ -335,7 +336,7 @@ gmeConfig::gmeConfig(QWidget* win) :
     hf->addWidget(asmaPath);
     connect(asmaPath, SIGNAL(editingFinished()), this, SLOT(onCmdAsmaEdited()));
     QPushButton* button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
-    button->setToolTip("Select ASMA directory");
+    button->setToolTip(tr("Select ASMA directory"));
     hf->addWidget(button);
     connect(button, SIGNAL(clicked()), this, SLOT(onCmdAsma()));
 }

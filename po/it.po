@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2017-03-24 20:37+0100\n"
+"POT-Creation-Date: 2017-03-28 21:00+0200\n"
 "PO-Revision-Date: 2017-03-19 21:50+0100\n"
 "Last-Translator: \n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -94,72 +94,72 @@ msgstr "Cancella i segnalibri"
 msgid "Are you sure you want to delete all bookmarks?"
 msgstr "Sei sicuro di voler cancellare tutti i segnalibri?"
 
-#: src/gui/centralFrame.cpp:109 src/gui/mainWindow.cpp:193
+#: src/gui/centralFrame.cpp:111 src/gui/mainWindow.cpp:193
 msgid "Playlist"
 msgstr "Playlist"
 
-#: src/gui/centralFrame.cpp:115
+#: src/gui/centralFrame.cpp:117
 msgid "Bookmarks"
 msgstr "Segnalibri"
 
-#: src/gui/centralFrame.cpp:133
+#: src/gui/centralFrame.cpp:135
 msgid "Edit"
 msgstr "Modifica"
 
-#: src/gui/centralFrame.cpp:134
+#: src/gui/centralFrame.cpp:136
 msgid "Edit playlist"
 msgstr "Modifica la playlist"
 
-#: src/gui/centralFrame.cpp:140
+#: src/gui/centralFrame.cpp:142
 msgid "Save"
 msgstr "Salva"
 
-#: src/gui/centralFrame.cpp:141 src/gui/centralFrame.cpp:774
+#: src/gui/centralFrame.cpp:143 src/gui/centralFrame.cpp:780
 msgid "Save playlist"
 msgstr "Salva la playlist"
 
-#: src/gui/centralFrame.cpp:146
+#: src/gui/centralFrame.cpp:148
 msgid "Current playlist"
 msgstr "Playlist corrente"
 
-#: src/gui/centralFrame.cpp:147
+#: src/gui/centralFrame.cpp:149
 msgid "Return to current playlist"
 msgstr "Ritorna alla playlist corrente"
 
-#: src/gui/centralFrame.cpp:152 src/gui/centralFrame.cpp:153
+#: src/gui/centralFrame.cpp:154 src/gui/centralFrame.cpp:155
 msgid "Home"
 msgstr "Home"
 
-#: src/gui/centralFrame.cpp:687
+#: src/gui/centralFrame.cpp:693
 msgid "Add to playlist"
 msgstr "Modifica la playlist"
 
-#: src/gui/centralFrame.cpp:688
+#: src/gui/centralFrame.cpp:694
 msgid "Add song to the playlist"
 msgstr "Aggiungi il brano alla playlist"
 
-#: src/gui/centralFrame.cpp:692
+#: src/gui/centralFrame.cpp:698
 msgid "Add to bookmarks"
 msgstr "Aggiungi ai segnalibri"
 
-#: src/gui/centralFrame.cpp:693
+#: src/gui/centralFrame.cpp:699
 msgid "Add directory to the bookmarks"
 msgstr "Aggiungi la cartella ai segnalibri"
 
-#: src/gui/centralFrame.cpp:779 src/audio/input/gmeBackend.cpp:391
+#: src/gui/centralFrame.cpp:785 src/audio/input/gmeBackend.cpp:392
 #: src/audio/input/sidBackend.cpp:999
 msgid "Warning"
 msgstr "Attenzione"
 
-#: src/gui/centralFrame.cpp:779
+#: src/gui/centralFrame.cpp:785
 msgid "File exists, owerwrite?"
 msgstr "Il file esiste, sovrascrivere?"
 
-#: src/gui/centralFrame.cpp:783
+#: src/gui/centralFrame.cpp:789
 msgid "Error"
 msgstr "Errore"
 
-#: src/gui/centralFrame.cpp:783
+#: src/gui/centralFrame.cpp:789
 msgid "Error saving playlist"
 msgstr "Errore nel salvataggio della playlist"
 
@@ -538,9 +538,9 @@ msgstr ""
 msgid "copyright"
 msgstr "copyright"
 
-#: src/audio/input/ffmpegBackend.cpp:425 src/audio/input/mpcBackend.cpp:277
+#: src/audio/input/ffmpegBackend.cpp:424 src/audio/input/mpcBackend.cpp:277
 #: src/audio/input/sndBackend.cpp:149 src/audio/input/ttaBackend.cpp:252
-#: src/audio/input/wvBackend.cpp:248
+#: src/audio/input/wvBackend.cpp:250
 msgid "No settings available"
 msgstr "Nessuna impostazione disponibile"
 
@@ -556,33 +556,33 @@ msgstr "gioco"
 msgid "dumper"
 msgstr "dumper"
 
-#: src/audio/input/gmeBackend.cpp:256 src/audio/input/hvlBackend.cpp:171
+#: src/audio/input/gmeBackend.cpp:257 src/audio/input/hvlBackend.cpp:171
 msgid "Samplerate"
 msgstr "Frequenza di campionamento"
 
-#: src/audio/input/gmeBackend.cpp:286
+#: src/audio/input/gmeBackend.cpp:287
 msgid "Equalizer"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:288
+#: src/audio/input/gmeBackend.cpp:289
 msgid "Enable equalizer"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:332
+#: src/audio/input/gmeBackend.cpp:333
 msgid "ASMA path:"
 msgstr "Percorso ASMA:"
 
-#: src/audio/input/gmeBackend.cpp:337 src/audio/input/sidBackend.cpp:780
+#: src/audio/input/gmeBackend.cpp:338 src/audio/input/sidBackend.cpp:780
 #: src/audio/input/sidBackend.cpp:791 src/audio/input/sidBackend.cpp:802
 #: src/audio/input/sidBackend.cpp:813
 msgid "&Browse"
 msgstr "&Sfoglia"
 
-#: src/audio/input/gmeBackend.cpp:379
+#: src/audio/input/gmeBackend.cpp:339 src/audio/input/gmeBackend.cpp:380
 msgid "Select ASMA directory"
 msgstr "Seleziona la cartella ASMA"
 
-#: src/audio/input/gmeBackend.cpp:391 src/audio/input/sidBackend.cpp:999
+#: src/audio/input/gmeBackend.cpp:392 src/audio/input/sidBackend.cpp:999
 msgid "Path does not exists"
 msgstr ""
 
@@ -590,11 +590,11 @@ msgstr ""
 msgid "publisher"
 msgstr "editore"
 
-#: src/audio/input/mpg123Backend.cpp:443
+#: src/audio/input/mpg123Backend.cpp:467
 msgid "Decoder"
 msgstr "Decoder"
 
-#: src/audio/input/mpg123Backend.cpp:463
+#: src/audio/input/mpg123Backend.cpp:487
 msgid "Fast scan"
 msgstr "Scan veloce"
 
@@ -626,7 +626,7 @@ msgstr "Separazione Stereo"
 msgid "Volume Ramping"
 msgstr ""
 
-#: src/audio/input/sidBackend.cpp:350
+#: src/audio/input/sidBackend.cpp:354
 msgid "released"
 msgstr "pubblicato"
 
@@ -732,6 +732,11 @@ msgstr "Rom caratteri:"
 msgid "Select HVSC directory"
 msgstr "Seleziona la cartella HVSC"
 
+#: src/audio/input/sidBackend.cpp:955
+#, fuzzy
+msgid "Select %1 Rom file"
+msgstr "&Sfoglia\tSeleziona il file della rom BASIC"
+
 #~ msgid "Fast sampling\tFaster but inaccurate sampling"
 #~ msgstr "Campionamento Veloce\tPiù veloce ma meno accurato"
 
@@ -828,9 +833,6 @@ msgstr "Seleziona la cartella HVSC"
 
 #~ msgid "&Browse\tSelect Kernal Rom file"
 #~ msgstr "&Sfoglia\tSeleziona il file della rom Kernal"
-
-#~ msgid "&Browse\tSelect BASIC Rom file"
-#~ msgstr "&Sfoglia\tSeleziona il file della rom BASIC"
 
 #~ msgid "&Browse\tSelect Chargen Rom file"
 #~ msgstr "&Sfoglia\tSeleziona il file della rom caratteri"

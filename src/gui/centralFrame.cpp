@@ -215,7 +215,6 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
         _playlist->clear();
         return;
     }
-
     items = (_input != nullptr) ? _playlist->filter(_input->ext()) : 0;
 
     if (items == 0)
@@ -272,8 +271,7 @@ void centralFrame::onHome()
         const QString musicDir = _input->getMusicDir();
         QString home = musicDir.isEmpty() ? xdg::getMusicDir() : musicDir;
         qDebug() << "home dir: " << home;
-        _dirlist->setCurrentIndex(fsm->index(home));
-        //_dirlist->scrollTo();
+        setDir(fsm->index(home));
     }
 }
 
@@ -291,7 +289,7 @@ void centralFrame::gotoDir(const QString &dir)
 {
     qDebug() << "gotoDir: " << dir;
     if (!dir.isNull())
-        _dirlist->setCurrentIndex(fsm->index(dir));
+        setDir(fsm->index(dir));
 }
  
 void centralFrame::setFile(const QString& file, const bool play)
@@ -336,7 +334,7 @@ void centralFrame::setFile(const QString& file, const bool play)
         else
         {
             _dirlist->setProperty("UserData", QVariant(QString::null));
-            _dirlist->setCurrentIndex(fsm->index(file));
+            setDir(fsm->index(file));
             playMode = true; // TODO sync GUI
         }
         goto done;
@@ -389,7 +387,7 @@ ok:
         }
     } else {
         _dirlist->setProperty("UserData", QVariant(QFileInfo(file).baseName()));
-        _dirlist->setCurrentIndex(fsm->index(qfile.dir().absolutePath()));
+        setDir(fsm->index(qfile.dir().absolutePath()));
     }
 
 done:
@@ -495,9 +493,11 @@ void centralFrame::setBackend(int val, int refresh)
         QModelIndex selected = _dirlist->currentIndex();
         qDebug() << "selected " << selected;
         if (selected.isValid())
+        {
             setProperty("AutoBackend", QVariant((refresh != 2)));
             onDirSelected(selected);
             //_dirlist->selectionModel()->select(selected, QItemSelectionModel::ClearAndSelect);
+        }
     }
 }
 
@@ -799,4 +799,10 @@ void centralFrame::updateSongs()
 
     QString text(QString("%1/%2").arg(tune).arg(tunes));
     emit songUpdated(text);
+}
+
+void centralFrame::setDir(const QModelIndex& index)
+{
+    _dirlist->setCurrentIndex(index);
+    _dirlist->scrollTo(index);
 }
