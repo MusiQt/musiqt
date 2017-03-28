@@ -495,9 +495,11 @@ void centralFrame::setBackend(int val, int refresh)
         QModelIndex selected = _dirlist->currentIndex();
         qDebug() << "selected " << selected;
         if (selected.isValid())
+        {
             setProperty("AutoBackend", QVariant((refresh != 2)));
             onDirSelected(selected);
             //_dirlist->selectionModel()->select(selected, QItemSelectionModel::ClearAndSelect);
+        }
     }
 }
 
