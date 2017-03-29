@@ -95,6 +95,12 @@ void oggBackend::saveSettings()
     save("Bits", (_settings.precision == sample_t::S16) ? 16 : 8);
 }
 
+bool compareTag(const char* orig, const char* tag)
+{
+    int n = qstrlen(tag);
+    return qstrnicmp(orig, tag, n);
+}
+
 bool oggBackend::open(const QString& fileName)
 {
     close();
@@ -133,8 +139,10 @@ bool oggBackend::open(const QString& fileName)
         if (!getComment(*ptr, &genre, "genre"))
         if (!getComment(*ptr, &comment, "comment"))
         {
-            if (!QString::compare(*ptr, "tracknumber"))
+            if (!compareTag(*ptr, "tracknumber"))
+            {
                 _metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
+            }
         }
         ++ptr;
     }
@@ -171,13 +179,13 @@ bool oggBackend::open(const QString& fileName)
 
 bool oggBackend::getComment(const char* orig, QString* dest, const char* type)
 {
-    if (QString::compare(orig, type))
+    const int n = qstrlen(type);
+    if (qstrnicmp(orig, type, n))
         return false;
 
     if (!dest->isEmpty())
         dest->append(", ");
 
-    const int n = strlen(type);
     dest->append(QString::fromUtf8(orig+n+1));
     return true;
 }
