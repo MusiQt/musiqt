@@ -116,7 +116,7 @@ bool hvlBackend::open(const QString& fileName)
     _metaData.addInfo(metaData::TITLE, (char*)_tune->ht_Name);
     QString comment = QString::null;
     for (unsigned int i=0; i<_tune->ht_InstrumentNr; i++)
-        comment.append(QString("%1").arg(_tune->ht_Instruments[i].ins_Name));
+        comment.append(QString("%1\n").arg(_tune->ht_Instruments[i].ins_Name));
 
     _metaData.addInfo(metaData::COMMENT, comment.trimmed());
 
