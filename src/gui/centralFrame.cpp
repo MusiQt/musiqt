@@ -632,7 +632,7 @@ void centralFrame::songEnded()
     qDebug("centralFrame::songEnded");
     if (SETTINGS->subtunes() && (_input->subtune()<_input->subtunes()))
     {
-        //handle(this, FXSEL(SEL_COMMAND, ID_NEXT_SUBTUNE), 0);
+        changeSubtune(ID_NEXT);
         return;
     }
 
