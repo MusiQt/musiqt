@@ -87,7 +87,7 @@ void (*mpg123Backend::dl_mpg123_exit)(void)=0;
 mpg123_handle* (*mpg123Backend::dl_mpg123_new)(const char*, int*)=0;
 void (*mpg123Backend::dl_mpg123_delete)(mpg123_handle*)=0;
 const char* (*mpg123Backend::dl_mpg123_plain_strerror)(int)=0;
-int (*mpg123Backend::dl_mpg123_open_fd)(mpg123_handle*, int)=0;
+int (*mpg123Backend::dl_mpg123_open_handle)(mpg123_handle*, void*)=0;
 int (*mpg123Backend::dl_mpg123_close)(mpg123_handle*)=0;
 int (*mpg123Backend::dl_mpg123_scan)(mpg123_handle*)=0;
 int (*mpg123Backend::dl_mpg123_getformat)(mpg123_handle*, long*, int*, int*)=0;
@@ -96,12 +96,9 @@ int (*mpg123Backend::dl_mpg123_read)(mpg123_handle*, unsigned char*, size_t, siz
 off_t (*mpg123Backend::dl_mpg123_seek)(mpg123_handle*, off_t, int)=0;
 int (*mpg123Backend::dl_mpg123_id3)(mpg123_handle*, mpg123_id3v1**, mpg123_id3v2**)=0;
 const char** (*mpg123Backend::dl_mpg123_supported_decoders)(void)=0;
-int(*mpg123Backend::dl_mpg123_replace_reader)(mpg123_handle*, ssize_t(*)(int, void *, size_t), off_t(*)(int, off_t, int))=0;
+int(*mpg123Backend::dl_mpg123_replace_reader_handle)(mpg123_handle*, ssize_t(*)(void*, void*, size_t), off_t(*)(void*, off_t, int), void(*)(void *))=0;
 int (*mpg123Backend::dl_mpg123_param)(mpg123_handle*, enum mpg123_parms, long, double)=0;
 
-QFile mpg123Backend::_file[2];
-
-int mpg123Backend::_count = 0;
 int mpg123Backend::_status = 0;
 const AutoDLL mpg123Backend::_dll(MPG123LIB);
 
@@ -133,7 +130,7 @@ bool mpg123Backend::init()
     LOADSYM(_dll, mpg123_new, mpg123_handle*(*)(const char*, int*))
     LOADSYM(_dll, mpg123_delete, void(*)(mpg123_handle*))
     LOADSYM(_dll, mpg123_plain_strerror, const char*(*)(int))
-    LOADSYMSFX(_dll, mpg123_open_fd, int(*)(mpg123_handle*, int))
+    LOADSYMSFX(_dll, mpg123_open_handle, int(*)(mpg123_handle*, void*))
     LOADSYM(_dll, mpg123_close, int(*)(mpg123_handle*))
     LOADSYM(_dll, mpg123_scan, int(*)(mpg123_handle*))
     LOADSYM(_dll, mpg123_getformat, int(*)(mpg123_handle*, long*, int*, int*))
@@ -142,7 +139,7 @@ bool mpg123Backend::init()
     LOADSYMSFX(_dll, mpg123_seek, off_t(*)(mpg123_handle*, off_t, int))
     LOADSYM(_dll, mpg123_id3, int(*)(mpg123_handle*, mpg123_id3v1**, mpg123_id3v2**))
     LOADSYM(_dll, mpg123_supported_decoders, const char**(*)(void))
-    TRYLOADSYM(_dll, mpg123_replace_reader, mpg123_replace_reader_64, int(*)(mpg123_handle*, ssize_t(*)(int, void *, size_t), off_t(*)(int, off_t, int)))
+    TRYLOADSYM(_dll, mpg123_replace_reader_handle, mpg123_replace_reader_handle_64, int(*)(mpg123_handle*, ssize_t(*)(void*, void*, size_t), off_t(*)(void*, off_t, int), 	void(*)(void *)))
     LOADSYM(_dll, mpg123_param, int(*)(mpg123_handle*, enum mpg123_parms, long, double))
 
     return true;
@@ -210,11 +207,10 @@ bool mpg123Backend::open(const QString& fileName)
     if (!_status)
         return false;
 
-    _fd = _count&1;
     close();
 
-    _file[_fd].setFileName(fileName);
-    if (!_file[_fd].open(QIODevice::ReadOnly))
+    _file.setFileName(fileName);
+    if (!_file.open(QIODevice::ReadOnly))
         return false;
 
     int err;
@@ -226,10 +222,10 @@ bool mpg123Backend::open(const QString& fileName)
     if (_handle == nullptr)
         goto error;
 
-    err = dl_mpg123_replace_reader(_handle, read_func, seek_func);
+    err = dl_mpg123_replace_reader_handle(_handle, read_func, seek_func, NULL);
     if (err == MPG123_OK)
     {
-        err = dl_mpg123_open_fd(_handle, _fd);
+        err = dl_mpg123_open_handle(_handle, &_file);
     }
     if (err != MPG123_OK)
     {
@@ -409,14 +405,12 @@ bool mpg123Backend::open(const QString& fileName)
         }
     }
 
-    _count++;
-
     songLoaded(fileName);
     return true;
 
 error:
     qWarning() << dl_mpg123_plain_strerror(err);
-    _file[_fd].close();
+    _file.close();
     return false;
 }
 
@@ -428,7 +422,7 @@ void mpg123Backend::close()
     dl_mpg123_close(_handle);
     dl_mpg123_delete(_handle);
 
-    _file[_fd].close();
+    _file.close();
 
     songLoaded(QString::null);
 }
@@ -444,12 +438,12 @@ bool mpg123Backend::rewind()
     return false;
 }
 
-ssize_t mpg123Backend::read_func(int fd, void* ptr, size_t size)
+ssize_t mpg123Backend::read_func(void* handle, void* ptr, size_t size)
 {
-    return _file[fd].read((char*)ptr, size);
+    return ((QFile*)handle)->read((char*)ptr, size);
 }
 
-off_t mpg123Backend::seek_func(int fd, off_t offset, int whence)
+off_t mpg123Backend::seek_func(void* handle, off_t offset, int whence)
 {
     qint64 pos;
     switch (whence)
@@ -458,15 +452,15 @@ off_t mpg123Backend::seek_func(int fd, off_t offset, int whence)
         pos = offset;
         break;
     case SEEK_CUR:
-        pos = _file[fd].pos() + offset;
+        pos = ((QFile*)handle)->pos() + offset;
         break;
     case SEEK_END:
-        pos = _file[fd].size() + offset;
+        pos = ((QFile*)handle)->size() + offset;
         break;
     default:
         return -1;
     }
-    return _file[fd].seek(pos) ? pos : -1;
+    return ((QFile*)handle)->seek(pos) ? pos : -1;
 }
 
 /*****************************************************************/

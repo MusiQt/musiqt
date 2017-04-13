@@ -71,16 +71,13 @@ private:
     long _samplerate;
     int _channels;
 
-    int _fd;
-
-    static QFile _file[2];
-    static int _count;
+    QFile _file;
 
     static int _status;
     static const AutoDLL _dll;
 
-    static ssize_t read_func(int, void*, size_t);
-    static off_t seek_func(int, off_t, int);
+    static ssize_t read_func(void*, void*, size_t);
+    static off_t seek_func(void*, off_t, int);
 
 public:
     static QStringList _decoders;
@@ -91,7 +88,7 @@ private:
     static mpg123_handle* (*dl_mpg123_new)(const char*, int*);
     static void (*dl_mpg123_delete)(mpg123_handle*);
     static const char* (*dl_mpg123_plain_strerror)(int);
-    static int (*dl_mpg123_open_fd)(mpg123_handle*, int);
+    static int (*dl_mpg123_open_handle)(mpg123_handle*, void*);
     static int (*dl_mpg123_close)(mpg123_handle*);
     static int (*dl_mpg123_scan)(mpg123_handle*);
     static int (*dl_mpg123_getformat)(mpg123_handle*, long*, int*, int*);
@@ -100,7 +97,7 @@ private:
     static off_t (*dl_mpg123_seek)(mpg123_handle*, off_t, int);
     static int (*dl_mpg123_id3)(mpg123_handle*, mpg123_id3v1**, mpg123_id3v2**);
     static const char** (*dl_mpg123_supported_decoders)(void);
-    static int (*dl_mpg123_replace_reader)(mpg123_handle*, ssize_t(*)(int, void *, size_t), off_t(*)(int, off_t, int));
+    static int (*dl_mpg123_replace_reader_handle)(mpg123_handle*, ssize_t(*)(void*, void*, size_t), off_t(*)(void*, off_t, int), void(*)(void *));
     static int (*dl_mpg123_param)(mpg123_handle*, enum mpg123_parms, long, double);
 
 private:
