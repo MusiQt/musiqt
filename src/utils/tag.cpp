@@ -129,7 +129,7 @@ tag::tag(QFile* file) :
     char* dataBuf = new char[itemsSize];
     file->read(dataBuf, itemsSize);
 
-    int i=0;
+    int i = 0;
     while ((i < itemsSize) && dataBuf[i])
         i += getAPEItem(dataBuf+i);
 
@@ -249,7 +249,7 @@ QString tag::getID3v2Text(const char* buf, int size)
     return tmp.trimmed();
 }
 
-int tag::getID3v2_2Frame(const char* buf)
+int tag::getID3v2_2Frame(char* buf)
 {
     const int size = ((unsigned int)((unsigned char)buf[3])<<16) | ((unsigned int)((unsigned char)buf[4])<<8)
         | ((unsigned int)((unsigned char)buf[5]));
@@ -329,7 +329,7 @@ int tag::getID3v2_2Frame(const char* buf)
     return size;
 }
 
-int tag::getID3v2Frame(const char* buf, int ver)
+int tag::getID3v2Frame(char* buf, int ver)
 {
     const int size = getFrameSize(buf+4, (ver == 4));
     qDebug() << "ID3v2 Frame: " << QString(buf).left(4) << " size: " << size;
@@ -461,7 +461,7 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
         return false;
     }
 
-    tagSize=getFrameSize(buf+6, true);
+    tagSize = getFrameSize(buf+6, true);
     qDebug() << "ID3v2 tag size: " << tagSize;
 
     const bool unsynch = buf[5] & 0x80;

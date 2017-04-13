@@ -51,10 +51,10 @@ private:
     QString getID3v2Text(const char* buf, int size);
 
     ///
-    int getID3v2_2Frame(const char* buf);
+    int getID3v2_2Frame(char* buf);
 
     ///
-    int getID3v2Frame(const char* buf, int ver);
+    int getID3v2Frame(char* buf, int ver);
 
     ///
     int getExtHdrSize(const char* buf, int ver);

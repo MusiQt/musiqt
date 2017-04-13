@@ -29,7 +29,7 @@ private:
     QString _type;
 
 public:
-    imageData(const size_t size, const char *data, QString &type) :
+    imageData(size_t size, char *data, QString &type) :
         _size(size),
         _data(new char[size]),
         _type(type)
@@ -39,9 +39,9 @@ public:
 
     ~imageData() { delete [] _data; }
 
-    size_t size(void) const { return _size; }
-    char* data(void) const { return _data; }
-    const QString& type(void) const { return _type; }
+    size_t size() const { return _size; }
+    char* data() const { return _data; }
+    const QString& type() const { return _type; }
 };
 
 #endif

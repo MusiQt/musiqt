@@ -127,6 +127,8 @@ bool oggBackend::open(const QString& fileName)
     QString album = QString::null;
     QString genre = QString::null;
     QString comment = QString::null;
+    QString mime = QString::null;
+    QByteArray image;
 
     char **ptr = ov_comment(_vf, -1)->user_comments;
     while (*ptr)
@@ -143,6 +145,27 @@ bool oggBackend::open(const QString& fileName)
             {
                 _metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
             }
+            else if (!compareTag(*ptr, "METADATA_BLOCK_PICTURE"))
+            {
+                qDebug() << "METADATA_BLOCK_PICTURE";
+                // TODO
+            }
+            else if (!compareTag(*ptr, "COVERARTMIME"))
+            {
+                qDebug() << "COVERARTMIME";
+                mime = QString(*ptr+13);
+            }
+            else if (!compareTag(*ptr, "COVERART"))
+            {
+                qDebug() << "COVERART";
+                image = QByteArray::fromBase64(*ptr+9);
+            }
+            else if (!compareTag(*ptr, "BINARY_COVERART"))
+            {
+                qDebug() << "BINARY_COVERART";
+                //mime = QString(*ptr+17);
+                //image = QByteArray::fromBase64(*ptr+16);
+            }
         }
         ++ptr;
     }
@@ -153,7 +176,7 @@ bool oggBackend::open(const QString& fileName)
 <32>   The length of the MIME type string in bytes.
 <n*8>  The MIME type string
 <32>   The length of the description string in bytes.
-<n*8>  The description of the picture, in UTF-8. 
+<n*8>  The description of the picture, in UTF-8.
 <32>   The width of the picture in pixels.
 <32>   The height of the picture in pixels.
 <32>   The color depth of the picture in bits-per-pixel.
@@ -172,6 +195,9 @@ bool oggBackend::open(const QString& fileName)
     _metaData.addInfo(metaData::GENRE, genre);
     _metaData.addInfo(metaData::YEAR, year);
     _metaData.addInfo(metaData::COMMENT, comment);
+
+    if (!mime.isNull())
+        _metaData.addInfo(new imageData(image.size(), (char*)image.data(), mime));
 
     songLoaded(fileName);
     return true;

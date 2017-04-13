@@ -69,7 +69,8 @@ private:
     imageData *_img;
 
 public:
-    metaDataImpl(void) : _img(0) {}
+    metaDataImpl() : _img(nullptr) {}
+    ~metaDataImpl() { delete _img; }
 
     /// Append song info
     void addInfo(QString type, QString info);

@@ -77,9 +77,9 @@ extern const unsigned char iconMpg123[560] =
 const char mpg123Backend::name[] = "Mpg123";
 
 #ifdef _WIN32
-# define MPG123LIB	"libmpg123-0.dll"
+# define MPG123LIB "libmpg123-0.dll"
 #else
-# define MPG123LIB	"libmpg123.so"
+# define MPG123LIB "libmpg123.so"
 #endif
 
 int (*mpg123Backend::dl_mpg123_init)(void)=0;
@@ -323,6 +323,7 @@ bool mpg123Backend::open(const QString& fileName)
 
         if (id3v2 && id3v2->genre)
         {
+        qDebug() << "genre id3v2: " << id3v2->genre->p;
             info = QString::fromUtf8(id3v2->genre->p);
             int st = info.indexOf('(');
             if (st >= 0)
@@ -336,6 +337,7 @@ bool mpg123Backend::open(const QString& fileName)
         else if (id3v1 && (id3v1->genre < GENRES))
         {
             info = genre[id3v1->genre];
+        qDebug() << "genre id3v1: " << id3v1->genre;
         }
         else
         {
@@ -347,6 +349,9 @@ bool mpg123Backend::open(const QString& fileName)
         if (id3v2 && id3v2->year)
         {
             info = QString::fromUtf8(id3v2->year->p);
+            // TODO support multiple genres
+            // RX    Remix
+            // CR    Cover
         }
         else if (id3v1)
         {
@@ -381,6 +386,13 @@ bool mpg123Backend::open(const QString& fileName)
                 if ((entry->description.fill == 0) || (entry->description.p[0] == 0))
                     info = QString::fromUtf8(entry->text.p).trimmed();
             }
+        }
+
+        if (id3v2 && id3v2->pictures)
+        {
+            QString mime(id3v2->picture[0].mime_type.p);
+            qDebug() << mime;
+            _metaData.addInfo(new imageData(id3v2->picture[0].size, (char*)id3v2->picture[0].data, mime));
         }
 
         if (info.isEmpty() && id3v1)
