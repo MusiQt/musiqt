@@ -32,6 +32,7 @@
 #include <QSize>
 #include <QPushButton>
 #include <QGridLayout>
+#include <QThreadPool>
 
 #define IMAGESIZE 150
 
@@ -47,18 +48,10 @@ void imageLoader::run()
     emit loaded(image);
 }
 
-void imageLoader::load(const QString& file)
-{
-    _name = file;
-
-    start();
-}
-
 /*****************************************************************/
 
 infoDialog::infoDialog(QWidget* w) :
     QDialog(w),
-    _imageLoader(nullptr),
     _imgFrame(nullptr)
 {
     QVBoxLayout *main = new QVBoxLayout();
@@ -100,12 +93,12 @@ infoDialog::infoDialog(QWidget* w) :
 
 infoDialog::~infoDialog()
 {
-    if (_imageLoader != nullptr)
-    {
-        _imageLoader->wait();
-        delete _imageLoader;
-        QApplication::restoreOverrideCursor();
-    }
+    //if (_imageLoader != nullptr)
+    //{
+    //    _imageLoader->wait();
+    //    delete _imageLoader;
+    //    QApplication::restoreOverrideCursor();
+    //}
 }
 
 void infoDialog::setInfo(const metaData* mtd)
@@ -212,9 +205,6 @@ void infoDialog::setInfo(const metaData* mtd)
     }
     else
     {
-        _imageLoader = new imageLoader();
-        
-        connect(_imageLoader, SIGNAL(loaded(const QImage*)), this, SLOT(onImgLoaded(const QImage*)));
 
         QDir dir = QFileInfo(location).dir();
         QString folder = dir.path();
@@ -227,7 +217,10 @@ void infoDialog::setInfo(const metaData* mtd)
             QString file = QFileInfo(folder, _files[0]).canonicalFilePath();
 
             qDebug() << "Trying to load album art: " << file;
-            _imageLoader->load(file);
+            imageLoader* loader = new imageLoader(file);
+            loader->setAutoDelete(true);
+            connect(loader, SIGNAL(loaded(const QImage*)), this, SLOT(onImgLoaded(const QImage*)));
+            QThreadPool::globalInstance()->start(loader);
             QApplication::setOverrideCursor(Qt::WaitCursor); // setCursor(Qt::WaitCursor); ???
         }
 
@@ -237,6 +230,7 @@ void infoDialog::setInfo(const metaData* mtd)
     if (gLayout->count() == 0)
         gLayout->addWidget(new QLabel(tr("No info"), matrix));
 
+    qDebug() << _text->document()->characterCount();
     if (_text->document()->characterCount() > 1) // ???
     {
         _text->show();
@@ -253,8 +247,6 @@ void infoDialog::setInfo(const metaData* mtd)
 
 void infoDialog::onImgLoaded(const QImage* img)
 {
-    _imageLoader->wait();
-
     if (img != nullptr)
     {
         _imgFrame->setPixmap(QPixmap::fromImage(*img));
@@ -262,5 +254,4 @@ void infoDialog::onImgLoaded(const QImage* img)
     }
 
     QApplication::restoreOverrideCursor();
-    delPtr(_imageLoader);
 }

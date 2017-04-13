@@ -23,27 +23,25 @@
 #include <QWidget>
 #include <QImage>
 #include <QLabel>
-#include <QThread>
+#include <QRunnable>
 #include <QPlainTextEdit>
 
 class metaData;
 
-class imageLoader : public QThread
+class imageLoader : public QObject, public QRunnable
 {
     Q_OBJECT
 
 private:
     QString _name;
 
-protected:
+public:
     void run() override;
 
 public:
-    imageLoader()
-        : QThread() {}
-
-    /// Load an image
-    void load(const QString& file);
+    imageLoader(const QString& file) :
+        _name(file)
+    {}
 
 signals:
     void loaded(const QImage* image);
@@ -56,7 +54,6 @@ class infoDialog : public QDialog
     Q_OBJECT
 
 private:
-    imageLoader *_imageLoader;
     QLabel *_imgFrame;
     QWidget *matrix;
     QPlainTextEdit *_text;
