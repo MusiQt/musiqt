@@ -29,7 +29,7 @@
 
 typedef struct
 {
-    sample_t	precision;
+    sample_t precision;
 } oggConfig_t;
 
 /*****************************************************************/
@@ -45,13 +45,12 @@ private:
     oggConfig(const oggConfig&);
     oggConfig& operator=(const oggConfig&);
 
-private slots:
-    void onCmdBits(int val);
-
 public:
     oggConfig(QWidget* win);
     virtual ~oggConfig() {}
 
+private slots:
+    void onCmdBits(int val);
 };
 
 /*****************************************************************/
@@ -70,7 +69,7 @@ private:
     QFile _file;
 
 private:
-    static ov_callbacks	vorbis_callbacks;
+    static ov_callbacks vorbis_callbacks;
 
     static size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource);
     static int seek_func(void *datasource, ogg_int64_t offset, int whence);
@@ -106,10 +105,10 @@ public:
     bool rewind() override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _vi ? _vi->rate : 0; }
+    unsigned int samplerate() const override { return _vi != nullptr ? _vi->rate : 0; }
 
     /// Get channels
-    unsigned int channels() const override { return _vi ? _vi->channels : 0; }
+    unsigned int channels() const override { return _vi != nullptr ? _vi->channels : 0; }
 
     /// Get precision
     sample_t precision() const override { return _settings.precision; }

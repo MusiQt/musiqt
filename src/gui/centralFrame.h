@@ -111,6 +111,7 @@ public slots:
     void onCmdNextSong();
     void onCmdPlEdit(bool);
     void onCmdPlSave();
+    void onDirectoryLoaded();
 
     void setFile(const QString& file, const bool play);
     

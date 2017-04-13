@@ -65,6 +65,7 @@ centralFrame::centralFrame(QWidget *parent) :
     fsm = new QFileSystemModel(this);
     fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot);
     fsm->setRootPath(QDir::rootPath());
+    connect(fsm, SIGNAL(directoryLoaded(const QString&)), this, SLOT(onDirectoryLoaded()));
 
     _dirlist = new QTreeView(this);
     _dirlist->setModel(fsm);
@@ -160,7 +161,7 @@ centralFrame::centralFrame(QWidget *parent) :
         for (int i=0; i<IFACTORY->num(); i++)
             _fileTypes->addItem(IFACTORY->name(i));
 
-        _fileTypes->setMaxVisibleItems((_fileTypes->count()>5)?5:_fileTypes->count());
+        _fileTypes->setMaxVisibleItems((_fileTypes->count() > 5) ? 5 : _fileTypes->count());
         connect(_fileTypes, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdFiletype(int)));
     }
 
@@ -223,7 +224,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
             return;
         int bk = 0;
         do {
-            if (bk!=_fileTypes->currentIndex())
+            if (bk != _fileTypes->currentIndex())
             {
                 input* i = IFACTORY->get(bk);
                 items = _playlist->filter(i->ext());
@@ -255,9 +256,12 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
             QFileInfo fileInfo(_input->songLoaded());
             QList<QListWidgetItem *> items = _playlist->findItems(fileInfo.baseName(),
                                                                   Qt::MatchExactly|Qt::MatchCaseSensitive);
-            const int i = items.empty() ? -1 : _playlist->row(items.at(0));
-            _playlist->setCurrentRow(i);
-            //_playlist->makeItemVisible(i);
+            if (!items.empty())
+            {
+                QListWidgetItem *item = items.at(0);
+                _playlist->setCurrentRow(_playlist->row(item));
+                _playlist->scrollToItem(item);
+            }
         }
         else if (!playing)
             _playlist->setCurrentRow(0);
@@ -534,8 +538,9 @@ void centralFrame::onCmdSongLoaded(input* res)
 
     if (res != nullptr)
     {
-        delete _input;
+        input* tmp = _input;
         _input = res;
+        delete tmp;
 
         emit setDisplay(_input);
 
@@ -567,7 +572,7 @@ void centralFrame::onCmdSongSelected(int currentRow)
         return;
 
     qDebug() << "onCmdSongSelected " << currentRow;
-    if (currentRow<0)
+    if (currentRow < 0)
         return;
 
     QString songLoaded = _input->songLoaded();
@@ -619,10 +624,10 @@ void centralFrame::preloadSong()
     if (playMode && _input->gapless() && !playDir.compare(fsm->fileName(_dirlist->currentIndex())))
     {
         const int nextSong = _playlist->currentRow()+1;
-        if (nextSong<_playlist->count())
+        if (nextSong < _playlist->count())
         {
-                preloaded = _playlist->getLocation(nextSong);
-                load(preloaded);
+            preloaded = _playlist->getLocation(nextSong);
+            load(preloaded);
         }
     }
 }
@@ -632,7 +637,7 @@ void centralFrame::songEnded()
     qDebug("centralFrame::songEnded");
     if (SETTINGS->subtunes() && (_input->subtune()<_input->subtunes()))
     {
-        //handle(this, FXSEL(SEL_COMMAND, ID_NEXT_SUBTUNE), 0);
+        changeSubtune(ID_NEXT);
         return;
     }
 
@@ -803,6 +808,14 @@ void centralFrame::updateSongs()
 
 void centralFrame::setDir(const QModelIndex& index)
 {
+    qDebug("centralFrame::setDir");
     _dirlist->setCurrentIndex(index);
     _dirlist->scrollTo(index);
+}
+
+void centralFrame::onDirectoryLoaded()
+{
+    qDebug("centralFrame::onDirectoryLoaded");
+    _dirlist->expand(_dirlist->currentIndex());
+    _dirlist->scrollTo(_dirlist->currentIndex());
 }
