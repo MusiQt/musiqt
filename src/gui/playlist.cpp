@@ -54,10 +54,10 @@ void playlist::dropEvent(QDropEvent *event)
     for (int i=0; i<urlList.size(); ++i)
     {
         QString url = urlList.at(i).path();
-        if (QFileInfo(url).exists())
+        if (QFileInfo(url).isFile())
         {
             add(url);
-            //sortItems();
+            //sortItems(order);
         }
     }
 
@@ -146,13 +146,13 @@ void playlist::onCmdDel()
 void playlist::sortAsc()
 {
     order = Qt::AscendingOrder;
-    sortItems(Qt::AscendingOrder);
+    sortItems(order);
 }
 
 void playlist::sortDesc()
 {
     order = Qt::DescendingOrder;
-    sortItems(Qt::DescendingOrder);
+    sortItems(order);
 }
 
 //long playlist::onCmdSort()
