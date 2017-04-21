@@ -346,12 +346,14 @@ bool sidBackend::open(const QString& fileName)
      */
     switch (tuneInfo->numberOfInfoStrings())
     {
-    case 1:
-        _metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));
-    case 2:
-        _metaData.addInfo(metaData::ARTIST, QString::fromLatin1(tuneInfo->infoString(1)));
     case 3:
         _metaData.addInfo(gettext("released"), QString::fromLatin1(tuneInfo->infoString(2)));
+        // fall-through
+    case 2:
+        _metaData.addInfo(metaData::ARTIST, QString::fromLatin1(tuneInfo->infoString(1)));
+        // fall-through
+    case 1:
+        _metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));
     }
 
     /*
