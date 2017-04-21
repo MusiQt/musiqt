@@ -183,7 +183,7 @@ bool mpcBackend::open(const QString& fileName)
 
     if (SETTINGS->replayGain())
     {
-        // Replaigain reference level (is this correct?)
+        // Replaygain reference level (is this correct?)
         const double referenceLevel = 89.0;
 #ifdef SV8
         mpc_set_replay_level(_demux, referenceLevel, MPC_TRUE,
