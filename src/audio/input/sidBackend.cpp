@@ -284,8 +284,8 @@ bool sidBackend::open(const QString& fileName)
     {
         ReSIDBuilder *tmpResid = new ReSIDBuilder("Musiqt reSID");
         tmpResid->create(_sidplayfp->info().maxsids());
-        tmpResid->filter(_settings.filter);
 
+        tmpResid->filter(_settings.filter);
         tmpResid->bias((double)_settings.bias/1000.0);
         emuSid = (sidbuilder*)tmpResid;
     }
@@ -295,6 +295,7 @@ bool sidBackend::open(const QString& fileName)
     {
         HardSIDBuilder *tmpHardsid = new HardSIDBuilder("Musiqt hardSID");
         tmpHardsid->create(_sidplayfp->info().maxsids());
+
         tmpHardsid->filter(_settings.filter);
         emuSid = (sidbuilder*)tmpHardsid;
     }
@@ -304,12 +305,13 @@ bool sidBackend::open(const QString& fileName)
     {
         exSIDBuilder *tmpExsid = new exSIDBuilder("Musiqt exSID");
         tmpExsid->create(_sidplayfp->info().maxsids());
+
         tmpExsid->filter(_settings.filter);
         emuSid = (sidbuilder*)tmpExsid;
     }
 #endif
 
-    if (!emuSid)
+    if (emuSid == nullptr)
     {
         delPtr(_sidplayfp);
         return false;
@@ -360,7 +362,7 @@ bool sidBackend::open(const QString& fileName)
      * MUS files have only comments
      */
     const unsigned int n = tuneInfo->numberOfCommentStrings();
-    if (n)
+    if (n != 0)
     {
         QString info;
         for (unsigned int i=0; i<n; i++)
@@ -463,7 +465,7 @@ void sidBackend::loadTune(const int num)
 {
     _tune->selectSong(num);
     _sidplayfp->load(_tune);
-    _length = _db ? _db->length(_md5, _tune->getInfo()->currentSong()) : 0;
+    _length = _db != nullptr ? _db->length(_md5, _tune->getInfo()->currentSong()) : 0;
     time(_length);
 }
 

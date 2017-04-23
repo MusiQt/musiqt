@@ -319,7 +319,7 @@ bool mpg123Backend::open(const QString& fileName)
 
         if (id3v2 && id3v2->genre)
         {
-        qDebug() << "genre id3v2: " << id3v2->genre->p;
+            qDebug() << "genre id3v2: " << id3v2->genre->p;
             info = QString::fromUtf8(id3v2->genre->p);
             int st = info.indexOf('(');
             if (st >= 0)

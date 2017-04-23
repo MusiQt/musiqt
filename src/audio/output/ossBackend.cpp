@@ -89,7 +89,7 @@ size_t ossBackend::open(const unsigned int card, unsigned int &sampleRate,
         qDebug() << "No mixer available";
     }
 
-    if (mask&(1<<SOUND_MIXER_PCM))
+    if (mask & (1<<SOUND_MIXER_PCM))
     {
         qDebug() << "PCM is supported";
     }
@@ -188,7 +188,7 @@ loop:
     }
 
     bufferSize -= n;
-    if (!bufferSize)
+    if (bufferSize == 0)
         return true;
 
     buffer = (char*)buffer+n;
