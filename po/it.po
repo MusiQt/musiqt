@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2017-03-28 21:00+0200\n"
+"POT-Creation-Date: 2017-04-15 20:56+0200\n"
 "PO-Revision-Date: 2017-03-19 21:50+0100\n"
 "Last-Translator: \n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -94,84 +94,84 @@ msgstr "Cancella i segnalibri"
 msgid "Are you sure you want to delete all bookmarks?"
 msgstr "Sei sicuro di voler cancellare tutti i segnalibri?"
 
-#: src/gui/centralFrame.cpp:111 src/gui/mainWindow.cpp:193
+#: src/gui/centralFrame.cpp:112 src/gui/mainWindow.cpp:193
 msgid "Playlist"
 msgstr "Playlist"
 
-#: src/gui/centralFrame.cpp:117
+#: src/gui/centralFrame.cpp:118
 msgid "Bookmarks"
 msgstr "Segnalibri"
 
-#: src/gui/centralFrame.cpp:135
+#: src/gui/centralFrame.cpp:136
 msgid "Edit"
 msgstr "Modifica"
 
-#: src/gui/centralFrame.cpp:136
+#: src/gui/centralFrame.cpp:137
 msgid "Edit playlist"
 msgstr "Modifica la playlist"
 
-#: src/gui/centralFrame.cpp:142
+#: src/gui/centralFrame.cpp:143
 msgid "Save"
 msgstr "Salva"
 
-#: src/gui/centralFrame.cpp:143 src/gui/centralFrame.cpp:780
+#: src/gui/centralFrame.cpp:144 src/gui/centralFrame.cpp:785
 msgid "Save playlist"
 msgstr "Salva la playlist"
 
-#: src/gui/centralFrame.cpp:148
+#: src/gui/centralFrame.cpp:149
 msgid "Current playlist"
 msgstr "Playlist corrente"
 
-#: src/gui/centralFrame.cpp:149
+#: src/gui/centralFrame.cpp:150
 msgid "Return to current playlist"
 msgstr "Ritorna alla playlist corrente"
 
-#: src/gui/centralFrame.cpp:154 src/gui/centralFrame.cpp:155
+#: src/gui/centralFrame.cpp:155 src/gui/centralFrame.cpp:156
 msgid "Home"
 msgstr "Home"
 
-#: src/gui/centralFrame.cpp:693
+#: src/gui/centralFrame.cpp:698
 msgid "Add to playlist"
 msgstr "Modifica la playlist"
 
-#: src/gui/centralFrame.cpp:694
+#: src/gui/centralFrame.cpp:699
 msgid "Add song to the playlist"
 msgstr "Aggiungi il brano alla playlist"
 
-#: src/gui/centralFrame.cpp:698
+#: src/gui/centralFrame.cpp:703
 msgid "Add to bookmarks"
 msgstr "Aggiungi ai segnalibri"
 
-#: src/gui/centralFrame.cpp:699
+#: src/gui/centralFrame.cpp:704
 msgid "Add directory to the bookmarks"
 msgstr "Aggiungi la cartella ai segnalibri"
 
-#: src/gui/centralFrame.cpp:785 src/audio/input/gmeBackend.cpp:392
+#: src/gui/centralFrame.cpp:790 src/audio/input/gmeBackend.cpp:392
 #: src/audio/input/sidBackend.cpp:999
 msgid "Warning"
 msgstr "Attenzione"
 
-#: src/gui/centralFrame.cpp:785
+#: src/gui/centralFrame.cpp:790
 msgid "File exists, owerwrite?"
 msgstr "Il file esiste, sovrascrivere?"
 
-#: src/gui/centralFrame.cpp:789
+#: src/gui/centralFrame.cpp:794
 msgid "Error"
 msgstr "Errore"
 
-#: src/gui/centralFrame.cpp:789
+#: src/gui/centralFrame.cpp:794
 msgid "Error saving playlist"
 msgstr "Errore nel salvataggio della playlist"
 
-#: src/gui/infoDialog.cpp:96
+#: src/gui/infoDialog.cpp:89
 msgid "&Close"
 msgstr "&Chiudi"
 
-#: src/gui/infoDialog.cpp:126
+#: src/gui/infoDialog.cpp:119
 msgid "No song loaded"
 msgstr "Nessun brano caricato"
 
-#: src/gui/infoDialog.cpp:238 src/gui/infoLabel.cpp:61
+#: src/gui/infoDialog.cpp:231 src/gui/infoLabel.cpp:61
 msgid "No info"
 msgstr "Nessuna informazione"
 
@@ -590,15 +590,15 @@ msgstr ""
 msgid "publisher"
 msgstr "editore"
 
-#: src/audio/input/mpg123Backend.cpp:467
+#: src/audio/input/mpg123Backend.cpp:473
 msgid "Decoder"
 msgstr "Decoder"
 
-#: src/audio/input/mpg123Backend.cpp:487
+#: src/audio/input/mpg123Backend.cpp:493
 msgid "Fast scan"
 msgstr "Scan veloce"
 
-#: src/audio/input/oggBackend.cpp:254
+#: src/audio/input/oggBackend.cpp:288
 msgid "Bits"
 msgstr "Bit"
 

@@ -22,6 +22,7 @@
 #include "trackListBackend.h"
 
 #include <QSettings>
+#include <QDebug>
 
 class trackListPls final : public trackListBackend
 {
@@ -53,16 +54,16 @@ public:
 
         QTextStream outputStream(&file);
 
-        outputStream << "[playlist]";
+        writeLine(outputStream, "[playlist]");
 
         QString tmp = QString("NumberOfEntries=%1").arg(tracks->size());
-        outputStream << tmp;
-
+        writeLine(outputStream, tmp);
 
         for (int i=0; i<tracks->size(); i++)
         {
+        qDebug() << "File: " << tracks->at(i).location();
             tmp = QString("File%1=%2").arg(i+1).arg(tracks->at(i).location());
-            outputStream << tmp;
+            writeLine(outputStream, tmp);
         }
 
         file.close();

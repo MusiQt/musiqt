@@ -44,7 +44,7 @@ Q_DECLARE_METATYPE(track_t)
 
 /*****************************************************************/
 
-class tracks : public QList<track_t>
+class tracks : public QList<track_t> // FIXME change to QAbstractListModel
 {
 public:
     tracks() : QList<track_t>() {}

@@ -91,15 +91,7 @@ infoDialog::infoDialog(QWidget* w) :
     connect(b, SIGNAL(clicked()), this, SLOT(close()));
 }
 
-infoDialog::~infoDialog()
-{
-    //if (_imageLoader != nullptr)
-    //{
-    //    _imageLoader->wait();
-    //    delete _imageLoader;
-    //    QApplication::restoreOverrideCursor();
-    //}
-}
+infoDialog::~infoDialog() {}
 
 void infoDialog::setInfo(const metaData* mtd)
 {
@@ -205,7 +197,6 @@ void infoDialog::setInfo(const metaData* mtd)
     }
     else
     {
-
         QDir dir = QFileInfo(location).dir();
         QString folder = dir.path();
         QStringList filters;

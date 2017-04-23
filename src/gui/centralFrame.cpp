@@ -63,8 +63,10 @@ centralFrame::centralFrame(QWidget *parent) :
 
     // dir view
     fsm = new QFileSystemModel(this);
-    fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot);
+    fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot|QDir::Files);
     fsm->setRootPath(QDir::rootPath());
+    fsm->setNameFilterDisables(false);
+    fsm->setNameFilters(TFACTORY->plExt());
     connect(fsm, SIGNAL(directoryLoaded(const QString&)), this, SLOT(onDirectoryLoaded()));
 
     _dirlist = new QTreeView(this);
@@ -762,13 +764,18 @@ void centralFrame::onCmdPlEdit(bool checked)
     {
         _playlist->clear();
         _playlist->setAcceptDrops(true);
-        fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot|QDir::Files);
-        fsm->setNameFilters(_input->ext());
+         // FIXME this sucks
+        QStringList ext = _input->ext();
+        QStringList result;
+        foreach (QString str, ext)
+        {
+            result << str.prepend("*.");
+        }
+        fsm->setNameFilters(result);
     }
     else
     {
         _playlist->setAcceptDrops(false);
-        fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot);
         fsm->setNameFilters(TFACTORY->plExt());
         setProperty("AutoBackend", QVariant(false));
         onDirSelected(_dirlist->currentIndex());
@@ -781,14 +788,10 @@ void centralFrame::onCmdPlSave()
     if (!n)
         return;
 
-    QString filter = TFACTORY->plExt().join(",");
+    QString filter = TFACTORY->plExt().join(" ");
     QString filename = QFileDialog::getSaveFileName(this, tr("Save playlist"), "", filter);
     if (filename.isNull())
         return;
-
-    if (QFile::exists(filename))
-        if (QMessageBox::question(this, tr("Warning"), tr("File exists, owerwrite?")) == QMessageBox::No)
-            return;
 
     if (!_playlist->save(filename))
         QMessageBox::critical(this, tr("Error"), tr("Error saving playlist"));
@@ -815,7 +818,9 @@ void centralFrame::setDir(const QModelIndex& index)
 
 void centralFrame::onDirectoryLoaded()
 {
+    //FIXME
     qDebug("centralFrame::onDirectoryLoaded");
-    _dirlist->expand(_dirlist->currentIndex());
-    _dirlist->scrollTo(_dirlist->currentIndex());
+    //const QModelIndex currentIndex = _dirlist->currentIndex();
+    //_dirlist->expand(currentIndex);
+    //_dirlist->scrollTo(currentIndex);
 }

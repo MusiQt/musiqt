@@ -65,7 +65,7 @@ public:
 
         for (int i=0; i<tracks->size(); i++)
         {
-            outputStream << tracks->at(i).location();
+            writeLine(outputStream, tracks->at(i).location());
         }
 
         file.close();

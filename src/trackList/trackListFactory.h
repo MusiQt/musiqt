@@ -26,9 +26,9 @@
 #define TFACTORY tFactory::instance()
 
 #ifdef HAVE_LIBCUE
-#  define EXT "pls,m3u,cue"
+#  define EXT "*.pls,*.m3u,*.cue"
 #else
-#  define EXT "pls,m3u"
+#  define EXT "*.pls,*.m3u"
 #endif
 
 class tFactory

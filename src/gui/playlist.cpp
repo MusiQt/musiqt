@@ -105,17 +105,17 @@ void playlist::contextMenuEvent(QContextMenuEvent * event)
         pane.addSeparator();
     }
 
-    QAction* asc = new  QAction(tr("Sort ascending"), &pane);
+    QAction* asc = new QAction(tr("Sort ascending"), &pane);
     asc->setCheckable(true);
     asc->setStatusTip(tr("Sort ascending"));
     if (order == Qt::AscendingOrder) asc->setChecked(true);
     connect(asc, SIGNAL(triggered()), this, SLOT(sortAsc()));
-    QAction* desc = new  QAction(tr("Sort descending"), &pane);
+    QAction* desc = new QAction(tr("Sort descending"), &pane);
     desc->setCheckable(true);
     desc->setStatusTip(tr("Sort descending"));
     if (order == Qt::DescendingOrder) desc->setChecked(true);
     connect(desc, SIGNAL(triggered()), this, SLOT(sortDesc()));
-    QAction* rnd = new  QAction(tr("Shuffle"), &pane); // playlist::ID_SORT_RANDOM
+    QAction* rnd = new QAction(tr("Shuffle"), &pane); // playlist::ID_SORT_RANDOM
     rnd->setCheckable(true);
     rnd->setDisabled(true); // TODO remove
     rnd->setStatusTip(tr("Sort randomly"));
@@ -155,45 +155,42 @@ void playlist::sortDesc()
     sortItems(order);
 }
 
-//long playlist::onCmdSort()
+//void playlist::onCmdSort()
 //{
 //	switch (FXSELID(sel)) {
 //	case ID_SORT_ASC:
-//		setSortFunc(playlist::ascending);
+//		order = Qt::AscendingOrder;
 //		break;
 //	case ID_SORT_DESC:
-//		setSortFunc(playlist::descending);
+//		order = Qt::DescendingOrder;
 //		break;
 //	case ID_SORT_RANDOM:
-//		setSortFunc(playlist::random);
+//		???;
 //		break;
 //	}
 //
 //	if (!count())
-//		return 0;
+//		return;
 //
-//	sortItems();
+//	sortItems(order);
 //	makeItemVisible(getCurrentItem());
-//
-//	return 1;
 //}
 //
-//long playlist::onUpdSort(FXObject* sender, FXSelector sel, void*)
+//void playlist::onUpdSort(FXObject* sender, FXSelector sel, void*)
 //{
 //	bool check=false;
 //	switch (FXSELID(sel)) {
 //	case ID_SORT_ASC:
-//		check=(getSortFunc()==playlist::ascending);
+//		check=(order==Qt::AscendingOrder);
 //		break;
 //	case ID_SORT_DESC:
-//		check=(getSortFunc()==playlist::descending);
+//		check=(order==Qt::DescendingOrder);
 //		break;
 //	case ID_SORT_RANDOM:
-//		check=(getSortFunc()==playlist::random);
+//		check=(order==playlist::random);
 //		break;
 //	}
 //	sender->handle(this, check?FXSEL(SEL_COMMAND, ID_CHECK):FXSEL(SEL_COMMAND, ID_UNCHECK), 0);
-//	return 1;
 //}
 
 //int playlist::ascending(const FXListItem* a, const FXListItem* b)
@@ -232,7 +229,7 @@ void playlist::sortDesc()
 //		return "descending";
 //	else if (getSortFunc()==playlist::random)
 //		return "random";
-//	return 0;
+//	return nullptr;
 //}
 
 int playlist::load(const QString& path)
@@ -259,10 +256,12 @@ bool playlist::save(const QString& file)
     //FIXME
     if (_tracks == nullptr)
         _tracks = new tracks();
-    _tracks->clear();
+    else
+        _tracks->clear();
+
     for (int i=0; i<count(); i++)
     {
-        _tracks->append(item(i)->text());
+        _tracks->append(item(i)->toolTip());
     }
 
     return tracklist->save(_tracks);
@@ -270,12 +269,13 @@ bool playlist::save(const QString& file)
 
 int playlist::filter(const QStringList& filter)
 {
-    if (!_tracks)
+    if (_tracks == nullptr)
         return 0;
 
     QString filt = filter.join("|");
     filt.prepend(".*\\.(").append(")");
     qDebug() << "filter: " << filt;
+
     clear();
 
     QRegExp regexp(filt);

@@ -41,11 +41,9 @@ protected:
         _tracks = new tracks();
     }
 
-    void writeLine(QFile* file, QString line)
+    void writeLine(QTextStream& outputStream, QString line)
     {
-        QTextStream outputStream(file);
-        //line.append(ENDLINE);
-        outputStream << line;
+        outputStream << line << '\n';
     }
 
 public:
