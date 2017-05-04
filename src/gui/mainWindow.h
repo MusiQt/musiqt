@@ -74,6 +74,9 @@ private slots:
     //void setSubtune();
     void onStatusbarChanged(const QString &message);
 
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
+
 private:
     void createTrayIcon();
     void createActions();

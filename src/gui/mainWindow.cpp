@@ -545,3 +545,16 @@ void mainWindow::onStatusbarChanged(const QString &message)
     if (message.isNull())
         statusBar()->showMessage(PACKAGE_STRING);
 }
+
+void mainWindow::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key())
+    {
+    case Qt::Key_MediaPlay: cFrame->onCmdPlayPauseSong(); event->accept(); break;
+    case Qt::Key_MediaStop: cFrame->onCmdStopSong(); event->accept(); break;
+    case Qt::Key_MediaPause: cFrame->onCmdPlayPauseSong(); event->accept(); break;
+    case Qt::Key_MediaPrevious: cFrame->onCmdPrevSong(); event->accept(); break;
+    case Qt::Key_MediaNext: cFrame->onCmdNextSong(); event->accept(); break;
+    default: QMainWindow::keyPressEvent(event); break;
+    }
+}
