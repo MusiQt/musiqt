@@ -411,7 +411,8 @@ void centralFrame::onCmdPlayPauseSong()
         playing = true;
         playDir = fsm->fileName(_dirlist->currentIndex());
     }
-    
+
+    _fileTypes->setEnabled(false);
     emit stateChanged(_audio->state());
 }
 
@@ -420,6 +421,7 @@ void centralFrame::onCmdStopSong()
     if (_audio->stop())
     {
         playing = false;
+        _fileTypes->setEnabled(true);
         emit updateTime(0);
         emit stateChanged(_audio->state());
         QModelIndex curr = _dirlist->currentIndex();
@@ -511,6 +513,8 @@ void centralFrame::load(const QString& filename)
 {
     qDebug() << "Loading " << filename;
 
+    _fileTypes->setEnabled(false);
+
     loadThread* loader = new loadThread(IFACTORY->get(_fileTypes->currentIndex()), filename);
     connect(loader, SIGNAL(loaded(input*)), this, SLOT(onCmdSongLoaded(input*)));
     connect(loader, SIGNAL(finished()), loader, SLOT(deleteLater()));
@@ -565,6 +569,7 @@ void centralFrame::onCmdSongLoaded(input* res)
         qWarning() << "Error loading song";
     }
 
+    _fileTypes->setEnabled(true);
     QApplication::restoreOverrideCursor();
 }
 
@@ -760,6 +765,8 @@ void centralFrame::changeSubtune(dir_t dir)
 
 void centralFrame::onCmdPlEdit(bool checked)
 {
+    _fileTypes->setEnabled(!checked);
+
     if (checked)
     {
         _playlist->clear();
