@@ -42,7 +42,6 @@
 #include <QPushButton>
 #include <QSignalMapper>
 #include <QStackedWidget>
-#include <QToolButton>
 #include <QTreeView>
 #include <QWidgetAction>
 #include <QDebug>
@@ -133,7 +132,7 @@ centralFrame::centralFrame(QWidget *parent) :
         _fileTypes = new QComboBox(this);
         _fileTypes->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         buttons->addWidget(_fileTypes);
-        _editMode = new QToolButton(this);
+        _editMode = new QPushButton(this);
         _editMode->setIcon(GET_ICON(icon_editlist));
         _editMode->setToolTip(tr("Edit"));;
         _editMode->setStatusTip(tr("Edit playlist"));

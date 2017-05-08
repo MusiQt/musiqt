@@ -35,7 +35,7 @@ class QTreeView;
 class QFileSystemModel;
 class QListView;
 class QItemSelectionModel;
-class QToolButton;
+class QPushButton;
 
 /*****************************************************************/
 
@@ -152,7 +152,7 @@ private:
     playlist *_playlist;
     QComboBox *_fileTypes;
     bookmark *_bookmarkList;
-    QToolButton *_editMode;
+    QPushButton *_editMode;
 };
 
 #endif
