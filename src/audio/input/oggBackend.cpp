@@ -209,6 +209,9 @@ bool oggBackend::getComment(const char* orig, QString* dest, const char* type)
     if (qstrnicmp(orig, type, n))
         return false;
 
+    if (orig[n] != '=')
+        return false;
+
     if (!dest->isEmpty())
         dest->append(", ");
 
