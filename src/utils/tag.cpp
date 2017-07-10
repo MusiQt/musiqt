@@ -230,8 +230,9 @@ QString tag::getID3v2Text(const char* buf, int size)
         {
             // Add BOM (0xfe 0xff)
             ushort* tempBuffer = new ushort[size*2 + 2];
-            memcpy(tempBuffer, buf, size*2);
-            tempBuffer[size] = (0xfe << 8) | 0xff;
+            tempBuffer[0] = 0xfe;
+            tempBuffer[1] = 0xff;
+            memcpy(tempBuffer+2, buf, size*2);
             tmp = QString::fromUtf16(tempBuffer, size);
             delete [] tempBuffer;
         }
