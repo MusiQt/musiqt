@@ -239,25 +239,18 @@ bool openmptBackend::open(const QString& fileName)
 
     QFile f(fName);
     f.open(QIODevice::ReadOnly);
-    const long size = f.size();
-    char* data = new char[size];
-    f.read(data, size);
+    QByteArray data = f.read(f.size());
     f.close();
-
-    void* buffer = (void*)data;
-    unsigned int len = size;
 
     try
     {
-        _module = new openmpt::module(buffer, len);
+        _module = new openmpt::module(data.constData(), data.length());
     }
     catch (const openmpt::exception &e)
     {
         delPtr(_module);
         return false;
     }
-
-    delete [] data;
 
     delTempFile(tmpFile, fName);
 
