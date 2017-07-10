@@ -57,9 +57,7 @@ typedef struct
     bool filter;
     QString hvscPath;
     int secondSidAddress;
-#ifdef ENABLE_3SID
     int thirdSidAddress;
-#endif
     QString kernalPath;
     QString basicPath;
     QString chargenPath;
@@ -103,9 +101,7 @@ private slots:
     void onCmdClock(int val);
     void onCmdModel(int val);
     void onCmdAddress2(int val);
-#ifdef ENABLE_3SID //FIXME
     void onCmdAddress3(int val);
-#endif
     void onCmdHvsc();
     void onCmdRom(int val);
     void onCmdForceSidModel(bool val);

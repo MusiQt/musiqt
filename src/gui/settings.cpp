@@ -81,12 +81,13 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setAutobk(int)));
     optionLayout->addWidget(cBox);
 
-#ifdef HAVE_BS2B
     cBox = new QCheckBox(tr("&Bauer stereophonic-to-binaural DSP"), this);
     cBox->setToolTip(tr("Bauer stereophonic-to-binaural DSP"));
     cBox->setCheckState(SETTINGS->_bs2b ? Qt::Checked : Qt::Unchecked);
     connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setBs2b(int)));
     optionLayout->addWidget(cBox);
+#ifndef HAVE_BS2B
+    cBox->setDisabled(true);
 #endif
 #if 0
     cBox = new QCheckBox(tr("&Album art HQ resizing"), this);
@@ -268,12 +269,10 @@ void settingsWindow::setAutobk(int val)
     SETTINGS->_autoBk = val == Qt::Checked;
 }
 
-#ifdef HAVE_BS2B
 void settingsWindow::setBs2b(int val)
 {
     SETTINGS->_bs2b = val == Qt::Checked;
 }
-#endif
 
 void settingsWindow::setReplaygain(bool val)
 {
@@ -305,9 +304,7 @@ void settings::load(const QSettings& appSettings)
     QString replayGainMode=appSettings.value("General Settings/Replaygain mode", "Album").toString();
     _replayGainMode = (!replayGainMode.compare("Track")) ? 1 : 0;
 
-#ifdef HAVE_BS2B
     _bs2b=appSettings.value("General Settings/Bauer DSP", false).toBool();
-#endif
 }
 
 void settings::save(QSettings& appSettings)
@@ -320,7 +317,5 @@ void settings::save(QSettings& appSettings)
     appSettings.setValue("General Settings/auto backend", _autoBk);
     appSettings.setValue("General Settings/Replaygain", _replayGain);
     appSettings.setValue("General Settings/Replaygain mode", (_replayGainMode == 0) ? "Album" : "Track");
-#ifdef HAVE_BS2B
     appSettings.setValue("General Settings/Bauer DSP", _bs2b);
-#endif
 }

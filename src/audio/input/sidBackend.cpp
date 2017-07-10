@@ -190,9 +190,7 @@ void sidBackend::loadSettings()
     _settings.filter = load("Filter", true);
     _settings.hvscPath = load("HVSC", QString::null);
     _settings.secondSidAddress = load("Second SID address", 0);
-#ifdef ENABLE_3SID
     _settings.thirdSidAddress = load("Third SID address", 0);
-#endif
     _settings.kernalPath = load("Kernal Rom", QString::null);
     _settings.basicPath = load("BASIC Rom", QString::null);
     _settings.chargenPath = load("Chargen Rom", QString::null);
@@ -222,9 +220,7 @@ void sidBackend::saveSettings()
     save("Filter", _settings.filter);
     save("HVSC", _settings.hvscPath);
     save("Second SID address", _settings.secondSidAddress);
-#ifdef ENABLE_3SID
     save("Third SID address", _settings.thirdSidAddress);
-#endif
     save("Kernal Rom", _settings.kernalPath);
     save("BASIC Rom", _settings.basicPath);
     save("Chargen Rom", _settings.chargenPath);
@@ -678,7 +674,6 @@ sidConfig::sidConfig(QWidget* win) :
     sidAddress->setCurrentIndex(val);
     connect(sidAddress, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdAddress2(int)));
 
-#ifdef ENABLE_3SID
     matrix()->addWidget(new QLabel(tr("Third SID address"), this));
     sidAddress = new QComboBox(this);
     matrix()->addWidget(sidAddress);
@@ -692,6 +687,8 @@ sidConfig::sidConfig(QWidget* win) :
     }
     sidAddress->setCurrentIndex(val);
     connect(sidAddress, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdAddress3(int)));
+#ifndef ENABLE_3SID
+    sidAddress->setDisabled(true);
 #endif
 
     {
@@ -918,12 +915,10 @@ void sidConfig::onCmdAddress2(int val)
     SIDSETTINGS.secondSidAddress = sidAddresses[val];
 }
 
-#ifdef ENABLE_3SID
 void sidConfig::onCmdAddress3(int val)
 {
     SIDSETTINGS.thirdSidAddress = sidAddresses[val];
 }
-#endif
 
 void sidConfig::onCmdHvsc()
 {

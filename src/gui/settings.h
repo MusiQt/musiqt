@@ -45,9 +45,7 @@ private:
 private slots:
     void setSubtunes(int val);
     void setAutobk(int val);
-#ifdef HAVE_BS2B // FIXME moc ignores this
     void setBs2b(int val);
-#endif
     void setReplaygain(bool val);
     void setReplaygainMode(int val);
 
@@ -74,9 +72,7 @@ private:
 
     bool   _subtunes;
     bool   _autoBk;
-#ifdef HAVE_BS2B
     bool   _bs2b;
-#endif
     bool   _replayGain;
     int    _replayGainMode;
 
@@ -116,10 +112,8 @@ public:
     /// Replay Gain Mode
     int replayGainMode() const { return _replayGainMode; }
 
-#ifdef HAVE_BS2B
     /// Bauer stereophonic-to-binaural DSP
     bool bs2b() const { return _bs2b; }
-#endif
 
     /// Default bittdepth
     unsigned int bits() const { return _bits; }
