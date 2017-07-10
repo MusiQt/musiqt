@@ -103,7 +103,11 @@ void wmmBackend::close()
     CloseHandle(_event[1]);
 
     while (waveOutUnprepareHeader(_wHandle, &_wHdr[1-_idx], sizeof(WAVEHDR)) != MMSYSERR_NOERROR)
+#if QT_VERSION >= 0x050000
         QThread::usleep(10);
+#else
+        Sleep(1);
+#endif
 
     waveOutClose(_wHandle);
     delete [] _wHdr[0].lpData;
