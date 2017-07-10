@@ -23,7 +23,10 @@
 #include <QList>
 #include <QString>
 #include <QDebug>
-#include <unistd.h>
+
+#ifndef _WIN32
+#  include <unistd.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,8 +55,13 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
                            const unsigned int channels, const unsigned int prec)
 {
     QAudioFormat format;
+#if QT_VERSION >= 0x050000
+    format.setSampleRate(sampleRate);
+    format.setChannelCount(channels);
+#else
     format.setFrequency(sampleRate);
     format.setChannels(channels);
+#endif
     format.setSampleSize(prec * 8);
     format.setCodec("audio/pcm");
     format.setByteOrder(QAudioFormat::LittleEndian);
@@ -99,7 +107,15 @@ bool qaudioBackend::write(void* buffer, size_t bufferSize)
 
     // FIXME this sucks
     while (!_audioBuffer->atEnd() && _audioOutput->state() != QAudio::StoppedState)
+#if QT_VERSION >= 0x050000
+        QThread::usleep(10);
+#else
+#  ifdef _WIN32
+        Sleep(1);
+#  else
         usleep(10);
+#  endif
+#endif
 
     return true;
 }
@@ -111,13 +127,19 @@ void qaudioBackend::stop()
 
 void qaudioBackend::volume(int vol)
 {
+#if QT_VERSION >= 0x050000
+    _audioOutput->volume(qreal(vol/100.0f));
+#else
     qDebug("Unimplemented");
-    //_audioOutput->volume(qreal(vol/100.0f));
+#endif
 }
 
 int qaudioBackend::volume()
 {
+#if QT_VERSION >= 0x050000
+    return _audioOutput->volume()*100;
+#else
     qDebug("Unimplemented");
     return 0;
-    // return _audioOutput->volume()*100;
+#endif
 }
