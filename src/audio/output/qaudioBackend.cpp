@@ -22,6 +22,7 @@
 #include <QAudioFormat>
 #include <QList>
 #include <QString>
+#include <QThread>
 #include <QDebug>
 
 #ifndef _WIN32
@@ -43,11 +44,9 @@ qaudioBackend::qaudioBackend() :
     _buffer(nullptr)
 {
     // Check devices
-    QList<QAudioDeviceInfo> list = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
-    for (QList<QAudioDeviceInfo>::const_iterator deviceInfo = list.constBegin();
-            deviceInfo != list.constEnd(); ++deviceInfo)
+    foreach(const QAudioDeviceInfo &deviceInfo, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
     {
-        addDevice((*deviceInfo).deviceName().toUtf8().constData());
+        addDevice(deviceInfo.deviceName().toUtf8().constData());
     }
 }
 
@@ -108,12 +107,12 @@ bool qaudioBackend::write(void* buffer, size_t bufferSize)
     // FIXME this sucks
     while (!_audioBuffer->atEnd() && _audioOutput->state() != QAudio::StoppedState)
 #if QT_VERSION >= 0x050000
-        QThread::usleep(10);
+        QThread::msleep(1);
 #else
 #  ifdef _WIN32
         Sleep(1);
 #  else
-        usleep(10);
+        usleep(1000);
 #  endif
 #endif
 
@@ -128,7 +127,7 @@ void qaudioBackend::stop()
 void qaudioBackend::volume(int vol)
 {
 #if QT_VERSION >= 0x050000
-    _audioOutput->volume(qreal(vol/100.0f));
+    _audioOutput->setVolume(qreal(vol/100.0f));
 #else
     qDebug("Unimplemented");
 #endif

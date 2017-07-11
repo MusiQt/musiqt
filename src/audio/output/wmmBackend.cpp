@@ -104,7 +104,7 @@ void wmmBackend::close()
 
     while (waveOutUnprepareHeader(_wHandle, &_wHdr[1-_idx], sizeof(WAVEHDR)) != MMSYSERR_NOERROR)
 #if QT_VERSION >= 0x050000
-        QThread::usleep(10);
+        QThread::msleep(1);
 #else
         Sleep(1);
 #endif
