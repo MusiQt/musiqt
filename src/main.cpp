@@ -27,6 +27,7 @@
 #include <QtPlugin>
 #  ifdef _WIN32
     Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+    Q_IMPORT_PLUGIN(QWindowsAudioPlugin);
 #  endif
 Q_IMPORT_PLUGIN(QGifPlugin)
 Q_IMPORT_PLUGIN(QJpegPlugin)

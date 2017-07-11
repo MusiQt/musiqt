@@ -24,6 +24,7 @@
 
 #include "alsaBackend.h"
 #include "ossBackend.h"
+#include "qaudioBackend.h"
 #include "wmmBackend.h"
 
 oFactory* oFactory::instance()
@@ -57,6 +58,8 @@ oFactory::oFactory()
 #ifdef _WIN32
     regBackend<wmmBackend>();
 #endif
+
+    regBackend<qaudioBackend>();
 }
 
 output* oFactory::get(const int i) const

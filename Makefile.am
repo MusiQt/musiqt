@@ -350,6 +350,8 @@ src/audio/output/ossBackend.h \
 src/audio/output/outputBackend.h \
 src/audio/output/outputFactory.cpp \
 src/audio/output/outputFactory.h \
+src/audio/output/qaudioBackend.cpp \
+src/audio/output/qaudioBackend.h \
 src/audio/output/wmmBackend.cpp \
 src/audio/output/wmmBackend.h \
 src/gui/aboutDialog.cpp \
