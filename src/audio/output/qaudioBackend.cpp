@@ -105,7 +105,11 @@ bool qaudioBackend::write(void* buffer, size_t bufferSize)
     data.append((const char*)buffer, bufferSize);
 
     // FIXME this sucks
-    while (!_audioBuffer->atEnd() && _audioOutput->state() != QAudio::StoppedState)
+    if (_audioOutput->state() == QAudio::SuspendedState)
+        _audioOutput->resume();
+    //while (!_audioBuffer->atEnd() && _audioOutput->state() != QAudio::StoppedState)
+    while ((_audioBuffer->bytesAvailable() > (bufferSize/10))
+        && (_audioOutput->state() == QAudio::ActiveState))
 #if QT_VERSION >= 0x050000
         QThread::msleep(1);
 #else
@@ -117,6 +121,11 @@ bool qaudioBackend::write(void* buffer, size_t bufferSize)
 #endif
 
     return true;
+}
+
+void qaudioBackend::pause()
+{
+    _audioOutput->suspend();
 }
 
 void qaudioBackend::stop()

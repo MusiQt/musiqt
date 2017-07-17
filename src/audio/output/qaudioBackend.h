@@ -63,6 +63,9 @@ public:
     /// Write data to output
     bool write(void* buffer, size_t bufferSize);
 
+    /// Pause
+    void pause() override;
+
     /// Stop
     void stop();
 
