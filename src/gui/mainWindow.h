@@ -90,7 +90,6 @@ private:
     centralFrame *cFrame;
 
     QSystemTrayIcon *trayIcon;
-    QMenu *trayIconMenu;
     QAction *_mStatus;
     QLabel *led;
     infoLabel *_songInfo;

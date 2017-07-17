@@ -314,7 +314,7 @@ void mainWindow::createActions()
 
 void mainWindow::createTrayIcon()
 {
-    trayIconMenu = new QMenu(this);
+    QMenu* trayIconMenu = new QMenu(this);
     _mStatus = new QAction(trayIconMenu);
     _mStatus->setText(tr("Stopped"));
     _mStatus->setIcon(QPixmap(ledRed));
