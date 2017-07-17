@@ -267,6 +267,7 @@ void mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         {
             show();
             raise();
+            activateWindow();
         }
         else
         {
