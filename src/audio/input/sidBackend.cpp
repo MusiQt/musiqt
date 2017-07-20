@@ -309,7 +309,7 @@ bool sidBackend::open(const QString& fileName)
 
     if (emuSid == nullptr)
     {
-        delPtr(_sidplayfp);
+        utils::delPtr(_sidplayfp);
         return false;
     }
 
@@ -429,10 +429,10 @@ void sidBackend::close()
     {
         const sidbuilder *emuSid = _sidplayfp->config().sidEmulation;
         delete emuSid;
-        delPtr(_sidplayfp);
+        utils::delPtr(_sidplayfp);
     }
 
-    delPtr(_tune);
+    utils::delPtr(_tune);
 
     songLoaded(QString::null);
 }
@@ -476,7 +476,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
     if (!_stil->setBaseDir(hvscPath.toLocal8Bit().constData()))
     {
         qWarning() << _stil->getErrorStr();
-        delPtr(_stil);
+        utils::delPtr(_stil);
     }
 
     if (_db == nullptr)
@@ -487,7 +487,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
         )
     {
         qWarning() << _db->error();
-        delPtr(_db);
+        utils::delPtr(_db);
     }
 }
 

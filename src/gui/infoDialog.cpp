@@ -43,7 +43,7 @@ void imageLoader::run()
     QImage* image = new QImage();
     bool res = reader.read(image);
     if (!res)
-        delPtr(image);
+        utils::delPtr(image);
 
     emit loaded(image);
 }

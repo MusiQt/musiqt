@@ -193,7 +193,7 @@ bool gmeBackend::check(const char* error)
 {
     if (error)
     {
-        delPtr(_emu);
+        utils::delPtr(_emu);
         qWarning() << "Error: " << error;
         return false;
     }
@@ -202,7 +202,7 @@ bool gmeBackend::check(const char* error)
 
 void gmeBackend::close()
 {
-    delPtr(_emu);
+    utils::delPtr(_emu);
 
     songLoaded(QString::null);
 }
@@ -239,7 +239,7 @@ void gmeBackend::openAsma(const QString& asmaPath)
     if (!_stil->setBaseDir(asmaPath.toLocal8Bit().constData()))
     {
         qWarning() << _stil->getErrorStr();
-        delPtr(_stil);
+        utils::delPtr(_stil);
     }
 }
 

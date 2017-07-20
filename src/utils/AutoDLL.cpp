@@ -27,7 +27,7 @@ AutoDLL::AutoDLL(const char* nm) :
     {
         _handle = new QLibrary(nm);
         if (!_handle->load())
-            delPtr(_handle);
+            utils::delPtr(_handle);
     }
 }
 
@@ -35,7 +35,7 @@ AutoDLL::~AutoDLL(){
     if (_handle != nullptr)
     {
         _handle->unload();
-        delPtr(_handle);
+        utils::delPtr(_handle);
     }
 }
 

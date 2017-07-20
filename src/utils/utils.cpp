@@ -26,7 +26,7 @@
 #include <windows.h>
 
 #ifdef UNICODE
-const wchar_t* convertUtf(const QString& string)
+const wchar_t* utils::convertUtf(const QString& string)
 {
     wchar_t* temp = new wchar_t[string.length()+1];
     int size = string.toWCharArray(temp);
@@ -44,7 +44,8 @@ const wchar_t* convertUtf(const QString& string)
 
 #endif //_WIN32
 
-void runCmd(const QString& cmd)
+#if 0 // unused
+void utils::runCmd(const QString& cmd)
 {
 #ifdef _WIN32
     PROCESS_INFORMATION pi = {0};
@@ -72,22 +73,24 @@ void runCmd(const QString& cmd)
     system(c.constData());
 #endif //_WIN32
 }
+#endif
 
 #define MAX_CHARS	20
 
-QString shrink(const QString& string)
+QString utils::shrink(const QString& string)
 {
     return (string.count() > MAX_CHARS)
         ? QString("...%1").arg(string.right(MAX_CHARS))
         : string;
 }
 
+#if 0 // unused
 /// Get gray value from RGBA color
 #define GRAYVAL(rgba) (30*rgba.red() + 59*rgba.green() + 11*rgba.blue())/100
 
 #define CLAMP(min, x, max) (x<min ? min : (x>max ? max : x))
 
-QColor altColor(QColor color)
+QColor utils::altColor(QColor color)
 {
     int val = GRAYVAL(color);
     val = static_cast<int>(((val<128)?15.0:-15.0)*exp((255-val)/196.0));
@@ -96,3 +99,4 @@ QColor altColor(QColor color)
         CLAMP(0, color.green()+val, 255),
         CLAMP(0, color.blue()+val, 255));
 }
+#endif

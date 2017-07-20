@@ -248,7 +248,7 @@ bool openmptBackend::open(const QString& fileName)
     }
     catch (const openmpt::exception &e)
     {
-        delPtr(_module);
+        utils::delPtr(_module);
         return false;
     }
 
@@ -281,7 +281,7 @@ void openmptBackend::close()
 {
     if (_module != nullptr)
     {
-        delPtr(_module);
+        utils::delPtr(_module);
     }
 
     songLoaded(QString::null);

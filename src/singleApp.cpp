@@ -48,7 +48,7 @@ singleApp::singleApp(int & argc, char ** argv) :
         && !_lockFile->lock(0, 1))
     {
         _lockFile->close();
-        delPtr(_lockFile);
+        utils::delPtr(_lockFile);
         qWarning("Already running");
         if (argc > 1)
         {
@@ -89,7 +89,7 @@ singleApp::singleApp(int & argc, char ** argv) :
         else
         {
             qWarning() << _fifoFile->errorString();
-            delPtr(_fifoFile);
+            utils::delPtr(_fifoFile);
         }
         running = false;
     }

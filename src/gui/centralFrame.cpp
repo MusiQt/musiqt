@@ -593,7 +593,7 @@ void centralFrame::onCmdSongSelected(int currentRow)
         if (preloaded.compare(song))
         {
             preloaded = QString::null;
-            delPtr(_preload);
+            utils::delPtr(_preload);
         }
         else
         {
@@ -695,7 +695,7 @@ void centralFrame::onRgtClkDirList(const QPoint& pos)
 
     QMenu pane(this);
     QWidgetAction *wa = new QWidgetAction(&pane);
-    wa->setDefaultWidget(new QLabel(shrink(fsm->fileName(item))));
+    wa->setDefaultWidget(new QLabel(utils::shrink(fsm->fileName(item))));
     pane.addAction(wa);
     pane.addSeparator();
 

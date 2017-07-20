@@ -405,7 +405,7 @@ void mainWindow::onCloseInfo()
 {
     qDebug("onCloseInfo");
     // FIXME not called
-    delPtr(_infoDialog);
+    utils::delPtr(_infoDialog);
 }
 
 void mainWindow::setPlayButton(state_t state)

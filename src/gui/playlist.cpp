@@ -95,7 +95,7 @@ void playlist::contextMenuEvent(QContextMenuEvent * event)
     if (item != nullptr)
     {
         QWidgetAction *wa = new QWidgetAction(&pane);
-        QLabel *label = new QLabel(shrink(item->text()));
+        QLabel *label = new QLabel(utils::shrink(item->text()));
         label->setAlignment(Qt::AlignCenter);
         wa->setDefaultWidget(label);
         pane.addAction(wa);
@@ -183,7 +183,7 @@ void playlist::shuffle()
 
 int playlist::load(const QString& path)
 {
-    delPtr(_tracks);
+    utils::delPtr(_tracks);
 
     std::unique_ptr<trackList> tracklist(TFACTORY->get(path));
 

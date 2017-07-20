@@ -112,7 +112,7 @@ bool oggBackend::open(const QString& fileName)
     _vf = new OggVorbis_File;
     if (ov_open_callbacks(&_file, _vf, NULL, 0, vorbis_callbacks) < 0)
     {
-        delPtr(_vf);
+        utils::delPtr(_vf);
         _file.close();
         return false;
     }
@@ -224,7 +224,7 @@ void oggBackend::close()
     if (_vf != nullptr)
     {
         ov_clear(_vf);
-        delPtr(_vf);
+        utils::delPtr(_vf);
         _file.close();
     }
 

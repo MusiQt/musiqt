@@ -52,7 +52,7 @@ protected:
     {
         if (!iBackend->open(fileName))
         {
-            delPtr(iBackend);
+            utils::delPtr(iBackend);
         }
         emit loaded(iBackend);
     }

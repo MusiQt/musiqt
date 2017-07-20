@@ -80,7 +80,7 @@ public:
     void addInfo(imageData* img) { _img = img; }
 
     /// Remove all info
-    void clearInfo() { _infos.clear(); delPtr(_img); }
+    void clearInfo() { _infos.clear(); utils::delPtr(_img); }
 
     /// Find song info
     QString findInfo(QString type) const { return _infos.find(type).value(); }

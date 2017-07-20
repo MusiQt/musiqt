@@ -22,24 +22,31 @@
 #include <QColor>
 #include <QString>
 
+namespace utils
+{
 #ifdef _WIN32
 #ifdef UNICODE
 /// Convert Unicode string
-extern const wchar_t* convertUtf(const QString& string);
-//extern const char* convertNc(const wchar_t* string);
+const wchar_t* convertUtf(const QString& string);
+//const char* convertNc(const wchar_t* string);
 #endif
 #endif
 
+#if 0 // unused
 /// Run external program
 void runCmd(const QString& cmd);
+#endif
 
 /// Delete a pointer and set it to null
 template<class T> inline void delPtr(T*& p) { delete p; p = nullptr; }
 
+#if 0 // unused
 /// Generate alternate color
 QColor altColor(QColor color);
+#endif
 
 /// Shrink a string if it's too long
-extern QString shrink(const QString& string);
+QString shrink(const QString& string);
+}
 
 #endif
