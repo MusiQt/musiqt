@@ -51,9 +51,9 @@ bool playlist::add(const QString& item)
 void playlist::dropEvent(QDropEvent *event)
 {
     QList<QUrl> urlList = event->mimeData()->urls();
-    for (int i=0; i<urlList.size(); ++i)
+    for (auto&& urlItem : urlList)
     {
-        QString url = urlList.at(i).path();
+        QString url(urlItem.path());
         if (QFileInfo(url).isFile())
         {
             add(url);
@@ -108,18 +108,18 @@ void playlist::contextMenuEvent(QContextMenuEvent * event)
     QAction* asc = new QAction(tr("Sort ascending"), &pane);
     asc->setCheckable(true);
     asc->setStatusTip(tr("Sort ascending"));
-    if (order == Qt::AscendingOrder) asc->setChecked(true);
+    if (ordered && order == Qt::AscendingOrder) asc->setChecked(true);
     connect(asc, SIGNAL(triggered()), this, SLOT(sortAsc()));
     QAction* desc = new QAction(tr("Sort descending"), &pane);
     desc->setCheckable(true);
     desc->setStatusTip(tr("Sort descending"));
-    if (order == Qt::DescendingOrder) desc->setChecked(true);
+    if (ordered && order == Qt::DescendingOrder) desc->setChecked(true);
     connect(desc, SIGNAL(triggered()), this, SLOT(sortDesc()));
-    QAction* rnd = new QAction(tr("Shuffle"), &pane); // playlist::ID_SORT_RANDOM
+    QAction* rnd = new QAction(tr("Shuffle"), &pane);
     rnd->setCheckable(true);
-    rnd->setDisabled(true); // TODO remove
     rnd->setStatusTip(tr("Sort randomly"));
-    //connect(rnd, SIGNAL(triggered()), this, SLOT(sortRnd()));
+    if (!ordered) rnd->setChecked(true);
+    connect(rnd, SIGNAL(triggered()), this, SLOT(shuffle()));
 
     QActionGroup *radioGroup = new QActionGroup(&pane);
     radioGroup->addAction(asc);
@@ -146,91 +146,40 @@ void playlist::onCmdDel()
 void playlist::sortAsc()
 {
     order = Qt::AscendingOrder;
+    ordered = true;
     sortItems(order);
 }
 
 void playlist::sortDesc()
 {
     order = Qt::DescendingOrder;
+    ordered = true;
     sortItems(order);
 }
 
-//void playlist::onCmdSort()
-//{
-//	switch (FXSELID(sel)) {
-//	case ID_SORT_ASC:
-//		order = Qt::AscendingOrder;
-//		break;
-//	case ID_SORT_DESC:
-//		order = Qt::DescendingOrder;
-//		break;
-//	case ID_SORT_RANDOM:
-//		???;
-//		break;
-//	}
-//
-//	if (!count())
-//		return;
-//
-//	sortItems(order);
-//	makeItemVisible(getCurrentItem());
-//}
-//
-//void playlist::onUpdSort(FXObject* sender, FXSelector sel, void*)
-//{
-//	bool check=false;
-//	switch (FXSELID(sel)) {
-//	case ID_SORT_ASC:
-//		check=(order==Qt::AscendingOrder);
-//		break;
-//	case ID_SORT_DESC:
-//		check=(order==Qt::DescendingOrder);
-//		break;
-//	case ID_SORT_RANDOM:
-//		check=(order==playlist::random);
-//		break;
-//	}
-//	sender->handle(this, check?FXSEL(SEL_COMMAND, ID_CHECK):FXSEL(SEL_COMMAND, ID_UNCHECK), 0);
-//}
+void playlist::shuffle()
+{
+    ordered = false;
 
-//int playlist::ascending(const FXListItem* a, const FXListItem* b)
-//{
-//	return comparecase(FXPath::name(a->getText()), FXPath::name(b->getText()));
-//}
-//
-//int playlist::descending(const FXListItem* a, const FXListItem* b)
-//{
-//	return comparecase(FXPath::name(b->getText()), FXPath::name(a->getText()));
-//}
-//
-//int playlist::random(const FXListItem*, const FXListItem*)
-//{
-//	return fxrandom(_seed);
-//}
-//
-//void playlist::sorting(const char* sort)
-//{
-//	Qt::SortOrder lsf=0;
-//	if (!compare(sort, "ascending"))
-//		lsf=Qt::AscendingOrder;
-//	else if (!compare(sort, "descending"))
-//		lsf=Qt::DescendingOrder;
-//	else if (!compare(sort, "random"))
-//		lsf=playlist::random;
-//
-//	setSortFunc(lsf);
-//}
-//
-//const char* playlist::sorting()
-//{
-//	if (getSortFunc()==playlist::ascending)
-//		return "ascending";
-//	else if (getSortFunc()==playlist::descending)
-//		return "descending";
-//	else if (getSortFunc()==playlist::random)
-//		return "random";
-//	return nullptr;
-//}
+    const int c = count();
+    QList<QListWidgetItem*> items;
+    items.reserve(c);
+    for (int i=0; i<c; i++)
+    {
+        QListWidgetItem *it = takeItem(0);
+        if (qrand()%2)
+            items.append(it);
+        else
+            items.prepend(it);
+    }
+
+    for (auto item : items)
+    {
+        addItem(item);
+    }
+
+    emit changed();
+}
 
 int playlist::load(const QString& path)
 {
@@ -272,7 +221,7 @@ int playlist::filter(const QStringList& filter)
     if (_tracks == nullptr)
         return 0;
 
-    QString filt = filter.join("|");
+    QString filt(filter.join("|"));
     filt.prepend(".*\\.(").append(")");
     qDebug() << "filter: " << filt;
 

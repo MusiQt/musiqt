@@ -20,6 +20,7 @@
 #define PLAYLIST_H
 
 #include <QListWidget>
+#include <QTime>
 
 #include "trackList.h"
 
@@ -33,24 +34,26 @@ private:
     tracks *_tracks;
 
     Qt::SortOrder order;
+    bool ordered;
 
 private:
     playlist() {}
     playlist(const playlist&);
     playlist& operator=(const playlist&);
 
-    //static int ascending(const FXListItem* a, const FXListItem* b);
-    //static int descending(const FXListItem* a, const FXListItem* b);
-    //static int random(const FXListItem* a, const FXListItem* b);
-
 public:
     playlist(QWidget * parent) :
         QListWidget(parent),
-        _tracks(nullptr)
+        _tracks(nullptr),
+        order(Qt::AscendingOrder),
+        ordered(true)
     {
         setAcceptDrops(true);
         setDropIndicatorShown(true);
         setContextMenuPolicy(Qt::DefaultContextMenu);
+
+        QTime now = QTime::currentTime();
+        qsrand(now.msec());
     }
     ~playlist() { delete _tracks; }
 
@@ -65,12 +68,6 @@ public:
 
     /// Filter playlist
     int filter(const QStringList& filter);
-
-    /// Set sorting type
-    //void sorting(const char* sort);
-
-    /// Get sorting type
-    //const char* sorting();
 
     /// Get track location
     const QString getLocation(int index) const { return (item(index)->data(Qt::UserRole).value<track_t>()).location(); }
@@ -95,6 +92,7 @@ protected slots:
     void onCmdDel();
     void sortAsc();
     void sortDesc();
+    void shuffle();
 };
 
 #endif
