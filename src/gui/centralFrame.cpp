@@ -42,6 +42,7 @@
 #include <QPushButton>
 #include <QSignalMapper>
 #include <QStackedWidget>
+#include <QTimer>
 #include <QTreeView>
 #include <QWidgetAction>
 #include <QDebug>
@@ -66,7 +67,6 @@ centralFrame::centralFrame(QWidget *parent) :
     fsm->setRootPath(QDir::rootPath());
     fsm->setNameFilterDisables(false);
     fsm->setNameFilters(TFACTORY->plExt());
-    connect(fsm, SIGNAL(directoryLoaded(const QString&)), this, SLOT(onDirectoryLoaded()));
 
     _dirlist = new QTreeView(this);
     _dirlist->setModel(fsm);
@@ -819,14 +819,11 @@ void centralFrame::setDir(const QModelIndex& index)
 {
     qDebug("centralFrame::setDir");
     _dirlist->setCurrentIndex(index);
-    _dirlist->scrollTo(index);
+    // FIXME ugly hack
+    QTimer::singleShot(200, this, SLOT(scroll()));
 }
 
-void centralFrame::onDirectoryLoaded()
+void centralFrame::scroll()
 {
-    //FIXME
-    qDebug("centralFrame::onDirectoryLoaded");
-    //const QModelIndex currentIndex = _dirlist->currentIndex();
-    //_dirlist->expand(currentIndex);
-    //_dirlist->scrollTo(currentIndex);
+    _dirlist->scrollTo(_dirlist->currentIndex());
 }
