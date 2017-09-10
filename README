@@ -18,9 +18,8 @@ just enter the edit mode and drag files from the dirlist view to the playlist.
 Formats currently supported:
 
 * Openmpt
-mod, s3m, xm, it, 669, amf, ams, dbm, dmf, dsm, far, mdl, med, mtm, okt, ptm, stm, ult, umx, mt2, psm
+mod, s3m, xm, it, 669, amf, ams, dbm, dmf, dsm, far, mdl, med, mtm, okt, ptm, stm, ult, umx, mt2, psm, mo3
 xmz, itz, mdz, s3z (if zlib is installed)
-mo3 (if unmo3lib/unmo3 is installed)
 
 * Sidplayfp
 sid, mus, prg, p00 (includes songlength db and STIL support)
@@ -67,14 +66,14 @@ Some Linux distro already ships these libraries.
 (libmpg123.so, libavcodec.so, libavformat.so and libavutil.so)
 
 On Windows you have to manually put them under the System folder
-or in the same folder as FAP binary.
+or in the same folder as musiqt binary.
 (libmpg123-0.dll, avcodec-56.dll, avformat-56.dll and avutil-54.dll)
 
 ####################################################################
 
 Platform notes
 
-The program is tested on Linux x86 (ALSA, OSS) and Windows XP (WMM)
+The program is tested on Linux x86 (ALSA, OSS) and Windows 7 (WMM)
 
 It should work also on other UNIX with OSS support
 

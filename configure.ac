@@ -1,6 +1,6 @@
 # Process this file with autoconf to create configure.
 
-AC_INIT([musiqt],[0.0.1],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
+AC_INIT([musiqt],[0.1.0],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR([config])
@@ -273,6 +273,7 @@ PKG_CHECK_MODULES(BS2B,
 #####################################################
 PKG_CHECK_MODULES(QT, [Qt5Core Qt5Gui Qt5Network Qt5Widgets Qt5Multimedia >= 5.6.0], [
   QT5_PATH="$( eval $PKG_CONFIG --variable=host_bins Qt5Core )"
+  AX_APPEND_FLAG([-fPIC])
   AC_PATH_PROGS(MOC, [moc-qt5 moc], [moc], [$QT5_PATH])
   AC_PATH_PROGS(RCC, [rcc-qt5 rcc], [rcc], [$QT5_PATH])
   AC_PATH_PROGS(UIC, [uic-qt5 uic], [uic], [$QT5_PATH])
