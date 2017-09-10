@@ -83,6 +83,14 @@ VORBIS_MOC = \
 src/audio/input/oggBackend_moc.cpp
 endif
 
+if OPUS
+OPUS_SOURCES = \
+src/audio/input/opusBackend.cpp \
+src/audio/input/opusBackend.h
+OPUS_MOC = \
+src/audio/input/opusBackend_moc.cpp
+endif
+
 if GME
 GMESOURCES = \
 src/libs/gme/Ay_Apu.h \
@@ -283,6 +291,7 @@ $(QT_CFLAGS) \
 $(BS2B_CFLAGS) \
 $(OPENMPT_CFLAGS) \
 $(VORBIS_CFLAGS) \
+$(OPUS_CFLAGS) \
 $(SIDPLAYFP_CFLAGS) \
 $(STILVIEW_CFLAGS) \
 $(SNDFILE_CFLAGS) \
@@ -297,6 +306,7 @@ $(ALSA_LIBS) \
 $(BS2B_LIBS) \
 $(OPENMPT_LIBS) \
 $(VORBIS_LIBS) \
+$(OPUS_LIBS) \
 $(SIDPLAYFP_LIBS) \
 $(STILVIEW_LIBS) \
 $(SNDFILE_LIBS) \
@@ -335,6 +345,7 @@ $(MPG123_SOURCES) \
 $(FFMPEG_SOURCES) \
 $(OPENMPT_SOURCES) \
 $(VORBIS_SOURCES) \
+$(OPUS_SOURCES) \
 $(GME_SOURCES) \
 $(HVL_SOURCES) \
 ${SIDPLAYFP_SOURCES} \
@@ -408,6 +419,7 @@ $(MPG123_MOC) \
 $(FFMPEG_MOC) \
 $(OPENMPT_MOC) \
 $(VORBIS_MOC) \
+$(OPUS_MOC) \
 $(GME_MOC) \
 $(HVL_MOC) \
 $(SIDPLAYFP_MOC) \

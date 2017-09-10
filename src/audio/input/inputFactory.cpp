@@ -28,6 +28,9 @@
 #ifdef HAVE_VORBIS
 #  include "oggBackend.h"
 #endif
+#ifdef HAVE_OPUS
+#  include "opusBackend.h"
+#endif
 #ifdef HAVE_OPENMPT
 #  include "openmptBackend.h"
 #endif
@@ -89,6 +92,10 @@ iFactory::iFactory()
 
 #ifdef HAVE_VORBIS
     regBackend<oggBackend>();
+#endif
+
+#ifdef HAVE_OPUS
+    regBackend<opusBackend>();
 #endif
 
 #ifdef HAVE_OPENMPT

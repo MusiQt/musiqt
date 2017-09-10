@@ -149,6 +149,20 @@ AS_IF([test "x$enable_vorbis_plugin" != xno],
 AM_CONDITIONAL([VORBIS], [test "x$pkg_cv_VORBIS_LIBS" != "x"])
 
 ##################################################################
+# Search for opusfile
+
+AC_ARG_ENABLE([opus-plugin], [AS_HELP_STRING([--disable-opus-plugin], [disable opus backend])])
+
+AS_IF([test "x$enable_opus_plugin" != xno],
+    [PKG_CHECK_MODULES(OPUS,
+        [opusfile >= 0.7],
+        [AC_DEFINE([HAVE_OPUS], 1, [Define to 1 if you have libopusfile (-lopusfile).])],
+        [AC_MSG_WARN([$OPUS_PKG_ERRORS])]
+    )]
+)
+AM_CONDITIONAL([OPUS], [test "x$pkg_cv_OPUS_LIBS" != "x"])
+
+##################################################################
 # Check if we should build Game Music Engine backend
 
 AC_ARG_ENABLE([gme-plugin], [AS_HELP_STRING([--enable-gme-plugin], [enable Game_Music_Emu backend])])

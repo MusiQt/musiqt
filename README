@@ -27,6 +27,9 @@ sid, mus, prg, p00 (includes songlength db and STIL support)
 * Ogg-Vorbis
 ogg
 
+* Opus
+opus
+
 * Sndfile
 wav, voc, au, aiff, aifc
 flac, caf (if libsndfile>=1.0.12)
@@ -98,8 +101,11 @@ http://www.zlib.org/
 libsidplayfp >= 1.0
 http://sourceforge.net/projects/sidplay-residfp/
 
-libvorbis >= 1.1.x
+libvorbisfile >= 1.1.x
 http://www.xiph.org/
+
+libopusfile >= 0.7
+http://opus-codec.org/
 
 libsndfile 1.0.x
 http://www.mega-nerd.com/libsndfile/
