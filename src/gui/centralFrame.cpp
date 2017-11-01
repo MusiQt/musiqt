@@ -104,7 +104,7 @@ centralFrame::centralFrame(QWidget *parent) :
 
     _bookmarkList = new bookmark(this);
     _bookmarkList->setAlternatingRowColors(true);
-    connect(_bookmarkList, SIGNAL(currentTextChanged(const QString&)), this, SLOT(gotoDir(const QString&)));
+        connect(_bookmarkList, SIGNAL(currentTextChanged(const QString&)), this, SLOT(gotoDir(const QString&)));
 
     // left view
     QStackedWidget *stackedWidget = new QStackedWidget(this);
@@ -204,6 +204,8 @@ centralFrame::~centralFrame()
 
 void centralFrame::onDirSelected(const QModelIndex& idx)
 {
+    _bookmarkList->setCurrentRow(-1);
+
     bool autoBk = property("AutoBackend").toBool();
     setProperty("AutoBackend", QVariant(true));
 
