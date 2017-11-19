@@ -44,16 +44,14 @@ private:
 private slots:
     void acceptMessage();
 
-protected:
-    //virtual bool getNextEvent(FXRawEvent& ev, bool blocking=true);
+signals:
+    void sendMessage(QString msg);
 
 public:
     singleApp(int & argc, char ** argv);
     virtual ~singleApp();
 
     bool isRunning() const { return running; }
-
-    //void addHotKeys(FXObject *tgt);
 };
 
 #endif

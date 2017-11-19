@@ -51,6 +51,8 @@ int main(int argc, char *argv[])
     mainWindow window;
     window.init(argc>1 ? argv[1] : nullptr);
 
+    QObject::connect(&app, SIGNAL(sendMessage(QString)), &window, SLOT(onMessage(QString)));
+
     window.show();
 
     return app.exec();

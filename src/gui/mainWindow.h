@@ -51,6 +51,9 @@ public:
 
     void init(const char* arg);
 
+public slots:
+    void onMessage(QString msg);
+
 private slots:
     void onCompact();
     void onPlaymode();

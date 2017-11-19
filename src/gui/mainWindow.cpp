@@ -151,6 +151,11 @@ void mainWindow::init(const char* arg)
     }
 }
 
+void mainWindow::onMessage(QString msg)
+{
+    cFrame->setFile(QDir(msg).absolutePath(), true);
+}
+
 QToolBar *mainWindow::createControlBar()
 {
     _timeDisplay = new timeDisplay(this);

@@ -129,61 +129,9 @@ void singleApp::acceptMessage()
     QString message;
     in >> message;
     qDebug() << "msg: " << message;
+
+    if (!message.isEmpty())
+        emit sendMessage(message);
+
     delete socket;
 }
-
-/*
-void singleApp::addHotKeys(FXObject *tgt)
-{
-	_target=tgt;
-
-#ifdef _WIN32
-	RegisterHotKey(NULL, 1, 0, VK_MEDIA_PLAY_PAUSE);
-	RegisterHotKey(NULL, 1, 0, VK_MEDIA_STOP);
-	RegisterHotKey(NULL, 1, 0, VK_MEDIA_PREV_TRACK);
-	RegisterHotKey(NULL, 1, 0, VK_MEDIA_NEXT_TRACK);
-#else
-	Display *display=(Display*)getDisplay();
-	KeyCode key=XKeysymToKeycode(display, XF86XK_AudioPlay);
-	XGrabKey(display, key, AnyModifier, getRootWindow()->id(), False, GrabModeAsync, GrabModeAsync);
-	key=XKeysymToKeycode(display, XF86XK_AudioPause);
-	XGrabKey(display, key, AnyModifier, getRootWindow()->id(), False, GrabModeAsync, GrabModeAsync);
-	key=XKeysymToKeycode(display, XF86XK_AudioStop);
-	XGrabKey(display, key, AnyModifier, getRootWindow()->id(), False, GrabModeAsync, GrabModeAsync);
-	key=XKeysymToKeycode(display, XF86XK_AudioNext);
-	XGrabKey(display, key, AnyModifier, getRootWindow()->id(), False, GrabModeAsync, GrabModeAsync);
-	key=XKeysymToKeycode(display, XF86XK_AudioPrev);
-	XGrabKey(display, key, AnyModifier, getRootWindow()->id(), False, GrabModeAsync, GrabModeAsync);
-#endif
-}
-
-bool singleApp::getNextEvent(FXRawEvent& ev, bool blocking)
-{
-	FXuint message=0;
-#ifdef _WIN32
-	if (ev.message==WM_HOTKEY) {
-		UINT virtKey=(UINT) HIWORD(ev.lParam);
-		switch (virtKey) {
-		case VK_MEDIA_PLAY_PAUSE: message=mainWindow::ID_PLAYPAUSE; break;
-		case VK_MEDIA_STOP: message=mainWindow::ID_STOP; break;
-		case VK_MEDIA_PREV_TRACK: message=mainWindow::ID_PREV; break;
-		case VK_MEDIA_NEXT_TRACK: message=mainWindow::ID_NEXT; break;
-		}
-#else
-	if (ev.xany.type==KeyPress) {
-		KeySym keySym=XLookupKeysym(&ev.xkey, 0);
-		switch (keySym) {
-		case XF86XK_AudioPlay:
-		case XF86XK_AudioPause: message=mainWindow::ID_PLAYPAUSE; break;
-		case XF86XK_AudioStop: message=mainWindow::ID_STOP; break;
-		case XF86XK_AudioPrev: message=mainWindow::ID_PREV; break;
-		case XF86XK_AudioNext: message=mainWindow::ID_NEXT; break;
-		}
-#endif
-		if (message && _target->tryHandle(this, FXSEL(SEL_COMMAND,message), (void*)(FXival)0))
-			refresh();
-	}
-
-	return FXApp::getNextEvent(ev, blocking);
-}
-*/
