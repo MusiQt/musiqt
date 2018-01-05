@@ -414,10 +414,20 @@ void centralFrame::onCmdPlayPauseSong()
     {
         _audio->pause();
     }
-    else if (_audio->play(_input))
+    else
     {
-        playing = true;
-        playDir = fsm->fileName(_dirlist->currentIndex());
+        // if loaded song is not the selected one don't play
+        QString songLoaded = _input->songLoaded();
+        const QString song = _playlist->getLocation(_playlist->currentRow());
+        if (!songLoaded.isEmpty() && songLoaded.compare(song))
+        {
+            playing = true;
+        }
+        else if (_audio->play(_input))
+        {
+            playing = true;
+            playDir = fsm->fileName(_dirlist->currentIndex());
+        }
     }
 
     _fileTypes->setEnabled(false);
