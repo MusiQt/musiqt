@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <QAudioOutput>
 #include <QBuffer>
 #include <QByteArray>
+#include <QMutex>
 
 #include "outputBackend.h"
 
@@ -38,7 +39,10 @@ private:
     QBuffer *_audioBuffer;
     QByteArray data;
 
-    char *_buffer;
+    QMutex mutex[2];
+
+    char *_buffer[2];
+    unsigned int _idx;
 
 private:
     qaudioBackend();
@@ -58,7 +62,7 @@ public:
     void close();
 
     /// Get buffer
-    void *buffer() { return _buffer; }
+    void *buffer() { return _buffer[_idx]; }
 
     /// Write data to output
     bool write(void* buffer, size_t bufferSize);

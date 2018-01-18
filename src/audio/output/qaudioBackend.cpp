@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,9 +40,11 @@ const char qaudioBackend::name[] = "QAUDIO";
 qaudioBackend::qaudioBackend() :
     outputBackend(name),
     _audioOutput(nullptr),
-    _audioBuffer(nullptr),
-    _buffer(nullptr)
+    _audioBuffer(nullptr)
 {
+    _buffer[0] = nullptr;
+    _buffer[1] = nullptr;
+
     // Check devices
     foreach(const QAudioDeviceInfo &deviceInfo, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
     {
@@ -86,8 +88,14 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
         delete _audioBuffer;
         return 0;
     }
-qDebug() << "bufferSize: " << _audioOutput->bufferSize() << " bytes";
-    _buffer = new char[_audioOutput->bufferSize()];
+
+    qDebug() << "bufferSize: " << _audioOutput->bufferSize() << " bytes";
+
+    _idx = 0;
+
+    _buffer[0] = new char[_audioOutput->bufferSize()];
+    _buffer[1] = new char[_audioOutput->bufferSize()];
+
     return _audioOutput->bufferSize();
 }
 
@@ -97,18 +105,16 @@ void qaudioBackend::close()
     _audioOutput = nullptr;
 
     delete _audioBuffer;
-    delete [] _buffer;
+    delete [] _buffer[0];
+    delete [] _buffer[1];
 }
 
 bool qaudioBackend::write(void* buffer, size_t bufferSize)
 {
+    mutex[_idx].lock();
     data.append((const char*)buffer, bufferSize);
 
-    // FIXME this sucks
-    if (_audioOutput->state() == QAudio::SuspendedState)
-        _audioOutput->resume();
-    //while (!_audioBuffer->atEnd() && _audioOutput->state() != QAudio::StoppedState)
-    while ((_audioBuffer->bytesAvailable() > (bufferSize/10))
+    while ((_audioBuffer->bytesAvailable() > bufferSize)
         && (_audioOutput->state() == QAudio::ActiveState))
 #if QT_VERSION >= 0x050000
         QThread::msleep(1);
@@ -119,6 +125,9 @@ bool qaudioBackend::write(void* buffer, size_t bufferSize)
         usleep(1000);
 #  endif
 #endif
+
+    _idx = 1-_idx;
+    mutex[_idx].unlock();
 
     return true;
 }
