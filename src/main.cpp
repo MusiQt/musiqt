@@ -18,17 +18,15 @@
 
 #include "singleApp.h"
 
-#include <QIcon>
-
 #include "mainWindow.h"
 #include "translator.h"
 
 #ifdef QT_STATICPLUGIN
 #include <QtPlugin>
 #  ifdef _WIN32
-    Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
-    Q_IMPORT_PLUGIN(QWindowsAudioPlugin);
-    Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
+    Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+    Q_IMPORT_PLUGIN(QWindowsAudioPlugin)
+    Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
 #  endif
 Q_IMPORT_PLUGIN(QGifPlugin)
 Q_IMPORT_PLUGIN(QJpegPlugin)
