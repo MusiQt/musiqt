@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2017 Leandro Nini
+ *  Copyright (C) 2013-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -56,6 +56,9 @@ mainWindow::mainWindow(QWidget *parent) :
     QMainWindow(parent),
     _infoDialog(nullptr)
 {
+    // Read settings
+    SETTINGS->load(settings);
+
     createActions();
 
     //setAttribute(Qt::WA_AlwaysShowToolTips);
@@ -107,9 +110,6 @@ mainWindow::mainWindow(QWidget *parent) :
     }
 
     qApp->setStyleSheet("QMainWindow > QPushButton,QToolButton { margin:0; padding:0; }");
-
-    // Read settings
-    SETTINGS->load(settings);
 
     QPoint pos = settings.value("General Settings/pos").toPoint();
     QSize size = settings.value("General Settings/size").toSize();
