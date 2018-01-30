@@ -40,7 +40,8 @@ const char qaudioBackend::name[] = "QAUDIO";
 qaudioBackend::qaudioBackend() :
     outputBackend(name),
     _audioOutput(nullptr),
-    _audioBuffer(nullptr)
+    _audioBuffer(nullptr),
+    semaphore(2)
 {
     _buffer[0] = nullptr;
     _buffer[1] = nullptr;
@@ -111,7 +112,7 @@ void qaudioBackend::close()
 
 bool qaudioBackend::write(void* buffer, size_t bufferSize)
 {
-    mutex[_idx].lock();
+    semaphore.acquire();
     data.append((const char*)buffer, bufferSize);
 
     while ((_audioBuffer->bytesAvailable() > bufferSize)
@@ -127,7 +128,7 @@ bool qaudioBackend::write(void* buffer, size_t bufferSize)
 #endif
 
     _idx = 1-_idx;
-    mutex[_idx].unlock();
+    semaphore.release();
 
     return true;
 }

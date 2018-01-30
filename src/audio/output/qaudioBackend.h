@@ -22,7 +22,7 @@
 #include <QAudioOutput>
 #include <QBuffer>
 #include <QByteArray>
-#include <QMutex>
+#include <QSemaphore>
 
 #include "outputBackend.h"
 
@@ -39,7 +39,7 @@ private:
     QBuffer *_audioBuffer;
     QByteArray data;
 
-    QMutex mutex[2];
+    QSemaphore semaphore;
 
     char *_buffer[2];
     unsigned int _idx;
