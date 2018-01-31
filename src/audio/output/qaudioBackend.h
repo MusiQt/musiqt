@@ -22,7 +22,6 @@
 #include <QAudioOutput>
 #include <QBuffer>
 #include <QByteArray>
-#include <QSemaphore>
 
 #include "outputBackend.h"
 
@@ -36,13 +35,9 @@ class qaudioBackend : public outputBackend
 private:
     QAudioOutput *_audioOutput;
 
-    QBuffer *_audioBuffer;
-    QByteArray data;
+    QBuffer audioBuffer;
 
-    QSemaphore semaphore;
-
-    char *_buffer[2];
-    unsigned int _idx;
+    char *_buffer;
 
 private:
     qaudioBackend();
@@ -62,7 +57,7 @@ public:
     void close();
 
     /// Get buffer
-    void *buffer() { return _buffer[_idx]; }
+    void *buffer() { return _buffer; }
 
     /// Write data to output
     bool write(void* buffer, size_t bufferSize);

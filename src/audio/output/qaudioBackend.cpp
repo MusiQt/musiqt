@@ -39,12 +39,9 @@ const char qaudioBackend::name[] = "QAUDIO";
 
 qaudioBackend::qaudioBackend() :
     outputBackend(name),
-    _audioOutput(nullptr),
-    _audioBuffer(nullptr),
-    semaphore(2)
+    _audioOutput(nullptr)
 {
-    _buffer[0] = nullptr;
-    _buffer[1] = nullptr;
+    _buffer = nullptr;
 
     // Check devices
     foreach(const QAudioDeviceInfo &deviceInfo, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
@@ -77,25 +74,20 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
         qDebug("error");
     }
 
-    data.resize(0);
-    _audioBuffer = new QBuffer(&data);
-    _audioBuffer->open(QIODevice::ReadWrite);
-    _audioOutput->start(_audioBuffer);
+    audioBuffer.buffer().resize(0);
+    audioBuffer.open(QIODevice::ReadWrite);
+    _audioOutput->start(&audioBuffer);
 
     if (_audioOutput->error() != QAudio::NoError)
     {
         delete _audioOutput;
         _audioOutput = nullptr;
-        delete _audioBuffer;
         return 0;
     }
 
     qDebug() << "bufferSize: " << _audioOutput->bufferSize() << " bytes";
 
-    _idx = 0;
-
-    _buffer[0] = new char[_audioOutput->bufferSize()];
-    _buffer[1] = new char[_audioOutput->bufferSize()];
+    _buffer = new char[_audioOutput->bufferSize()];
 
     return _audioOutput->bufferSize();
 }
@@ -105,17 +97,14 @@ void qaudioBackend::close()
     delete _audioOutput;
     _audioOutput = nullptr;
 
-    delete _audioBuffer;
-    delete [] _buffer[0];
-    delete [] _buffer[1];
+    delete [] _buffer;
 }
 
 bool qaudioBackend::write(void* buffer, size_t bufferSize)
 {
-    semaphore.acquire();
-    data.append((const char*)buffer, bufferSize);
+    audioBuffer.buffer().append((const char*)buffer, bufferSize);
 
-    while ((_audioBuffer->bytesAvailable() > bufferSize)
+    while ((audioBuffer.bytesAvailable() > bufferSize)
         && (_audioOutput->state() == QAudio::ActiveState))
 #if QT_VERSION >= 0x050000
         QThread::msleep(1);
@@ -126,9 +115,6 @@ bool qaudioBackend::write(void* buffer, size_t bufferSize)
         usleep(1000);
 #  endif
 #endif
-
-    _idx = 1-_idx;
-    semaphore.release();
 
     return true;
 }
