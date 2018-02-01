@@ -88,6 +88,7 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
 
     _buffer = new char[_audioOutput->bufferSize()];
 
+    audioBuffer.buffer().clear();
     audioBuffer.buffer().reserve(_audioOutput->bufferSize()*2);
     audioBuffer.seek(0);
 
