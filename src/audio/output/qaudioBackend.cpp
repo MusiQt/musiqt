@@ -74,7 +74,6 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
         qDebug("error");
     }
 
-    audioBuffer.buffer().resize(0);
     audioBuffer.open(QIODevice::ReadWrite);
     _audioOutput->start(&audioBuffer);
 
@@ -88,6 +87,9 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     qDebug() << "bufferSize: " << _audioOutput->bufferSize() << " bytes";
 
     _buffer = new char[_audioOutput->bufferSize()];
+
+    audioBuffer.buffer().reserve(_audioOutput->bufferSize()*2);
+    audioBuffer.seek(0);
 
     return _audioOutput->bufferSize();
 }
