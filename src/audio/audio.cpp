@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -290,6 +290,7 @@ void audio::pause()
     case state_t::PAUSE:
         qDebug() << "Unpause";
         _playing = true;
+        _output->unpause();
         _thread->start();
         _state = state_t::PLAY;
         break;

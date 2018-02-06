@@ -65,6 +65,9 @@ public:
     /// Pause
     void pause() override;
 
+    /// Unpause
+    void unpause() override;
+
     /// Stop
     void stop();
 

@@ -127,6 +127,11 @@ void qaudioBackend::pause()
     _audioOutput->suspend();
 }
 
+void qaudioBackend::unpause()
+{
+    _audioOutput->resume();
+}
+
 void qaudioBackend::stop()
 {
     _audioOutput->stop();
