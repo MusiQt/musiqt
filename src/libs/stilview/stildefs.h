@@ -36,7 +36,7 @@
 // #endif
 
 #include <QDir>
-#define SLASH QDir::separator()
+#define SLASH QDir::separator().toLatin1()
 
 // Define which one of the following two is supported on your system.
 //#define HAVE_STRCASECMP 1
