@@ -32,8 +32,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <algorithm>
 
 const char qaudioBackend::name[] = "QAUDIO";
+
+/*****************************************************************/
+
+AudioBuffer::AudioBuffer() {}
+AudioBuffer::~AudioBuffer() {}
+
+qint64 AudioBuffer::readData(char *data, qint64 maxSize)
+{
+    if (sem.available()==BUFFERS)
+        return 0;
+
+    const qint64 size = std::min(length[readIdx], maxSize);
+    memcpy(data, buffer[readIdx].get(), size);
+    if (size==length[readIdx])
+    {
+        length[readIdx] = 0;
+        readIdx = 1 - readIdx;
+        sem.release();
+    }
+    else
+    {
+        const qint64 left = length[readIdx] - size;
+        memcpy(buffer[readIdx].get(), buffer[readIdx].get()+size, left);
+        length[readIdx] = left;
+    }
+    return size;
+}
+
+qint64 AudioBuffer::writeData(const char *data, qint64 maxSize)
+{
+    if (!sem.tryAcquire(1, 100))
+        return 0;
+    const qint64 size = std::min(len, maxSize);
+    memcpy(buffer[writeIdx].get(), data, size);
+    length[writeIdx] = size;
+    writeIdx = 1 - writeIdx;
+    return size;
+}
+
+bool AudioBuffer::isSequential() const { return true; }
+qint64 AudioBuffer::bytesAvailable() const { return length[readIdx]; }
+
+void AudioBuffer::init(qint64 size)
+{
+    readIdx = 0;
+    writeIdx = 0;
+    len = size;
+    length[0] = 0;
+    length[1] = 0;
+    buffer[0].reset(new char[size]);
+    buffer[1].reset(new char[size]);
+    if (sem.available()<BUFFERS)
+    {
+        sem.release(BUFFERS-sem.available());
+    }
+}
 
 /*****************************************************************/
 
@@ -88,9 +145,7 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
 
     _buffer = new char[_audioOutput->bufferSize()];
 
-    audioBuffer.buffer().clear();
-    audioBuffer.buffer().reserve(_audioOutput->bufferSize()*2);
-    audioBuffer.seek(0);
+    audioBuffer.init(_audioOutput->bufferSize());
 
     return _audioOutput->bufferSize();
 }
@@ -105,19 +160,20 @@ void qaudioBackend::close()
 
 bool qaudioBackend::write(void* buffer, size_t bufferSize)
 {
-    audioBuffer.buffer().append((const char*)buffer, bufferSize);
+loop:
+    qint64 n = audioBuffer.write((const char*)buffer, bufferSize);
 
-    while ((audioBuffer.bytesAvailable() > bufferSize)
-        && (_audioOutput->state() == QAudio::ActiveState))
-#if QT_VERSION >= 0x050000
-        QThread::msleep(1);
-#else
-#  ifdef _WIN32
-        Sleep(1);
-#  else
-        usleep(1000);
-#  endif
-#endif
+    if (n <= 0)
+    {
+        return false;
+    }
+
+    bufferSize -= n;
+    if (bufferSize > 0)
+    {
+        buffer = (char*)buffer+n;
+        goto loop;
+    }
 
     return true;
 }
