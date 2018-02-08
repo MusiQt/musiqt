@@ -165,6 +165,8 @@ loop:
 
     if (n <= 0)
     {
+        if (_audioOutput->state() == QAudio::ActiveState)
+            goto loop;
         return false;
     }
 
