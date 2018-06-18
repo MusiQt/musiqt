@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2017 Leandro Nini
+ *  Copyright (C) 2008-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,6 +48,9 @@ private slots:
     void setBs2b(int val);
     void setReplaygain(bool val);
     void setReplaygainMode(int val);
+
+protected:
+    bool event(QEvent *e);
 
 public:
     settingsWindow(QWidget* win, inputConfig* i);

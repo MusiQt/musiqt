@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2017 Leandro Nini
+ *  Copyright (C) 2008-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,9 @@
 #include <QRadioButton>
 #include <QStackedWidget>
 #include <QSettings>
+#include <QStatusTipEvent>
+#include <QMainWindow>
+#include <QStatusBar>
 
 settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     QDialog(win)
@@ -132,7 +135,7 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     button->setIcon(GET_ICON(icon_preferencesdesktop));
     button->setText(tr("General")); 
     button->setToolTip(tr("General setting"));
-    button->setStatusTip("General setting"); // FIXME
+    button->setStatusTip("General setting");
     button->setCheckable(true);
     button->setChecked(true);
     button->setSizePolicy(sizePol);
@@ -174,7 +177,7 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     button->setIcon(GET_ICON(icon_guioptions));
     button->setText( tr("Interface")); 
     button->setToolTip("Interface setting");
-    button->setStatusTip("Interface setting"); // FIXME
+    button->setStatusTip("Interface setting");
     button->setCheckable(true);
     button->setSizePolicy(sizePol);
     buttonGroup->addButton(button, section++);
@@ -201,7 +204,7 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     button->setIcon(GET_ICON(icon_card));
     button->setText(tr("Audio")); 
     button->setToolTip(tr("Audio setting"));
-    button->setStatusTip("Audio setting"); // FIXME
+    button->setStatusTip("Audio setting");
     button->setCheckable(true);
     button->setSizePolicy(sizePol);
     buttonGroup->addButton(button, section++);
@@ -233,7 +236,7 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     button->setIcon(i->icon());
     button->setText(tr("Backend")); 
     button->setToolTip(tr("Backend setting"));
-    button->setStatusTip("Backend setting"); // FIXME
+    button->setStatusTip("Backend setting");
     button->setCheckable(true);
     button->setSizePolicy(sizePol);
     buttonGroup->addButton(button, section++);
@@ -282,6 +285,17 @@ void settingsWindow::setReplaygain(bool val)
 void settingsWindow::setReplaygainMode(int val)
 {
     SETTINGS->_replayGainMode = val;
+}
+
+bool settingsWindow::event(QEvent *e)
+{
+    if (e->type() == QEvent::StatusTip)
+    {
+        QStatusTipEvent *ev = (QStatusTipEvent*)e;
+        ((QMainWindow*)parentWidget())->statusBar()->showMessage(ev->tip());
+        return true;
+    }
+    return QDialog::event(e);
 }
 
 /*****************************************************************/
