@@ -101,10 +101,10 @@ template<> inline void audio::process<short>(size_t size)
 #if (Q_BYTE_ORDER == Q_BIG_ENDIAN)
     {
         //Swap bytes on big endian machines
-        qint16 *buf = (qint16*)_output->buffer();
-        const short *end = buf+(size/2);
+        quint16 *buf = (quint16*)_output->buffer();
+        const quint16 *end = buf+(size/2);
         do {
-            const qint16 tmp = *buf;
+            const quint16 tmp = *buf;
             *buf++ = ((tmp & 0x00FF)<<8) & ((tmp & 0xFF00)>>8);
         } while (buf<end);
     }
