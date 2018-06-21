@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QThreadPool>
+#include <QRegExp>
 
 #define IMAGESIZE 150
 
@@ -168,7 +169,15 @@ void infoDialog::setInfo(const metaData* mtd)
                 palette.setColor(lbl->foregroundRole(), color);
                 lbl->setPalette(palette);
 
-                gLayout->addWidget(new QLabel(temp, matrix), j, 1);
+                QLabel *text = new QLabel(matrix);
+                if (!QString::compare(info, "comment"))
+                {
+                    QRegExp url("(\\b(?:https?://|www\\.)\\S+\\b)");
+                    temp.replace(url, "<a href=\"\\1\">\\1</a>");
+                    text->setOpenExternalLinks(true);
+                }
+                text->setText(temp);
+                gLayout->addWidget(text, j, 1);
             }
         }
     }
