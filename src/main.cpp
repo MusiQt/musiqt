@@ -21,6 +21,8 @@
 #include "mainWindow.h"
 #include "translator.h"
 
+#include <QLocale>
+#include <QTime>
 #include <QSplashScreen>
 
 #ifdef QT_STATICPLUGIN
@@ -35,11 +37,53 @@ Q_IMPORT_PLUGIN(QJpegPlugin)
 Q_IMPORT_PLUGIN(QTiffPlugin)
 #endif
 
+
+#if QT_VERSION >= 0x050000
+void messageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+#else
+void messageOutput(QtMsgType type, const char *msg)
+#endif
+{
+    QByteArray timeMsg = QTime::currentTime().toString("hh:mm:ss.zzz").toLocal8Bit();
+#if QT_VERSION >= 0x050000
+    QByteArray localMsg = msg.toLocal8Bit();
+#else
+    QByteArray localMsg = msg;
+#endif
+    switch (type)
+    {
+    case QtDebugMsg:
+        fprintf(stderr, "%s:D: %s\n", timeMsg.constData(), localMsg.constData());
+        break;
+#if QT_VERSION >= 0x050000
+    case QtInfoMsg:
+        fprintf(stderr, "%s:I: %s\n", timeMsg.constData(), localMsg.constData());
+        break;
+#endif
+    case QtWarningMsg:
+        fprintf(stderr, "%s:W: %s\n", timeMsg.constData(), localMsg.constData());
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "%s:C: %s\n", timeMsg.constData(), localMsg.constData());
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "%s:F: %s\n", timeMsg.constData(), localMsg.constData());
+        break;
+    }
+    fflush(stderr);
+}
+
 int main(int argc, char *argv[])
 {
     singleApp app(argc, argv);
     if (app.isRunning())
         return -1;
+
+#if QT_VERSION >= 0x050000
+    qInstallMessageHandler(messageOutput);
+#else
+    qInstallMsgHandler(messageOutput);
+#endif
 
     QPixmap pixmap(":/resources/splash.png");
     QSplashScreen splash(pixmap, Qt::WindowStaysOnTopHint);
