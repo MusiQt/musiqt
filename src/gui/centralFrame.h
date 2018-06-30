@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2017 Leandro Nini
+ *  Copyright (C) 2013-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -95,6 +95,8 @@ public:
     void setVolume(int vol) { _audio->volume(vol); }
 
     void changeSubtune(dir_t dir);
+
+    void init();
 
 signals:
     void stateChanged(state_t state);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2017 Leandro Nini
+ *  Copyright (C) 2013-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,7 +65,6 @@ centralFrame::centralFrame(QWidget *parent) :
     // dir view
     fsm = new QFileSystemModel(this);
     fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot|QDir::Files);
-    fsm->setRootPath(QDir::rootPath());
     fsm->setNameFilterDisables(false);
     fsm->setNameFilters(TFACTORY->plExt());
 
@@ -845,4 +844,9 @@ void centralFrame::setDir(const QModelIndex& index)
 void centralFrame::scroll()
 {
     _dirlist->scrollTo(_dirlist->currentIndex());
+}
+
+void centralFrame::init()
+{
+    fsm->setRootPath(QDir::rootPath());
 }

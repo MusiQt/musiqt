@@ -133,6 +133,8 @@ mainWindow::~mainWindow()
 
 void mainWindow::init(const char* arg)
 {
+    cFrame->init();
+
     // Look at command line arguments
     if (arg != nullptr)
     {

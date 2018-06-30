@@ -21,6 +21,8 @@
 #include "mainWindow.h"
 #include "translator.h"
 
+#include <QSplashScreen>
+
 #ifdef QT_STATICPLUGIN
 #include <QtPlugin>
 #  ifdef _WIN32
@@ -39,6 +41,12 @@ int main(int argc, char *argv[])
     if (app.isRunning())
         return -1;
 
+    QPixmap pixmap(":/resources/splash.png");
+    QSplashScreen splash(pixmap, Qt::WindowStaysOnTopHint);
+    splash.show();
+    splash.clearMessage(); // Splash doesn't show on Linux without this (???)
+    app.processEvents();
+
     app.setOrganizationName("DrFiemost");
     app.setApplicationName("musiqt");
 
@@ -48,11 +56,15 @@ int main(int argc, char *argv[])
 #endif
 
     mainWindow window;
-    window.init(argc>1 ? argv[1] : nullptr);
-
     QObject::connect(&app, SIGNAL(sendMessage(QString)), &window, SLOT(onMessage(QString)));
 
     window.show();
+    app.processEvents();
+
+    window.init(argc>1 ? argv[1] : nullptr);
+    app.processEvents();
+
+    splash.finish(&window);
 
     return app.exec();
 }
