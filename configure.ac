@@ -119,8 +119,16 @@ AM_CONDITIONAL([SNDFILE], [test "x$pkg_cv_SNDFILE_LIBS" != "x"])
 ##################################################################
 # Search for libmpg123
 
-AC_CHECK_HEADERS([mpg123.h])
-AM_CONDITIONAL([MPG123], [test "x$ac_cv_header_mpg123_h" = "xyes"])
+AC_ARG_ENABLE([mpg123-plugin], [AS_HELP_STRING([--disable-mpg123-plugin], [disable mpg123 backend])])
+
+AS_IF([test "x$enable_mpg123_plugin" != xno],
+    [PKG_CHECK_MODULES(MPG123,
+        [libmpg123 >= 1.6],
+        [AC_DEFINE([HAVE_MPG123], 1, [Define to 1 if you have libmpg123 (-lmpg123).])],
+        [AC_MSG_WARN([$MPG123_PKG_ERRORS])]
+    )]
+)
+AM_CONDITIONAL([MPG123], [test "x$pkg_cv_MPG123_LIBS" != "x"])
 
 ##################################################################
 # Search for ffmpeg

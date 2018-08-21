@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #include <mpg123.h>
 
 #include "inputBackend.h"
-#include "AutoDLL.h"
 
 #include <QFile>
 
@@ -74,7 +73,6 @@ private:
     QFile _file;
 
     static int _status;
-    static const AutoDLL _dll;
 
     static ssize_t read_func(void*, void*, size_t);
     static off_t seek_func(void*, off_t, int);
@@ -83,32 +81,12 @@ public:
     static QStringList _decoders;
 
 private:
-    static int (*dl_mpg123_init)(void);
-    static void (*dl_mpg123_exit)(void);
-    static mpg123_handle* (*dl_mpg123_new)(const char*, int*);
-    static void (*dl_mpg123_delete)(mpg123_handle*);
-    static const char* (*dl_mpg123_plain_strerror)(int);
-    static int (*dl_mpg123_open_handle)(mpg123_handle*, void*);
-    static int (*dl_mpg123_close)(mpg123_handle*);
-    static int (*dl_mpg123_scan)(mpg123_handle*);
-    static int (*dl_mpg123_getformat)(mpg123_handle*, long*, int*, int*);
-    static off_t (*dl_mpg123_length)(mpg123_handle*);
-    static int (*dl_mpg123_read)(mpg123_handle*, unsigned char*, size_t, size_t*);
-    static off_t (*dl_mpg123_seek)(mpg123_handle*, off_t, int);
-    static int (*dl_mpg123_id3)(mpg123_handle*, mpg123_id3v1**, mpg123_id3v2**);
-    static const char** (*dl_mpg123_supported_decoders)(void);
-    static int (*dl_mpg123_replace_reader_handle)(mpg123_handle*, ssize_t(*)(void*, void*, size_t), off_t(*)(void*, off_t, int), void(*)(void *));
-    static int (*dl_mpg123_param)(mpg123_handle*, enum mpg123_parms, long, double);
-
-private:
     mpg123Backend();
 
 public:
     ~mpg123Backend();
 
     static const char name[];
-
-    static bool init();
 
     /// Factory method
     static input* factory() { return new mpg123Backend(); }

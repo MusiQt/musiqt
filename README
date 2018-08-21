@@ -60,17 +60,17 @@ ahx, hvl
 mp3
 
 Note:
-Mpg123 and ffmpeg backends are enabled only when needed libraries are found
+ffmpeg backend is enabled only when needed libraries are found
 at runtime, so you need to install them on your own.
 Beware that these libraries may contain patented code and support some
 proprietary codec.
 
 Some Linux distro already ships these libraries.
-(libmpg123.so, libavcodec.so, libavformat.so and libavutil.so)
+(libavcodec.so, libavformat.so and libavutil.so)
 
 On Windows you have to manually put them under the System folder
 or in the same folder as musiqt binary.
-(libmpg123-0.dll, avcodec-56.dll, avformat-56.dll and avutil-54.dll)
+(avcodec-56.dll, avformat-56.dll and avutil-54.dll)
 
 ####################################################################
 

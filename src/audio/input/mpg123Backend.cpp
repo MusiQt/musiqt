@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 
 #include "settings.h"
 #include "genres.h"
-#include "loadsym.h"
 
 #include <algorithm>
 
@@ -71,36 +70,12 @@ extern const unsigned char iconMpg123[560] =
 // mp3|mp2
 #define EXT "mp3"
 
-#define CREDITS "MPEG Audio Decoder library\ncopyright 1995-2008 by the mpg123 project"
+#define CREDITS "MPEG Audio Decoder library\nCopyright \302\251 the mpg123 project"
 #define LINK    "http://mpg123.org/"
 
 const char mpg123Backend::name[] = "Mpg123";
 
-#ifdef _WIN32
-# define MPG123LIB "libmpg123-0.dll"
-#else
-# define MPG123LIB "libmpg123.so"
-#endif
-
-int (*mpg123Backend::dl_mpg123_init)(void)=0;
-void (*mpg123Backend::dl_mpg123_exit)(void)=0;
-mpg123_handle* (*mpg123Backend::dl_mpg123_new)(const char*, int*)=0;
-void (*mpg123Backend::dl_mpg123_delete)(mpg123_handle*)=0;
-const char* (*mpg123Backend::dl_mpg123_plain_strerror)(int)=0;
-int (*mpg123Backend::dl_mpg123_open_handle)(mpg123_handle*, void*)=0;
-int (*mpg123Backend::dl_mpg123_close)(mpg123_handle*)=0;
-int (*mpg123Backend::dl_mpg123_scan)(mpg123_handle*)=0;
-int (*mpg123Backend::dl_mpg123_getformat)(mpg123_handle*, long*, int*, int*)=0;
-off_t (*mpg123Backend::dl_mpg123_length)(mpg123_handle*)=0;
-int (*mpg123Backend::dl_mpg123_read)(mpg123_handle*, unsigned char*, size_t, size_t*)=0;
-off_t (*mpg123Backend::dl_mpg123_seek)(mpg123_handle*, off_t, int)=0;
-int (*mpg123Backend::dl_mpg123_id3)(mpg123_handle*, mpg123_id3v1**, mpg123_id3v2**)=0;
-const char** (*mpg123Backend::dl_mpg123_supported_decoders)(void)=0;
-int(*mpg123Backend::dl_mpg123_replace_reader_handle)(mpg123_handle*, ssize_t(*)(void*, void*, size_t), off_t(*)(void*, off_t, int), void(*)(void *))=0;
-int (*mpg123Backend::dl_mpg123_param)(mpg123_handle*, enum mpg123_parms, long, double)=0;
-
 int mpg123Backend::_status = 0;
-const AutoDLL mpg123Backend::_dll(MPG123LIB);
 
 QStringList mpg123Backend::_decoders;
 
@@ -111,7 +86,7 @@ mpg123Config_t mpg123Backend::_settings;
 size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
     size_t n;
-    const int err = dl_mpg123_read(_handle, (unsigned char*)buffer, bufferSize, &n);
+    const int err = mpg123_read(_handle, (unsigned char*)buffer, bufferSize, &n);
     if (err != MPG123_OK)
         return 0;
 
@@ -119,31 +94,6 @@ size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize, const un
 }
 
 /*****************************************************************/
-
-bool mpg123Backend::init()
-{
-    if (!_dll.loaded())
-        return false;
-
-    LOADSYM(_dll, mpg123_init, int(*)(void))
-    LOADSYM(_dll, mpg123_exit, void(*)(void))
-    LOADSYM(_dll, mpg123_new, mpg123_handle*(*)(const char*, int*))
-    LOADSYM(_dll, mpg123_delete, void(*)(mpg123_handle*))
-    LOADSYM(_dll, mpg123_plain_strerror, const char*(*)(int))
-    LOADSYMSFX(_dll, mpg123_open_handle, int(*)(mpg123_handle*, void*))
-    LOADSYM(_dll, mpg123_close, int(*)(mpg123_handle*))
-    LOADSYM(_dll, mpg123_scan, int(*)(mpg123_handle*))
-    LOADSYM(_dll, mpg123_getformat, int(*)(mpg123_handle*, long*, int*, int*))
-    LOADSYMSFX(_dll, mpg123_length, off_t(*)(mpg123_handle*))
-    LOADSYM(_dll, mpg123_read, int(*)(mpg123_handle*, unsigned char*, size_t, size_t*))
-    LOADSYMSFX(_dll, mpg123_seek, off_t(*)(mpg123_handle*, off_t, int))
-    LOADSYM(_dll, mpg123_id3, int(*)(mpg123_handle*, mpg123_id3v1**, mpg123_id3v2**))
-    LOADSYM(_dll, mpg123_supported_decoders, const char**(*)(void))
-    TRYLOADSYM(_dll, mpg123_replace_reader_handle, mpg123_replace_reader_handle_64, int(*)(mpg123_handle*, ssize_t(*)(void*, void*, size_t), off_t(*)(void*, off_t, int), 	void(*)(void *)))
-    LOADSYM(_dll, mpg123_param, int(*)(mpg123_handle*, enum mpg123_parms, long, double))
-
-    return true;
-}
 
 bool mpg123Backend::supports(const QString& fileName)
 {
@@ -163,11 +113,11 @@ mpg123Backend::mpg123Backend() :
     if (++_status > 1)
         return;
 
-    const int err = dl_mpg123_init();
+    const int err = mpg123_init();
     if (err == MPG123_OK)
     {
         _decoders << "auto";
-        const char** decoders = dl_mpg123_supported_decoders();
+        const char** decoders = mpg123_supported_decoders();
         while (*decoders)
         {
             qDebug() << "Decoder: " << *decoders;
@@ -177,7 +127,7 @@ mpg123Backend::mpg123Backend() :
     }
     else
     {
-        qWarning() << dl_mpg123_plain_strerror(err);
+        qWarning() << mpg123_plain_strerror(err);
         _status = 0;
     }
 }
@@ -187,7 +137,7 @@ mpg123Backend::~mpg123Backend()
     close();
 
     if (--_status == 0)
-        dl_mpg123_exit();
+        mpg123_exit();
 }
 
 void mpg123Backend::loadSettings()
@@ -218,42 +168,42 @@ bool mpg123Backend::open(const QString& fileName)
     const char *decoder = QString::compare(_settings.decoder, "auto")
         ? _settings.decoder.toLocal8Bit().constData()
         : nullptr;
-    _handle = dl_mpg123_new(decoder, &err);
+    _handle = mpg123_new(decoder, &err);
     if (_handle == nullptr)
         goto error;
 
-    err = dl_mpg123_replace_reader_handle(_handle, read_func, seek_func, NULL);
+    err = mpg123_replace_reader_handle(_handle, read_func, seek_func, NULL);
     if (err == MPG123_OK)
     {
-        err = dl_mpg123_open_handle(_handle, &_file);
+        err = mpg123_open_handle(_handle, &_file);
     }
     if (err != MPG123_OK)
     {
-        dl_mpg123_delete(_handle);
+        mpg123_delete(_handle);
         goto error;
     }
 
     if (!_settings.fastscan)
     {
-        err = dl_mpg123_scan(_handle);
+        err = mpg123_scan(_handle);
         if (err != MPG123_OK)
         {
-            qWarning() << dl_mpg123_plain_strerror(err);
+            qWarning() << mpg123_plain_strerror(err);
         }
     }
 
     int encoding;
-    err = dl_mpg123_getformat(_handle, &_samplerate, &_channels, &encoding);
+    err = mpg123_getformat(_handle, &_samplerate, &_channels, &encoding);
     if (err != MPG123_OK)
     {
-        dl_mpg123_delete(_handle);
+        mpg123_delete(_handle);
         goto error;
     }
 
-    err = dl_mpg123_length(_handle);
+    err = mpg123_length(_handle);
     time(err/_samplerate);
 
-    err = dl_mpg123_param(_handle, MPG123_RVA,
+    err = mpg123_param(_handle, MPG123_RVA,
         SETTINGS->replayGain()
             ? (SETTINGS->replayGainMode() == 0) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
             : MPG123_RVA_OFF,
@@ -261,7 +211,7 @@ bool mpg123Backend::open(const QString& fileName)
 
     mpg123_id3v1* id3v1;
     mpg123_id3v2* id3v2;
-    err = dl_mpg123_id3(_handle, &id3v1, &id3v2);
+    err = mpg123_id3(_handle, &id3v1, &id3v2);
     if (err == MPG123_OK)
     {
         QString info;
@@ -409,7 +359,7 @@ bool mpg123Backend::open(const QString& fileName)
     return true;
 
 error:
-    qWarning() << dl_mpg123_plain_strerror(err);
+    qWarning() << mpg123_plain_strerror(err);
     _file.close();
     return false;
 }
@@ -419,8 +369,8 @@ void mpg123Backend::close()
     if (songLoaded().isEmpty())
         return;
 
-    dl_mpg123_close(_handle);
-    dl_mpg123_delete(_handle);
+    mpg123_close(_handle);
+    mpg123_delete(_handle);
 
     _file.close();
 
@@ -431,7 +381,7 @@ bool mpg123Backend::rewind()
 {
     if (!songLoaded().isEmpty())
     {
-        dl_mpg123_seek(_handle, 0, SEEK_SET);
+        mpg123_seek(_handle, 0, SEEK_SET);
         return true;
     }
 
