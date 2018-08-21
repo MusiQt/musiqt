@@ -130,4 +130,7 @@ http://www.ffmpeg.org/
 libmpg123 >= 1.6.x
 http://mpg123.org/
 
+game-music-emu >= 0.6
+https://bitbucket.org/mpyne/game-music-emu/
+
 ####################################################################
