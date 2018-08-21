@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2018-06-30 09:01+0200\n"
+"POT-Creation-Date: 2018-08-21 15:39+0200\n"
 "PO-Revision-Date: 2018-06-30 10:39+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -519,7 +519,7 @@ msgstr "Año"
 msgid "arturl"
 msgstr "Rutaimagen"
 
-#: src/audio/input/ffmpegBackend.cpp:349 src/audio/input/gmeBackend.cpp:182
+#: src/audio/input/ffmpegBackend.cpp:349 src/audio/input/gmeBackend.cpp:201
 #: src/audio/input/sndBackend.cpp:107
 msgid "copyright"
 msgstr "Copyright"
@@ -530,49 +530,49 @@ msgstr "Copyright"
 msgid "No settings available"
 msgstr "Sin configuración disponible"
 
-#: src/audio/input/gmeBackend.cpp:183
+#: src/audio/input/gmeBackend.cpp:202
 msgid "system"
 msgstr "sistema"
 
-#: src/audio/input/gmeBackend.cpp:184
+#: src/audio/input/gmeBackend.cpp:203
 msgid "game"
 msgstr "juego"
 
-#: src/audio/input/gmeBackend.cpp:185
+#: src/audio/input/gmeBackend.cpp:204
 msgid "dumper"
 msgstr "dumper"
 
-#: src/audio/input/gmeBackend.cpp:257 src/audio/input/hvlBackend.cpp:171
+#: src/audio/input/gmeBackend.cpp:280 src/audio/input/hvlBackend.cpp:171
 msgid "Samplerate"
 msgstr "Frecuencia de muestreo"
 
-#: src/audio/input/gmeBackend.cpp:287
+#: src/audio/input/gmeBackend.cpp:310
 msgid "Equalizer"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:289
+#: src/audio/input/gmeBackend.cpp:312
 msgid "Enable equalizer"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:333
+#: src/audio/input/gmeBackend.cpp:356
 msgid "ASMA path:"
 msgstr "Ruta ASMA:"
 
-#: src/audio/input/gmeBackend.cpp:338 src/audio/input/sidBackend.cpp:781
+#: src/audio/input/gmeBackend.cpp:361 src/audio/input/sidBackend.cpp:781
 #: src/audio/input/sidBackend.cpp:792 src/audio/input/sidBackend.cpp:803
 #: src/audio/input/sidBackend.cpp:814
 msgid "&Browse"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:339 src/audio/input/gmeBackend.cpp:380
+#: src/audio/input/gmeBackend.cpp:362 src/audio/input/gmeBackend.cpp:403
 msgid "Select ASMA directory"
 msgstr "Selecciona el directorio ASMA"
 
-#: src/audio/input/gmeBackend.cpp:392 src/audio/input/sidBackend.cpp:998
+#: src/audio/input/gmeBackend.cpp:415 src/audio/input/sidBackend.cpp:998
 msgid "Warning"
 msgstr "Advertencia"
 
-#: src/audio/input/gmeBackend.cpp:392 src/audio/input/sidBackend.cpp:998
+#: src/audio/input/gmeBackend.cpp:415 src/audio/input/sidBackend.cpp:998
 msgid "Path does not exists"
 msgstr ""
 
@@ -580,11 +580,11 @@ msgstr ""
 msgid "publisher"
 msgstr "editor"
 
-#: src/audio/input/mpg123Backend.cpp:473
+#: src/audio/input/mpg123Backend.cpp:423
 msgid "Decoder"
 msgstr "Decodificador"
 
-#: src/audio/input/mpg123Backend.cpp:493
+#: src/audio/input/mpg123Backend.cpp:443
 msgid "Fast scan"
 msgstr ""
 
