@@ -37,7 +37,7 @@
 
 #define AUTHOR  "Leandro Nini"
 #define WEBSITE "https://github.com/drfiemost/musiqt/"
-#define YEAR    "2006-2017"
+#define YEAR    "2006-2018"
 
 aboutDialog::aboutDialog(QWidget *parent) :
     QDialog(parent)
