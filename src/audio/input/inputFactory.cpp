@@ -37,7 +37,7 @@
 #ifdef HAVE_SIDPLAYFP
 #  include "sidBackend.h"
 #endif
-#ifdef BUILD_GME
+#ifdef HAVE_GME
 #  include "gmeBackend.h"
 #endif
 #ifdef BUILD_HVL
@@ -106,7 +106,7 @@ iFactory::iFactory()
     regBackend<sidBackend>();
 #endif
 
-#ifdef BUILD_GME
+#ifdef HAVE_GME
     regBackend<gmeBackend>();
 #endif
 

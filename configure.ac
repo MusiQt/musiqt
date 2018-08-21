@@ -173,12 +173,16 @@ AM_CONDITIONAL([OPUS], [test "x$pkg_cv_OPUS_LIBS" != "x"])
 ##################################################################
 # Check if we should build Game Music Engine backend
 
-AC_ARG_ENABLE([gme-plugin], [AS_HELP_STRING([--enable-gme-plugin], [enable Game_Music_Emu backend])])
+AC_ARG_ENABLE([gme-plugin], [AS_HELP_STRING([--disable-gme-plugin], [disable Game_Music_Emu backend])])
 
-AS_IF([test "x$enable_gme_plugin" = xyes],
-    [AC_DEFINE([BUILD_GME], 1, [Define to 1 if you want the Game_Music_Emu backend.])]
+AS_IF([test "x$enable_gme_plugin" != xno],
+    [PKG_CHECK_MODULES(GME,
+        [libgme >= 0.6],
+        [AC_DEFINE([HAVE_GME], 1, [Define to 1 if you have libgme (-lgme).])],
+        [AC_MSG_WARN([$GME_PKG_ERRORS])]
+    )]
 )
-AM_CONDITIONAL([GME], [test "x$enable_gme_plugin" = xyes])
+AM_CONDITIONAL([GME], [test "x$pkg_cv_GME_LIBS" != "x"])
 
 ##################################################################
 # Check if we should build Hively backend
