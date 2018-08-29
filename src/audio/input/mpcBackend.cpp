@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,10 @@
 #include "settings.h"
 #include "utils.h"
 #include "tag.h"
+
+#ifndef SV8
+#  include <math.h>
+#endif
 
 #include <QDebug>
 #include <QLabel>
@@ -201,7 +205,7 @@ bool mpcBackend::open(const QString& fileName)
         if (peak < gain)
             gain = peak;
 
-        mpc_decoder_scale_output(&decoder, gain);
+        mpc_decoder_scale_output(&_decoder, gain);
 #endif
     }
 
