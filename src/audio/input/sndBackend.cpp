@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ bool sndBackend::open(const QString& fileName)
 
     _si.format = 0;
 #if defined (_WIN32) && defined (UNICODE)
-    wchar_t *buffer = convertUtf(fileName);
+    const wchar_t *buffer = utils::convertUtf(fileName);
 
 #ifdef ENABLE_SNDFILE_WINDOWS_PROTOTYPES
     _sf = sf_wchar_open(buffer, SFM_READ, &_si);
