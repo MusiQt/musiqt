@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -203,7 +203,7 @@ bool openmptBackend::open(const QString& fileName)
         zlib_filefunc64_def ffunc;
         fill_win32_filefunc64(&ffunc);
 #    ifdef UNICODE
-        const wchar_t* tmpFileName = convertUtf(fileName);
+        const wchar_t* tmpFileName = utils::convertUtf(fileName);
         unzFile modZip = unzOpen2_64(tmpFileName, &ffunc);
         delete [] tmpFileName;
 #    else
