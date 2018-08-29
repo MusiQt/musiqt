@@ -103,15 +103,14 @@ AC_ARG_ENABLE([sndfile-plugin], [AS_HELP_STRING([--disable-sndfile-plugin], [dis
 
 AS_IF([test "x$enable_sndfile_plugin" != xno],
     [AS_IF([test "x$MINGW32" = "xyes"],
-        [PKG_CHECK_EXISTS(SNDFILE,
-            [sndfile >= 1.0.21],
+        [PKG_CHECK_EXISTS([sndfile >= 1.0.21],
             [AC_DEFINE([ENABLE_SNDFILE_WINDOWS_PROTOTYPES], 1, [Define to 1 if you have libsndfile>=1.0.21 on MinGW.])]
-        )],
-        [PKG_CHECK_MODULES(SNDFILE,
-                [sndfile >= 1.0],
-                [AC_DEFINE([HAVE_SNDFILE], 1, [Define to 1 if you have libsndfile (-lsndfile).])],
-                [AC_MSG_WARN([$SNDFILE_PKG_ERRORS])]
         )]
+    )
+    PKG_CHECK_MODULES(SNDFILE,
+        [sndfile >= 1.0],
+        [AC_DEFINE([HAVE_SNDFILE], 1, [Define to 1 if you have libsndfile (-lsndfile).])],
+        [AC_MSG_WARN([$SNDFILE_PKG_ERRORS])]
     )]
 )
 AM_CONDITIONAL([SNDFILE], [test "x$pkg_cv_SNDFILE_LIBS" != "x"])
