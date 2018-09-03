@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2017 Leandro Nini
+ *  Copyright (C) 2013-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@
 
 #define AUTHOR  "Leandro Nini"
 #define WEBSITE "https://github.com/drfiemost/musiqt/"
-#define YEAR    "2006-2017"
+#define YEAR    "2006-2018"
 
 aboutDialog::aboutDialog(QWidget *parent) :
     QDialog(parent)
