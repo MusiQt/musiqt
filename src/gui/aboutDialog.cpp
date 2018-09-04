@@ -113,7 +113,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     QTabWidget *tabWidget = new QTabWidget(this);
     tabWidget->addTab(infoWidget, tr("&Info"));
     tabWidget->addTab(contactWidget, tr("&Contact"));
-    tabWidget->addTab(creditsArea, tr("&Credits"));
+    tabWidget->addTab(creditsArea, tr("C&redits"));
     tabWidget->addTab(qtWidget, tr("&Qt"));
     tabWidget->addTab(licenseLabel, tr("&License"));
 

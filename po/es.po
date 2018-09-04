@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2018-06-30 09:01+0200\n"
-"PO-Revision-Date: 2018-06-30 10:39+0200\n"
+"POT-Creation-Date: 2018-09-04 21:18+0200\n"
+"PO-Revision-Date: 2018-09-04 21:19+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: es\n"
@@ -47,10 +47,10 @@ msgstr "&Info"
 
 #: src/gui/aboutDialog.cpp:115
 msgid "&Contact"
-msgstr "C&ontato"
+msgstr "&Contato"
 
 #: src/gui/aboutDialog.cpp:116
-msgid "&Credits"
+msgid "C&redits"
 msgstr "C&reditos"
 
 #: src/gui/aboutDialog.cpp:117
@@ -524,7 +524,7 @@ msgstr "Rutaimagen"
 msgid "copyright"
 msgstr "Copyright"
 
-#: src/audio/input/ffmpegBackend.cpp:424 src/audio/input/mpcBackend.cpp:277
+#: src/audio/input/ffmpegBackend.cpp:424 src/audio/input/mpcBackend.cpp:281
 #: src/audio/input/sndBackend.cpp:149 src/audio/input/ttaBackend.cpp:252
 #: src/audio/input/wvBackend.cpp:250
 msgid "No settings available"
@@ -576,7 +576,7 @@ msgstr "Advertencia"
 msgid "Path does not exists"
 msgstr ""
 
-#: src/audio/input/mpcBackend.cpp:153 src/audio/input/ttaBackend.cpp:168
+#: src/audio/input/mpcBackend.cpp:157 src/audio/input/ttaBackend.cpp:168
 msgid "publisher"
 msgstr "editor"
 
