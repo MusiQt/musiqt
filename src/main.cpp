@@ -25,6 +25,10 @@
 #include <QTime>
 #include <QSplashScreen>
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #ifdef QT_STATICPLUGIN
 #include <QtPlugin>
 #  ifdef _WIN32
@@ -92,7 +96,7 @@ int main(int argc, char *argv[])
     app.processEvents();
 
     app.setOrganizationName("DrFiemost");
-    app.setApplicationName("musiqt");
+    app.setApplicationName(PACKAGE_NAME);
 
 #ifdef ENABLE_NLS
     // Add translator
