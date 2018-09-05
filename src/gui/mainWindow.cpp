@@ -175,7 +175,7 @@ QToolBar *mainWindow::createControlBar()
     act->setStatusTip(tr("Switch to compact view"));
     connect(act, SIGNAL(triggered()), this, SLOT(onCompact()));
 
-    act = controlBar->addAction(GET_ICON(icon_preferencesdesktop), "Settings");
+    act = controlBar->addAction(GET_ICON(icon_preferencesdesktop), tr("Settings"));
     act->setToolTip(tr("Settings"));
     act->setStatusTip(tr("Program settings"));
     connect(act, SIGNAL(triggered()), this, SLOT(onConfig()));
