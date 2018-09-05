@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,9 +24,6 @@
 
 #ifdef _WIN32
 #  include <windows.h>
-#else
-#  include <fcntl.h>
-#  include <X11/XF86keysym.h>
 #endif
 
 #include <QDir>

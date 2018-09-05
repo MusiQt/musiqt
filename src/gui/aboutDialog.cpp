@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2017 Leandro Nini
+ *  Copyright (C) 2013-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     QTabWidget *tabWidget = new QTabWidget(this);
     tabWidget->addTab(infoWidget, tr("&Info"));
     tabWidget->addTab(contactWidget, tr("&Contact"));
-    tabWidget->addTab(creditsArea, tr("&Credits"));
+    tabWidget->addTab(creditsArea, tr("C&redits"));
     tabWidget->addTab(qtWidget, tr("&Qt"));
     tabWidget->addTab(licenseLabel, tr("&License"));
 
