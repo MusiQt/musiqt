@@ -45,7 +45,7 @@ msgid ""
 "This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt."
 "io/</a>"
 msgstr ""
-"Questo programma usa la version Qt %1<br><br><a href=\"http://qt.io/"
+"Questo programma usa la versione Qt %1<br><br><a href=\"http://qt.io/"
 "\">http://qt.io/</a>"
 
 #: src/gui/aboutDialog.cpp:114 src/gui/mainWindow.cpp:312
