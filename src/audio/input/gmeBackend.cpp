@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2017 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,9 +31,11 @@
 #include <QMessageBox>
 #include <QGroupBox>
 
-#include <string>
-
-#define EXT "ay|gbs|gym|hes|kss|nsfe|nsf|sap|spc|vgm|vgz"
+#ifdef HAVE_LIBZ
+#  define EXT "ay|gbs|gym|hes|kss|nsfe|nsf|sap|spc|vgm|vgz"
+#else
+#  define EXT "ay|gbs|gym|hes|kss|nsfe|nsf|sap|spc|vgm"
+#endif
 
 // ASMA path to STIL.
 #define ASMA_STIL "/Docs/STIL.txt"
@@ -41,48 +43,31 @@
 // ASMA path to BUGlist.
 #define ASMA_BUGLIST "/Docs/Bugs.txt"
 
-#define CREDITS "Game_Music_Emu library\nCopyright \302\251 Shay Green, Michael Pyne."
+#define CREDITS "Game_Music_Emu library 0.6.2\nCopyright \302\251 Shay Green, Michael Pyne."
 #define LINK    "https://bitbucket.org/mpyne/game-music-emu/"
 
 const char gmeBackend::name[] = "Gme";
 
 gmeConfig_t gmeBackend::_settings;
 
-QStringList gmeBackend::_ext;
-
 /*****************************************************************/
 
 size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
 {
-    if (gme_track_ended(_emu))
+    if (_emu->track_ended())
         return 0;
 
-    gme_play(_emu, (bufferSize>>1), (short*)buffer);
+    _emu->play((bufferSize>>1), (Music_Emu::sample_t*)buffer);
     return bufferSize;
 }
 
 /*****************************************************************/
 
-bool gmeBackend::init()
-{
-#if GME_VERSION >= 0x000602
-    gme_type_t const* types = gme_type_list();
-
-    while (gme_type_t type = *types++)
-    {
-        _ext << gme_type_extension(type);
-    }
-#else
-    _ext = QString(EXT).split("|");
-#endif
-    return true;
-}
-
 bool gmeBackend::supports(const QString& fileName)
 {
-    QString ext = _ext.join("|");
+    QString ext(EXT);
     ext.prepend(".*\\.(").append(")");
-    qDebug() << "gmeBackend::supports: " << ext;
+    qDebug() << "sidBackend::supports: " << ext;
 
     QRegExp rx(ext);
     return rx.exactMatch(fileName);
@@ -93,8 +78,6 @@ inline QStringList gmeBackend::ext() const { return QString(EXT).split("|"); }
 gmeBackend::gmeBackend() :
     inputBackend(name),
     _emu(nullptr),
-    _currentTrack(0),
-    _hasStilInfo(false),
     _stil(nullptr)
 {
     loadSettings();
@@ -140,25 +123,23 @@ bool gmeBackend::open(const QString& fileName)
     if (!check(gme_identify_file(fileName.toUtf8().constData(), &fileType)))
         return false;
 
-    qDebug() << "System " << gme_type_system(fileType);
+    qDebug() << "System " << fileType->system;
 
-    _emu = gme_new_emu(fileType, _settings.samplerate);
-    if (_emu == nullptr)
+    _emu = fileType->new_emu();
+    if (!check(_emu->set_sample_rate(_settings.samplerate)))
         return false;
     if (_settings.equalizer)
     {
         gme_equalizer_t eq = { _settings.treble_dB, _settings.bass_freq };
         gme_set_equalizer(_emu, &eq);
     }
-    if (!check(gme_load_file(_emu, fileName.toUtf8().constData())))
+    if (!check(_emu->load_file(fileName.toUtf8().constData())))
         return false;
-    if (!check(gme_start_track(_emu, 0)))
+    if (!check(_emu->start_track(0)))
         return false;
-
-    _currentTrack = 0;
 
     QFileInfo fInfo(fileName);
-    gme_load_m3u(_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
+    _emu->load_m3u(QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
 
     getInfo();
 
@@ -188,33 +169,31 @@ bool gmeBackend::open(const QString& fileName)
 
 void gmeBackend::getInfo()
 {
-    gme_info_t *ti;
-    const char* err = gme_track_info(_emu, &ti, _currentTrack);
+    track_info_t ti;
+    const char* err = _emu->track_info(&ti);
     if (err)
     {
         qWarning() << "Warning: " << err;
         return;
     }
 
-    _metaData.addInfo(metaData::TITLE, ti->song);
-    _metaData.addInfo(metaData::ARTIST, ti->author);
-    _metaData.addInfo(gettext("copyright"), ti->copyright);
-    _metaData.addInfo(gettext("system"), ti->system);
-    _metaData.addInfo(gettext("game"), ti->game);
-    _metaData.addInfo(gettext("dumper"), ti->dumper);
+    _metaData.addInfo(metaData::TITLE, ti.song);
+    _metaData.addInfo(metaData::ARTIST, ti.author);
+    _metaData.addInfo(gettext("copyright"), ti.copyright);
+    _metaData.addInfo(gettext("system"), ti.system);
+    _metaData.addInfo(gettext("game"), ti.game);
+    _metaData.addInfo(gettext("dumper"), ti.dumper);
     if (!_hasStilInfo)
-        _metaData.addInfo(metaData::COMMENT, ti->comment);
+        _metaData.addInfo(metaData::COMMENT, ti.comment);
 
-    time(ti->length/1000);
-
-    gme_free_info(ti);
+    time(ti.length/1000);
 }
 
 bool gmeBackend::check(const char* error)
 {
     if (error)
     {
-        gme_delete(_emu);
+        utils::delPtr(_emu);
         qWarning() << "Error: " << error;
         return false;
     }
@@ -223,7 +202,7 @@ bool gmeBackend::check(const char* error)
 
 void gmeBackend::close()
 {
-    gme_delete(_emu);
+    utils::delPtr(_emu);
 
     songLoaded(QString::null);
 }
@@ -232,7 +211,7 @@ bool gmeBackend::rewind()
 {
     if (_emu != nullptr)
     {
-        gme_seek_samples(_emu, 0);
+        _emu->start_track(_emu->current_track());
         return true;
     }
     return false;
@@ -240,11 +219,9 @@ bool gmeBackend::rewind()
 
 bool gmeBackend::subtune(const unsigned int i)
 {
-    if ((_emu != nullptr) && (i > 0) && (i <= (unsigned int)gme_track_count(_emu)))
+    if ((_emu != nullptr) && (i > 0) && (i <= _emu->track_count()))
     {
-        _currentTrack = i - 1;
-        if (!check(gme_start_track(_emu, _currentTrack)))
-            return false;
+        _emu->start_track(i-1);
         getInfo();
         return true;
     }

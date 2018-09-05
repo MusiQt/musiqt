@@ -17,6 +17,17 @@ http://lala.c64.org/
 
 ####################################################################
 
+Game_Music_Emu library 0.6.2
+Copyright (C) 2003-2010 Shay Green
+Copyright (C) 2009-2017 Michael Pyne
+http://www.slack.net/~ant/
+https://bitbucket.org/mpyne/game-music-emu/
+
+Sega Genesis YM2612 emulator
+Copyright (C) 2002 Stephane Dallongeville.
+
+####################################################################
+
 TTA Library 2.2
 Copyright (C) 1999-2014 Alexander Djourik
 http://www.true-audio.com/

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2018 Leandro Nini
+ *  Copyright (C) 2007-2017 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 #include "inputFactory.h"
 
-#ifdef HAVE_MPG123
+#ifdef HAVE_MPG123_H
 #  include "mpg123Backend.h"
 #endif
 #ifdef HAVE_VORBIS
@@ -37,7 +37,7 @@
 #ifdef HAVE_SIDPLAYFP
 #  include "sidBackend.h"
 #endif
-#ifdef HAVE_GME
+#ifdef BUILD_GME
 #  include "gmeBackend.h"
 #endif
 #ifdef BUILD_HVL
@@ -85,8 +85,9 @@ iFactory::iFactory()
 {
     // Register backends
 
-#ifdef HAVE_MPG123
-    regBackend<mpg123Backend>();
+#ifdef HAVE_MPG123_H
+    if (mpg123Backend::init())
+        regBackend<mpg123Backend>();
 #endif
 
 #ifdef HAVE_VORBIS
@@ -106,7 +107,7 @@ iFactory::iFactory()
     regBackend<sidBackend>();
 #endif
 
-#ifdef HAVE_GME
+#ifdef BUILD_GME
     regBackend<gmeBackend>();
 #endif
 

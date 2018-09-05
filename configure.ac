@@ -1,6 +1,6 @@
 # Process this file with autoconf to create configure.
 
-AC_INIT([musiqt],[0.2.0],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
+AC_INIT([musiqt],[0.1.1],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR([config])
@@ -118,16 +118,8 @@ AM_CONDITIONAL([SNDFILE], [test "x$pkg_cv_SNDFILE_LIBS" != "x"])
 ##################################################################
 # Search for libmpg123
 
-AC_ARG_ENABLE([mpg123-plugin], [AS_HELP_STRING([--disable-mpg123-plugin], [disable mpg123 backend])])
-
-AS_IF([test "x$enable_mpg123_plugin" != xno],
-    [PKG_CHECK_MODULES(MPG123,
-        [libmpg123 >= 1.6],
-        [AC_DEFINE([HAVE_MPG123], 1, [Define to 1 if you have libmpg123 (-lmpg123).])],
-        [AC_MSG_WARN([$MPG123_PKG_ERRORS])]
-    )]
-)
-AM_CONDITIONAL([MPG123], [test "x$pkg_cv_MPG123_LIBS" != "x"])
+AC_CHECK_HEADERS([mpg123.h])
+AM_CONDITIONAL([MPG123], [test "x$ac_cv_header_mpg123_h" = "xyes"])
 
 ##################################################################
 # Search for ffmpeg
@@ -172,16 +164,12 @@ AM_CONDITIONAL([OPUS], [test "x$pkg_cv_OPUS_LIBS" != "x"])
 ##################################################################
 # Check if we should build Game Music Engine backend
 
-AC_ARG_ENABLE([gme-plugin], [AS_HELP_STRING([--disable-gme-plugin], [disable Game_Music_Emu backend])])
+AC_ARG_ENABLE([gme-plugin], [AS_HELP_STRING([--enable-gme-plugin], [enable Game_Music_Emu backend])])
 
-AS_IF([test "x$enable_gme_plugin" != xno],
-    [PKG_CHECK_MODULES(GME,
-        [libgme >= 0.6],
-        [AC_DEFINE([HAVE_GME], 1, [Define to 1 if you have libgme (-lgme).])],
-        [AC_MSG_WARN([$GME_PKG_ERRORS])]
-    )]
+AS_IF([test "x$enable_gme_plugin" = xyes],
+    [AC_DEFINE([BUILD_GME], 1, [Define to 1 if you want the Game_Music_Emu backend.])]
 )
-AM_CONDITIONAL([GME], [test "x$pkg_cv_GME_LIBS" != "x"])
+AM_CONDITIONAL([GME], [test "x$enable_gme_plugin" = xyes])
 
 ##################################################################
 # Check if we should build Hively backend

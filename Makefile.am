@@ -5,6 +5,7 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = po
 
 DISTCHECK_CONFIGURE_FLAGS = \
+--enable-gme-plugin \
 --enable-hvl-plugin \
 --enable-tta-plugin
 
@@ -26,6 +27,11 @@ musiqt.png \
 src/resources.qrc \
 src/icons \
 src/resources \
+src/libs/gme/changes.txt \
+src/libs/gme/design.txt \
+src/libs/gme/gme.txt \
+src/libs/gme/license.txt \
+src/libs/gme/readme.txt \
 src/libs/hvl_replay/ChangeLog.txt \
 src/libs/stilview/README.txt \
 src/libs/libtta/README \
@@ -86,6 +92,109 @@ src/audio/input/opusBackend_moc.cpp
 endif
 
 if GME
+GMESOURCES = \
+src/libs/gme/Ay_Apu.h \
+src/libs/gme/Ay_Apu.cpp \
+src/libs/gme/Ay_Cpu.h \
+src/libs/gme/Ay_Cpu.cpp \
+src/libs/gme/Ay_Emu.h \
+src/libs/gme/Ay_Emu.cpp \
+src/libs/gme/blargg_common.h \
+src/libs/gme/blargg_config.h \
+src/libs/gme/blargg_endian.h \
+src/libs/gme/blargg_source.h \
+src/libs/gme/Blip_Buffer.h \
+src/libs/gme/Blip_Buffer.cpp \
+src/libs/gme/Classic_Emu.h \
+src/libs/gme/Classic_Emu.cpp \
+src/libs/gme/Data_Reader.h \
+src/libs/gme/Data_Reader.cpp \
+src/libs/gme/Dual_Resampler.h \
+src/libs/gme/Dual_Resampler.cpp \
+src/libs/gme/Effects_Buffer.h \
+src/libs/gme/Effects_Buffer.cpp \
+src/libs/gme/Fir_Resampler.h \
+src/libs/gme/Fir_Resampler.cpp \
+src/libs/gme/Gb_Apu.h \
+src/libs/gme/Gb_Apu.cpp \
+src/libs/gme/Gb_Cpu.h \
+src/libs/gme/Gb_Cpu.cpp \
+src/libs/gme/gb_cpu_io.h \
+src/libs/gme/Gb_Oscs.h \
+src/libs/gme/Gb_Oscs.cpp \
+src/libs/gme/Gbs_Emu.h \
+src/libs/gme/Gbs_Emu.cpp \
+src/libs/gme/Gme_File.h \
+src/libs/gme/Gme_File.cpp \
+src/libs/gme/gme.h \
+src/libs/gme/gme.cpp \
+src/libs/gme/gme_types.h \
+src/libs/gme/Gym_Emu.h \
+src/libs/gme/Gym_Emu.cpp \
+src/libs/gme/Hes_Apu.h \
+src/libs/gme/Hes_Apu.cpp \
+src/libs/gme/Hes_Cpu.h \
+src/libs/gme/Hes_Cpu.cpp \
+src/libs/gme/hes_cpu_io.h \
+src/libs/gme/Hes_Emu.h \
+src/libs/gme/Hes_Emu.cpp \
+src/libs/gme/Kss_Cpu.h \
+src/libs/gme/Kss_Cpu.cpp \
+src/libs/gme/Kss_Emu.h \
+src/libs/gme/Kss_Emu.cpp \
+src/libs/gme/Kss_Scc_Apu.h \
+src/libs/gme/Kss_Scc_Apu.cpp \
+src/libs/gme/M3u_Playlist.h \
+src/libs/gme/M3u_Playlist.cpp \
+src/libs/gme/Multi_Buffer.h \
+src/libs/gme/Multi_Buffer.cpp \
+src/libs/gme/Music_Emu.h \
+src/libs/gme/Music_Emu.cpp \
+src/libs/gme/Nes_Apu.h \
+src/libs/gme/Nes_Apu.cpp \
+src/libs/gme/Nes_Cpu.h \
+src/libs/gme/Nes_Cpu.cpp \
+src/libs/gme/nes_cpu_io.h \
+src/libs/gme/Nes_Fme7_Apu.h \
+src/libs/gme/Nes_Fme7_Apu.cpp \
+src/libs/gme/Nes_Namco_Apu.h \
+src/libs/gme/Nes_Namco_Apu.cpp \
+src/libs/gme/Nes_Oscs.h \
+src/libs/gme/Nes_Oscs.cpp \
+src/libs/gme/Nes_Vrc6_Apu.h \
+src/libs/gme/Nes_Vrc6_Apu.cpp \
+src/libs/gme/Nsfe_Emu.h \
+src/libs/gme/Nsfe_Emu.cpp \
+src/libs/gme/Nsf_Emu.h \
+src/libs/gme/Nsf_Emu.cpp \
+src/libs/gme/Sap_Apu.h \
+src/libs/gme/Sap_Apu.cpp \
+src/libs/gme/Sap_Cpu.h \
+src/libs/gme/Sap_Cpu.cpp \
+src/libs/gme/sap_cpu_io.h \
+src/libs/gme/Sap_Emu.h \
+src/libs/gme/Sap_Emu.cpp \
+src/libs/gme/Sms_Apu.h \
+src/libs/gme/Sms_Apu.cpp \
+src/libs/gme/Sms_Oscs.h \
+src/libs/gme/Snes_Spc.h \
+src/libs/gme/Snes_Spc.cpp \
+src/libs/gme/Spc_Cpu.h \
+src/libs/gme/Spc_Cpu.cpp \
+src/libs/gme/Spc_Dsp.h \
+src/libs/gme/Spc_Dsp.cpp \
+src/libs/gme/Spc_Emu.h \
+src/libs/gme/Spc_Emu.cpp \
+src/libs/gme/Spc_Filter.h \
+src/libs/gme/Spc_Filter.cpp \
+src/libs/gme/Vgm_Emu.h \
+src/libs/gme/Vgm_Emu.cpp \
+src/libs/gme/Vgm_Emu_Impl.h \
+src/libs/gme/Vgm_Emu_Impl.cpp \
+src/libs/gme/Ym2413_Emu.h \
+src/libs/gme/Ym2413_Emu.cpp \
+src/libs/gme/Ym2612_Emu.h \
+src/libs/gme/Ym2612_Emu.cpp 
 GME_SOURCES =\
 src/audio/input/gmeBackend.h \
 src/audio/input/gmeBackend.cpp
@@ -182,9 +291,7 @@ $(QT_CFLAGS) \
 $(BS2B_CFLAGS) \
 $(OPENMPT_CFLAGS) \
 $(VORBIS_CFLAGS) \
-$(MPG123_CFLAGS) \
 $(OPUS_CFLAGS) \
-$(GME_CFLAGS) \
 $(SIDPLAYFP_CFLAGS) \
 $(STILVIEW_CFLAGS) \
 $(SNDFILE_CFLAGS) \
@@ -199,9 +306,7 @@ $(ALSA_LIBS) \
 $(BS2B_LIBS) \
 $(OPENMPT_LIBS) \
 $(VORBIS_LIBS) \
-$(MPG123_LIBS) \
 $(OPUS_LIBS) \
-$(GME_LIBS) \
 $(SIDPLAYFP_LIBS) \
 $(STILVIEW_LIBS) \
 $(SNDFILE_LIBS) \
@@ -290,6 +395,7 @@ src/trackList/trackListPls.h \
 src/trackList/trackListCue.h \
 $(ZLIBSOURCES) \
 $(STILVIEWSOURCES) \
+$(GMESOURCES) \
 $(HVLSOURCES) \
 $(TTASOURCES) \
 src/utils/AutoDLL.h \
