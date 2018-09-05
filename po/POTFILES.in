@@ -16,6 +16,7 @@ src/audio/input/mpcBackend.cpp
 src/audio/input/mpg123Backend.cpp
 src/audio/input/oggBackend.cpp
 src/audio/input/openmptBackend.cpp
+src/audio/input/opusBackend.cpp
 src/audio/input/sidBackend.cpp
 src/audio/input/sndBackend.cpp
 src/audio/input/ttaBackend.cpp
