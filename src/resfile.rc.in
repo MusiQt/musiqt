@@ -18,7 +18,7 @@ BEGIN
             VALUE "FileDescription",    "@PACKAGE_NAME@"
             VALUE "FileVersion",        "@PACKAGE_VERSION@"
             VALUE "InternalName",       "@PACKAGE_NAME@"
-            VALUE "LegalCopyright",     "Copyright \251 2016-2017 Leandro Nini"
+            VALUE "LegalCopyright",     "Copyright \251 2016-2018 Leandro Nini"
             VALUE "OriginalFilename",   "musiqt.exe"
             VALUE "ProductName",        "@PACKAGE_NAME@"
             VALUE "ProductVersion",     "@PACKAGE_VERSION@"
