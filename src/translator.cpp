@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@ translator::translator(QObject* parent) :
     bindtextdomain(PACKAGE, cmd.toLocal8Bit().constData());
 #endif
 
+    bind_textdomain_codeset(PACKAGE, "utf-8");
     textdomain(PACKAGE);
 }
 
