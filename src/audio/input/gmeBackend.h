@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2018 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "libs/gme/Music_Emu.h"
+#include "gme/gme.h"
 
 #include "inputBackend.h"
 
@@ -82,9 +82,12 @@ private:
 
 private:
     Music_Emu *_emu;
+    int _currentTrack;
     bool _hasStilInfo;
 
     STIL *_stil;
+
+    static QStringList _ext;
 
 private:
     gmeBackend();
@@ -99,6 +102,8 @@ public:
     ~gmeBackend();
 
     static const char name[];
+
+    static bool init();
 
     /// Factory method
     static input* factory() { return new gmeBackend(); }
@@ -119,10 +124,10 @@ public:
     bool rewind() override;
 
     /// Get number of subtunes
-    unsigned int subtunes() const override { return _emu ? _emu->track_count() : 0; }
+    unsigned int subtunes() const override { return _emu ? gme_track_count(_emu) : 0; }
 
     /// Get current subtune
-    unsigned int subtune() const override { return _emu ? _emu->current_track()+1 : 0; }
+    unsigned int subtune() const override { return _currentTrack; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;
