@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011-2017 Leandro Nini
+ *  Copyright (C) 2011-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,19 +18,25 @@
 
 #include "xdg.h"
 
-#include <cstdlib>
-
-#include <QDir>
+#include <QtGlobal>
 #include <QDesktopServices>
 #include <QUrl>
-#include <QDebug>
 
-#ifdef _WIN32
-#  include <windows.h>
-#  include <shlobj.h>
+#if QT_VERSION >= 0x050000
+#  include <QStandardPaths>
+#else
+#  include <cstdlib>
+
+#  include <QDir>
+#  include <QDebug>
+
+#  ifdef _WIN32
+#    include <windows.h>
+#    include <shlobj.h>
+#  endif
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) && QT_VERSION < 0x050000
 #  ifdef UNICODE
 #    define TCHAR2QString(x) QString::fromWCharArray(x)
 #  else
@@ -49,43 +55,58 @@ const QString getWindowsDir(const int csidl)
 
 const QString xdg::getCacheDir()
 {
-#ifdef _WIN32
-    return getWindowsDir(CSIDL_INTERNET_CACHE);
+#if QT_VERSION >= 0x050000
+    return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #else
+#  ifdef _WIN32
+    return getWindowsDir(CSIDL_INTERNET_CACHE);
+#  else
     QString xdgCacheDir(qgetenv("XDG_CACHE_HOME"));
     if (xdgCacheDir.isEmpty())
         xdgCacheDir = QDir::homePath()+"/.cache";
     return QDir::cleanPath(xdgCacheDir);
+#  endif
 #endif
 }
 
 const QString xdg::getRuntimeDir()
 {
-#ifndef _WIN32
+#if QT_VERSION >= 0x050000
+    return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+#else
+#  ifndef _WIN32
     QString xdgRuntimeDir(qgetenv("XDG_RUNTIME_DIR"));
     if (!xdgRuntimeDir.isEmpty())
         return QDir::cleanPath(xdgRuntimeDir);
-#endif
+#  endif
     return getCacheDir();
+#endif
 }
 
 const QString xdg::getConfigDir()
 {
-#ifdef _WIN32
-    return getWindowsDir(CSIDL_APPDATA);
+#if QT_VERSION >= 0x050000
+    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 #else
+#  ifdef _WIN32
+    return getWindowsDir(CSIDL_APPDATA);
+#  else
     QString xdgConfigDir(qgetenv("XDG_CONFIG_HOME"));
     if (xdgConfigDir.isEmpty())
         xdgConfigDir = QDir::homePath()+"/.config";
     return QDir::cleanPath(xdgConfigDir);
+#  endif
 #endif
 }
 
 const QString xdg::getMusicDir()
 {
-#ifdef _WIN32
-    return getWindowsDir(CSIDL_MYMUSIC);
+#if QT_VERSION >= 0x050000
+    return QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
 #else
+#  ifdef _WIN32
+    return getWindowsDir(CSIDL_MYMUSIC);
+#  else
     QString xdgUserDirs=getConfigDir();
     xdgUserDirs.append("/user-dirs.dirs");
     qDebug() << "xdgUserDirs: " << xdgUserDirs;
@@ -105,6 +126,7 @@ const QString xdg::getMusicDir()
     }
 
     return QDir::cleanPath(musicDir);
+#  endif
 #endif
 }
 
