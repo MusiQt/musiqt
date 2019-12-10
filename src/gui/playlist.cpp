@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ void playlist::dropEvent(QDropEvent *event)
     QList<QUrl> urlList = event->mimeData()->urls();
     for (auto&& urlItem : urlList)
     {
-        QString url(urlItem.path());
+        QString url(urlItem.toLocalFile());
         if (QFileInfo(url).isFile())
         {
             add(url);
@@ -210,7 +210,7 @@ bool playlist::save(const QString& file)
 
     for (int i=0; i<count(); i++)
     {
-        _tracks->append(item(i)->toolTip());
+        _tracks->append(item(i)->text());
     }
 
     return tracklist->save(_tracks);
