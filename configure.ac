@@ -1,6 +1,6 @@
 # Process this file with autoconf to create configure.
 
-AC_INIT([musiqt],[0.1.1],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
+AC_INIT([musiqt],[0.1.2],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR([config])
