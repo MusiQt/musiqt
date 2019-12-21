@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2018-09-04 21:18+0200\n"
+"POT-Creation-Date: 2019-12-10 21:22+0100\n"
 "PO-Revision-Date: 2018-09-04 21:19+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -170,7 +170,8 @@ msgstr "Modo compacto"
 msgid "Switch to compact view"
 msgstr "Cambiar a modo compacto"
 
-#: src/gui/mainWindow.cpp:179 src/gui/settings.cpp:44
+#: src/gui/mainWindow.cpp:178 src/gui/mainWindow.cpp:179
+#: src/gui/settings.cpp:44
 msgid "Settings"
 msgstr "Configuración"
 
