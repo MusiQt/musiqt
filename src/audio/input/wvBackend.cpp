@@ -222,7 +222,7 @@ void wvBackend::close()
         delete [] _decodeBuf;
     }
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool wvBackend::rewind()

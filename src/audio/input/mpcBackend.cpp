@@ -229,7 +229,7 @@ void mpcBackend::close()
         mpc_demux_exit(_demux);
 #endif
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool mpcBackend::rewind()

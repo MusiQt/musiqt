@@ -124,7 +124,7 @@ void sndBackend::close()
         _sf = nullptr;
     }
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool sndBackend::rewind()

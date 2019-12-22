@@ -32,7 +32,7 @@ private:
     int _start;
 
 public:
-    track_t() : _location(QString::null), _start(0) {}
+    track_t() : _start(0) {}
     track_t(const QString& location, const unsigned int start=0) : _location(location), _start(start) {}
 
     const QString& location() const { return _location; }

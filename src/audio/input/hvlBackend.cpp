@@ -114,7 +114,7 @@ bool hvlBackend::open(const QString& fileName)
     hvl_InitSubsong(_tune, 0);
 
     _metaData.addInfo(metaData::TITLE, (char*)_tune->ht_Name);
-    QString comment = QString::null;
+    QString comment = QString();
     for (unsigned int i=0; i<_tune->ht_InstrumentNr; i++)
         comment.append(QString("%1\n").arg(_tune->ht_Instruments[i].ins_Name));
 
@@ -138,7 +138,7 @@ void hvlBackend::close()
         _buffer = nullptr;
     }
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool hvlBackend::rewind()

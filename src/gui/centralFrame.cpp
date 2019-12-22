@@ -53,9 +53,7 @@ centralFrame::centralFrame(QWidget *parent) :
     _input(nullptr),
     _preload(nullptr),
     _audio(new audio),
-    playing(false),
-    preloaded(QString::null),
-    playDir(QString::null)
+    playing(false)
 {
     connect(_audio, SIGNAL(outputError()), this, SLOT(onCmdStopSong()));
     connect(_audio, SIGNAL(updateTime()), this, SLOT(onUpdateTime()));
@@ -256,7 +254,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
         const int i = items.empty() ? -1 : _playlist->row(items.at(0));
 
         _playlist->setCurrentRow((i < 0) ? 0 : i);
-        _dirlist->setProperty("UserData", QVariant(QString::null));
+        _dirlist->setProperty("UserData", QVariant(QString()));
     }
     else
     {
@@ -346,7 +344,7 @@ void centralFrame::setFile(const QString& file, const bool play)
         }
         else
         {
-            _dirlist->setProperty("UserData", QVariant(QString::null));
+            _dirlist->setProperty("UserData", QVariant(QString()));
             setDir(fsm->index(file));
             playMode = true; // TODO sync GUI
         }
@@ -447,7 +445,7 @@ void centralFrame::onCmdStopSong()
             setProperty("AutoBackend", QVariant(true));
             onDirSelected(curr);
         }
-        playDir = QString::null;
+        playDir = QString();
     }
 }
 
@@ -485,7 +483,7 @@ void centralFrame::onCmdChangeSong(dir_t dir)
         if (!preloaded.isEmpty())
         {
             _preload->close();
-            preloaded = QString::null;
+            preloaded = QString();
         }
         _playlist->setCurrentRow(idx);
     }
@@ -554,7 +552,7 @@ void centralFrame::onCmdSongLoaded(input* res)
         else
         {
             delete res;
-            preloaded = QString::null;
+            preloaded = QString();
         }
         return;
     }
@@ -580,7 +578,7 @@ void centralFrame::onCmdSongLoaded(input* res)
     else
     {
         playing = false;
-        playDir = QString::null;
+        playDir = QString();
         emit setInfo(nullptr);
         emit stateChanged(_audio->state());
         qWarning() << "Error loading song";
@@ -610,7 +608,7 @@ void centralFrame::onCmdSongSelected(int currentRow)
     {
         if (preloaded.compare(song))
         {
-            preloaded = QString::null;
+            preloaded = QString();
             utils::delPtr(_preload);
         }
         else
@@ -618,7 +616,7 @@ void centralFrame::onCmdSongSelected(int currentRow)
             delete _input;
             _input = _preload;
             _preload = nullptr;
-            preloaded = QString::null;
+            preloaded = QString();
             emit setDisplay(_input);
             return;
         }

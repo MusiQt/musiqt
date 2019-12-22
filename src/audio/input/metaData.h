@@ -91,7 +91,7 @@ public:
     QString getKey(const unsigned int num) const { return _infos.keys()[num]; }
     QString getKey(const mpris_t info) const { return mprisTags[info]; }
     QString getInfo(unsigned int num) const { return _infos.values()[num]; }
-    QString getInfo(const char* info) const { auto it=_infos.find(info); return it!=_infos.end()?it.value():QString::null; }
+    QString getInfo(const char* info) const { auto it=_infos.find(info); return it!=_infos.end()?it.value():QString(); }
     QString getInfo(const mpris_t info) const { return getInfo(mprisTags[info]); }
     imageData* getImage(void) const { return _img; }
 };

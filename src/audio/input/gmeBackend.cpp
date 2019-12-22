@@ -114,12 +114,12 @@ void gmeBackend::loadSettings()
     _settings.equalizer = load("Equalizer", false);
     _settings.treble_dB = load("Treble dB", 0.0);
     _settings.bass_freq = load("Bass freq", 15);
-    _settings.asmaPath = load("ASMA", QString::null);
+    _settings.asmaPath = load("ASMA", QString());
 }
 
 void gmeBackend::saveSettings()
 {
-    if (_settings.asmaPath.compare(load("ASMA", QString::null)))
+    if (_settings.asmaPath.compare(load("ASMA", QString())))
     {
         qDebug() << "Reloading ASMA from " << _settings.asmaPath;
         openAsma(_settings.asmaPath);
@@ -225,7 +225,7 @@ void gmeBackend::close()
 {
     gme_delete(_emu);
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool gmeBackend::rewind()

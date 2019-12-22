@@ -230,7 +230,7 @@ void oggBackend::close()
 
     _vi = nullptr;
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool oggBackend::rewind()

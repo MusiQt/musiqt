@@ -211,7 +211,7 @@ void ttaBackend::close()
     delete TTA;
     delete [] _decodeBuf;
     _file.close();
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool ttaBackend::rewind()

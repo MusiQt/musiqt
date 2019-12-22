@@ -376,7 +376,7 @@ void ffmpegBackend::close()
     _audioStream = 0;
     _formatContext = 0;
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool ffmpegBackend::seek(const int pos)

@@ -228,7 +228,7 @@ bool mpg123Backend::open(const QString& fileName)
         }
         else
         {
-            info = QString::null;
+            info = QString();
         }
         qDebug() << "TITLE: " << info;
         _metaData.addInfo(metaData::TITLE, info);
@@ -245,7 +245,7 @@ bool mpg123Backend::open(const QString& fileName)
         }
         else
         {
-            info = QString::null;
+            info = QString();
         }
         qDebug() << "ARTIST: " << info;
         _metaData.addInfo(metaData::ARTIST, info);
@@ -262,7 +262,7 @@ bool mpg123Backend::open(const QString& fileName)
         }
         else
         {
-            info = QString::null;
+            info = QString();
         }
         qDebug() << "ALBUM: " << info;
         _metaData.addInfo(metaData::ALBUM, info);
@@ -287,7 +287,7 @@ bool mpg123Backend::open(const QString& fileName)
         }
         else
         {
-            info = QString::null;
+            info = QString();
         }
         qDebug() << "GENRE: " << info;
         _metaData.addInfo(metaData::GENRE, info);
@@ -307,7 +307,7 @@ bool mpg123Backend::open(const QString& fileName)
         }
         else
         {
-            info = QString::null;
+            info = QString();
         }
         qDebug() << "YEAR: " << info;
         _metaData.addInfo(metaData::YEAR, info);
@@ -318,12 +318,12 @@ bool mpg123Backend::open(const QString& fileName)
         }
         else
         {
-            info = QString::null;
+            info = QString();
         }
         qDebug() << "TRACK: " << info;
         _metaData.addInfo(metaData::TRACK, info);
 
-        info = QString::null;
+        info = QString();
         if (id3v2)
         {
             for (unsigned int i=0; i<id3v2->comments; i++)
@@ -374,7 +374,7 @@ void mpg123Backend::close()
 
     _file.close();
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool mpg123Backend::rewind()

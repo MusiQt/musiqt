@@ -284,7 +284,7 @@ void openmptBackend::close()
         utils::delPtr(_module);
     }
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool openmptBackend::rewind()

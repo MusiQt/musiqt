@@ -490,8 +490,8 @@ void mainWindow::setDisplay(input* i)
 
 void mainWindow::clearDisplay(bool loading)
 {
-    _songInfo->setText(loading ? tr("Loading...") : QString::null);
-    _songInfo->setToolTip(QString::null);
+    _songInfo->setText(loading ? tr("Loading...") : QString());
+    _songInfo->setToolTip(QString());
     setWindowTitle(QString(PACKAGE_STRING));
     trayIcon->setToolTip(PACKAGE_STRING);
 

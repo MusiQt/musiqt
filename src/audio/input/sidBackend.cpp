@@ -188,17 +188,17 @@ void sidBackend::loadSettings()
     _settings.forceSidModel = load("Force SID Model", false);
     _settings.engine = load("Engine", engines[0]);
     _settings.filter = load("Filter", true);
-    _settings.hvscPath = load("HVSC", QString::null);
+    _settings.hvscPath = load("HVSC", QString());
     _settings.secondSidAddress = load("Second SID address", 0);
     _settings.thirdSidAddress = load("Third SID address", 0);
-    _settings.kernalPath = load("Kernal Rom", QString::null);
-    _settings.basicPath = load("BASIC Rom", QString::null);
-    _settings.chargenPath = load("Chargen Rom", QString::null);
+    _settings.kernalPath = load("Kernal Rom", QString());
+    _settings.basicPath = load("BASIC Rom", QString());
+    _settings.chargenPath = load("Chargen Rom", QString());
 }
 
 void sidBackend::saveSettings()
 {
-    QString hvsc = load("HVSC", QString::null);
+    QString hvsc = load("HVSC", QString());
     if (hvsc.compare(_settings.hvscPath))
     {
         qDebug() << "Reloading HVSC from " << _settings.hvscPath;
@@ -434,7 +434,7 @@ void sidBackend::close()
 
     utils::delPtr(_tune);
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool sidBackend::rewind()

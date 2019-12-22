@@ -32,8 +32,8 @@ if (!temp.isEmpty()) { \
 
 void infoLabel::setInfo(const metaData *data)
 {
-    QString tip = QString::null;
-    QString label = QString::null;
+    QString tip;
+    QString label;
     if (data != nullptr)
     {
         QString temp = data->getInfo(metaData::TITLE);

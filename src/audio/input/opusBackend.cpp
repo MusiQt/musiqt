@@ -215,7 +215,7 @@ void opusBackend::close()
         _file.close();
     }
 
-    songLoaded(QString::null);
+    songLoaded(QString());
 }
 
 bool opusBackend::rewind()

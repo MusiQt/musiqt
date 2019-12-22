@@ -31,14 +31,6 @@
 #define APE_HEADER_SIZE 32
 
 tag::tag(QFile* file) :
-    _title(QString::null),
-    _artist(QString::null),
-    _album(QString::null),
-    _publisher(QString::null),
-    _comment(QString::null),
-    _genre(QString::null),
-    _year(QString::null),
-    _track(QString::null),
     _offsBegin(0),
     _offsEnd(0),
     _img(nullptr)
@@ -241,7 +233,7 @@ QString tag::getID3v2Text(const char* buf, int size)
         tmp = QString::fromUtf8(buf, size);
         break;
     default:
-        return QString::null;
+        return QString();
     }
 
     tmp.replace('\0', ',');
