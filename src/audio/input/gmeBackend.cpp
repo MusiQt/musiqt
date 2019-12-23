@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -253,6 +253,7 @@ bool gmeBackend::subtune(const unsigned int i)
 
 void gmeBackend::openAsma(const QString& asmaPath)
 {
+#if HAVE_STILVIEW
     if (asmaPath.isEmpty())
         return;
 
@@ -264,6 +265,7 @@ void gmeBackend::openAsma(const QString& asmaPath)
         qWarning() << _stil->getErrorStr();
         utils::delPtr(_stil);
     }
+#endif
 }
 
 /*****************************************************************/
@@ -362,6 +364,10 @@ gmeConfig::gmeConfig(QWidget* win) :
     button->setToolTip(tr("Select ASMA directory"));
     hf->addWidget(button);
     connect(button, SIGNAL(clicked()), this, SLOT(onCmdAsma()));
+#if !HAVE_STILVIEW
+     asmaPath->setEnabled(false);
+     button->setEnabled(false);
+#endif
 }
 
 void gmeConfig::onCmdSamplerate(int val)

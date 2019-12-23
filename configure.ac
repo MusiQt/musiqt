@@ -242,9 +242,7 @@ PKG_CHECK_MODULES(WAVPACK,
 AM_CONDITIONAL([WAVPACK], [test "x$pkg_cv_WAVPACK_LIBS" != "x"])
 
 ##################################################################
-# Check if we should build STIL support
-
-internal_stil=no
+# Check if we need STIL support
 
 AS_IF([test "x$enable_gme_plugin" = xyes -o "x$enable_sidplayfp_plugin" != xno],
     [PKG_CHECK_MODULES(STILVIEW,
@@ -254,13 +252,8 @@ AS_IF([test "x$enable_gme_plugin" = xyes -o "x$enable_sidplayfp_plugin" != xno],
     )
     AS_IF([test "x$pkg_cv_STILVIEW_LIBS" = "x"],
         internal_stil=yes
-    )
-    AC_CHECK_FUNCS([strcasecmp strncasecmp])
-    AC_CHECK_FUNCS([stricmp strnicmp])
-    ]
+    )]
 )
-
-AM_CONDITIONAL([STIL_SUPPORT], [ test "x${internal_stil}" = xyes ])
 
 ##################################################################
 # Search for bs2b

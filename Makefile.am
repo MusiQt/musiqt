@@ -26,7 +26,6 @@ src/resources.qrc \
 src/icons \
 src/resources \
 src/libs/hvl_replay/ChangeLog.txt \
-src/libs/stilview/README.txt \
 src/libs/unzip/MiniZip64_info.txt \
 src/gui/ledGreen.xpm \
 src/gui/ledRed.xpm \
@@ -141,15 +140,6 @@ src/audio/input/wvBackend.cpp \
 src/audio/input/wvBackend.h
 WAVPACK_MOC = \
 src/audio/input/wvBackend_moc.cpp
-endif
-
-if STIL_SUPPORT
-STILVIEWSOURCES = \
-src/libs/stilview/stil.h \
-src/libs/stilview/stil.cpp \
-src/libs/stilview/stilcomm.h \
-src/libs/stilview/stilcomm.cpp \
-src/libs/stilview/stildefs.h
 endif
 
 bin_PROGRAMS = src/musiqt
