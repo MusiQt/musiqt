@@ -1,5 +1,5 @@
 MusiQt - https://github.com/drfiemost/musiqt/
-Leandro Nini (aka Dr. Fiemost) - drfiemost@users.sourceforge.net
+Leandro Nini - drfiemost@users.sourceforge.net
 
 ####################################################################
 
@@ -46,9 +46,6 @@ vgz (if zlib is installed)
 
 * Musepack
 mpc
-
-* True Audio
-tta
 
 * WavPack
 wv

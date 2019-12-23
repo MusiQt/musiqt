@@ -5,8 +5,7 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = po
 
 DISTCHECK_CONFIGURE_FLAGS = \
---enable-hvl-plugin \
---enable-tta-plugin
+--enable-hvl-plugin
 
 icondir = $(prefix)/share/icons
 icon_DATA = musiqt.png
@@ -28,8 +27,6 @@ src/icons \
 src/resources \
 src/libs/hvl_replay/ChangeLog.txt \
 src/libs/stilview/README.txt \
-src/libs/libtta/README \
-src/libs/libtta/COPYING \
 src/libs/unzip/MiniZip64_info.txt \
 src/gui/ledGreen.xpm \
 src/gui/ledRed.xpm \
@@ -138,18 +135,6 @@ MPC_MOC = \
 src/audio/input/mpcBackend_moc.cpp
 endif
 
-if TTA
-TTASOURCES = \
-src/libs/libtta/filter.h \
-src/libs/libtta/libtta.h \
-src/libs/libtta/libtta.cpp
-TTA_SOURCES = \
-src/audio/input/ttaBackend.h \
-src/audio/input/ttaBackend.cpp
-TTA_MOC = \
-src/audio/input/ttaBackend_moc.cpp
-endif
-
 if WAVPACK
 WAVPACK_SOURCES = \
 src/audio/input/wvBackend.cpp \
@@ -246,7 +231,6 @@ $(HVL_SOURCES) \
 ${SIDPLAYFP_SOURCES} \
 $(SNDFILE_SOURCES) \
 $(MPC_SOURCES) \
-$(TTA_SOURCES) \
 $(WAVPACK_SOURCES) \
 src/audio/output/output.h \
 src/audio/output/alsaBackend.cpp \
@@ -291,7 +275,6 @@ src/trackList/trackListCue.h \
 $(ZLIBSOURCES) \
 $(STILVIEWSOURCES) \
 $(HVLSOURCES) \
-$(TTASOURCES) \
 src/utils/AutoDLL.h \
 src/utils/AutoDLL.cpp \
 src/utils/imageData.h \
@@ -319,7 +302,6 @@ $(HVL_MOC) \
 $(SIDPLAYFP_MOC) \
 $(SNDFILE_MOC) \
 $(MPC_MOC) \
-$(TTA_MOC) \
 $(WAVPACK_MOC) \
 src/gui/aboutDialog_moc.cpp \
 src/gui/bookmark_moc.cpp \

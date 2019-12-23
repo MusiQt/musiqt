@@ -1,6 +1,6 @@
 # Process this file with autoconf to create configure.
 
-AC_INIT([musiqt],[0.2.0],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
+AC_INIT([musiqt],[0.3.0],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR([config])
@@ -241,17 +241,6 @@ AS_IF([test "x$enable_mpc_plugin" != xno],
 )
 AM_CONDITIONAL([MPC], [test "x$ac_cv_lib_mpcdec_mpc_decoder_initialize" = "xyes" \
     -o "x$ac_cv_lib_mpcdec_mpc_demux_init" = "xyes"])
-
-##################################################################
-# Check if we should build True Audio backend
-
-AC_ARG_ENABLE([tta-plugin], [AS_HELP_STRING([--enable-tta-plugin], [enable True Audio backend])])
-
-AS_IF([test "x$enable_tta_plugin" = xyes],
-    [AC_DEFINE([BUILD_TTA], 1, [Define to 1 if you want the tta backend.])]
-)
-
-AM_CONDITIONAL([TTA], [test "x$enable_tta_plugin" = xyes])
 
 ##################################################################
 # Search for wavpack

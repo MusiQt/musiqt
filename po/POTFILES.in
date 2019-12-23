@@ -19,5 +19,4 @@ src/audio/input/openmptBackend.cpp
 src/audio/input/opusBackend.cpp
 src/audio/input/sidBackend.cpp
 src/audio/input/sndBackend.cpp
-src/audio/input/ttaBackend.cpp
 src/audio/input/wvBackend.cpp
