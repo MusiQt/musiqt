@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: musiqt 0.1.1\n"
+"Project-Id-Version: musiqt 0.2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2018-08-21 15:39+0200\n"
+"POT-Creation-Date: 2019-12-22 16:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,63 +88,63 @@ msgstr ""
 msgid "Are you sure you want to delete all bookmarks?"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:119 src/gui/mainWindow.cpp:200
+#: src/gui/centralFrame.cpp:117 src/gui/mainWindow.cpp:200
 msgid "Playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:125
+#: src/gui/centralFrame.cpp:123
 msgid "Bookmarks"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:143
+#: src/gui/centralFrame.cpp:141
 msgid "Edit"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:144
+#: src/gui/centralFrame.cpp:142
 msgid "Edit playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:150
+#: src/gui/centralFrame.cpp:148
 msgid "Save"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:151 src/gui/centralFrame.cpp:816
+#: src/gui/centralFrame.cpp:149 src/gui/centralFrame.cpp:814
 msgid "Save playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:156
+#: src/gui/centralFrame.cpp:154
 msgid "Current playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:157
+#: src/gui/centralFrame.cpp:155
 msgid "Return to current playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:162 src/gui/centralFrame.cpp:163
+#: src/gui/centralFrame.cpp:160 src/gui/centralFrame.cpp:161
 msgid "Home"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:722
+#: src/gui/centralFrame.cpp:720
 msgid "Add to playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:723
+#: src/gui/centralFrame.cpp:721
 msgid "Add song to the playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:727
+#: src/gui/centralFrame.cpp:725
 msgid "Add to bookmarks"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:728
+#: src/gui/centralFrame.cpp:726
 msgid "Add directory to the bookmarks"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:821
+#: src/gui/centralFrame.cpp:819
 msgid "Error"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:821
+#: src/gui/centralFrame.cpp:819
 msgid "Error saving playlist"
 msgstr ""
 
@@ -169,7 +169,8 @@ msgstr ""
 msgid "Switch to compact view"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:179 src/gui/settings.cpp:44
+#: src/gui/mainWindow.cpp:178 src/gui/mainWindow.cpp:179
+#: src/gui/settings.cpp:44
 msgid "Settings"
 msgstr ""
 
@@ -522,8 +523,8 @@ msgid "copyright"
 msgstr ""
 
 #: src/audio/input/ffmpegBackend.cpp:424 src/audio/input/mpcBackend.cpp:281
-#: src/audio/input/sndBackend.cpp:149 src/audio/input/ttaBackend.cpp:252
-#: src/audio/input/wvBackend.cpp:250
+#: src/audio/input/opusBackend.cpp:274 src/audio/input/sndBackend.cpp:149
+#: src/audio/input/ttaBackend.cpp:252 src/audio/input/wvBackend.cpp:250
 msgid "No settings available"
 msgstr ""
 
