@@ -50,7 +50,7 @@ private slots:
     void setReplaygainMode(int val);
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 public:
     settingsWindow(QWidget* win, inputConfig* i);
