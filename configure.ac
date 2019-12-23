@@ -26,17 +26,6 @@ AS_CASE([$host_os],
 )
 AM_CONDITIONAL([MINGW32], [test "x$MINGW32" = "xyes"])
 
-##################################################################
-# Checks for typedefs, structures, and compiler characteristics.
-
-AC_SYS_LARGEFILE
-AS_IF([test "x$ac_cv_sys_file_offset_bits" = x || echo "$ac_cv_sys_file_offset_bits" | grep -q '@<:@^0-9@:>@'],
-        [LARGEFILE_SUFFIX=],
-        [LARGEFILE_SUFFIX="_$ac_cv_sys_file_offset_bits"]
-)
-
-AC_SUBST([LARGEFILE_SUFFIX])
-
 #####################################################
 # Check for debug build
 #####################################################
@@ -305,7 +294,6 @@ po/Makefile.in
 Makefile
 musiqt.desktop
 src/resfile.rc
-src/utils/loadsym.h
 ])
 
 AC_OUTPUT

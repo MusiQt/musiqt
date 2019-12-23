@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,13 +18,6 @@
 
 #define LOADSYM(dll, sym, type) \
     dl_##sym=(type)dll.address(#sym); \
-    if (!dl_##sym) { \
-        qWarning() << "No symbol " << #sym; \
-        return false; \
-    }
-
-#define LOADSYMSFX(dll, sym, type) \
-    dl_##sym=(type)dll.address(#sym"@LARGEFILE_SUFFIX@"); \
     if (!dl_##sym) { \
         qWarning() << "No symbol " << #sym; \
         return false; \

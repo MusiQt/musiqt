@@ -280,6 +280,7 @@ src/utils/AutoDLL.cpp \
 src/utils/imageData.h \
 src/utils/genres.h \
 src/utils/ioEx.h \
+src/utils/loadsym.h \
 src/utils/utils.cpp \
 src/utils/utils.h \
 src/utils/tag.cpp \
