@@ -31,7 +31,8 @@ AutoDLL::AutoDLL(const char* nm) :
     }
 }
 
-AutoDLL::~AutoDLL(){
+AutoDLL::~AutoDLL()
+{
     if (_handle != nullptr)
     {
         _handle->unload();

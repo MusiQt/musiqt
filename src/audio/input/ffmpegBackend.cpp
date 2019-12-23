@@ -75,11 +75,6 @@ void (*ffmpegBackend::dl_av_free_packet)(AVPacket*)=0;
 
 QStringList ffmpegBackend::_ext;
 
-// Based on code from GNUsound 0.7.4 - Copyright (C) 2002-2004, Pascal Haakmat
-// http://www.gnu.org/software/gnusound/
-// and on info from Martin Böhme's article "Using libavformat and libavcodec"
-// http://www.inb.uni-luebeck.de/~boehme/using_libavcodec.html
-
 /*****************************************************************/
 
 size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)

@@ -26,7 +26,7 @@
 
 #define EXT "ahx|hvl" // FIXME support as prefix (Amiga style) too
 
-#define CREDITS "HivelyTracker\nDexter/Abyss, Xeron/IRIS, and Pieknyman"
+#define CREDITS "HivelyTracker\nVersion 1.8\nDexter/Abyss, Xeron/IRIS, and Pieknyman"
 #define LINK    "https://github.com/pete-gordon/hivelytracker"
 
 const char hvlBackend::name[] = "Hively";

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2018 Leandro Nini
+ *  Copyright (C) 2007-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,9 +46,6 @@
 #ifdef HAVE_WAVPACK
 #  include "wvBackend.h"
 #endif
-#ifdef BUILD_TTA
-#  include "ttaBackend.h"
-#endif
 #ifdef HAVE_SNDFILE
 #  include "sndBackend.h"
 #endif
@@ -58,8 +55,6 @@
 #if defined(HAVE_MPCDEC_MPCDEC_H) || defined(HAVE_MPC_MPCDEC_H)
 #  include "mpcBackend.h"
 #endif
-//#include "madBackend.h"
-//#include "modBackend.h"
 
 #include <QDebug>
 
@@ -107,7 +102,8 @@ iFactory::iFactory()
 #endif
 
 #ifdef HAVE_GME
-    regBackend<gmeBackend>();
+    if (gmeBackend::init())
+        regBackend<gmeBackend>();
 #endif
 
 #ifdef BUILD_HVL
@@ -116,10 +112,6 @@ iFactory::iFactory()
 
 #ifdef HAVE_WAVPACK
     regBackend<wvBackend>();
-#endif
-
-#ifdef BUILD_TTA
-    regBackend<ttaBackend>();
 #endif
 
 #ifdef HAVE_SNDFILE
@@ -135,17 +127,6 @@ iFactory::iFactory()
 #if defined(HAVE_MPCDEC_MPCDEC_H) || defined(HAVE_MPC_MPCDEC_H)
     regBackend<mpcBackend>();
 #endif
-
-//#ifdef HAVE_MAD_H
-//      if (madBackend::init())
-//              regBackend<madBackend>();
-//#endif
-    
-//#ifdef HAVE_LIBMODPLUG
-//      regBackend<modBackend>();
-//#endif
-
-
 }
 
 input* iFactory::get(const int i)

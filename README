@@ -71,12 +71,6 @@ or in the same folder as musiqt binary.
 
 ####################################################################
 
-Platform notes
-
-The program is tested on Linux x86 (ALSA, OSS) and Windows 7 (WMM)
-
-It should work also on other UNIX with OSS support
-
 Please report problems, suggestions and patches at https://github.com/drfiemost/musiqt/
 
 ####################################################################
@@ -115,6 +109,12 @@ http://www.musepack.com/
 WavPack 4.x
 http://www.wavpack.com/
 
+libmpg123 >= 1.6.x
+http://mpg123.org/
+
+game-music-emu >= 0.6
+https://bitbucket.org/mpyne/game-music-emu/
+
 libbs2b 2.2.x or 3.x
 http://bs2b.sourceforge.net/
 
@@ -123,11 +123,5 @@ libavcodec >= 55
 libavformat >= 55
 avutil >= 53
 http://www.ffmpeg.org/
-
-libmpg123 >= 1.6.x
-http://mpg123.org/
-
-game-music-emu >= 0.6
-https://bitbucket.org/mpyne/game-music-emu/
 
 ####################################################################
