@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,22 +28,11 @@ namespace utils
 #ifdef UNICODE
 /// Convert Unicode string
 const wchar_t* convertUtf(const QString& string);
-//const char* convertNc(const wchar_t* string);
 #endif
-#endif
-
-#if 0 // unused
-/// Run external program
-void runCmd(const QString& cmd);
 #endif
 
 /// Delete a pointer and set it to null
 template<class T> inline void delPtr(T*& p) { delete p; p = nullptr; }
-
-#if 0 // unused
-/// Generate alternate color
-QColor altColor(QColor color);
-#endif
 
 /// Shrink a string if it's too long
 QString shrink(const QString& string);
