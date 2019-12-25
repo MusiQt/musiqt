@@ -51,7 +51,7 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsi
     size_t n = 0;
     int read;
     do {
-        read = op_read_stereo(_of, (opus_int16*)(buffer+n), (bufferSize-n)/2);
+        read = op_read_stereo(_of, (opus_int16*)buffer+n/2, (bufferSize-n)/2);
         if (read < 0)
         {
             qWarning() << "Decoding error: " << read;
