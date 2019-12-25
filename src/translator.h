@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,8 +29,8 @@ private:
     translator() {}
 
 public:
-    translator(QObject* parent=0);
-    ~translator();
+    translator(QObject* parent=nullptr);
+    virtual ~translator();
 
 #if QT_VERSION >= 0x050000
     QString translate(const char* context, const char* sourceText, const char* disambiguation=Q_NULLPTR, int n=-1) const override;

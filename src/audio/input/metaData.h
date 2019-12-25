@@ -51,6 +51,9 @@ public:
     virtual QString getInfo(const char* info) const =0;
     virtual QString getInfo(const mpris_t info) const =0;
     virtual QByteArray* getImage(void) const =0;
+
+protected:
+    ~metaData() {}
 };
 
 /*****************************************************************/

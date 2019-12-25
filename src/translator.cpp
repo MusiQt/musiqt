@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2018 Leandro Nini
+ *  Copyright (C) 2010-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,12 +38,13 @@ translator::translator(QObject* parent) :
     char* locale = setlocale(LC_ALL, "");
     qDebug() << "locale: " << locale;
 #ifndef _WIN32
-    bindtextdomain(PACKAGE, LOCALEDIR);
+    char* basedir = bindtextdomain(PACKAGE, LOCALEDIR);
 #else
-    QString cmd = QString(QCoreApplication::applicationDirPath()).append("/locale");
-    qDebug() << "localedir: " << cmd;
-    bindtextdomain(PACKAGE, cmd.toLocal8Bit().constData());
+    QString localedir = QString(QCoreApplication::applicationDirPath()).append("/locale");
+    qDebug() << "localedir: " << localedir;
+    char* basedir = bindtextdomain(PACKAGE, localedir.toLocal8Bit().constData());
 #endif
+    qDebug() << "basedir: " << basedir;
 
     bind_textdomain_codeset(PACKAGE, "utf-8");
     textdomain(PACKAGE);
