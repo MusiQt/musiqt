@@ -20,9 +20,6 @@
 #define QAUDIOBACKEND_H
 
 #include <QAudioOutput>
-#include <QBuffer>
-#include <QByteArray>
-#include <QMutex>
 #include <QSemaphore>
 
 #include <memory>
@@ -53,7 +50,7 @@ private:
     QSemaphore sem;
     int readIdx;
     int writeIdx;
-    qint64 len;
+    qint64 bufSize;
 };
 
 /*****************************************************************/

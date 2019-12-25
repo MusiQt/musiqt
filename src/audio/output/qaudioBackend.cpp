@@ -48,17 +48,16 @@ qint64 AudioBuffer::readData(char *data, qint64 maxSize)
 
     const qint64 size = std::min(length[readIdx], maxSize);
     memcpy(data, buffer[readIdx].get(), size);
-    if (size==length[readIdx])
+    const qint64 left = length[readIdx] - size;
+    length[readIdx] = left;
+    if (left==0)
     {
-        length[readIdx] = 0;
         readIdx = 1 - readIdx;
         sem.release();
     }
     else
     {
-        const qint64 left = length[readIdx] - size;
         memcpy(buffer[readIdx].get(), buffer[readIdx].get()+size, left);
-        length[readIdx] = left;
     }
     return size;
 }
@@ -67,7 +66,8 @@ qint64 AudioBuffer::writeData(const char *data, qint64 maxSize)
 {
     if (!sem.tryAcquire(1, 100))
         return 0;
-    const qint64 size = std::min(len, maxSize);
+
+    const qint64 size = std::min(bufSize, maxSize);
     memcpy(buffer[writeIdx].get(), data, size);
     length[writeIdx] = size;
     writeIdx = 1 - writeIdx;
@@ -81,7 +81,7 @@ void AudioBuffer::init(qint64 size)
 {
     readIdx = 0;
     writeIdx = 0;
-    len = size;
+    bufSize = size;
     length[0] = 0;
     length[1] = 0;
     buffer[0].reset(new char[size]);
@@ -161,13 +161,22 @@ void qaudioBackend::close()
 bool qaudioBackend::write(void* buffer, size_t bufferSize)
 {
 loop:
-    qint64 n = audioBuffer.write((const char*)buffer, bufferSize);
+    const qint64 n = audioBuffer.write((const char*)buffer, bufferSize);
 
-    if (n <= 0)
-    {
-        if (_audioOutput->state() == QAudio::ActiveState)
-            goto loop;
+    if (n < 0)
         return false;
+
+    if (n == 0)
+    {
+        switch (_audioOutput->state())
+        {
+        case QAudio::ActiveState:
+        case QAudio::IdleState:
+            goto loop;
+        case QAudio::SuspendedState:
+        case QAudio::StoppedState:
+            return true;
+        }
     }
 
     bufferSize -= n;
