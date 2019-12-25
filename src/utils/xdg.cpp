@@ -18,39 +18,11 @@
 
 #include "xdg.h"
 
-#include <QtGlobal>
 #include <QDesktopServices>
 #include <QUrl>
 
 #if QT_VERSION >= 0x050000
 #  include <QStandardPaths>
-#else
-#  include <cstdlib>
-
-#  include <QDir>
-#  include <QDebug>
-
-#  ifdef _WIN32
-#    include <windows.h>
-#    include <shlobj.h>
-#  endif
-#endif
-
-#if defined(_WIN32) && QT_VERSION < 0x050000
-#  ifdef UNICODE
-#    define TCHAR2QString(x) QString::fromWCharArray(x)
-#  else
-#    define TCHAR2QString(x) QString::fromLocal8Bit(x)
-#  endif
-const QString getWindowsDir(const int csidl)
-{
-    TCHAR szPath[MAX_PATH];
-
-    if (SHGetSpecialFolderPath(NULL, szPath, csidl, 1))
-        return TCHAR2QString(szPath);
-    else
-        return QString();
-}
 #endif
 
 const QString xdg::getCacheDir()
@@ -58,14 +30,7 @@ const QString xdg::getCacheDir()
 #if QT_VERSION >= 0x050000
     return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #else
-#  ifdef _WIN32
-    return getWindowsDir(CSIDL_INTERNET_CACHE);
-#  else
-    QString xdgCacheDir(qgetenv("XDG_CACHE_HOME"));
-    if (xdgCacheDir.isEmpty())
-        xdgCacheDir = QDir::homePath()+"/.cache";
-    return QDir::cleanPath(xdgCacheDir);
-#  endif
+    return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 #endif
 }
 
@@ -74,12 +39,7 @@ const QString xdg::getRuntimeDir()
 #if QT_VERSION >= 0x050000
     return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
 #else
-#  ifndef _WIN32
-    QString xdgRuntimeDir(qgetenv("XDG_RUNTIME_DIR"));
-    if (!xdgRuntimeDir.isEmpty())
-        return QDir::cleanPath(xdgRuntimeDir);
-#  endif
-    return getCacheDir();
+    return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 #endif
 }
 
@@ -88,14 +48,7 @@ const QString xdg::getConfigDir()
 #if QT_VERSION >= 0x050000
     return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 #else
-#  ifdef _WIN32
-    return getWindowsDir(CSIDL_APPDATA);
-#  else
-    QString xdgConfigDir(qgetenv("XDG_CONFIG_HOME"));
-    if (xdgConfigDir.isEmpty())
-        xdgConfigDir = QDir::homePath()+"/.config";
-    return QDir::cleanPath(xdgConfigDir);
-#  endif
+    return QDesktopServices::storageLocation(QDesktopServices::DataLocation);
 #endif
 }
 
@@ -104,29 +57,7 @@ const QString xdg::getMusicDir()
 #if QT_VERSION >= 0x050000
     return QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
 #else
-#  ifdef _WIN32
-    return getWindowsDir(CSIDL_MYMUSIC);
-#  else
-    QString xdgUserDirs=getConfigDir();
-    xdgUserDirs.append("/user-dirs.dirs");
-    qDebug() << "xdgUserDirs: " << xdgUserDirs;
-
-    QString musicDir;
-    QFile userDirs(xdgUserDirs);
-    if (userDirs.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream in(&userDirs);
-        while (!in.atEnd())
-        {
-            QString line = in.readLine();
-            qDebug() << "user-dirs.dirs: " << line;
-            if (!line.compare("XDG_MUSIC_DIR"))
-                musicDir.append(line.replace('"', ' ').trimmed().midRef(line.indexOf('=')));
-        }
-    }
-
-    return QDir::cleanPath(musicDir);
-#  endif
+    return QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
 #endif
 }
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011-2017 Leandro Nini
+ *  Copyright (C) 2011-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,11 +22,7 @@
 #include <QString>
 
 /**
- * This is an utility class to deal with standard and user dirs
- * It is based on XDG specs for Linux:
- * http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
- * and CSIDL for Windows:
- * http://msdn.microsoft.com/en-us/library/bb762494(v=vs.85).aspx
+ * This is an utility class to deal with standard and user dirs.
  */
 namespace xdg
 {
