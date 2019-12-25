@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2018 Leandro Nini
+ *  Copyright (C) 2013-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -424,11 +424,11 @@ void centralFrame::onCmdPlayPauseSong()
         {
             playing = true;
             playDir = fsm->fileName(_dirlist->currentIndex());
+
+            _fileTypes->setEnabled(false);
+            emit stateChanged(_audio->state());
         }
     }
-
-    _fileTypes->setEnabled(false);
-    emit stateChanged(_audio->state());
 }
 
 void centralFrame::onCmdStopSong()
