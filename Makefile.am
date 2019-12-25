@@ -302,7 +302,6 @@ src/gui/mainWindow_moc.cpp \
 src/gui/playlist_moc.cpp \
 src/gui/settings_moc.cpp \
 src/gui/timeDisplay_moc.cpp \
-src/utils/ioEx_moc.cpp \
 src/resources_rcc.cpp
 
 src_musiqt_LDADD = $(resfile)

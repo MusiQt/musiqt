@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2018 Leandro Nini
+ *  Copyright (C) 2010-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,33 +33,60 @@ singleApp::singleApp(int & argc, char ** argv) :
     QApplication(argc, argv),
     _lockFile(nullptr),
     _fifoFile(nullptr),
-    _lockFileName(QString("%1/.musiqt.lock").arg(xdg::getRuntimeDir())),
-#ifdef _WIN32
-    _fifoFileName("\\\\.\\pipe\\musiqt.fifo")
-#else
-    _fifoFileName(QString("%1/.musiqt.fifo").arg(xdg::getRuntimeDir()))
-#endif
+    message(argc > 1 ? argv[1] : "")
+{}
+
+bool singleApp::isRunning()
 {
-    _lockFile = new QFileEx(_lockFileName);
-    if (_lockFile->open(QIODevice::ReadWrite)
-        && !_lockFile->lock(0, 1))
+#ifdef _WIN32
+    const QString fifoFileName("\\\\.\\pipe\\musiqt.fifo");
+#else
+    const QString fifoFileName(QString("%1/.musiqt.fifo").arg(xdg::getRuntimeDir()));
+#endif
+
+    const QString runtimeDir = xdg::getRuntimeDir();
+    QDir().mkpath(runtimeDir);
+
+    const QString lockFileName(QString("%1/.musiqt.lock").arg(runtimeDir));
+    qDebug() << lockFileName;
+
+    _lockFile = new QLockFile(lockFileName);
+    if (_lockFile->tryLock())
     {
-        _lockFile->close();
+        _lockFile->setStaleLockTime(0);
+
+        // delete stale fifo if any
+        QFile::remove(fifoFileName);
+
+        _fifoFile = new QLocalServer(this);
+        if (_fifoFile->listen(fifoFileName))
+        {
+            connect(_fifoFile, SIGNAL(newConnection()), this, SLOT(acceptMessage()));
+        }
+        else
+        {
+            qWarning() << _fifoFile->errorString();
+            utils::delPtr(_fifoFile);
+        }
+        return false;
+    }
+    else
+    {
         utils::delPtr(_lockFile);
         qWarning("Already running");
-        if (argc > 1)
+        if (!message.isEmpty())
         {
             QLocalSocket socket(this);
-            qDebug() << _fifoFileName;
-            socket.connectToServer(_fifoFileName);
+            qDebug() << fifoFileName;
+            socket.connectToServer(fifoFileName);
             if (socket.waitForConnected())
             {
-                const QString message = QDir(QString(argv[1])).absolutePath();
-                qDebug() << message;
+                const QString path = QDir(message).absolutePath();
+                qDebug() << path;
                 QByteArray block;
                 QDataStream out(&block, QIODevice::WriteOnly);
                 out.setVersion(QDataStream::Qt_4_0);
-                out << message;
+                out << path;
                 qint64 res = socket.write(block);
                 qDebug() << "res: " << res;
                 socket.flush();
@@ -71,24 +98,7 @@ singleApp::singleApp(int & argc, char ** argv) :
             }
             socket.close();
         }
-        running = true;
-    }
-    else
-    {
-        // delete stale fifo
-        QFile::remove(_fifoFileName);
-
-        _fifoFile = new QLocalServer(this);
-        if (_fifoFile->listen(_fifoFileName))
-        {
-            connect(_fifoFile, SIGNAL(newConnection()), this, SLOT(acceptMessage()));
-        }
-        else
-        {
-            qWarning() << _fifoFile->errorString();
-            utils::delPtr(_fifoFile);
-        }
-        running = false;
+        return true;
     }
 }
 
@@ -96,16 +106,13 @@ singleApp::~singleApp()
 {
     if (_lockFile != nullptr)
     {
-        if (_lockFile->isOpen())
-            _lockFile->close();
         delete _lockFile;
-        QFile::remove(_lockFileName);
     }
 
     if (_fifoFile != nullptr)
     {
+        QFile::remove(_fifoFile->serverName());
         delete _fifoFile;
-        QFile::remove(_fifoFileName);
     }
 }
 

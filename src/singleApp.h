@@ -31,12 +31,10 @@ class singleApp : public QApplication
     Q_OBJECT
 
 private:
-    QFileEx *_lockFile;
+    QLockFile *_lockFile;
     QLocalServer *_fifoFile;
-    QString _lockFileName;
-    QString _fifoFileName;
 
-    bool running;
+    const QString message;
 
 private:
     singleApp();
@@ -51,7 +49,7 @@ public:
     singleApp(int & argc, char ** argv);
     virtual ~singleApp();
 
-    bool isRunning() const { return running; }
+    bool isRunning();
 };
 
 #endif

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,6 +19,12 @@
 #ifndef EXIO_H
 #define EXIO_H
 
+#include <QtGlobal>
+
+#if QT_VERSION >= 0x050100
+#  include <QLockFile>
+#else
+
 #ifdef _WIN32
 #  include <windows.h>
 #  include <io.h>
@@ -30,35 +36,50 @@
 
 #include <QFile>
 
-class QFileEx : public QFile
+class QLockFile
 {
-    Q_OBJECT
+private:
+    QLockFile(const QLockFile&);
+    QLockFile &operator=(const QLockFile&);
 
 private:
-    QFileEx(const QFileEx&);
-    QFileEx &operator=(const QFileEx&);
+    QFile file;
+
+    bool fileLocked;
 
 public:
-    QFileEx(const QString & name) : QFile(name) {}
+    QLockFile(const QString & name) : file(name), fileLocked(false) {}
+    ~QLockFile() { file.close(); if (fileLocked) QFile::remove(file.fileName()); }
 
-    bool lock(qint64 start, qint64 end)
+    bool tryLock()
     {
+        if (file.open(QIODevice::ReadWrite))
+        {
+            const qint64 start = 0;
+            const qint64 end = 0;
 #ifdef _WIN32
-        if (!LockFile((HANDLE)_get_osfhandle(handle()), (DWORD)start, (DWORD)(start>>32), (DWORD)end, (DWORD)(end>>32)))
-            return false;
+            if (LockFile((HANDLE)_get_osfhandle(file.handle()), (DWORD)start, (DWORD)(start>>32), (DWORD)end, (DWORD)(end>>32)))
+                fileLocked = true;
 #else
-        struct flock fl;
+            struct flock fl;
 
-        fl.l_type = F_WRLCK;
-        fl.l_whence = SEEK_SET;
-        fl.l_start = start;
-        fl.l_len = end-start;
+            fl.l_type = F_WRLCK;
+            fl.l_whence = SEEK_SET;
+            fl.l_start = start;
+            fl.l_len = end-start;
 
-        if (fcntl(handle(), F_SETLK, &fl) == -1)
-            return false;
+            if (fcntl(file.handle(), F_SETLK, &fl) != -1)
+                fileLocked = true;
 #endif
-        return true;
+        }
+
+        return fileLocked;
     }
+
+    void setStaleLockTime(int) {}
+    void unlock() {}
 };
+
+#endif
 
 #endif
