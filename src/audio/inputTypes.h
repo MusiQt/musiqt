@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009 Leandro Nini
+ *  Copyright (C) 2009-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,21 +21,15 @@
 
 /**
  * Sample types
- * U8 - 8 bit unsigned
- * S16 - 16 bit signed
- * S24 - 24 bit signed
- * S32 - 32 bit signed
- * FLOAT - 32 bit float
- * FIXED - 32 bit fixed point
 */
 enum class sample_t
 {
-    U8 = 1,
-    S16,
-    S24,
-    S32,
-    SAMPLE_FLOAT,
-    SAMPLE_FIXED
+    U8 = 1,       ///< U8 - 8 bit unsigned
+    S16,          ///< S16 - 16 bit signed
+    S24,          ///< S24 - 24 bit signed
+    S32,          ///< S32 - 32 bit signed
+    SAMPLE_FLOAT, ///< FLOAT - 32 bit float
+    SAMPLE_FIXED  ///< FIXED - 32 bit fixed point
 };
 
 #endif
