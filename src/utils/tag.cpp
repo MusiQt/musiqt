@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2017 Leandro Nini
+ *  Copyright (C) 2007-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -305,7 +305,7 @@ int tag::getID3v2_2Frame(char* buf)
         const int j = description.length();
         const int imgOffset = 14+i+j;
         qDebug() << "imgOffset: " << imgOffset;
-        _img = new imageData(size-imgOffset, buf+imgOffset, mime);
+        _img = new QByteArray(buf+imgOffset, size-imgOffset);
     }
     else
     /*if (isFrame(buf, "COM"))
@@ -407,7 +407,7 @@ int tag::getID3v2Frame(char* buf, int ver)
         const int imgOffset = 14+i+j;
         qDebug() << "imgOffset: " << imgOffset;
 
-        _img = new imageData(size-imgOffset, buf+imgOffset, mime);
+        _img = new QByteArray(buf+imgOffset, size-imgOffset);
     }
     else
         qDebug() << "Unhandled frame " << QString(buf).left(4);

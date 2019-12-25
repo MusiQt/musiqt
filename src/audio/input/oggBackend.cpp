@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -197,7 +197,7 @@ bool oggBackend::open(const QString& fileName)
     _metaData.addInfo(metaData::COMMENT, comment);
 
     if (!mime.isNull())
-        _metaData.addInfo(new imageData(image.size(), (char*)image.data(), mime));
+        _metaData.addInfo(new QByteArray((char*)image.data(), image.size()));
 
     songLoaded(fileName);
     return true;

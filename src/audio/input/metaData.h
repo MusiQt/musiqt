@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 #ifndef METADATA_H
 #define METADATA_H
 
-#include "imageData.h"
 #include "utils.h"
 
 #include <QHash>
@@ -51,7 +50,7 @@ public:
     virtual QString getInfo(unsigned int num) const =0;
     virtual QString getInfo(const char* info) const =0;
     virtual QString getInfo(const mpris_t info) const =0;
-    virtual imageData* getImage(void) const =0;
+    virtual QByteArray* getImage(void) const =0;
 };
 
 /*****************************************************************/
@@ -66,7 +65,7 @@ private:
 private:
     StringDict _infos;
 
-    imageData *_img;
+    QByteArray *_img;
 
 public:
     metaDataImpl() : _img(nullptr) {}
@@ -77,7 +76,7 @@ public:
     void addInfo(QString type, unsigned int info);
     void addInfo(const mpris_t type, QString info);
     void addInfo(const mpris_t type, unsigned int info);
-    void addInfo(imageData* img) { _img = img; }
+    void addInfo(QByteArray* img) { _img = img; }
 
     /// Remove all info
     void clearInfo() { _infos.clear(); utils::delPtr(_img); }
@@ -93,7 +92,7 @@ public:
     QString getInfo(unsigned int num) const { return _infos.values()[num]; }
     QString getInfo(const char* info) const { auto it=_infos.find(info); return it!=_infos.end()?it.value():QString(); }
     QString getInfo(const mpris_t info) const { return getInfo(mprisTags[info]); }
-    imageData* getImage(void) const { return _img; }
+    QByteArray* getImage() const { return _img; }
 };
 
 #endif

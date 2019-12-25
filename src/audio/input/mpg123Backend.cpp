@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2018 Leandro Nini
+ *  Copyright (C) 2009-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -338,7 +338,7 @@ bool mpg123Backend::open(const QString& fileName)
         {
             QString mime(id3v2->picture[0].mime_type.p);
             qDebug() << mime;
-            _metaData.addInfo(new imageData(id3v2->picture[0].size, (char*)id3v2->picture[0].data, mime));
+            _metaData.addInfo(new QByteArray((char*)id3v2->picture[0].data, id3v2->picture[0].size));
         }
 
         if (info.isEmpty() && id3v1)

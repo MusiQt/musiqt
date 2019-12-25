@@ -267,7 +267,6 @@ $(STILVIEWSOURCES) \
 $(HVLSOURCES) \
 src/utils/AutoDLL.h \
 src/utils/AutoDLL.cpp \
-src/utils/imageData.h \
 src/utils/genres.h \
 src/utils/ioEx.h \
 src/utils/loadsym.h \

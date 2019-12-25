@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2017 Leandro Nini
+ *  Copyright (C) 2007-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
 #ifndef TAG_H
 #define TAG_H
 
-#include "imageData.h"
-
 #include <QFile>
 
 class tag
@@ -38,7 +36,7 @@ private:
     int _offsBegin;
     int _offsEnd;
 
-    imageData *_img;
+    QByteArray *_img;
 
 private:
     ///
@@ -128,7 +126,7 @@ public:
     const QString& track() const { return _track; }
 
     /// Get image
-    imageData* image() const { return _img; }
+    QByteArray* image() const { return _img; }
 };
 
 #endif

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 #include "settings.h"
 #include "iconFactory.h"
 #include "utils.h"
-#include "imageData.h"
 #include "input/metaData.h"
 
 #include <QApplication>
@@ -184,14 +183,13 @@ void infoDialog::setInfo(const metaData* mtd)
 
     // Display album art
     QImage newimg;
-    imageData *img = mtd->getImage();
+    QByteArray *img = mtd->getImage();
     if (img != nullptr)
     {
         QByteArray ba(img->data(), img->size());
         QBuffer buffer(&ba);
         if (buffer.open(QIODevice::ReadOnly))
         {
-            //img->type().replace("image/", "")
             QImageReader reader(&buffer);
             reader.setScaledSize(QSize(IMAGESIZE, IMAGESIZE));
             newimg = reader.read();
