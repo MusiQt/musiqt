@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2018 Leandro Nini
+ *  Copyright (C) 2013-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -75,11 +75,11 @@ class centralFrame : public QWidget
     Q_OBJECT
 
 public:
-    typedef enum
+    enum class dir_t
     {
         ID_PREV,
         ID_NEXT
-    } dir_t;
+    };
 
 public:
     centralFrame(QWidget *parent = 0);

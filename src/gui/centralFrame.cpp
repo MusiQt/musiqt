@@ -451,12 +451,12 @@ void centralFrame::onCmdStopSong()
 
 void centralFrame::onCmdPrevSong()
 {
-    onCmdChangeSong(ID_PREV);
+    onCmdChangeSong(dir_t::ID_PREV);
 }
 
 void centralFrame::onCmdNextSong()
 {
-    onCmdChangeSong(ID_NEXT);
+    onCmdChangeSong(dir_t::ID_NEXT);
 }
 
 void centralFrame::onCmdChangeSong(dir_t dir)
@@ -468,11 +468,11 @@ void centralFrame::onCmdChangeSong(dir_t dir)
 
     switch (dir)
     {
-    case ID_PREV:
+    case dir_t::ID_PREV:
             idx--;
             qDebug("Previous");
             break;
-    case ID_NEXT:
+    case dir_t::ID_NEXT:
             idx++;
             qDebug("Next");
             break;
@@ -659,7 +659,7 @@ void centralFrame::songEnded()
     qDebug("centralFrame::songEnded");
     if (SETTINGS->subtunes() && (_input->subtune()<_input->subtunes()))
     {
-        changeSubtune(ID_NEXT);
+        changeSubtune(dir_t::ID_NEXT);
         return;
     }
 
@@ -755,10 +755,10 @@ void centralFrame::changeSubtune(dir_t dir)
     unsigned int i = _input->subtune();
     switch (dir)
     {
-    case ID_PREV:
+    case dir_t::ID_PREV:
         i--;
         break;
-    case ID_NEXT:
+    case dir_t::ID_NEXT:
         i++;
         break;
     }

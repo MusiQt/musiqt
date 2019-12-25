@@ -539,12 +539,12 @@ void mainWindow::onCmdVol(int vol)
 
 void mainWindow::onPrevSubtune()
 {
-    cFrame->changeSubtune(centralFrame::ID_PREV);
+    cFrame->changeSubtune(centralFrame::dir_t::ID_PREV);
 }
 
 void mainWindow::onNextSubtune()
 {
-    cFrame->changeSubtune(centralFrame::ID_NEXT);
+    cFrame->changeSubtune(centralFrame::dir_t::ID_NEXT);
 }
 
 void mainWindow::onStatusbarChanged(const QString &message)
