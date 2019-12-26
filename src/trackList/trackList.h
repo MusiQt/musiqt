@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,42 +19,10 @@
 #ifndef TRACKLIST_H
 #define TRACKLIST_H
 
-#include <QList>
-#include <QString>
-#include <QMetaType>
+#include <QStringList>
 
-/*****************************************************************/
-
-class track_t
-{
-private:
-    QString _location;
-    int _start;
-
-public:
-    track_t() : _start(0) {}
-    track_t(const QString& location, const unsigned int start=0) : _location(location), _start(start) {}
-
-    const QString& location() const { return _location; }
-
-    unsigned int start() const { return _start; }
-};
-
-Q_DECLARE_METATYPE(track_t)
-
-/*****************************************************************/
-
-class tracks : public QList<track_t> // FIXME change to QAbstractListModel
-{
-public:
-    tracks() : QList<track_t>() {}
-
-    void append(const QString &text)
-    {
-        const track_t t(text);
-        QList<track_t>::append(t);
-    }
-};
+typedef QString track_t;
+typedef QStringList tracks_t;
 
 /*****************************************************************/
 
@@ -64,10 +32,10 @@ public:
     virtual ~trackList() {}
 
     /// Load playlist
-    virtual tracks* load() =0;
+    virtual tracks_t load() =0;
 
     /// Save playlist
-    virtual bool save(const tracks*) =0;
+    virtual bool save(const tracks_t&) =0;
 };
 
 #endif

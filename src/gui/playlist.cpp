@@ -183,16 +183,14 @@ void playlist::shuffle()
 
 int playlist::load(const QString& path)
 {
-    utils::delPtr(_tracks);
-
     std::unique_ptr<trackList> tracklist(TFACTORY->get(path));
 
     if (tracklist.get() == nullptr)
         return 0;
 
-    _tracks = tracklist->load();
+    tracks = tracklist->load();
 
-    return _tracks->count();
+    return tracks.count();
 }
 
 bool playlist::save(const QString& file)
@@ -202,25 +200,16 @@ bool playlist::save(const QString& file)
     if (tracklist.get() == nullptr)
         return false;
 
-    //FIXME
-    if (_tracks == nullptr)
-        _tracks = new tracks();
-    else
-        _tracks->clear();
-
     for (int i=0; i<count(); i++)
     {
-        _tracks->append(item(i)->text());
+        tracks.append(item(i)->text());
     }
 
-    return tracklist->save(_tracks);
+    return tracklist->save(tracks);
 }
 
 int playlist::filter(const QStringList& filter)
 {
-    if (_tracks == nullptr)
-        return 0;
-
     QString filt(filter.join("|"));
     filt.prepend(".*\\.(").append(")");
     qDebug() << "filter: " << filt;
@@ -229,15 +218,15 @@ int playlist::filter(const QStringList& filter)
 
     QRegExp regexp(filt);
 
-    for (int i=0; i<_tracks->count(); i++)
+    for (int i=0; i<tracks.count(); i++)
     {
-        QFileInfo location(_tracks->at(i).location());
+        QFileInfo location(tracks.at(i));
         qDebug() << "File: " << location.absoluteFilePath();
         if (regexp.exactMatch(location.fileName())
             && location.exists())
         {
             QVariant qv;
-            qv.setValue(_tracks->at(i));
+            qv.setValue(tracks.at(i));
             QListWidgetItem* item = new QListWidgetItem(location.completeBaseName());
             item->setData(Qt::UserRole, qv);
             item->setToolTip(location.absoluteFilePath());

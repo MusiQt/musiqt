@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ class playlist : public QListWidget
 private:
     static unsigned int _seed;
 
-    tracks *_tracks;
+    tracks_t tracks;
 
     Qt::SortOrder order;
     bool ordered;
@@ -44,7 +44,7 @@ private:
 public:
     playlist(QWidget * parent) :
         QListWidget(parent),
-        _tracks(nullptr),
+        tracks(nullptr),
         order(Qt::AscendingOrder),
         ordered(true)
     {
@@ -55,7 +55,6 @@ public:
         QTime now = QTime::currentTime();
         qsrand(now.msec());
     }
-    ~playlist() { delete _tracks; }
 
     /// Add item to playlist
     bool add(const QString& item);
@@ -70,10 +69,7 @@ public:
     int filter(const QStringList& filter);
 
     /// Get track location
-    const QString getLocation(int index) const { return (item(index)->data(Qt::UserRole).value<track_t>()).location(); }
-
-    /// Get track start
-    int getStart(int index) const { return (item(index)->data(Qt::UserRole).value<track_t>()).start(); }
+    const QString getLocation(int index) const { return (item(index)->data(Qt::UserRole).value<track_t>()); }
 
 protected:
     void dropEvent(QDropEvent *event) override;

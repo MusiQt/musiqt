@@ -29,15 +29,16 @@ public:
     trackListDir(const QString &path) : trackListBackend(path) {}
 
     /// Load playlist
-    tracks* load() override
+    tracks_t load() override
     {
         QDir dir(_path);
         QStringList filelist=dir.entryList(QDir::Files);
 
-        for (int i=0; i<filelist.size(); i++)
-            _tracks->append(dir.absoluteFilePath(filelist[i]));
+        tracks_t tracks;
+        for (QString file : filelist)
+            tracks.append(dir.absoluteFilePath(file));
 
-        return _tracks;
+        return tracks;
     }
 };
 

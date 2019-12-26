@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,16 +29,17 @@ public:
     trackListM3u(const QString &path) : trackListBackend(path) {}
 
     /// Load playlist
-    tracks* load() override
+    tracks_t load() override
     {
-        const int bufSize = 2048;
+        constexpr int bufSize = 2048;
         char buffer[bufSize+1];
         buffer[bufSize]='\0';
 
         QFile file(_path);
         if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
-            return nullptr;
+            return QStringList();
 
+        tracks_t tracks;
         while (const int n=file.read(buffer, bufSize))
         {
             if (buffer[0]!='#')
@@ -46,16 +47,16 @@ public:
                 int i = 1;
                 while (i<n && isprint(buffer[i])) i++;
                 buffer[i] = '\0';
-                _tracks->append(QString(buffer));
+                tracks.append(QString(buffer));
             }
         }
 
         file.close();
 
-        return _tracks;
+        return tracks;
     }
 
-    bool save(const tracks* tracks) override
+    bool save(const tracks_t& tracks) override
     {
         QFile file(_path);
         if (!file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
@@ -63,9 +64,9 @@ public:
 
         QTextStream outputStream(&file);
 
-        for (int i=0; i<tracks->size(); i++)
+        for (QString track : tracks)
         {
-            writeLine(outputStream, tracks->at(i).location());
+            writeLine(outputStream, track);
         }
 
         file.close();

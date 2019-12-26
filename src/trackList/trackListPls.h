@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,23 +30,24 @@ public:
     trackListPls(const QString &path) : trackListBackend(path) {}
 
     /// Load playlist
-    tracks* load() override
+    tracks_t load() override
     {
         QSettings pls(_path, QSettings::IniFormat);
 
         const int items = pls.value("playlist/NumberOfEntries").toInt();
 
+        tracks_t tracks;
         for (int i=1; i<=items; i++)
         {
             QString section = QString("playlist/File%1").arg(i);
             const QString file = pls.value(section).toString();
-            _tracks->append(file);
+            tracks.append(file);
         }
 
-        return _tracks;
+        return tracks;
     }
 
-    bool save(const tracks* tracks) override
+    bool save(const tracks_t& tracks) override
     {
         QFile file(_path);
         if (!file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
@@ -56,13 +57,13 @@ public:
 
         writeLine(outputStream, "[playlist]");
 
-        QString tmp = QString("NumberOfEntries=%1").arg(tracks->size());
+        QString tmp = QString("NumberOfEntries=%1").arg(tracks.size());
         writeLine(outputStream, tmp);
 
-        for (int i=0; i<tracks->size(); i++)
+        for (int i=0; i<tracks.size(); i++)
         {
-        qDebug() << "File: " << tracks->at(i).location();
-            tmp = QString("File%1=%2").arg(i+1).arg(tracks->at(i).location());
+            qDebug() << "File: " << tracks.at(i);
+            tmp = QString("File%1=%2").arg(i+1).arg(tracks.at(i));
             writeLine(outputStream, tmp);
         }
 

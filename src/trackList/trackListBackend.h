@@ -27,7 +27,6 @@
 class trackListBackend : public trackList
 {
 protected:
-    tracks *_tracks;
     QString _path;
 
 private:
@@ -36,10 +35,7 @@ private:
     trackListBackend& operator= (const trackListBackend&);
 
 protected:
-    trackListBackend(const QString &path) : _path(path)
-    {
-        _tracks = new tracks();
-    }
+    trackListBackend(const QString &path) : _path(path) {}
 
     void writeLine(QTextStream& outputStream, QString line)
     {
@@ -50,10 +46,10 @@ public:
     virtual ~trackListBackend() {}
 
     /// Load playlist
-    virtual tracks* load() { return nullptr; }
+    virtual tracks_t load() { return tracks_t(); }
 
     /// Save playlist
-    virtual bool save(const tracks*) { return false; }
+    virtual bool save(const tracks_t&) { return false; }
 };
 
 #endif

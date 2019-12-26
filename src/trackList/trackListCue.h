@@ -33,16 +33,17 @@ public:
     trackListCue(const QString &path) : trackListBackend(path) {}
 
     /// Load playlist
-    tracks* load() override
+    tracks_t* load() override
     {
         FILE* file = fopen(_path.text(), "r");
         Cd* cue = cue_parse_file(file);  //Cd* cue_parse_string(const char*);
         fclose(file);
 
-        const int tracks = cd_get_ntrack(cue);
-        qDebug() << "tracks: " << tracks;
+        const int track_num = cd_get_ntrack(cue);
+        qDebug() << "tracks: " << track_num;
 
-        for (int num_track=1; num_track<=tracks; num_track++)
+        tracks_t tracks;
+        for (int num_track=1; num_track<=track_num; num_track++)
         {
             Track* track = cd_get_track(cue, num_track);
         
@@ -50,10 +51,10 @@ public:
             //long start=track_get_start(track);
             //long length=track_get_length(track);
             qDebug() << "File: " << fileName;
-            _tracks->append(FXPath::absolute(FXPath::directory(_path), fileName));
+            tracks->append(FXPath::absolute(FXPath::directory(_path), fileName));
         }
 
-        return _tracks;
+        return tracks;
     }
 };
 
