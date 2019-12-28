@@ -5,7 +5,6 @@ src/gui/centralFrame.cpp
 src/gui/infoDialog.cpp
 src/gui/infoLabel.cpp
 src/gui/mainWindow.cpp
-src/gui/playlist.cpp
 src/gui/settings.cpp
 src/audio/audio.cpp
 src/audio/input/metaData.cpp

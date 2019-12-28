@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2019 Leandro Nini
+ *  Copyright (C) 2013-2017 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,10 +24,11 @@
 #include "audio.h"
 
 #include <QThread>
+#include <QListView>
 #include <QWidget>
 
 class bookmark;
-class playlist;
+class playlistModel;
 
 class QComboBox;
 class QModelIndex;
@@ -36,6 +37,7 @@ class QFileSystemModel;
 class QListView;
 class QItemSelectionModel;
 class QPushButton;
+class QSortFilterProxyModel;
 
 /*****************************************************************/
 
@@ -115,7 +117,11 @@ public slots:
     void onCmdPlSave();
 
     void setFile(const QString& file, const bool play);
-    
+
+    void sortAsc();
+    void sortDesc();
+    void shuffle();
+
 private slots:
     void onDirSelected(const QModelIndex&);
     void onHome();
@@ -124,17 +130,18 @@ private slots:
     void setBackend(int val, int refresh);
     void gotoDir(const QString &dir);
     void onCmdSongLoaded(input* res);
-    void onCmdSongSelected(int currentRow);
+    void onCmdSongSelected(const QModelIndex& currentRow);
     void preloadSong();
     void songEnded();
     void onUpdateTime();
     void onRgtClkDirList(const QPoint& pos);
+    void onRgtClkPlayList(const QPoint& pos);
 
     void onCmdAdd();
     void onCmdBmAdd();
     void updateSongs();
 
-    void scroll();
+    void scroll(const QString &);
 
 private:
     void load(const QString& filename);
@@ -152,7 +159,9 @@ private:
 
     QFileSystemModel *fsm;
     QTreeView *_dirlist;
-    playlist *_playlist;
+    playlistModel *_playlistModel;
+    QSortFilterProxyModel *_proxyModel;
+    QListView *_playlist;
     QComboBox *_fileTypes;
     bookmark *_bookmarkList;
     QPushButton *_editMode;
