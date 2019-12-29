@@ -275,26 +275,27 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
         }
     }
 
-    //_playlist->sortItems();
-    QModelIndex index;
-    _playlist->setCurrentIndex(index);
+    _playlist->setCurrentIndex(QModelIndex());
 
     const QString fileName = _dirlist->property("UserData").toString();
     if (!fileName.isEmpty())
     {
-        QModelIndexList items = _playlistModel->match(_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(fileName), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
+        qDebug() << "selecting file " << fileName;
+        QModelIndexList items = _proxyModel->match(_proxyModel->index(0, 0), Qt::DisplayRole,
+                QVariant::fromValue(fileName), 1, Qt::MatchExactly|Qt::MatchCaseSensitive);
         if (!items.empty())
-            index = items.at(0);
-
-        _playlist->setCurrentIndex(index);
-        _dirlist->setProperty("UserData", QVariant(QString()));
+        {
+            _playlist->setCurrentIndex(items.at(0));
+            _dirlist->setProperty("UserData", QVariant(QString()));
+        }
     }
     else
     {
         if (!curItem.compare(playDir))
         {
             QFileInfo fileInfo(_input->songLoaded());
-            QModelIndexList items = _playlistModel->match(_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(fileInfo.completeBaseName()), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
+            QModelIndexList items = _proxyModel->match(_proxyModel->index(0, 0), Qt::DisplayRole,
+                    QVariant::fromValue(fileInfo.completeBaseName()), 1, Qt::MatchExactly|Qt::MatchCaseSensitive);
             if (!items.empty())
             {
                 _playlist->setCurrentIndex(items.at(0));
@@ -304,7 +305,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
         else if (!playing)
         {
             qDebug() << "setCurrentIndex 0";
-            _playlist->setCurrentIndex(_playlistModel->index(0));
+            _playlist->setCurrentIndex(_proxyModel->index(0, 0));
         }
     }
 }
@@ -330,7 +331,7 @@ void centralFrame::onCmdCurrentDir()
     QFileInfo fileInfo(file);
     gotoDir(fileInfo.absolutePath());
 
-     QModelIndexList items = _playlistModel->match(_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(fileInfo.completeBaseName()), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
+     QModelIndexList items = _proxyModel->match(_proxyModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(fileInfo.completeBaseName()), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
     _playlist->setCurrentIndex(items.at(0));
 }
 
@@ -347,9 +348,9 @@ void centralFrame::setFile(const QString& file, const bool play)
 
     QModelIndex curItem = _playlist->currentIndex();
 
-    QFileInfo qfile(file);
+    QFileInfo fileInfo(file);
     // Check if requested file/directory exists
-    if (!qfile.exists())
+    if (!fileInfo.exists())
     {
         if (curItem.isValid()) // ???
             onHome();
@@ -357,7 +358,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     }
 
     QModelIndexList items = _playlistModel->match(_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(file), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
-    
+
     const bool selected = items.empty() ? false : _playlist->selectionModel()->isSelected(items.at(0));
 
     // Check if requested song is already playing
@@ -369,9 +370,9 @@ void centralFrame::setFile(const QString& file, const bool play)
         val = items.at(0);
 
     QString currentDir = fsm->fileName(_dirlist->currentIndex());
-    const bool dirSelected = !currentDir.compare(qfile.dir().absolutePath());
+    const bool dirSelected = !currentDir.compare(fileInfo.dir().absolutePath());
 
-    if (qfile.isDir() || (TFACTORY->plExt().indexOf(qfile.suffix().toLower()) >= 0))
+    if (fileInfo.isDir() || (TFACTORY->plExt().indexOf(fileInfo.suffix().toLower()) >= 0))
     {
         if (dirSelected)
         {
@@ -392,7 +393,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     }
 
     {
-        const QString fName = qfile.fileName();
+        const QString fName = fileInfo.fileName();
 
         if (!fName.isEmpty())
         {
@@ -437,9 +438,11 @@ ok:
             else
                 _playlist->setCurrentIndex(val);
         }
-    } else {
+    }
+    else
+    {
         _dirlist->setProperty("UserData", QVariant(QFileInfo(file).completeBaseName()));
-        setDir(fsm->index(qfile.dir().absolutePath()));
+        setDir(fsm->index(fileInfo.dir().absolutePath()));
     }
 
 done:
@@ -519,7 +522,7 @@ void centralFrame::onCmdChangeSong(dir_t dir)
             break;
     }
 
-    QModelIndex index = _playlistModel->index(row, 0);
+    QModelIndex index = _proxyModel->index(row, 0);
 
     if (index.isValid())
     {
@@ -717,7 +720,7 @@ void centralFrame::songEnded()
         if (!playDir.compare(fsm->fileName(_dirlist->currentIndex())))
         {
             int nextSong = _playlist->currentIndex().row() + 1;
-            index = _playlistModel->index(nextSong, 0);
+            index = _proxyModel->index(nextSong, 0);
         }
 
         if (index.isValid())
