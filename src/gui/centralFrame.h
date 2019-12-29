@@ -125,7 +125,7 @@ public slots:
 private slots:
     void onDirSelected(const QModelIndex&);
     void onHome();
-    void onCmdPlBack();
+    void onCmdCurrentDir();
     void onCmdFiletype(int val);
     void setBackend(int val, int refresh);
     void gotoDir(const QString &dir);

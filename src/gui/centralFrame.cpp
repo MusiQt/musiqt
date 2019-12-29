@@ -179,7 +179,7 @@ centralFrame::centralFrame(QWidget *parent) :
         b1->setIcon(GET_ICON(icon_currentplaylist));
         b1->setToolTip(tr("Current playlist"));
         b1->setStatusTip(tr("Return to current playlist"));
-        connect(b1, SIGNAL(clicked()), this, SLOT(onCmdPlBack()));
+        connect(b1, SIGNAL(clicked()), this, SLOT(onCmdCurrentDir()));
         buttons->addWidget(b1);
         b1 = new QPushButton(this);
         b1->setIcon(GET_ICON(icon_gohome));
@@ -320,9 +320,14 @@ void centralFrame::onHome()
     }
 }
 
-void centralFrame::onCmdPlBack()
+void centralFrame::onCmdCurrentDir()
 {
-    QFileInfo fileInfo(_input->songLoaded());
+    qDebug() << "onCmdCurrentDir";
+    QString file = _input->songLoaded();
+    if (file.isEmpty())
+        return;
+
+    QFileInfo fileInfo(file);
     gotoDir(fileInfo.absolutePath());
 
      QModelIndexList items = _playlistModel->match(_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(fileInfo.completeBaseName()), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
