@@ -299,7 +299,7 @@ void centralFrame::onCmdPlBack()
 void centralFrame::gotoDir(const QString &dir)
 {
     qDebug() << "gotoDir: " << dir;
-    if (!dir.isNull())
+    if (!dir.isEmpty())
         setDir(fsm->index(dir));
 }
  
@@ -812,7 +812,7 @@ void centralFrame::onCmdPlSave()
 
     QString filter = TFACTORY->plExt().join(" ");
     QString filename = QFileDialog::getSaveFileName(this, tr("Save playlist"), "", filter);
-    if (filename.isNull())
+    if (filename.isEmpty())
         return;
 
     if (!_playlist->save(filename))
