@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2018 Leandro Nini
+ *  Copyright (C) 2008-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QButtonGroup>
 #include <QColorDialog>
+#include <QEvent>
 #include <QFrame>
 #include <QGroupBox>
 #include <QCheckBox>
@@ -37,6 +38,7 @@
 #include <QStatusTipEvent>
 #include <QMainWindow>
 #include <QStatusBar>
+#include <QStatusTipEvent>
 
 settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     QDialog(win)
