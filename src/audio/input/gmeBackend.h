@@ -29,6 +29,9 @@
 #  include "stilview/stil.h"
 #endif
 
+// fix compiling with gme 0.6.3
+#undef check
+
 /*****************************************************************/
 
 typedef struct
