@@ -384,6 +384,9 @@ const int16 filter_thing[2790] =
 32512, 32512, 32512, 32512, 32512, 4835
 };
 
+int8 waves[WAVES_SIZE];
+uint32 panning_left[256], panning_right[256];
+
 void hvl_GenPanningTables( void )
 {
 	uint32 i;
