@@ -32,10 +32,6 @@
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 #  include <QRandomGenerator>
-
-    int random() { return QRandomGenerator::global()->generate(); }
-#else
-    int random() { return qrand(); }
 #endif
 
 class playlistModel : public QAbstractListModel
@@ -46,6 +42,15 @@ private:
     QStringList locations;
 
 private:
+    static int random()
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+        return QRandomGenerator::global()->generate();
+#else
+        return qrand();
+#endif
+    }
+
     void setStringList(const QStringList &strings)
     {
         beginResetModel();
