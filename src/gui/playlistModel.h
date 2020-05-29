@@ -187,7 +187,7 @@ public:
 
     bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex()) override
     {
-        beginInsertRows(QModelIndex(), row, row+count-1);
+        beginInsertRows(parent, row, row+count-1);
         locations.append("---");
         endInsertRows();
         return true;
