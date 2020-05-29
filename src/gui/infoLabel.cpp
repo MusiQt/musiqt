@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #define APPENDINFO(info) \
 temp = data->getInfo(info); \
 if (!temp.isEmpty()) { \
-    if (!tip.isEmpty() && tip[tip.length()]!='\n') \
+    if (!tip.isEmpty() && tip[tip.length()-1]!='\n') \
         tip.append('\n'); \
     tip.append(QString("%1: %2").arg((data->getKey(info)), data->getInfo(info))); \
 }
