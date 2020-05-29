@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019 Leandro Nini
+ *  Copyright (C) 2019-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,14 @@
 #include <QDebug>
 
 #include <memory>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+#  include <QRandomGenerator>
+
+    int random() { return QRandomGenerator::global()->generate(); }
+#else
+    int random() { return qrand(); }
+#endif
 
 class playlistModel : public QAbstractListModel
 {
@@ -117,7 +125,7 @@ public:
         items.reserve(locations.size());
         for (auto i : locations)
         {
-            if (qrand()%2)
+            if (random()%2)
                 items.append(i);
             else
                 items.prepend(i);
