@@ -887,7 +887,7 @@ void centralFrame::changeSubtune(dir_t dir)
     _audio->stop();
 
     if (_input->subtune(i))
-        setDisplay(_input);
+        emit setDisplay(_input);
 
     if (playing)
     {
