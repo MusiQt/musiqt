@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2019 Leandro Nini
+ *  Copyright (C) 2013-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -696,10 +696,10 @@ void centralFrame::preloadSong()
     if (playMode && _input->gapless() && !playDir.compare(fsm->fileName(_dirlist->currentIndex())))
     {
         const int nextSong = _playlist->currentIndex().row()+1;
-        QModelIndex index = _playlistModel->index(nextSong, 0);
+        QModelIndex index = _proxyModel->index(nextSong, 0);
         if (index.isValid())
         {
-            preloaded = _playlistModel->data(index, Qt::UserRole).toString();
+            preloaded = _proxyModel->data(index, Qt::UserRole).toString();
             load(preloaded);
         }
     }
