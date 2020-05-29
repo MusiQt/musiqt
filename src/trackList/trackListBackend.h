@@ -46,10 +46,10 @@ public:
     virtual ~trackListBackend() {}
 
     /// Load playlist
-    virtual tracks_t load() { return tracks_t(); }
+    virtual tracks_t load() override { return tracks_t(); }
 
     /// Save playlist
-    virtual bool save(const tracks_t&) { return false; }
+    virtual bool save(const tracks_t&) override { return false; }
 };
 
 #endif
