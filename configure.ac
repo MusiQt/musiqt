@@ -68,15 +68,15 @@ PKG_CHECK_MODULES(ALSA,
 ##################################################################
 # Search for Windows audio API
 
-AUDIO_LDFLAGS=""
+AUDIO_LIBS=""
 
 AC_CHECK_HEADERS([mmsystem.h], [], [], [#include <windows.h>])
 
 AS_IF([test "$ac_cv_header_mmsystem_h" = "yes"],
-    [AUDIO_LDFLAGS="$AUDIO_LDFLAGS -lwinmm"]
+    [AUDIO_LIBS="$AUDIO_LIBS -lwinmm"]
 )
 
-AC_SUBST([AUDIO_LDFLAGS])
+AC_SUBST([AUDIO_LIBS])
 
 ##################################################################
 # Search for zlib

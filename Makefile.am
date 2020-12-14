@@ -167,22 +167,6 @@ $(WAVPACK_CFLAGS) \
 $(ZLIB_CPPFLAGS) \
 -DLOCALEDIR=\"$(localedir)\"
 
-src_musiqt_LDFLAGS = \
-$(QT_LIBS) \
-$(AUDIO_LDFLAGS) \
-$(ALSA_LIBS) \
-$(BS2B_LIBS) \
-$(OPENMPT_LIBS) \
-$(VORBIS_LIBS) \
-$(MPG123_LIBS) \
-$(OPUS_LIBS) \
-$(GME_LIBS) \
-$(SIDPLAYFP_LIBS) \
-$(STILVIEW_LIBS) \
-$(SNDFILE_LIBS) \
-$(WAVPACK_LIBS) \
-@LIBINTL@
-
 src_musiqt_SOURCES = \
 src/gettext.h \
 src/main.cpp \
@@ -303,7 +287,21 @@ src/gui/settings_moc.cpp \
 src/gui/timeDisplay_moc.cpp \
 src/resources_rcc.cpp
 
-src_musiqt_LDADD = $(resfile)
+src_musiqt_LDADD = $(resfile) \
+$(QT_LIBS) \
+$(AUDIO_LIBS) \
+$(ALSA_LIBS) \
+$(BS2B_LIBS) \
+$(OPENMPT_LIBS) \
+$(VORBIS_LIBS) \
+$(MPG123_LIBS) \
+$(OPUS_LIBS) \
+$(GME_LIBS) \
+$(SIDPLAYFP_LIBS) \
+$(STILVIEW_LIBS) \
+$(SNDFILE_LIBS) \
+$(WAVPACK_LIBS) \
+@LIBINTL@
 
 
 #BUILT_SOURCES =
