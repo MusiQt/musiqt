@@ -139,7 +139,7 @@ private:
     audioConfig(const audioConfig&);
     audioConfig& operator=(const audioConfig&);
 
-    void setCards(const output* const audio);
+    void setCards();
 
 private slots:
     void onCmdCard(const QString &);

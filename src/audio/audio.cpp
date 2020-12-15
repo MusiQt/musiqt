@@ -22,7 +22,7 @@
 #include "converter/converterFactory.h"
 #include "input/input.h"
 #include "output/output.h"
-#include "output/outputFactory.h"
+#include "output/qaudioBackend.h"
 
 #include <QDebug>
 #include <QLabel>
@@ -197,7 +197,7 @@ audio::audio() :
 {
     _volume = settings.value("Audio Settings/volume", 50).toInt();
 
-    _output = OFACTORY->get();
+    _output = new qaudioBackend();
 }
 
 audio::~audio()
@@ -220,9 +220,10 @@ bool audio::play(input* i, int pos)
 
     unsigned int _card = 0;
     QString card = SETTINGS->card();
-    for (unsigned int i=0; i<_output->devices(); i++)
+    const QStringList devices = qaudioBackend::devices();
+    for (unsigned int i=0; i<devices.size(); i++)
     {
-        if (!card.compare(_output->device(i)))
+        if (!card.compare(devices[i]))
         {
             _card = i;
             break;
@@ -358,7 +359,7 @@ audioConfig::audioConfig(QWidget* win) :
     matrix()->addWidget(new QLabel(tr("Card"), this));
     _cardList = new QComboBox(this);
     matrix()->addWidget(_cardList);
-    setCards(OFACTORY->get());
+    setCards();
     connect(_cardList, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCmdCard(const QString &)));
 
     matrix()->addWidget(new QLabel(tr("Default bitdepth"), this));
@@ -393,23 +394,18 @@ void audioConfig::onCmdCard(const QString &card)
     SETTINGS->_card = card;
 }
 
-void audioConfig::setCards(const output* const audio)
+void audioConfig::setCards()
 {
-    if (audio == nullptr)
-        return;
-
     _cardList->clear();
 
-    const int devices = audio->devices();
-    qDebug() << "Devices: " << devices;
-    for (int i=0; i<devices; i++)
+    const QStringList devices = qaudioBackend::devices();
+    qDebug() << "Devices: " << devices.size();
+    for (int i=0; i<devices.size(); i++)
     {
-        _cardList->addItem(audio->device(i));
+        _cardList->addItem(devices[i]);
     }
 
-    delete audio;
-
-    _cardList->setMaxVisibleItems((devices > 5) ? 5 : devices);
+    _cardList->setMaxVisibleItems((devices.size() > 5) ? 5 : devices.size());
 
     int val = _cardList->findText(SETTINGS->card());
     if (val >= 0)

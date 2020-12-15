@@ -34,8 +34,6 @@
 #include <iostream>
 #include <algorithm>
 
-const char qaudioBackend::name[] = "QAUDIO";
-
 /*****************************************************************/
 
 AudioBuffer::AudioBuffer() {}
@@ -94,18 +92,21 @@ void AudioBuffer::init(qint64 size)
 
 /*****************************************************************/
 
-qaudioBackend::qaudioBackend() :
-    outputBackend(name),
-    _audioOutput(nullptr)
+QStringList qaudioBackend::devices()
 {
-    _buffer = nullptr;
-
+    QStringList devices;
     // Check devices
     foreach(const QAudioDeviceInfo &deviceInfo, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
     {
-        addDevice(deviceInfo.deviceName().toUtf8().constData());
+        devices.append(deviceInfo.deviceName().toUtf8().constData());
     }
+    return devices;
 }
+
+qaudioBackend::qaudioBackend() :
+    _audioOutput(nullptr),
+    _buffer(nullptr)
+{}
 
 size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
                            const unsigned int channels, const unsigned int prec)

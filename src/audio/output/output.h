@@ -31,15 +31,6 @@ class output
 public:
     virtual ~output() {}
 
-    /// Get backend name
-    virtual const char* name() const =0;
-
-    /// Get number of available devices
-    virtual unsigned int devices() const =0;
-
-    /// Get device name
-    virtual const QString device(const unsigned int i) const =0;
-
     /// Open
     /// returns the buffer size
     virtual size_t open(const unsigned int card, unsigned int &sampleRate, const unsigned int channels, const unsigned int prec) =0;

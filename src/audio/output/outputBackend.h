@@ -33,20 +33,13 @@ class outputBackend : public output
 {
 private:
     QSettings settings;
-    const char *_name;
-
-    QList<QString> _devices;
 
 private:
-    outputBackend();
     outputBackend(const outputBackend&);
     outputBackend& operator=(const outputBackend&);
 
 protected:
-    outputBackend(const char name[]) : _name(name) {}
-
-    /// Add a device to the list
-    void addDevice(const char* dev) { _devices.append(dev); }
+    outputBackend() {}
 
     /// Load int setting
     int load(const char* key, int defVal)
@@ -74,15 +67,6 @@ protected:
 
 public:
     virtual ~outputBackend() {}
-
-    /// Get backend name
-    const char* name() const override { return _name; }
-
-    /// Get number of available devices
-    unsigned int devices() const override { return _devices.size(); }
-
-    /// Get device name
-    const QString device(const unsigned int i) const override { return _devices[i]; }
 
     /// Pause
     virtual void pause() override {}

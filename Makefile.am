@@ -208,8 +208,6 @@ $(MPC_SOURCES) \
 $(WAVPACK_SOURCES) \
 src/audio/output/output.h \
 src/audio/output/outputBackend.h \
-src/audio/output/outputFactory.cpp \
-src/audio/output/outputFactory.h \
 src/audio/output/qaudioBackend.cpp \
 src/audio/output/qaudioBackend.h \
 src/gui/aboutDialog.cpp \

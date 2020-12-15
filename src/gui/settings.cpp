@@ -20,7 +20,6 @@
 
 #include "audio.h"
 #include "input/input.h"
-#include "output/outputFactory.h"
 #include "iconFactory.h"
 
 #include <QDebug>

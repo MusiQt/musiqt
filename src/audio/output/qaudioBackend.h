@@ -67,16 +67,12 @@ private:
 
     char *_buffer;
 
-private:
+public:
     qaudioBackend();
 
-public:
     virtual ~qaudioBackend() {};
 
-    static const char name[];
-
-    /// Factory method
-    static output* factory() { return new qaudioBackend(); }
+    static QStringList devices();
 
     /// Open
     size_t open(const unsigned int card, unsigned int &sampleRate, const unsigned int channels, const unsigned int prec);
