@@ -16,10 +16,6 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "outputFactory.h"
 
 #include "qaudioBackend.h"
@@ -30,24 +26,7 @@ oFactory* oFactory::instance()
     return &o;
 }
 
-template <class backend>
-void oFactory::regBackend()
-{
-    outputs_t temp;
-
-    temp.name = backend::name;
-    temp.factory = &backend::factory;
-    _outputs.append(temp);
-}
-
-oFactory::oFactory()
-{
-    // Register backends
-
-    regBackend<qaudioBackend>();
-}
-
 output* oFactory::get() const
 {
-    return _outputs[0].factory();
+    return qaudioBackend::factory();
 }

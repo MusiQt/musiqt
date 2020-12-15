@@ -21,30 +21,12 @@
 
 #include "output.h"
 
-#include <new>
-#include <QList>
-
 #define OFACTORY oFactory::instance()
 
 class oFactory
 {
-typedef output* (*outputFactory)();
-
-typedef struct
-{
-    const char* name;
-    outputFactory factory;
-} outputs_t;
-
-private:
-    template <class backend>
-    void regBackend();
-
-private:
-    QList<outputs_t> _outputs;
-
 protected:
-    oFactory();
+    oFactory() {}
     oFactory(const oFactory&);
     oFactory& operator=(const oFactory&);
     ~oFactory() {}
@@ -52,9 +34,6 @@ protected:
 public:
     /// Get singleton instance
     static oFactory* instance();
-
-    /// Get backend's name
-    const char* name(const int i) const { return _outputs[i].name; }
 
     /// Instantiate backend
     output* get() const;
