@@ -47,18 +47,7 @@ oFactory::oFactory()
     regBackend<qaudioBackend>();
 }
 
-output* oFactory::get(const int i) const
+output* oFactory::get() const
 {
-    return _outputs[i].factory();
-}
-
-output* oFactory::get(const QString& api) const
-{
-    for (int i=0; i<_outputs.size(); i++)
-    {
-        if (!api.compare(_outputs[i].name))
-            return _outputs[i].factory();
-    }
-
     return _outputs[0].factory();
 }

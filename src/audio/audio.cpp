@@ -197,8 +197,7 @@ audio::audio() :
 {
     _volume = settings.value("Audio Settings/volume", 50).toInt();
 
-    qDebug() << "apiName: " << SETTINGS->apiName();
-    _output = OFACTORY->get(SETTINGS->apiName());
+    _output = OFACTORY->get();
 }
 
 audio::~audio()
@@ -212,7 +211,7 @@ audio::~audio()
 
 bool audio::play(input* i, int pos)
 {
-    if ((!_output) || (i->songLoaded().isEmpty()) || (_state == state_t::PLAY))
+    if ((i->songLoaded().isEmpty()) || (_state == state_t::PLAY))
         return false;
 
     qDebug() << "audio::play";
@@ -299,7 +298,7 @@ void audio::pause()
 
 bool audio::stop()
 {
-    if ((!_output) || (_state == state_t::STOP))
+    if ((_state == state_t::STOP))
         return false;
 
     qDebug() << "audio::stop";
@@ -332,8 +331,7 @@ bool audio::stop()
 void audio::volume(const int vol)
 {
     _volume = vol;
-    if (_output != nullptr)
-        _output->volume(_volume);
+    _output->volume(_volume);
 }
 
 bool audio::gapless(input* const i)
@@ -352,39 +350,15 @@ bool audio::gapless(input* const i)
     }
 }
 
-void audio::setOpts()
-{
-    delete _output;
-    _output = OFACTORY->get(SETTINGS->apiName());
-}
-
 /*****************************************************************/
 
 audioConfig::audioConfig(QWidget* win) :
     configFrame(win, "Audio")
 {
-    matrix()->addWidget(new QLabel(tr("API"), this), 0, 0);
-    _apiList = new QComboBox(this);
-    matrix()->addWidget(_apiList, 0, 1);
-    const int apis = OFACTORY->num();
-    for (int i=0; i<apis; i++)
-        _apiList->addItem(OFACTORY->name(i));
-    _apiList->setMaxVisibleItems(apis);
-    int item = _apiList->findText(SETTINGS->_apiName);
-    qDebug() << "API " << SETTINGS->_apiName << " - " << item;
-    // Fallback to default if not found
-    if (item == -1)
-    {
-        item = 0;
-        SETTINGS->_apiName = _apiList->itemText(0);
-    }
-    _apiList->setCurrentIndex(item);
-    connect(_apiList, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdApi(int)));
-
     matrix()->addWidget(new QLabel(tr("Card"), this));
     _cardList = new QComboBox(this);
     matrix()->addWidget(_cardList);
-    setCards(OFACTORY->get(SETTINGS->_apiName));
+    setCards(OFACTORY->get());
     connect(_cardList, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCmdCard(const QString &)));
 
     matrix()->addWidget(new QLabel(tr("Default bitdepth"), this));
@@ -410,15 +384,6 @@ audioConfig::audioConfig(QWidget* win) :
     bitBox->setCurrentIndex(val);
 
     connect(bitBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdBits(int)));
-}
-
-void audioConfig::onCmdApi(int val)
-{
-    qDebug() << "onCmdApi" << val;
-
-    setCards(OFACTORY->get(val));
-
-    SETTINGS->_apiName = _apiList->itemText(val);
 }
 
 void audioConfig::onCmdCard(const QString &card)

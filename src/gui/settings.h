@@ -69,7 +69,6 @@ class settings
     friend class audioConfig;
 
 private:
-    QString _apiName;
     QString _card;
     unsigned int _bits;
 
@@ -96,9 +95,6 @@ public:
     void save(QSettings& appSettings);
 
     // Get program settings
-
-    /// Audio API
-    const QString& apiName() const { return _apiName; }
 
     /// Soundcard
     const QString& card() const { return _card; }

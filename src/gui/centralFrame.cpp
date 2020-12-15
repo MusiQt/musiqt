@@ -737,7 +737,6 @@ void centralFrame::songEnded()
 
 void centralFrame::setOpts()
 {
-    _audio->setOpts();
     _input->saveSettings();
     if (_playlistModel->rowCount())
     {

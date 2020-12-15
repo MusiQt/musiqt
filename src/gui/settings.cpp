@@ -310,7 +310,6 @@ settings* SETTINGS
 
 void settings::load(const QSettings& appSettings)
 {
-    _apiName = appSettings.value("Audio Settings/api", OFACTORY->name(0)).toString();
     _card = appSettings.value("Audio Settings/card").toString();
     _bits = appSettings.value("Audio Settings/bits", 16).toInt();
 
@@ -325,7 +324,6 @@ void settings::load(const QSettings& appSettings)
 
 void settings::save(QSettings& appSettings)
 {
-    appSettings.setValue("Audio Settings/api", _apiName);
     appSettings.setValue("Audio Settings/card", _card);
     appSettings.setValue("Audio Settings/bits", _bits);
 

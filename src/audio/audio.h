@@ -96,9 +96,6 @@ public:
     audio();
     ~audio();
 
-    /// Set options
-    void setOpts();
-
     /// Start stream
     bool play(input* i, int pos=0);
 
@@ -135,7 +132,6 @@ class audioConfig : public configFrame
     Q_OBJECT
 
 private:
-    QComboBox *_apiList;
     QComboBox *_cardList;
 
 private:
@@ -146,7 +142,6 @@ private:
     void setCards(const output* const audio);
 
 private slots:
-    void onCmdApi(int val);
     void onCmdCard(const QString &);
     void onCmdBits(int val);
 

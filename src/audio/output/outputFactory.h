@@ -53,17 +53,11 @@ public:
     /// Get singleton instance
     static oFactory* instance();
 
-    /// Get number of registered backends
-    int num() const { return _outputs.size(); }
-
     /// Get backend's name
     const char* name(const int i) const { return _outputs[i].name; }
 
     /// Instantiate backend
-    output* get(const QString& api) const;
-
-    /// Instantiate backend
-    output* get(const int i) const;
+    output* get() const;
 };
 
 #endif
