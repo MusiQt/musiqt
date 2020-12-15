@@ -22,10 +22,7 @@
 
 #include "outputFactory.h"
 
-#include "alsaBackend.h"
-#include "ossBackend.h"
 #include "qaudioBackend.h"
-#include "wmmBackend.h"
 
 oFactory* oFactory::instance()
 {
@@ -46,18 +43,6 @@ void oFactory::regBackend()
 oFactory::oFactory()
 {
     // Register backends
-
-#ifdef HAVE_ALSA
-    regBackend<alsaBackend>();
-#endif
-
-#if defined (HAVE_SYS_SOUNDCARD_H) || defined (HAVE_MACHINE_SOUNDCARD_H)
-    regBackend<ossBackend>();
-#endif
-
-#ifdef _WIN32
-    regBackend<wmmBackend>();
-#endif
 
     regBackend<qaudioBackend>();
 }
