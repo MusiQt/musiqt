@@ -19,6 +19,7 @@
 #include "audio.h"
 
 #include "settings.h"
+#include "InputWrapper.h"
 #include "converter/converterFactory.h"
 #include "input/input.h"
 #include "output/qaudioBackend.h"
@@ -43,7 +44,7 @@
 #endif
 
 /*****************************************************************/
-
+/*
 void audioThread::run()
 {
     switch (_audio->outputPrecision())
@@ -60,7 +61,7 @@ void audioThread::run()
         break;
     }
 }
-
+*/
 /*****************************************************************/
 
 inline sample_t audio::outputPrecision()
@@ -129,7 +130,7 @@ template<> inline void audio::process<short>(size_t size)
 
 template<typename T>
 void audio::loop()
-{
+{/*
     qDebug() << "loop " << static_cast<int>(sizeof(T)<<3) << " bit";
     while (_playing)
     {
@@ -179,7 +180,7 @@ PROFILE_END
             else
                 emit preloadSong();
         }
-    }
+    }*/
 }
 
 /*****************************************************************/
@@ -234,17 +235,17 @@ bool audio::play(input* i, int pos)
     // FIXME only supports 8/16 bits
     const unsigned int precision = (outputPrecision() == sample_t::U8) ? 1 : 2;
     qDebug() << "Setting parameters " << sampleRate << ":" << _input->channels() << ":" << precision;
-    _bufferSize = _output->open(_card, sampleRate, _input->channels(), precision);
-    if (!_bufferSize)
+    size_t bufferSize = _output->open(_card, sampleRate, _input->channels(), precision, new InputWrapper(_input));
+    if (!bufferSize)
         return false;
 
     qDebug() << "Output samplerate " << sampleRate;
 
     // Check if soundcard supports requested samplerate
-    _converter = CFACTORY->get(_input->samplerate(), sampleRate, _bufferSize,
+    _converter = CFACTORY->get(_input->samplerate(), sampleRate, bufferSize,
         _input->channels(), _input->precision(), outputPrecision(), _input->fract());
 
-    _bufPerSec = ((sampleRate << DECIMALS) * _input->channels() * precision) / _bufferSize;
+    _bufPerSec = ((sampleRate << DECIMALS) * _input->channels() * precision) / bufferSize;
     _buffers = _bufPerSec;
 #ifdef HAVE_BS2B
     if (SETTINGS->bs2b() && (_input->channels() == 2)
@@ -266,11 +267,8 @@ bool audio::play(input* i, int pos)
 
     _input->seek(pos);
 
-    _thread = new audioThread(this);
-
     _playing = true;
     _state = state_t::PLAY;
-    _thread->start();
 
     return true;
 }
@@ -283,14 +281,12 @@ void audio::pause()
         qDebug() << "Pause";
         _playing = false;
         _output->pause();
-        _thread->wait();
         _state = state_t::PAUSE;
         break;
     case state_t::PAUSE:
         qDebug() << "Unpause";
         _playing = true;
         _output->unpause();
-        _thread->start();
         _state = state_t::PLAY;
         break;
     }
@@ -307,11 +303,7 @@ bool audio::stop()
 
     _output->stop();
 
-    _thread->wait();
-
     _output->close();
-
-    delete _thread;
 
     _seconds = 0;
     _state = state_t::STOP;

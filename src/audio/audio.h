@@ -30,15 +30,10 @@
 #include "inputTypes.h"
 
 #include <QSettings>
-#include <QThread>
 
 class input;
 class qaudioBackend;
 class converter;
-
-/*****************************************************************/
-
-class audioThread;
 
 /*****************************************************************/
 
@@ -48,8 +43,6 @@ class audio : public QObject
 {
     Q_OBJECT
 
-    friend class audioThread;
-
 private:
     QSettings   settings;
     input *_input;
@@ -58,10 +51,6 @@ private:
 
     state_t _state;
     bool _playing;
-
-    audioThread *_thread;
-
-    size_t _bufferSize;
 
     int _buffers;
     int _bufPerSec;
@@ -143,25 +132,6 @@ private slots:
 public:
     audioConfig(QWidget* win);
     virtual ~audioConfig() {}
-};
-
-/*****************************************************************/
-
-class audioThread : public QThread
-{
-    Q_OBJECT
-
-private:
-    audio *_audio;
-
-protected:
-    void run() override;
-
-public:
-    audioThread(audio* a) :
-        QThread(),
-        _audio(a) {}
-    ~audioThread() {}
 };
 
 #endif

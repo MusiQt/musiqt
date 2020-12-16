@@ -174,6 +174,7 @@ src/singleApp.cpp \
 src/singleApp.h \
 src/translator.cpp \
 src/translator.h \
+src/audio/InputWrapper.h \
 src/audio/audio.cpp \
 src/audio/audio.h \
 src/audio/configFrame.cpp \

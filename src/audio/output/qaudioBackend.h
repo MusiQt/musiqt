@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,36 +20,8 @@
 #define QAUDIOBACKEND_H
 
 #include <QAudioOutput>
-#include <QSemaphore>
 
 #include <memory>
-
-/*****************************************************************/
-
-class AudioBuffer : public QIODevice
-{
-public:
-    AudioBuffer();
-    ~AudioBuffer();
-
-    qint64 readData(char *data, qint64 maxSize) override;
-    qint64 writeData(const char *data, qint64 maxSize) override;
-
-    bool isSequential() const override;
-    qint64 bytesAvailable() const override;
-
-    void init(qint64 size);
-
-private:
-    static constexpr int BUFFERS=2;
-
-    std::unique_ptr<char[]> buffer[BUFFERS];
-    qint64 length[BUFFERS];
-    QSemaphore sem;
-    int readIdx;
-    int writeIdx;
-    qint64 bufSize;
-};
 
 /*****************************************************************/
 
@@ -61,10 +33,6 @@ class qaudioBackend
 private:
     QAudioOutput *_audioOutput;
 
-    AudioBuffer audioBuffer;
-
-    char *_buffer;
-
 public:
     qaudioBackend();
 
@@ -73,16 +41,10 @@ public:
     static QStringList devices();
 
     /// Open
-    size_t open(const unsigned int card, unsigned int &sampleRate, const unsigned int channels, const unsigned int prec);
+    size_t open(const unsigned int card, unsigned int &sampleRate, const unsigned int channels, const unsigned int prec, QIODevice* device);
 
     /// Close
     void close();
-
-    /// Get buffer
-    void *buffer() { return _buffer; }
-
-    /// Write data to output
-    bool write(void* buffer, size_t bufferSize);
 
     /// Pause
     void pause();

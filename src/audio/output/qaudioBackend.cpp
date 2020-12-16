@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,74 +21,11 @@
 #include <QAudioDeviceInfo>
 #include <QAudioFormat>
 #include <QList>
-#include <QString>
-#include <QThread>
 #include <QDebug>
 
 #ifndef _WIN32
 #  include <unistd.h>
 #endif
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <algorithm>
-
-/*****************************************************************/
-
-AudioBuffer::AudioBuffer() {}
-AudioBuffer::~AudioBuffer() {}
-
-qint64 AudioBuffer::readData(char *data, qint64 maxSize)
-{
-    if (sem.available()==BUFFERS)
-        return 0;
-
-    const qint64 size = std::min(length[readIdx], maxSize);
-    memcpy(data, buffer[readIdx].get(), size);
-    const qint64 left = length[readIdx] - size;
-    length[readIdx] = left;
-    if (left==0)
-    {
-        readIdx = 1 - readIdx;
-        sem.release();
-    }
-    else
-    {
-        memcpy(buffer[readIdx].get(), buffer[readIdx].get()+size, left);
-    }
-    return size;
-}
-
-qint64 AudioBuffer::writeData(const char *data, qint64 maxSize)
-{
-    if (!sem.tryAcquire(1, 100))
-        return 0;
-
-    const qint64 size = std::min(bufSize, maxSize);
-    memcpy(buffer[writeIdx].get(), data, size);
-    length[writeIdx] = size;
-    writeIdx = 1 - writeIdx;
-    return size;
-}
-
-bool AudioBuffer::isSequential() const { return true; }
-qint64 AudioBuffer::bytesAvailable() const { return length[readIdx]; }
-
-void AudioBuffer::init(qint64 size)
-{
-    readIdx = 0;
-    writeIdx = 0;
-    bufSize = size;
-    length[0] = 0;
-    length[1] = 0;
-    buffer[0].reset(new char[size]);
-    buffer[1].reset(new char[size]);
-    if (sem.available()<BUFFERS)
-    {
-        sem.release(BUFFERS-sem.available());
-    }
-}
 
 /*****************************************************************/
 
@@ -104,12 +41,11 @@ QStringList qaudioBackend::devices()
 }
 
 qaudioBackend::qaudioBackend() :
-    _audioOutput(nullptr),
-    _buffer(nullptr)
+    _audioOutput(nullptr)
 {}
 
 size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
-                           const unsigned int channels, const unsigned int prec)
+                           const unsigned int channels, const unsigned int prec, QIODevice* device)
 {
     QAudioFormat format;
 #if QT_VERSION >= 0x050000
@@ -125,28 +61,36 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     format.setSampleType(prec == 1 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
 
     QList<QAudioDeviceInfo> list = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+    
+    if (!list[card].isFormatSupported(format))
+    {
+        // FIXME
+        qWarning() << "Audio format not supported";
+        return 0;
+        //format = list[card].nearestFormat(format);
+    }
 
     _audioOutput = new QAudioOutput(list[card], format);
     if (_audioOutput->error() != QAudio::NoError)
     {
-        qDebug("error");
+        qWarning() << "error";
+        delete _audioOutput;
+        _audioOutput = nullptr;
+        return 0;
     }
 
-    audioBuffer.open(QIODevice::ReadWrite);
-    _audioOutput->start(&audioBuffer);
+    device->open(QIODevice::ReadWrite);
+    _audioOutput->start(device);
 
     if (_audioOutput->error() != QAudio::NoError)
     {
+        qWarning() << "error";
         delete _audioOutput;
         _audioOutput = nullptr;
         return 0;
     }
 
     qDebug() << "bufferSize: " << _audioOutput->bufferSize() << " bytes";
-
-    _buffer = new char[_audioOutput->bufferSize()];
-
-    audioBuffer.init(_audioOutput->bufferSize());
 
     return _audioOutput->bufferSize();
 }
@@ -155,39 +99,6 @@ void qaudioBackend::close()
 {
     delete _audioOutput;
     _audioOutput = nullptr;
-
-    delete [] _buffer;
-}
-
-bool qaudioBackend::write(void* buffer, size_t bufferSize)
-{
-loop:
-    const qint64 n = audioBuffer.write((const char*)buffer, bufferSize);
-
-    if (n < 0)
-        return false;
-
-    if (n == 0)
-    {
-        switch (_audioOutput->state())
-        {
-        case QAudio::ActiveState:
-        case QAudio::IdleState:
-            goto loop;
-        case QAudio::SuspendedState:
-        case QAudio::StoppedState:
-            return true;
-        }
-    }
-
-    bufferSize -= n;
-    if (bufferSize > 0)
-    {
-        buffer = (char*)buffer+n;
-        goto loop;
-    }
-
-    return true;
 }
 
 void qaudioBackend::pause()
@@ -208,7 +119,14 @@ void qaudioBackend::stop()
 void qaudioBackend::volume(int vol)
 {
 #if QT_VERSION >= 0x050000
-    _audioOutput->setVolume(qreal(vol/100.0f));
+#  if QT_VERSION >= 0x050800
+    qreal volume = QAudio::convertVolume(vol / qreal(100.0),
+                                         QAudio::LogarithmicVolumeScale,
+                                         QAudio::LinearVolumeScale);
+#  else
+    qreal volume = qreal(vol/100.0f);
+#  endif
+    _audioOutput->setVolume(volume);
 #else
     qDebug("Unimplemented");
 #endif
@@ -217,7 +135,13 @@ void qaudioBackend::volume(int vol)
 int qaudioBackend::volume()
 {
 #if QT_VERSION >= 0x050000
+#  if QT_VERSION >= 0x050800
+    return QAudio::convertVolume(_audioOutput->volume(),
+                                 QAudio::LinearVolumeScale,
+                                 QAudio::LogarithmicVolumeScale) * 100;
+#  else
     return _audioOutput->volume()*100;
+#  endif
 #else
     qDebug("Unimplemented");
     return 0;
