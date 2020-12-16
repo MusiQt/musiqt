@@ -63,15 +63,15 @@ void audioThread::run()
 */
 /*****************************************************************/
 
-inline sample_t audio::outputPrecision()
+inline sample_t audio::outputPrecision(input* i)
 {
-    switch (_input->precision())
+    switch (i->precision())
     {
     case sample_t::U8:
     case sample_t::S16:
     case sample_t::S24:
     case sample_t::S32:
-        return _input->precision();
+        return i->precision();
     case sample_t::SAMPLE_FLOAT:
     case sample_t::SAMPLE_FIXED:
         switch (SETTINGS->bits())
@@ -134,7 +134,7 @@ void audio::loop()
     while (_playing)
     {
 PROFILE_START
-        size_t size = _input->fillBuffer(
+        size_t size = i->fillBuffer(
             _converter != nullptr ? _converter->buffer() : _output->buffer(),
             _converter != nullptr ? _converter->bufSize() : _bufferSize,
             _seconds);
@@ -144,7 +144,7 @@ PROFILE_START
             emit songEnded();
             if (_preload)
             {
-                _input = _preload;
+                i = _preload;
                 _preload = nullptr;
                 _seconds = 0;
                 continue;
@@ -174,7 +174,7 @@ PROFILE_END
                 _buffers += _bufPerSec;
                 _seconds++;
             } while (_buffers < 0);
-            if (_seconds != _input->time()-5)
+            if (_seconds != i->time()-5)
                 emit updateTime();
             else
                 emit preloadSong();
@@ -184,19 +184,7 @@ PROFILE_END
 */
 /*****************************************************************/
 
-void audio::onCmdSongEnded() {
-
-    emit songEnded();
-    if (_preload)
-    {
-        _input = _preload;
-        _preload = nullptr;
-    }
-}
-
 audio::audio() :
-    _input(nullptr),
-    _preload(nullptr),
     _state(state_t::STOP),
     _playing(false)
 #ifdef HAVE_BS2B
@@ -224,8 +212,6 @@ bool audio::play(input* i, int pos)
 
     qDebug() << "audio::play";
 
-    _input = i;
-
     unsigned int _card = 0;
     QString card = SETTINGS->card();
     const QStringList devices = qaudioBackend::devices();
@@ -238,31 +224,31 @@ bool audio::play(input* i, int pos)
         }
     }
 
-    unsigned int sampleRate = _input->samplerate();
+    unsigned int sampleRate = i->samplerate();
 
     // FIXME only supports 8/16 bits
-    const unsigned int precision = (outputPrecision() == sample_t::U8) ? 1 : 2;
-    qDebug() << "Setting parameters " << sampleRate << ":" << _input->channels() << ":" << precision;
-    iw = new InputWrapper(_input);
-    connect(iw, SIGNAL(songEnded()), this, SLOT(onCmdSongEnded()));
+    const unsigned int precision = (outputPrecision(i) == sample_t::U8) ? 1 : 2;
+    qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << precision;
+    iw = new InputWrapper(i);
+    connect(iw, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
     connect(iw, SIGNAL(updateTime()), this, SIGNAL(updateTime()));
     connect(iw, SIGNAL(preloadSong()), this, SIGNAL(preloadSong()));
-    size_t bufferSize = _output->open(_card, sampleRate, _input->channels(), precision, iw);
+    size_t bufferSize = _output->open(_card, sampleRate, i->channels(), precision, iw);
     if (!bufferSize)
         return false;
 
     qDebug() << "Output samplerate " << sampleRate;
 
     // Check if soundcard supports requested samplerate
-    _converter = CFACTORY->get(_input->samplerate(), sampleRate, bufferSize,
-        _input->channels(), _input->precision(), outputPrecision(), _input->fract());
+    _converter = CFACTORY->get(i->samplerate(), sampleRate, bufferSize,
+        i->channels(), i->precision(), outputPrecision(i), i->fract());
 
-    int bytePerSec = sampleRate * _input->channels() * precision;
+    int bytePerSec = sampleRate * i->channels() * precision;
     iw->setBPS(bytePerSec);
 #ifdef HAVE_BS2B
-    if (SETTINGS->bs2b() && (_input->channels() == 2)
+    if (SETTINGS->bs2b() && (i->channels() == 2)
 #if BS2B_VERSION_MAJOR == 2
-        && (outputPrecision() == sample_t::S16)
+        && (outputPrecision(i) == sample_t::S16)
 #endif
     )
     {
@@ -277,7 +263,7 @@ bool audio::play(input* i, int pos)
 #endif
     _output->volume(_volume);
 
-    _input->seek(pos);
+    i->seek(pos);
 
     _playing = true;
     _state = state_t::PLAY;
@@ -341,18 +327,7 @@ void audio::volume(const int vol)
 
 bool audio::gapless(input* const i)
 {
-    if ((_input->samplerate() == i->samplerate())
-        && (_input->channels() == i->channels())
-        && (_input->precision() == i->precision()))
-    {
-        _preload = i;
-        return true;
-    }
-    else
-    {
-        _preload = nullptr;
-        return false;
-    }
+    return iw->tryPreload(i);
 }
 
 int audio::seconds() const { return iw->getSeconds(); }

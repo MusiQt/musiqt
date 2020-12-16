@@ -41,6 +41,8 @@ public:
 
     //bool isSequential() const override;
     //qint64 bytesAvailable() const override;
+    
+    bool tryPreload(input* i);
 
     void setBPS(int size);
     
@@ -48,6 +50,7 @@ public:
 
 private:
     input *_input;
+    input *_preload;
 
     int bytes;
     int bytePerSec;

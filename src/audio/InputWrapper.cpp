@@ -22,14 +22,21 @@
 
 InputWrapper::InputWrapper(input* i) :
     _input(i),
+    _preload(nullptr),
     seconds(0)
 {}
 
 qint64 InputWrapper::readData(char *data, qint64 maxSize) {
-    size_t n = _input->fillBuffer((void*)data, maxSize, 0);
+    size_t n = _input->fillBuffer((void*)data, maxSize, seconds);
     if (n == 0) {
         emit songEnded();
-        seconds = 0;
+        if (_preload)
+        {
+            _input = _preload;
+            _preload = nullptr;
+            seconds = 0;
+            n = _input->fillBuffer((void*)data, maxSize, seconds);
+        }
     }
     
     bytes += n;
@@ -49,6 +56,22 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize) {
 }
 
 qint64 InputWrapper::writeData(const char *data, qint64 maxSize) { return -1; }
+
+bool InputWrapper::tryPreload(input* i) {
+
+    if ((_input->samplerate() == i->samplerate())
+        && (_input->channels() == i->channels())
+        && (_input->precision() == i->precision()))
+    {
+        _preload = i;
+        return true;
+    }
+    else
+    {
+        _preload = nullptr;
+        return false;
+    }
+}
 
 void InputWrapper::setBPS(int bps) {
     bytePerSec = bps;

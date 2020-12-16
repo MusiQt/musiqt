@@ -47,8 +47,6 @@ class audio : public QObject
 private:
     QSettings   settings;
     InputWrapper *iw;
-    input *_input;
-    input *_preload;
     qaudioBackend *_output;
 
     state_t _state;
@@ -64,16 +62,13 @@ private:
     audio(const audio&);
     audio& operator=(const audio&);
 
-    sample_t outputPrecision();
+    sample_t outputPrecision(input* i);
 
 signals:
     void songEnded();
     void outputError();
     void updateTime();
     void preloadSong();
-
-public slots:
-    void onCmdSongEnded();
 
 public:
     audio();
