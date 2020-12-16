@@ -125,14 +125,9 @@ public:
 
 #include "configFrame.h"
 
-class QComboBox;
-
 class audioConfig : public configFrame
 {
     Q_OBJECT
-
-private:
-    QComboBox *_cardList;
 
 private:
     audioConfig() {}

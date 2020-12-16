@@ -357,10 +357,26 @@ audioConfig::audioConfig(QWidget* win) :
     configFrame(win, "Audio")
 {
     matrix()->addWidget(new QLabel(tr("Card"), this));
-    _cardList = new QComboBox(this);
-    matrix()->addWidget(_cardList);
-    setCards();
-    connect(_cardList, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCmdCard(const QString &)));
+    QComboBox* cardList = new QComboBox(this);
+    matrix()->addWidget(cardList);
+
+    {
+        const QStringList deviceNames = qaudioBackend::devices();
+        int devices = deviceNames.size();
+        qDebug() << "Devices: " << devices;
+        for (int i=0; i<devices; i++)
+        {
+            cardList->addItem(deviceNames[i]);
+        }
+
+        cardList->setMaxVisibleItems((devices > 5) ? 5 : devices);
+
+        int val = cardList->findText(SETTINGS->card());
+        if (val >= 0)
+            cardList->setCurrentIndex(val);
+    }
+
+    connect(cardList, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCmdCard(const QString &)));
 
     matrix()->addWidget(new QLabel(tr("Default bitdepth"), this));
     QComboBox *bitBox = new QComboBox(this);
@@ -370,19 +386,21 @@ audioConfig::audioConfig(QWidget* win) :
     bitBox->addItems(items);
     bitBox->setMaxVisibleItems(items.size());
 
-    unsigned int val;
-    switch (SETTINGS->bits())
     {
-    case 8:
-        val = 0;
-        break;
-    default:
-    case 16:
-        val = 1;
-        break;
-    }
+        unsigned int val;
+        switch (SETTINGS->bits())
+        {
+        case 8:
+            val = 0;
+            break;
+        default:
+        case 16:
+            val = 1;
+            break;
+        }
 
-    bitBox->setCurrentIndex(val);
+        bitBox->setCurrentIndex(val);
+    }
 
     connect(bitBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdBits(int)));
 }
@@ -392,24 +410,6 @@ void audioConfig::onCmdCard(const QString &card)
     qDebug() << "onCmdCard" << card;
 
     SETTINGS->_card = card;
-}
-
-void audioConfig::setCards()
-{
-    _cardList->clear();
-
-    const QStringList devices = qaudioBackend::devices();
-    qDebug() << "Devices: " << devices.size();
-    for (int i=0; i<devices.size(); i++)
-    {
-        _cardList->addItem(devices[i]);
-    }
-
-    _cardList->setMaxVisibleItems((devices.size() > 5) ? 5 : devices.size());
-
-    int val = _cardList->findText(SETTINGS->card());
-    if (val >= 0)
-        _cardList->setCurrentIndex(val);
 }
 
 void audioConfig::onCmdBits(int val)
