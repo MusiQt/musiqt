@@ -47,37 +47,6 @@ AS_IF([test "x$enable_debug" = "xyes"],
 AC_SUBST([debug_flags])
 
 
-#####################################################
-# Check for audio libs
-#####################################################
-
-##################################################################
-# Search for OSS
-
-AC_CHECK_HEADERS([sys/soundcard.h machine/soundcard.h], [break])
-
-##################################################################
-# Search for ALSA
-
-PKG_CHECK_MODULES(ALSA,
-        [alsa >= 1.0],
-        [AC_DEFINE([HAVE_ALSA], 1, [Define to 1 if you have libasound (-lasound).])],
-        [AC_MSG_WARN([$ALSA_PKG_ERRORS])]
-)
-
-##################################################################
-# Search for Windows audio API
-
-AUDIO_LIBS=""
-
-AC_CHECK_HEADERS([mmsystem.h], [], [], [#include <windows.h>])
-
-AS_IF([test "$ac_cv_header_mmsystem_h" = "yes"],
-    [AUDIO_LIBS="$AUDIO_LIBS -lwinmm"]
-)
-
-AC_SUBST([AUDIO_LIBS])
-
 ##################################################################
 # Search for zlib
 
