@@ -206,7 +206,6 @@ ${SIDPLAYFP_SOURCES} \
 $(SNDFILE_SOURCES) \
 $(MPC_SOURCES) \
 $(WAVPACK_SOURCES) \
-src/audio/output/outputBackend.h \
 src/audio/output/qaudioBackend.cpp \
 src/audio/output/qaudioBackend.h \
 src/gui/aboutDialog.cpp \

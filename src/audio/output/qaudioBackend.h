@@ -24,8 +24,6 @@
 
 #include <memory>
 
-#include "outputBackend.h"
-
 /*****************************************************************/
 
 class AudioBuffer : public QIODevice
@@ -58,7 +56,7 @@ private:
 /**
  * QAudio output backend
  */
-class qaudioBackend : public outputBackend
+class qaudioBackend
 {
 private:
     QAudioOutput *_audioOutput;
@@ -87,8 +85,8 @@ public:
     bool write(void* buffer, size_t bufferSize);
 
     /// Pause
-    void pause() override;
-    void unpause() override;
+    void pause();
+    void unpause();
 
     /// Stop
     void stop();
