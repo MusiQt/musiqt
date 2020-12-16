@@ -19,8 +19,6 @@
 #ifndef OUTPUT_PLUGIN_H
 #define OUTPUT_PLUGIN_H
 
-#include "output.h"
-
 #include <new>
 #include <QList>
 #include <QSettings>
@@ -29,7 +27,7 @@
 
 #define SECTION(key) QString("Audio Settings/%1").arg(key)
 
-class outputBackend : public output
+class outputBackend
 {
 private:
     QSettings settings;
@@ -69,19 +67,19 @@ public:
     virtual ~outputBackend() {}
 
     /// Pause
-    virtual void pause() override {}
+    virtual void pause() {}
 
     /// Unpause
-    virtual void unpause() override {}
+    virtual void unpause() {}
 
     /// Stop
-    virtual void stop() override {}
+    virtual void stop() {}
 
     /// Set volume
-    virtual void volume(int vol) override {}
+    virtual void volume(int vol) {}
 
     /// Get volume
-    virtual int volume() const override { return -1; }
+    virtual int volume() const { return -1; }
 };
 
 #endif

@@ -33,7 +33,7 @@
 #include <QThread>
 
 class input;
-class output;
+class qaudioBackend;
 class converter;
 
 /*****************************************************************/
@@ -54,7 +54,7 @@ private:
     QSettings   settings;
     input *_input;
     input *_preload;
-    output *_output;
+    qaudioBackend *_output;
 
     state_t _state;
     bool _playing;
