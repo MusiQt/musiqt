@@ -174,11 +174,12 @@ src/singleApp.cpp \
 src/singleApp.h \
 src/translator.cpp \
 src/translator.h \
-src/audio/InputWrapper.h \
 src/audio/audio.cpp \
 src/audio/audio.h \
 src/audio/configFrame.cpp \
 src/audio/configFrame.h \
+src/audio/InputWrapper.cpp \
+src/audio/InputWrapper.h \
 src/audio/converter/converter.h \
 src/audio/converter/converters.cpp \
 src/audio/converter/converters.h \
@@ -255,6 +256,7 @@ nodist_src_musiqt_SOURCES = \
 src/singleApp_moc.cpp \
 src/translator_moc.cpp \
 src/audio/audio_moc.cpp \
+src/audio/InputWrapper_moc.cpp \
 src/audio/configFrame_moc.cpp \
 $(MPG123_MOC) \
 $(FFMPEG_MOC) \

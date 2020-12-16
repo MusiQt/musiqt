@@ -19,12 +19,19 @@
 #ifndef INPUTWRAPPER_H
 #define INPUTWRAPPER_H
 
-#include "input/input.h"
-
 #include <QIODevice>
+
+class input;
 
 class InputWrapper : public QIODevice
 {
+    Q_OBJECT
+
+signals:
+    void songEnded();
+    void updateTime();
+    void preloadSong();
+
 public:
     InputWrapper(input* i);
     //~InputWrapper();
@@ -34,21 +41,17 @@ public:
 
     //bool isSequential() const override;
     //qint64 bytesAvailable() const override;
-    //
-    //void init(qint64 size);
+
+    void setBPS(int size);
+    
+    int getSeconds() const { return seconds; }
 
 private:
     input *_input;
+
+    int bytes;
+    int bytePerSec;
+    int seconds;
 };
-
-InputWrapper::InputWrapper(input* i) : _input(i) {}
-
-qint64 InputWrapper::readData(char *data, qint64 maxSize) {
-    return _input->fillBuffer((void*)data, maxSize, 0);
-}
-
-qint64 InputWrapper::writeData(const char *data, qint64 maxSize) { return -1; }
-
-
 
 #endif

@@ -29,7 +29,6 @@
 #include <QComboBox>
 #include <QStringList>
 
-#define DECIMALS 10
 //#define PROFILE
 
 #if defined(PROFILE) && QT_VERSION >= 0x040700
@@ -84,7 +83,7 @@ inline sample_t audio::outputPrecision()
         }
     }
 }
-
+/*
 template<> inline void audio::process<quint8>(size_t size)
 {
 #if defined HAVE_BS2B && BS2B_VERSION_MAJOR == 3
@@ -130,7 +129,7 @@ template<> inline void audio::process<short>(size_t size)
 
 template<typename T>
 void audio::loop()
-{/*
+{
     qDebug() << "loop " << static_cast<int>(sizeof(T)<<3) << " bit";
     while (_playing)
     {
@@ -180,17 +179,26 @@ PROFILE_END
             else
                 emit preloadSong();
         }
-    }*/
+    }
 }
-
+*/
 /*****************************************************************/
+
+void audio::onCmdSongEnded() {
+
+    emit songEnded();
+    if (_preload)
+    {
+        _input = _preload;
+        _preload = nullptr;
+    }
+}
 
 audio::audio() :
     _input(nullptr),
     _preload(nullptr),
     _state(state_t::STOP),
-    _playing(false),
-    _seconds(0)
+    _playing(false)
 #ifdef HAVE_BS2B
     ,_bs2bdp(0)
 #endif
@@ -235,7 +243,11 @@ bool audio::play(input* i, int pos)
     // FIXME only supports 8/16 bits
     const unsigned int precision = (outputPrecision() == sample_t::U8) ? 1 : 2;
     qDebug() << "Setting parameters " << sampleRate << ":" << _input->channels() << ":" << precision;
-    size_t bufferSize = _output->open(_card, sampleRate, _input->channels(), precision, new InputWrapper(_input));
+    iw = new InputWrapper(_input);
+    connect(iw, SIGNAL(songEnded()), this, SLOT(onCmdSongEnded()));
+    connect(iw, SIGNAL(updateTime()), this, SIGNAL(updateTime()));
+    connect(iw, SIGNAL(preloadSong()), this, SIGNAL(preloadSong()));
+    size_t bufferSize = _output->open(_card, sampleRate, _input->channels(), precision, iw);
     if (!bufferSize)
         return false;
 
@@ -245,8 +257,8 @@ bool audio::play(input* i, int pos)
     _converter = CFACTORY->get(_input->samplerate(), sampleRate, bufferSize,
         _input->channels(), _input->precision(), outputPrecision(), _input->fract());
 
-    _bufPerSec = ((sampleRate << DECIMALS) * _input->channels() * precision) / bufferSize;
-    _buffers = _bufPerSec;
+    int bytePerSec = sampleRate * _input->channels() * precision;
+    iw->setBPS(bytePerSec);
 #ifdef HAVE_BS2B
     if (SETTINGS->bs2b() && (_input->channels() == 2)
 #if BS2B_VERSION_MAJOR == 2
@@ -305,7 +317,6 @@ bool audio::stop()
 
     _output->close();
 
-    _seconds = 0;
     _state = state_t::STOP;
 #ifdef HAVE_BS2B
     if (_bs2bdp)
@@ -316,6 +327,8 @@ bool audio::stop()
 #endif
     if (_converter != nullptr)
         delete _converter;
+
+    delete iw;
 
     return true;
 }
@@ -341,6 +354,8 @@ bool audio::gapless(input* const i)
         return false;
     }
 }
+
+int audio::seconds() const { return iw->getSeconds(); }
 
 /*****************************************************************/
 

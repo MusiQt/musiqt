@@ -32,6 +32,7 @@
 #include <QSettings>
 
 class input;
+class InputWrapper;
 class qaudioBackend;
 class converter;
 
@@ -45,16 +46,13 @@ class audio : public QObject
 
 private:
     QSettings   settings;
+    InputWrapper *iw;
     input *_input;
     input *_preload;
     qaudioBackend *_output;
 
     state_t _state;
     bool _playing;
-
-    int _buffers;
-    int _bufPerSec;
-    int _seconds;
 
     int _volume;
 
@@ -68,18 +66,14 @@ private:
 
     sample_t outputPrecision();
 
-    template<typename T>
-    void process(size_t size);
-
-    ///
-    template<typename T>
-    void loop();
-
 signals:
     void songEnded();
     void outputError();
     void updateTime();
     void preloadSong();
+
+public slots:
+    void onCmdSongEnded();
 
 public:
     audio();
@@ -98,7 +92,7 @@ public:
     state_t state() const { return _state; }
 
     /// Get seconds
-    int seconds() const { return _seconds; }
+    int seconds() const;
 
     /// Set volume
     void volume(const int vol);
