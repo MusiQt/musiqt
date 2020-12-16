@@ -21,7 +21,6 @@
 #include "settings.h"
 #include "converter/converterFactory.h"
 #include "input/input.h"
-#include "output/output.h"
 #include "output/qaudioBackend.h"
 
 #include <QDebug>
