@@ -355,12 +355,7 @@ audioConfig::audioConfig(QWidget* win) :
     {
         const QStringList deviceNames = qaudioBackend::devices();
         int devices = deviceNames.size();
-        qDebug() << "Devices: " << devices;
-        for (int i=0; i<devices; i++)
-        {
-            cardList->addItem(deviceNames[i]);
-        }
-
+        cardList->addItems(deviceNames);
         cardList->setMaxVisibleItems((devices > 5) ? 5 : devices);
 
         int val = cardList->findText(SETTINGS->card());
