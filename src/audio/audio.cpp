@@ -63,26 +63,6 @@ void audioThread::run()
 */
 /*****************************************************************/
 
-inline sample_t audio::outputPrecision(input* i)
-{
-    switch (i->precision())
-    {
-    case sample_t::U8:
-    case sample_t::S16:
-    case sample_t::S24:
-    case sample_t::S32:
-        return i->precision();
-    case sample_t::SAMPLE_FLOAT:
-    case sample_t::SAMPLE_FIXED:
-        switch (SETTINGS->bits())
-        {
-        case 8:
-            return sample_t::U8;
-        case 16:
-            return sample_t::S16;
-        }
-    }
-}
 /*
 template<> inline void audio::process<quint8>(size_t size)
 {
@@ -215,7 +195,7 @@ bool audio::play(input* i, int pos)
     unsigned int _card = 0;
     QString card = SETTINGS->card();
     const QStringList devices = qaudioBackend::devices();
-    for (unsigned int i=0; i<devices.size(); i++)
+    for (int i=0; i<devices.size(); i++)
     {
         if (!card.compare(devices[i]))
         {
@@ -226,8 +206,33 @@ bool audio::play(input* i, int pos)
 
     unsigned int sampleRate = i->samplerate();
 
+    sample_t sample_type;
+    switch (i->precision())
+    {
+    case sample_t::U8:
+    case sample_t::S16:
+    case sample_t::S24:
+    case sample_t::S32:
+        sample_type = i->precision();
+        break;
+    case sample_t::SAMPLE_FLOAT:
+    case sample_t::SAMPLE_FIXED:
+        switch (SETTINGS->bits())
+        {
+        case 8:
+            sample_type = sample_t::U8;
+            break;
+        case 16:
+            sample_type = sample_t::S16;
+            break;
+        default:
+            qWarning() << "Unhandled sample type " << SETTINGS->bits();
+            return false;
+        }
+    }
+
     // FIXME only supports 8/16 bits
-    const unsigned int precision = (outputPrecision(i) == sample_t::U8) ? 1 : 2;
+    const unsigned int precision = (sample_type == sample_t::U8) ? 1 : 2;
     qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << precision;
     iw = new InputWrapper(i);
     connect(iw, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
@@ -241,14 +246,14 @@ bool audio::play(input* i, int pos)
 
     // Check if soundcard supports requested samplerate
     _converter = CFACTORY->get(i->samplerate(), sampleRate, bufferSize,
-        i->channels(), i->precision(), outputPrecision(i), i->fract());
+        i->channels(), i->precision(), sample_type, i->fract());
 
     int bytePerSec = sampleRate * i->channels() * precision;
     iw->setBPS(bytePerSec);
 #ifdef HAVE_BS2B
     if (SETTINGS->bs2b() && (i->channels() == 2)
 #if BS2B_VERSION_MAJOR == 2
-        && (outputPrecision(i) == sample_t::S16)
+        && (sample_type == sample_t::S16)
 #endif
     )
     {
@@ -286,6 +291,8 @@ void audio::pause()
         _playing = true;
         _output->unpause();
         _state = state_t::PLAY;
+        break;
+    case state_t::STOP:
         break;
     }
 }

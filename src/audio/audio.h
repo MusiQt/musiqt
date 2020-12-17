@@ -62,8 +62,6 @@ private:
     audio(const audio&);
     audio& operator=(const audio&);
 
-    sample_t outputPrecision(input* i);
-
 signals:
     void songEnded();
     void outputError();
