@@ -292,7 +292,7 @@ void audio::pause()
 
 bool audio::stop()
 {
-    if ((_state == state_t::STOP))
+    if (_state == state_t::STOP)
         return false;
 
     qDebug() << "audio::stop";
@@ -300,6 +300,8 @@ bool audio::stop()
     _playing = false;
 
     _output->stop();
+
+    iw->close();
 
     _output->close();
 
@@ -331,6 +333,8 @@ bool audio::gapless(input* const i)
 }
 
 int audio::seconds() const { return iw->getSeconds(); }
+
+void audio::unload() { iw->unload(); }
 
 /*****************************************************************/
 

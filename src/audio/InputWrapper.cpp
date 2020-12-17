@@ -20,25 +20,38 @@
 
 #include "input/input.h"
 
+#include <QDebug>
+
 InputWrapper::InputWrapper(input* i) :
     _input(i),
     _preload(nullptr),
     seconds(0)
 {}
 
-qint64 InputWrapper::readData(char *data, qint64 maxSize) {
+qint64 InputWrapper::readData(char *data, qint64 maxSize)
+{
+    if (maxSize == 0)
+    {
+        qDebug() << "readData maxSize=0";
+        return 0;
+    }
     size_t n = _input->fillBuffer((void*)data, maxSize, seconds);
-    if (n == 0) {
+    if (n == 0)
+    {
         emit songEnded();
-        if (_preload)
+        qDebug() << "***";
+        if (_preload != nullptr)
         {
             _input = _preload;
             _preload = nullptr;
             seconds = 0;
-            n = _input->fillBuffer((void*)data, maxSize, seconds);
+            //n = _input->fillBuffer((void*)data, maxSize, seconds);
+            return 0;
         }
+        else
+            return -1;
     }
-    
+
     bytes += n;
     if (bytes > bytePerSec)
     {
@@ -57,8 +70,8 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize) {
 
 qint64 InputWrapper::writeData(const char *data, qint64 maxSize) { return -1; }
 
-bool InputWrapper::tryPreload(input* i) {
-
+bool InputWrapper::tryPreload(input* i)
+{
     if ((_input->samplerate() == i->samplerate())
         && (_input->channels() == i->channels())
         && (_input->precision() == i->precision()))
@@ -73,7 +86,13 @@ bool InputWrapper::tryPreload(input* i) {
     }
 }
 
-void InputWrapper::setBPS(int bps) {
+void InputWrapper::unload()
+{
+    _preload = nullptr;
+}
+
+void InputWrapper::setBPS(int bps)
+{
     bytePerSec = bps;
     bytes = 0;
 }

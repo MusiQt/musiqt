@@ -97,6 +97,8 @@ public:
 
     /// Check if gapless playback is supported
     bool gapless(input* const i);
+
+    void unload();
 };
 
 /*****************************************************************/

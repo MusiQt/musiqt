@@ -44,6 +44,25 @@ qaudioBackend::qaudioBackend() :
     _audioOutput(nullptr)
 {}
 
+void qaudioBackend::onStateChange(QAudio::State newState)
+{
+    qDebug() << "onStateChange: " << newState;
+    /*switch (newState)
+    {
+    case QAudio::IdleState:
+        stop();
+        break;
+    case QAudio::StoppedState:
+        if (_audioOutput->error() != QAudio::NoError)
+        {
+            qWarning() << "Error";
+        }
+        break;
+    default:
+        break;
+    }*/
+}
+
 size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
                            const unsigned int channels, const unsigned int prec, QIODevice* device)
 {
@@ -61,13 +80,17 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     format.setSampleType(prec == 1 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
 
     QList<QAudioDeviceInfo> list = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
-    
+
     if (!list[card].isFormatSupported(format))
     {
-        // FIXME
-        qWarning() << "Audio format not supported";
-        return 0;
-        //format = list[card].nearestFormat(format);
+        format = list[card].nearestFormat(format);
+#if QT_VERSION >= 0x050000
+        sampleRate = format.sampleRate();
+#else
+        sampleRate = format.frequency();
+#endif
+        //qWarning() << "Audio format not supported";
+        //return 0;
     }
 
     _audioOutput = new QAudioOutput(list[card], format);
@@ -78,6 +101,8 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
         _audioOutput = nullptr;
         return 0;
     }
+
+    connect(_audioOutput, SIGNAL(stateChanged(QAudio::State)), this, SLOT(onStateChange(QAudio::State)));
 
     device->open(QIODevice::ReadWrite);
     _audioOutput->start(device);

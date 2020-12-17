@@ -258,6 +258,7 @@ src/translator_moc.cpp \
 src/audio/audio_moc.cpp \
 src/audio/InputWrapper_moc.cpp \
 src/audio/configFrame_moc.cpp \
+src/audio/output/qaudioBackend_moc.cpp \
 $(MPG123_MOC) \
 $(FFMPEG_MOC) \
 $(OPENMPT_MOC) \

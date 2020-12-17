@@ -43,6 +43,7 @@ public:
     //qint64 bytesAvailable() const override;
     
     bool tryPreload(input* i);
+    void unload();
 
     void setBPS(int size);
     

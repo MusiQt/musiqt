@@ -62,7 +62,7 @@ centralFrame::centralFrame(QWidget *parent) :
     preloaded(QString()),
     playDir(QString())
 {
-    connect(_audio, SIGNAL(outputError()), this, SLOT(onCmdStopSong()));
+    //connect(_audio, SIGNAL(outputError()), this, SLOT(onCmdStopSong()));
     connect(_audio, SIGNAL(updateTime()),  this, SLOT(onUpdateTime()));
     connect(_audio, SIGNAL(songEnded()),   this, SLOT(songEnded()));
     connect(_audio, SIGNAL(preloadSong()), this, SLOT(preloadSong()));
@@ -477,6 +477,7 @@ void centralFrame::onCmdPlayPauseSong()
 
 void centralFrame::onCmdStopSong()
 {
+    qDebug() << "centralFrame::onCmdStopSong";
     if (_audio->stop())
     {
         playing = false;
@@ -693,6 +694,7 @@ void centralFrame::onUpdateTime()
 
 void centralFrame::preloadSong()
 {
+    qDebug("centralFrame::preloadSong");
     if (playMode && _input->gapless() && !playDir.compare(fsm->fileName(_dirlist->currentIndex())))
     {
         const int nextSong = _playlist->currentIndex().row()+1;
@@ -732,7 +734,20 @@ void centralFrame::songEnded()
     }
 
     // emit stop();
-    onCmdStopSong();
+    //onCmdStopSong();
+    _audio->unload();
+
+    playing = false;
+    _fileTypes->setEnabled(true);
+    emit updateTime(0);
+    emit stateChanged(state_t::STOP);
+    QModelIndex curr = _dirlist->currentIndex();
+    if (playDir.compare(fsm->fileName(curr)))
+    {
+        setProperty("AutoBackend", QVariant(true));
+        onDirSelected(curr);
+    }
+    playDir = QString();
 }
 
 void centralFrame::setOpts()

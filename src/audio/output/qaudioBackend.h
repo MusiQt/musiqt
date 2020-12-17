@@ -19,6 +19,7 @@
 #ifndef QAUDIOBACKEND_H
 #define QAUDIOBACKEND_H
 
+#include <QAudio>
 #include <QAudioOutput>
 
 #include <memory>
@@ -28,10 +29,15 @@
 /**
  * QAudio output backend
  */
-class qaudioBackend
+class qaudioBackend : public QObject
 {
+    Q_OBJECT
+
 private:
     QAudioOutput *_audioOutput;
+
+public slots:
+    void onStateChange(QAudio::State newState);
 
 public:
     qaudioBackend();
