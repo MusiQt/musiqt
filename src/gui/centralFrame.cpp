@@ -741,9 +741,12 @@ void centralFrame::songEnded()
     _fileTypes->setEnabled(true);
     emit updateTime(0);
     emit stateChanged(state_t::STOP);
+
     QModelIndex curr = _dirlist->currentIndex();
+    qDebug() << "-> " << playDir;
     if (playDir.compare(fsm->fileName(curr)))
     {
+        qDebug() << "---";
         setProperty("AutoBackend", QVariant(true));
         onDirSelected(curr);
     }

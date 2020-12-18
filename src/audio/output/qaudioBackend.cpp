@@ -41,26 +41,26 @@ QStringList qaudioBackend::devices()
 }
 
 qaudioBackend::qaudioBackend() :
-    _audioOutput(nullptr)
+    audioOutput(nullptr)
 {}
 
 void qaudioBackend::onStateChange(QAudio::State newState)
 {
     qDebug() << "onStateChange: " << newState;
-    /*switch (newState)
+    switch (newState)
     {
     case QAudio::IdleState:
-        stop();
+        emit songEnded();
         break;
     case QAudio::StoppedState:
-        if (_audioOutput->error() != QAudio::NoError)
+        if (audioOutput->error() != QAudio::NoError)
         {
-            qWarning() << "Error";
+            qWarning() << "Error " << audioOutput->error();
         }
         break;
     default:
         break;
-    }*/
+    }
 }
 
 size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
@@ -93,52 +93,52 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
         //return 0;
     }
 
-    _audioOutput = new QAudioOutput(list[card], format);
-    if (_audioOutput->error() != QAudio::NoError)
+    audioOutput = new QAudioOutput(list[card], format);
+    if (audioOutput->error() != QAudio::NoError)
     {
         qWarning() << "error";
-        delete _audioOutput;
-        _audioOutput = nullptr;
+        delete audioOutput;
+        audioOutput = nullptr;
         return 0;
     }
 
-    connect(_audioOutput, SIGNAL(stateChanged(QAudio::State)), this, SLOT(onStateChange(QAudio::State)));
+    connect(audioOutput, SIGNAL(stateChanged(QAudio::State)), this, SLOT(onStateChange(QAudio::State)));
 
-    device->open(QIODevice::ReadWrite);
-    _audioOutput->start(device);
+    device->open(QIODevice::ReadOnly);
+    audioOutput->start(device);
 
-    if (_audioOutput->error() != QAudio::NoError)
+    if (audioOutput->error() != QAudio::NoError)
     {
         qWarning() << "error";
-        delete _audioOutput;
-        _audioOutput = nullptr;
+        delete audioOutput;
+        audioOutput = nullptr;
         return 0;
     }
 
-    qDebug() << "bufferSize: " << _audioOutput->bufferSize() << " bytes";
+    qDebug() << "bufferSize: " << audioOutput->bufferSize() << " bytes";
 
-    return _audioOutput->bufferSize();
+    return audioOutput->bufferSize();
 }
 
 void qaudioBackend::close()
 {
-    delete _audioOutput;
-    _audioOutput = nullptr;
+    delete audioOutput;
+    audioOutput = nullptr;
 }
 
 void qaudioBackend::pause()
 {
-    _audioOutput->suspend();
+    audioOutput->suspend();
 }
 
 void qaudioBackend::unpause()
 {
-    _audioOutput->resume();
+    audioOutput->resume();
 }
 
 void qaudioBackend::stop()
 {
-    _audioOutput->stop();
+    audioOutput->stop();
 }
 
 void qaudioBackend::volume(int vol)
@@ -151,7 +151,7 @@ void qaudioBackend::volume(int vol)
 #  else
     qreal volume = qreal(vol/100.0f);
 #  endif
-    _audioOutput->setVolume(volume);
+    audioOutput->setVolume(volume);
 #else
     qDebug("Unimplemented");
 #endif
@@ -161,11 +161,11 @@ int qaudioBackend::volume()
 {
 #if QT_VERSION >= 0x050000
 #  if QT_VERSION >= 0x050800
-    return QAudio::convertVolume(_audioOutput->volume(),
+    return QAudio::convertVolume(audioOutput->volume(),
                                  QAudio::LinearVolumeScale,
                                  QAudio::LogarithmicVolumeScale) * 100;
 #  else
-    return _audioOutput->volume()*100;
+    return audioOutput->volume()*100;
 #  endif
 #else
     qDebug("Unimplemented");

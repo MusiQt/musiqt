@@ -22,9 +22,9 @@
 
 #include <QDebug>
 
-InputWrapper::InputWrapper(input* i) :
-    _input(i),
-    _preload(nullptr),
+InputWrapper::InputWrapper(input* song) :
+    currentSong(song),
+    preloadedSong(nullptr),
     seconds(0)
 {}
 
@@ -35,21 +35,22 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
         qDebug() << "readData maxSize=0";
         return 0;
     }
-    size_t n = _input->fillBuffer((void*)data, maxSize, seconds);
+    size_t n = currentSong->fillBuffer((void*)data, maxSize, seconds);
     if (n == 0)
     {
-        emit songEnded();
-        qDebug() << "***";
-        if (_preload != nullptr)
+        if (preloadedSong != nullptr)
         {
-            _input = _preload;
-            _preload = nullptr;
+            currentSong = preloadedSong;
+            preloadedSong = nullptr;
             seconds = 0;
-            //n = _input->fillBuffer((void*)data, maxSize, seconds);
-            return 0;
+            n = currentSong->fillBuffer((void*)data, maxSize, seconds);
+            emit switchSong();
         }
         else
-            return -1;
+        {
+            qDebug() << "finished playing";
+            return 0;
+        }
     }
 
     bytes += n;
@@ -59,7 +60,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
             bytes -= bytePerSec;
             seconds++;
         } while (bytes > bytePerSec);
-        if (seconds != _input->time()-5)
+        if (seconds != currentSong->time()-5)
             emit updateTime();
         else
             emit preloadSong();
@@ -70,25 +71,25 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
 
 qint64 InputWrapper::writeData(const char *data, qint64 maxSize) { return -1; }
 
-bool InputWrapper::tryPreload(input* i)
+bool InputWrapper::tryPreload(input* newSong)
 {
-    if ((_input->samplerate() == i->samplerate())
-        && (_input->channels() == i->channels())
-        && (_input->precision() == i->precision()))
+    if ((currentSong->samplerate() == newSong->samplerate())
+        && (currentSong->channels() == newSong->channels())
+        && (currentSong->precision() == newSong->precision()))
     {
-        _preload = i;
+        preloadedSong = newSong;
         return true;
     }
     else
     {
-        _preload = nullptr;
+        preloadedSong = nullptr;
         return false;
     }
 }
 
 void InputWrapper::unload()
 {
-    _preload = nullptr;
+    preloadedSong = nullptr;
 }
 
 void InputWrapper::setBPS(int bps)

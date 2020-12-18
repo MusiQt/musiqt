@@ -34,7 +34,10 @@ class qaudioBackend : public QObject
     Q_OBJECT
 
 private:
-    QAudioOutput *_audioOutput;
+    QAudioOutput *audioOutput;
+
+signals:
+    void songEnded();
 
 public slots:
     void onStateChange(QAudio::State newState);

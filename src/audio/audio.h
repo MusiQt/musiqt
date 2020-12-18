@@ -50,7 +50,7 @@ private:
     qaudioBackend *_output;
 
     state_t _state;
-    bool _playing;
+    bool isPlaying;
 
     int _volume;
 

@@ -28,21 +28,18 @@ class InputWrapper : public QIODevice
     Q_OBJECT
 
 signals:
-    void songEnded();
     void updateTime();
     void preloadSong();
+    void switchSong();
 
-public:
-    InputWrapper(input* i);
-    //~InputWrapper();
-
+protected:
     qint64 readData(char *data, qint64 maxSize) override;
     qint64 writeData(const char *data, qint64 maxSize) override;
 
-    //bool isSequential() const override;
-    //qint64 bytesAvailable() const override;
-    
-    bool tryPreload(input* i);
+public:
+    InputWrapper(input* song);
+
+    bool tryPreload(input* newSong);
     void unload();
 
     void setBPS(int size);
@@ -50,12 +47,12 @@ public:
     int getSeconds() const { return seconds; }
 
 private:
-    input *_input;
-    input *_preload;
+    input *currentSong;
+    input *preloadedSong;
 
     int bytes;
     int bytePerSec;
-    int seconds;
+    unsigned int seconds;
 };
 
 #endif

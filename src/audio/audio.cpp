@@ -111,7 +111,7 @@ template<typename T>
 void audio::loop()
 {
     qDebug() << "loop " << static_cast<int>(sizeof(T)<<3) << " bit";
-    while (_playing)
+    while (isPlaying)
     {
 PROFILE_START
         size_t size = i->fillBuffer(
@@ -139,11 +139,11 @@ PROFILE_START
         process<T>(size);
 PROFILE_END
 
-        if (!_output->write(_output->buffer(), _bufferSize) && _playing)
+        if (!_output->write(_output->buffer(), _bufferSize) && isPlaying)
         {
             qWarning() << "Output error";
             emit outputError();
-            _playing = false;
+            isPlaying = false;
             break;
         }
 
@@ -166,7 +166,7 @@ PROFILE_END
 
 audio::audio() :
     _state(state_t::STOP),
-    _playing(false)
+    isPlaying(false)
 #ifdef HAVE_BS2B
     ,_bs2bdp(0)
 #endif
@@ -192,38 +192,38 @@ bool audio::play(input* i, int pos)
 
     qDebug() << "audio::play";
 
-    unsigned int _card = 0;
-    QString card = SETTINGS->card();
+    unsigned int selectedCard = 0;
+    QString cardName = SETTINGS->card();
     const QStringList devices = qaudioBackend::devices();
     for (int i=0; i<devices.size(); i++)
     {
-        if (!card.compare(devices[i]))
+        if (!cardName.compare(devices[i]))
         {
-            _card = i;
+            selectedCard = i;
             break;
         }
     }
 
     unsigned int sampleRate = i->samplerate();
 
-    sample_t sample_type;
+    sample_t sampleType;
     switch (i->precision())
     {
     case sample_t::U8:
     case sample_t::S16:
     case sample_t::S24:
     case sample_t::S32:
-        sample_type = i->precision();
+        sampleType = i->precision();
         break;
     case sample_t::SAMPLE_FLOAT:
     case sample_t::SAMPLE_FIXED:
         switch (SETTINGS->bits())
         {
         case 8:
-            sample_type = sample_t::U8;
+            sampleType = sample_t::U8;
             break;
         case 16:
-            sample_type = sample_t::S16;
+            sampleType = sample_t::S16;
             break;
         default:
             qWarning() << "Unhandled sample type " << SETTINGS->bits();
@@ -232,13 +232,14 @@ bool audio::play(input* i, int pos)
     }
 
     // FIXME only supports 8/16 bits
-    const unsigned int precision = (sample_type == sample_t::U8) ? 1 : 2;
+    const unsigned int precision = (sampleType == sample_t::U8) ? 1 : 2;
     qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << precision;
     iw = new InputWrapper(i);
-    connect(iw, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
+    connect(_output, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
+    connect(iw, SIGNAL(switchSong()), this, SIGNAL(songEnded()));
     connect(iw, SIGNAL(updateTime()), this, SIGNAL(updateTime()));
     connect(iw, SIGNAL(preloadSong()), this, SIGNAL(preloadSong()));
-    size_t bufferSize = _output->open(_card, sampleRate, i->channels(), precision, iw);
+    size_t bufferSize = _output->open(selectedCard, sampleRate, i->channels(), precision, iw);
     if (!bufferSize)
         return false;
 
@@ -246,14 +247,15 @@ bool audio::play(input* i, int pos)
 
     // Check if soundcard supports requested samplerate
     _converter = CFACTORY->get(i->samplerate(), sampleRate, bufferSize,
-        i->channels(), i->precision(), sample_type, i->fract());
+        i->channels(), i->precision(), sampleType, i->fract());
 
     int bytePerSec = sampleRate * i->channels() * precision;
     iw->setBPS(bytePerSec);
+
 #ifdef HAVE_BS2B
     if (SETTINGS->bs2b() && (i->channels() == 2)
 #if BS2B_VERSION_MAJOR == 2
-        && (sample_type == sample_t::S16)
+        && (sampleType == sample_t::S16)
 #endif
     )
     {
@@ -270,7 +272,7 @@ bool audio::play(input* i, int pos)
 
     i->seek(pos);
 
-    _playing = true;
+    isPlaying = true;
     _state = state_t::PLAY;
 
     return true;
@@ -282,13 +284,13 @@ void audio::pause()
     {
     case state_t::PLAY:
         qDebug() << "Pause";
-        _playing = false;
+        isPlaying = false;
         _output->pause();
         _state = state_t::PAUSE;
         break;
     case state_t::PAUSE:
         qDebug() << "Unpause";
-        _playing = true;
+        isPlaying = true;
         _output->unpause();
         _state = state_t::PLAY;
         break;
@@ -304,7 +306,7 @@ bool audio::stop()
 
     qDebug() << "audio::stop";
 
-    _playing = false;
+    isPlaying = false;
 
     _output->stop();
 
@@ -369,7 +371,7 @@ audioConfig::audioConfig(QWidget* win) :
     QComboBox *bitBox = new QComboBox(this);
     matrix()->addWidget(bitBox);
     QStringList items;
-    items << "8" << "16";
+    items << "8" << "16"; // TODO get supported values from device QAudioDeviceInfo::supportedSampleSizes() 
     bitBox->addItems(items);
     bitBox->setMaxVisibleItems(items.size());
 
