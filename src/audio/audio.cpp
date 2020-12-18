@@ -64,49 +64,6 @@ void audioThread::run()
 /*****************************************************************/
 
 /*
-template<> inline void audio::process<quint8>(size_t size)
-{
-#if defined HAVE_BS2B && BS2B_VERSION_MAJOR == 3
-    if (_bs2bdp)
-    {
-        uint8_t *buf = (uint8_t*)_output->buffer();
-        bs2b_cross_feed_u8(_bs2bdp, buf, size/2);
-    }
-#endif
-}
-
-template<> inline void audio::process<short>(size_t size)
-{
-#if (Q_BYTE_ORDER == Q_BIG_ENDIAN)
-    {
-        //Swap bytes on big endian machines
-        quint16 *buf = (quint16*)_output->buffer();
-        const quint16 *end = buf+(size/2);
-        do {
-            const quint16 tmp = *buf;
-            *buf++ = ((tmp & 0x00FF)<<8) & ((tmp & 0xFF00)>>8);
-        } while (buf<end);
-    }
-#endif
-
-#ifdef HAVE_BS2B
-    if (_bs2bdp)
-    {
-#if BS2B_VERSION_MAJOR == 3
-        int16_t *buf = (int16_t*)_output->buffer();
-        bs2b_cross_feed_s16le(_bs2bdp, buf, size/4);
-#else
-        short *buf = (short*)_output->buffer();
-        const short *end = buf+(size/2);
-        do {
-            bs2b_cross_feed_16(_bs2bdp, buf);
-            buf += 2;
-        } while (buf < end);
-#endif
-    }
-#endif
-}
-
 template<typename T>
 void audio::loop()
 {
@@ -167,13 +124,11 @@ PROFILE_END
 audio::audio() :
     _state(state_t::STOP),
     isPlaying(false)
-#ifdef HAVE_BS2B
-    ,_bs2bdp(0)
-#endif
 {
     _volume = settings.value("Audio Settings/volume", 50).toInt();
 
     _output = new qaudioBackend();
+    connect(_output, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
 }
 
 audio::~audio()
@@ -235,7 +190,6 @@ bool audio::play(input* i, int pos)
     const unsigned int precision = (sampleType == sample_t::U8) ? 1 : 2;
     qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << precision;
     iw = new InputWrapper(i);
-    connect(_output, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
     connect(iw, SIGNAL(switchSong()), this, SIGNAL(songEnded()));
     connect(iw, SIGNAL(updateTime()), this, SIGNAL(updateTime()));
     connect(iw, SIGNAL(preloadSong()), this, SIGNAL(preloadSong()));
@@ -252,22 +206,9 @@ bool audio::play(input* i, int pos)
     int bytePerSec = sampleRate * i->channels() * precision;
     iw->setBPS(bytePerSec);
 
-#ifdef HAVE_BS2B
-    if (SETTINGS->bs2b() && (i->channels() == 2)
-#if BS2B_VERSION_MAJOR == 2
-        && (sampleType == sample_t::S16)
-#endif
-    )
-    {
-        _bs2bdp = bs2b_open();
-        if (_bs2bdp)
-        {
-            qDebug() << "bs2b enabled";
-            bs2b_set_srate(_bs2bdp, sampleRate);
-            bs2b_set_level(_bs2bdp, BS2B_DEFAULT_CLEVEL);
-        }
-    }
-#endif
+    if (SETTINGS->bs2b() && (i->channels() == 2))
+        iw->enableBs2b();
+
     _output->volume(_volume);
 
     i->seek(pos);
@@ -315,13 +256,7 @@ bool audio::stop()
     _output->close();
 
     _state = state_t::STOP;
-#ifdef HAVE_BS2B
-    if (_bs2bdp)
-    {
-        bs2b_close(_bs2bdp);
-        _bs2bdp = 0;
-    }
-#endif
+
     if (_converter != nullptr)
         delete _converter;
 

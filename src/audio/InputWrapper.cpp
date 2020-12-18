@@ -19,6 +19,7 @@
 #include "InputWrapper.h"
 
 #include "input/input.h"
+#include "output/audioProcess.h"
 
 #include <QDebug>
 
@@ -26,7 +27,31 @@ InputWrapper::InputWrapper(input* song) :
     currentSong(song),
     preloadedSong(nullptr),
     seconds(0)
-{}
+{
+    switch (song->precision())
+    {
+    case sample_t::U8:
+        aProcess = new audioProcess8();
+        break;
+    case sample_t::S16:
+        aProcess = new audioProcess16();
+        break;
+    default:
+        aProcess = nullptr;
+        break;
+    }
+}
+
+InputWrapper::~InputWrapper()
+{
+    delete aProcess;
+}
+
+void InputWrapper::enableBs2b()
+{
+    if (aProcess != nullptr)
+        aProcess->init(currentSong->samplerate());
+}
 
 qint64 InputWrapper::readData(char *data, qint64 maxSize)
 {
@@ -36,6 +61,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
         return 0;
     }
     size_t n = currentSong->fillBuffer((void*)data, maxSize, seconds);
+    aProcess->process(data, n);
     if (n == 0)
     {
         if (preloadedSong != nullptr)

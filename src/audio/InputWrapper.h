@@ -22,6 +22,7 @@
 #include <QIODevice>
 
 class input;
+class audioProcess;
 
 class InputWrapper : public QIODevice
 {
@@ -38,9 +39,12 @@ protected:
 
 public:
     InputWrapper(input* song);
+    ~InputWrapper();
 
     bool tryPreload(input* newSong);
     void unload();
+
+    void enableBs2b();
 
     void setBPS(int size);
     
@@ -49,6 +53,8 @@ public:
 private:
     input *currentSong;
     input *preloadedSong;
+
+    audioProcess *aProcess;
 
     int bytes;
     int bytePerSec;

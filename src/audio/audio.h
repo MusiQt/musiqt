@@ -19,14 +19,6 @@
 #ifndef AUDIO_OUTPUT_H
 #define AUDIO_OUTPUT_H
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
-#ifdef HAVE_BS2B
-#  include <bs2b.h>
-#endif
-
 #include "inputTypes.h"
 
 #include <QSettings>
@@ -55,9 +47,7 @@ private:
     int _volume;
 
     converter *_converter;
-#ifdef HAVE_BS2B
-    t_bs2bdp _bs2bdp;
-#endif
+
 private:
     audio(const audio&);
     audio& operator=(const audio&);
