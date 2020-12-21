@@ -49,7 +49,7 @@ public:
     void enableBs2b();
 
     void setBPS(int size);
-    
+
     int getSeconds() const { return seconds; }
 
 private:

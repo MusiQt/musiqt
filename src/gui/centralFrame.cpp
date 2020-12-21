@@ -925,7 +925,7 @@ void centralFrame::onCmdPlEdit(bool checked)
          // FIXME this sucks
         QStringList ext = _input->ext();
         QStringList result;
-        foreach (QString str, ext)
+        for (QString str: ext)
         {
             result << str.prepend("*.");
         }

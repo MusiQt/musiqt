@@ -33,7 +33,7 @@ QStringList qaudioBackend::devices()
 {
     QStringList devices;
     // Check devices
-    foreach(const QAudioDeviceInfo &deviceInfo, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+    for (const QAudioDeviceInfo &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
     {
         devices.append(deviceInfo.deviceName().toUtf8().constData());
     }
