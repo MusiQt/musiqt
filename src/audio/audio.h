@@ -39,10 +39,9 @@ class audio : public QObject
 private:
     QSettings   settings;
     InputWrapper *iw;
-    qaudioBackend *_output;
+    qaudioBackend *audioOutput;
 
     state_t _state;
-    bool isPlaying;
 
     int _volume;
 

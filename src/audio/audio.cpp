@@ -43,25 +43,6 @@
 #endif
 
 /*****************************************************************/
-/*
-void audioThread::run()
-{
-    switch (_audio->outputPrecision())
-    {
-    case sample_t::U8:
-        _audio->loop<quint8>();
-        break;
-    case sample_t::S16:
-        _audio->loop<qint16>();
-        break;
-    case sample_t::S24:
-    case sample_t::S32:
-        qWarning() << "Not supported yet";
-        break;
-    }
-}
-*/
-/*****************************************************************/
 
 /*
 template<typename T>
@@ -72,7 +53,7 @@ void audio::loop()
     {
 PROFILE_START
         size_t size = i->fillBuffer(
-            _converter != nullptr ? _converter->buffer() : _output->buffer(),
+            _converter != nullptr ? _converter->buffer() : audioOutput->buffer(),
             _converter != nullptr ? _converter->bufSize() : _bufferSize,
             _seconds);
 
@@ -91,12 +72,12 @@ PROFILE_START
         }
 
         if (_converter != nullptr)
-            size = _converter->convert(_output->buffer(), _bufferSize);
+            size = _converter->convert(audioOutput->buffer(), _bufferSize);
 
         process<T>(size);
 PROFILE_END
 
-        if (!_output->write(_output->buffer(), _bufferSize) && isPlaying)
+        if (!audioOutput->write(audioOutput->buffer(), _bufferSize) && isPlaying)
         {
             qWarning() << "Output error";
             emit outputError();
@@ -122,13 +103,12 @@ PROFILE_END
 /*****************************************************************/
 
 audio::audio() :
-    _state(state_t::STOP),
-    isPlaying(false)
+    _state(state_t::STOP)
 {
     _volume = settings.value("Audio Settings/volume", 50).toInt();
 
-    _output = new qaudioBackend();
-    connect(_output, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
+    audioOutput = new qaudioBackend();
+    connect(audioOutput, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
 }
 
 audio::~audio()
@@ -137,7 +117,7 @@ audio::~audio()
 
     settings.setValue("Audio Settings/volume", _volume);
 
-    delete _output;
+    delete audioOutput;
 }
 
 bool audio::play(input* i, int pos)
@@ -193,7 +173,7 @@ bool audio::play(input* i, int pos)
     connect(iw, SIGNAL(switchSong()), this, SIGNAL(songEnded()));
     connect(iw, SIGNAL(updateTime()), this, SIGNAL(updateTime()));
     connect(iw, SIGNAL(preloadSong()), this, SIGNAL(preloadSong()));
-    size_t bufferSize = _output->open(selectedCard, sampleRate, i->channels(), precision, iw);
+    size_t bufferSize = audioOutput->open(selectedCard, sampleRate, i->channels(), precision, iw);
     if (!bufferSize)
         return false;
 
@@ -209,11 +189,10 @@ bool audio::play(input* i, int pos)
     if (SETTINGS->bs2b() && (i->channels() == 2))
         iw->enableBs2b();
 
-    _output->volume(_volume);
+    audioOutput->volume(_volume);
 
     i->seek(pos);
 
-    isPlaying = true;
     _state = state_t::PLAY;
 
     return true;
@@ -225,14 +204,12 @@ void audio::pause()
     {
     case state_t::PLAY:
         qDebug() << "Pause";
-        isPlaying = false;
-        _output->pause();
+        audioOutput->pause();
         _state = state_t::PAUSE;
         break;
     case state_t::PAUSE:
         qDebug() << "Unpause";
-        isPlaying = true;
-        _output->unpause();
+        audioOutput->unpause();
         _state = state_t::PLAY;
         break;
     case state_t::STOP:
@@ -247,13 +224,11 @@ bool audio::stop()
 
     qDebug() << "audio::stop";
 
-    isPlaying = false;
-
-    _output->stop();
+    audioOutput->stop();
 
     iw->close();
 
-    _output->close();
+    audioOutput->close();
 
     _state = state_t::STOP;
 
@@ -268,7 +243,7 @@ bool audio::stop()
 void audio::volume(const int vol)
 {
     _volume = vol;
-    _output->volume(_volume);
+    audioOutput->volume(_volume);
 }
 
 bool audio::gapless(input* const i) { return iw->tryPreload(i); }
