@@ -136,7 +136,7 @@ void infoDialog::setInfo(const metaData* mtd)
             {
                 rows++;
                 if (cnt > cols)
-                        cols = cnt;
+                    cols = cnt;
                 cnt = 0;
             } else
                 cnt++;
@@ -168,15 +168,15 @@ void infoDialog::setInfo(const metaData* mtd)
                 palette.setColor(lbl->foregroundRole(), color);
                 lbl->setPalette(palette);
 
-                QLabel *text = new QLabel(matrix);
+                QLabel *textLabel = new QLabel(matrix);
                 if (!QString::compare(info, "comment"))
                 {
                     QRegExp url("(\\b(?:https?://|www\\.)\\S+\\b)");
                     temp.replace(url, "<a href=\"\\1\">\\1</a>");
-                    text->setOpenExternalLinks(true);
+                    textLabel->setOpenExternalLinks(true);
                 }
-                text->setText(temp);
-                gLayout->addWidget(text, j, 1);
+                textLabel->setText(temp);
+                gLayout->addWidget(textLabel, j, 1);
             }
         }
     }
@@ -228,8 +228,8 @@ void infoDialog::setInfo(const metaData* mtd)
     if (gLayout->count() == 0)
         gLayout->addWidget(new QLabel(tr("No info"), matrix));
 
-    qDebug() << text->document()->characterCount();
-    if (text->document()->characterCount() > 1) // ???
+    qDebug() << "Comment characters " << text->document()->characterCount();
+    if (text->document()->characterCount() > 1)
     {
         text->show();
         //text->resize(text->getDefaultWidth(), text->getDefaultHeight());
