@@ -89,8 +89,9 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
 #else
         sampleRate = format.frequency();
 #endif
-        //qWarning() << "Audio format not supported";
-        //return 0;
+        // FIXME
+        qWarning() << "Audio format not supported";
+        return 0;
     }
 
     audioOutput = new QAudioOutput(list[card], format);
