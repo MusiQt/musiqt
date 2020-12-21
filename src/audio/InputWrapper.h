@@ -25,6 +25,7 @@
 
 class input;
 class audioProcess;
+class converter;
 
 class InputWrapper : public QIODevice
 {
@@ -40,7 +41,7 @@ protected:
     qint64 writeData(const char *data, qint64 maxSize) override;
 
 public:
-    InputWrapper(input* song, sample_t sampleType);
+    InputWrapper(input* song);
     ~InputWrapper();
 
     bool tryPreload(input* newSong);
@@ -48,7 +49,7 @@ public:
 
     void enableBs2b();
 
-    void setBPS(int size);
+    void setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize);
 
     int getSeconds() const { return seconds; }
 
@@ -57,6 +58,8 @@ private:
     input *preloadedSong;
 
     audioProcess *aProcess;
+
+    converter *audioConverter;
 
     int bytes;
     int bytePerSec;

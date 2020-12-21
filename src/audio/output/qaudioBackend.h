@@ -19,6 +19,8 @@
 #ifndef QAUDIOBACKEND_H
 #define QAUDIOBACKEND_H
 
+#include "inputTypes.h"
+
 #include <QAudio>
 #include <QAudioOutput>
 
@@ -50,7 +52,7 @@ public:
     static QStringList devices();
 
     /// Open
-    size_t open(const unsigned int card, unsigned int &sampleRate, const unsigned int channels, const unsigned int prec, QIODevice* device);
+    size_t open(const unsigned int card, unsigned int &sampleRate, const unsigned int channels, const sample_t sType, QIODevice* device);
 
     /// Close
     void close();

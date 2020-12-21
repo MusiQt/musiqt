@@ -20,7 +20,6 @@
 
 #include "settings.h"
 #include "InputWrapper.h"
-#include "converter/converterFactory.h"
 #include "input/input.h"
 #include "output/qaudioBackend.h"
 
@@ -28,19 +27,6 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QStringList>
-
-//#define PROFILE
-
-#if defined(PROFILE) && QT_VERSION >= 0x040700
-#  include <QElapsedTimer>
-
-#  define PROFILE_START QElapsedTimer timer; \
-    timer.start();
-#  define PROFILE_END   qDebug() << "Elapsed " << timer.elapsed();
-#else
-#  define PROFILE_START
-#  define PROFILE_END
-#endif
 
 /*****************************************************************/
 
@@ -102,6 +88,18 @@ PROFILE_END
 */
 /*****************************************************************/
 
+const char* sampleTypeString(sample_t sampleType)
+{
+    switch (sampleType)
+    {
+    case sample_t::U8:  return "U8";
+    case sample_t::S16: return "S16";
+    case sample_t::S24: return "S24";
+    case sample_t::S32: return "S32";
+    default:            return "Unknown";
+    }
+}
+
 audio::audio() :
     _state(state_t::STOP)
 {
@@ -127,14 +125,16 @@ bool audio::play(input* i, int pos)
 
     qDebug() << "audio::play";
 
+    i->seek(pos);
+
     unsigned int selectedCard = 0;
     QString cardName = SETTINGS->card();
     const QStringList devices = qaudioBackend::devices();
-    for (int i=0; i<devices.size(); i++)
+    for (int dev=0; dev<devices.size(); dev++)
     {
-        if (!cardName.compare(devices[i]))
+        if (!cardName.compare(devices[dev]))
         {
-            selectedCard = i;
+            selectedCard = dev;
             break;
         }
     }
@@ -166,32 +166,23 @@ bool audio::play(input* i, int pos)
         }
     }
 
-    // FIXME only supports 8/16 bits yet
-    const unsigned int precision = (sampleType == sample_t::U8) ? 1 : 2;
-    qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << precision;
-    iw = new InputWrapper(i, sampleType);
+    qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << sampleTypeString(sampleType);
+    iw = new InputWrapper(i);
     connect(iw, SIGNAL(switchSong()), this, SIGNAL(songEnded()));
     connect(iw, SIGNAL(updateTime()), this, SIGNAL(updateTime()));
     connect(iw, SIGNAL(preloadSong()), this, SIGNAL(preloadSong()));
-    size_t bufferSize = audioOutput->open(selectedCard, sampleRate, i->channels(), precision, iw);
+    size_t bufferSize = audioOutput->open(selectedCard, sampleRate, i->channels(), sampleType, iw);
     if (!bufferSize)
         return false;
 
     qDebug() << "Output samplerate " << sampleRate;
 
-    // Check if soundcard supports requested samplerate
-    _converter = CFACTORY->get(i->samplerate(), sampleRate, bufferSize,
-        i->channels(), i->precision(), sampleType, i->fract());
-
-    int bytePerSec = sampleRate * i->channels() * precision;
-    iw->setBPS(bytePerSec);
+    iw->setFormat(sampleRate, i->channels(), sampleType, bufferSize);
 
     if (SETTINGS->bs2b() && (i->channels() == 2))
         iw->enableBs2b();
 
     audioOutput->volume(_volume);
-
-    i->seek(pos);
 
     _state = state_t::PLAY;
 
@@ -231,9 +222,6 @@ bool audio::stop()
     audioOutput->close();
 
     _state = state_t::STOP;
-
-    if (_converter != nullptr)
-        delete _converter;
 
     delete iw;
 

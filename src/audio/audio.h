@@ -26,7 +26,6 @@
 class input;
 class InputWrapper;
 class qaudioBackend;
-class converter;
 
 /*****************************************************************/
 
@@ -44,8 +43,6 @@ private:
     state_t _state;
 
     int _volume;
-
-    converter *_converter;
 
 private:
     audio(const audio&);

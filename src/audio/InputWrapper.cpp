@@ -20,31 +20,37 @@
 
 #include "input/input.h"
 #include "output/audioProcess.h"
+#include "converter/converterFactory.h"
 
 #include <QDebug>
 
-InputWrapper::InputWrapper(input* song, sample_t sampleType) :
+//#define PROFILE
+
+#if defined(PROFILE) && QT_VERSION >= 0x040700
+#  include <QElapsedTimer>
+
+#  define PROFILE_START QElapsedTimer timer; \
+    timer.start();
+#  define PROFILE_END   qDebug() << "Elapsed " << timer.elapsed();
+#else
+#  define PROFILE_START
+#  define PROFILE_END
+#endif
+
+InputWrapper::InputWrapper(input* song) :
     currentSong(song),
     preloadedSong(nullptr),
+    audioConverter(nullptr),
+    bytes(0),
     seconds(0)
-{
-    switch (sampleType)
-    {
-    case sample_t::U8:
-        aProcess = new audioProcess8();
-        break;
-    case sample_t::S16:
-        aProcess = new audioProcess16();
-        break;
-    default:
-        aProcess = nullptr;
-        break;
-    }
-}
+{}
 
 InputWrapper::~InputWrapper()
 {
     delete aProcess;
+
+    if (audioConverter != nullptr)
+        delete audioConverter;
 }
 
 void InputWrapper::enableBs2b()
@@ -61,6 +67,10 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
         return 0;
     }
     size_t n = currentSong->fillBuffer((void*)data, maxSize, seconds);
+
+    //if (audioConverter != nullptr)
+    //    size = audioConverter->convert(data, maxSize);
+
     aProcess->process(data, n);
     if (n == 0)
     {
@@ -124,8 +134,26 @@ void InputWrapper::unload()
     preloadedSong = nullptr;
 }
 
-void InputWrapper::setBPS(int bps)
+void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
 {
-    bytePerSec = bps;
-    bytes = 0;
+    const unsigned int precision = (sampleType == sample_t::U8) ? 1 : 2; // FIXME
+    bytePerSec = sampleRate * channels * precision;
+
+    switch (sampleType)
+    {
+    case sample_t::U8:
+        aProcess = new audioProcess8();
+        break;
+    case sample_t::S16:
+        aProcess = new audioProcess16();
+        break;
+    default:
+        aProcess = nullptr;
+        break;
+    }
+
+    // Check if soundcard supports requested samplerate
+    audioConverter = CFACTORY->get(currentSong->samplerate(), sampleRate, bufferSize,
+        currentSong->channels(), currentSong->precision(), sampleType, currentSong->fract());
+
 }

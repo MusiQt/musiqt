@@ -36,6 +36,9 @@ QStringList qaudioBackend::devices()
     for (const QAudioDeviceInfo &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
     {
         devices.append(deviceInfo.deviceName().toUtf8().constData());
+        qDebug() << "Device name: " << deviceInfo.deviceName();
+        qDebug() << "SampleRates: " << deviceInfo.supportedSampleRates();
+        qDebug() << "SampleSizes: " << deviceInfo.supportedSampleSizes();
     }
     return devices;
 }
@@ -64,8 +67,34 @@ void qaudioBackend::onStateChange(QAudio::State newState)
 }
 
 size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
-                           const unsigned int channels, const unsigned int prec, QIODevice* device)
+                           const unsigned int channels, const sample_t sType, QIODevice* device)
 {
+    int sampleSize;
+    QAudioFormat::SampleType sampleType;
+
+    switch (sType)
+    {
+    case sample_t::U8:
+        sampleSize = 8;
+        sampleType = QAudioFormat::UnSignedInt;
+        break;
+    case sample_t::S16:
+        sampleSize = 16;
+        sampleType = QAudioFormat::SignedInt;
+        break;
+    case sample_t::S24:
+        sampleSize = 24;
+        sampleType = QAudioFormat::SignedInt;
+        break;
+    case sample_t::S32:
+        sampleSize = 32;
+        sampleType = QAudioFormat::SignedInt;
+        break;
+    default:
+        qWarning() << "Unsupported sample type";
+        return 0;
+    }
+
     QAudioFormat format;
 #if QT_VERSION >= 0x050000
     format.setSampleRate(sampleRate);
@@ -74,10 +103,10 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     format.setFrequency(sampleRate);
     format.setChannels(channels);
 #endif
-    format.setSampleSize(prec * 8);
+    format.setSampleSize(sampleSize);
     format.setCodec("audio/pcm");
     format.setByteOrder(QAudioFormat::LittleEndian);
-    format.setSampleType(prec == 1 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
+    format.setSampleType(sampleType);
 
     QList<QAudioDeviceInfo> list = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
 

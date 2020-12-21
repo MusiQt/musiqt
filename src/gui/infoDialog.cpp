@@ -131,7 +131,7 @@ void infoDialog::setInfo(const metaData* mtd)
             // Convert Mac and Windows EOLs to Unix
             if (s[pos] == '\r')
                 temp.replace(pos, (s[pos+1]=='\n') ? '\0' : '\n');
-            //Count rows and columns
+            // Count rows and columns
             if (s[pos] == '\n')
             {
                 rows++;
