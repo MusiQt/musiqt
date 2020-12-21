@@ -21,6 +21,8 @@
 
 #include <QIODevice>
 
+#include "inputTypes.h"
+
 class input;
 class audioProcess;
 
@@ -38,7 +40,7 @@ protected:
     qint64 writeData(const char *data, qint64 maxSize) override;
 
 public:
-    InputWrapper(input* song);
+    InputWrapper(input* song, sample_t sampleType);
     ~InputWrapper();
 
     bool tryPreload(input* newSong);

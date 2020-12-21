@@ -23,12 +23,12 @@
 
 #include <QDebug>
 
-InputWrapper::InputWrapper(input* song) :
+InputWrapper::InputWrapper(input* song, sample_t sampleType) :
     currentSong(song),
     preloadedSong(nullptr),
     seconds(0)
 {
-    switch (song->precision())
+    switch (sampleType)
     {
     case sample_t::U8:
         aProcess = new audioProcess8();
@@ -95,7 +95,13 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
     return n;
 }
 
-qint64 InputWrapper::writeData(const char *data, qint64 maxSize) { return -1; }
+qint64 InputWrapper::writeData(const char *data, qint64 maxSize)
+{
+    Q_UNUSED(data);
+    Q_UNUSED(maxSize);
+
+    return 0;
+}
 
 bool InputWrapper::tryPreload(input* newSong)
 {

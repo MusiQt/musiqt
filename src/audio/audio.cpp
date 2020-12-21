@@ -186,10 +186,10 @@ bool audio::play(input* i, int pos)
         }
     }
 
-    // FIXME only supports 8/16 bits
+    // FIXME only supports 8/16 bits yet
     const unsigned int precision = (sampleType == sample_t::U8) ? 1 : 2;
     qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << precision;
-    iw = new InputWrapper(i);
+    iw = new InputWrapper(i, sampleType);
     connect(iw, SIGNAL(switchSong()), this, SIGNAL(songEnded()));
     connect(iw, SIGNAL(updateTime()), this, SIGNAL(updateTime()));
     connect(iw, SIGNAL(preloadSong()), this, SIGNAL(preloadSong()));
@@ -271,10 +271,7 @@ void audio::volume(const int vol)
     _output->volume(_volume);
 }
 
-bool audio::gapless(input* const i)
-{
-    return iw->tryPreload(i);
-}
+bool audio::gapless(input* const i) { return iw->tryPreload(i); }
 
 int audio::seconds() const { return iw->getSeconds(); }
 
