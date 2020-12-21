@@ -459,8 +459,9 @@ void centralFrame::onCmdPlayPauseSong()
     {
         // if loaded song is not the selected one don't play
         QString songLoaded = _input->songLoaded();
-        const QString song;// = _playlist->getLocation(_playlist->currentRow()); // FIXME
-        if (!songLoaded.isEmpty() && !song.compare(songLoaded))
+        const QString song = _playlistModel->data(_playlist->currentIndex(), Qt::UserRole).toString();
+        qDebug() << "Song: " << song;
+        if (!songLoaded.isEmpty() && song.compare(songLoaded))
         {
             playing = true;
         }
@@ -468,11 +469,11 @@ void centralFrame::onCmdPlayPauseSong()
         {
             playing = true;
             playDir = fsm->fileName(_dirlist->currentIndex());
-
-            _fileTypes->setEnabled(false);
-            emit stateChanged(_audio->state());
         }
     }
+
+    _fileTypes->setEnabled(false);
+    emit stateChanged(_audio->state());
 }
 
 void centralFrame::onCmdStopSong()
