@@ -151,7 +151,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
         }
         dl_av_frame_free(&frame);
 
-        qDebug() << "frame_size: " << frame_size;
+        //qDebug() << "frame_size: " << frame_size;
         if (used >= 0)
         {
             n += frame_size;

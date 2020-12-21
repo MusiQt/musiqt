@@ -126,7 +126,7 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     audioOutput = new QAudioOutput(list[card], format);
     if (audioOutput->error() != QAudio::NoError)
     {
-        qWarning() << "error";
+        qWarning() << "Error creating QAudioOutput";
         delete audioOutput;
         audioOutput = nullptr;
         return 0;
@@ -139,7 +139,7 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
 
     if (audioOutput->error() != QAudio::NoError)
     {
-        qWarning() << "error";
+        qWarning() << "Error starting QAudioOutput";
         delete audioOutput;
         audioOutput = nullptr;
         return 0;
