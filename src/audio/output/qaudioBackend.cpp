@@ -23,10 +23,6 @@
 #include <QList>
 #include <QDebug>
 
-#ifndef _WIN32
-#  include <unistd.h>
-#endif
-
 /*****************************************************************/
 
 QStringList qaudioBackend::devices()
@@ -145,7 +141,8 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
         return 0;
     }
 
-    qDebug() << "bufferSize: " << audioOutput->bufferSize() << " bytes";
+    // suspend audio playback until initialization is done
+    audioOutput->suspend();
 
     return audioOutput->bufferSize();
 }

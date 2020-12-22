@@ -176,6 +176,7 @@ bool audio::play(input* i, int pos)
         return false;
 
     qDebug() << "Output samplerate " << sampleRate;
+    qDebug() << "bufferSize: " << bufferSize << " bytes";
 
     iw->setFormat(sampleRate, i->channels(), sampleType, bufferSize);
 
@@ -183,6 +184,9 @@ bool audio::play(input* i, int pos)
         iw->enableBs2b();
 
     audioOutput->volume(_volume);
+
+    // We're ready, resume playback
+    audioOutput->unpause();
 
     _state = state_t::PLAY;
 
