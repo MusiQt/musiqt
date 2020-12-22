@@ -70,7 +70,7 @@ centralFrame::centralFrame(QWidget *parent) :
     // dir view
     fsm = new QFileSystemModel(this);
     fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot|QDir::Files);
-    fsm->setRootPath(QDir::rootPath()); // FIXME slow as hell on Windows
+    fsm->setRootPath(QDir::rootPath());
     fsm->setNameFilterDisables(false);
     fsm->setNameFilters(TFACTORY->plExt());
 
@@ -242,7 +242,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
     qDebug() << "Set dir " << curItem;
 
     const QString mPath = fsm->fileInfo(idx).absoluteFilePath();
-    qDebug() << mPath;
+    qDebug() << "Full path: " << mPath;
 
     _playlistModel->load(mPath);
 
@@ -269,15 +269,15 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
             }
         } while ((++bk < _fileTypes->count()) && (items == 0));
         if (items != 0)
+        {
             setBackend(bk-1, 0);
+        }
         else
         {
             _proxyModel->setFilterRegExp(currentFilt);
             return;
         }
     }
-
-    _playlist->setCurrentIndex(QModelIndex());
 
     const QString fileName = _dirlist->property("UserData").toString();
     if (!fileName.isEmpty())
@@ -293,9 +293,14 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
     }
     else
     {
-        if (!curItem.compare(playDir))
+        QString songLoaded = _input->songLoaded();
+        if (songLoaded.isEmpty())
         {
-            QFileInfo fileInfo(_input->songLoaded());
+            _playlist->setCurrentIndex(_proxyModel->index(0, 0));
+        }
+        else
+        {
+            QFileInfo fileInfo(songLoaded);
             QModelIndexList items = _proxyModel->match(_proxyModel->index(0, 0), Qt::DisplayRole,
                     QVariant::fromValue(fileInfo.completeBaseName()), 1, Qt::MatchExactly|Qt::MatchCaseSensitive);
             if (!items.empty())
@@ -303,11 +308,6 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
                 _playlist->setCurrentIndex(items.at(0));
                 _playlist->scrollTo(items.at(0));
             }
-        }
-        else if (!playing)
-        {
-            qDebug() << "setCurrentIndex 0";
-            _playlist->setCurrentIndex(_proxyModel->index(0, 0));
         }
     }
 }
@@ -445,7 +445,7 @@ ok:
     }
     else
     {
-        _dirlist->setProperty("UserData", QVariant(QFileInfo(file).completeBaseName()));
+        _dirlist->setProperty("UserData", QVariant(fileInfo.completeBaseName()));
         setDir(fsm->index(fileInfo.dir().absolutePath()));
     }
 
