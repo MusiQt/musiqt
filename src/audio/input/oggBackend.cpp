@@ -121,13 +121,13 @@ bool oggBackend::open(const QString& fileName)
 
     time((int)ov_time_total(_vf, -1));
 
-    QString title = QString::null;
-    QString artist = QString::null;
-    QString year = QString::null;
-    QString album = QString::null;
-    QString genre = QString::null;
-    QString comment = QString::null;
-    QString mime = QString::null;
+    QString title = QString();
+    QString artist = QString();
+    QString year = QString();
+    QString album = QString();
+    QString genre = QString();
+    QString comment = QString();
+    QString mime = QString();
     QByteArray image;
 
     char **ptr = ov_comment(_vf, -1)->user_comments;
