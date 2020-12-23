@@ -382,7 +382,6 @@ void centralFrame::setFile(const QString& file, const bool play)
         {
             if (play && !playing)
             {
-                // emit play();
                 onCmdPlayPauseSong();
             }
             return;
@@ -414,8 +413,6 @@ void centralFrame::setFile(const QString& file, const bool play)
                 qDebug() << "check factory " << i;
                 if (IFACTORY->supports(i, fName))
                 {
-                    //emit stop();
-
                     setBackend(i, dirSelected ? 1 : 0);
                     items = _playlistModel->match(_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(file), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
                     if (!items.empty())
@@ -436,7 +433,6 @@ ok:
         {
             if (val == curItem)
             {
-                //emit play();
                 onCmdPlayPauseSong();
             }
             else
@@ -548,7 +544,7 @@ void centralFrame::onCmdChangeSong(dir_t dir)
 void centralFrame::setBackend(int val, int refresh)
 {
     qDebug() << "setBackend " << val;
-    if ((val < 0) || val>_fileTypes->count())
+    if ((val < 0) || (val > _fileTypes->count()))
         return;
 
     _fileTypes->setCurrentIndex(val);
@@ -630,7 +626,6 @@ void centralFrame::onCmdSongLoaded(input* res)
 
         if (playing)
         {
-            //emit play();
             onCmdPlayPauseSong();
         }
         qDebug() << "Song loaded";
@@ -644,7 +639,8 @@ void centralFrame::onCmdSongLoaded(input* res)
         qWarning() << "Error loading song";
     }
 
-    _fileTypes->setEnabled(true);
+    if (!playing)
+        _fileTypes->setEnabled(true);
     QApplication::restoreOverrideCursor();
 }
 
@@ -742,7 +738,6 @@ void centralFrame::songEnded()
         }
     }
 
-    // emit stop();
     //onCmdStopSong();
     _audio->unload();
 
@@ -917,7 +912,6 @@ void centralFrame::changeSubtune(dir_t dir)
 
     if (playing)
     {
-        //emit play();
         onCmdPlayPauseSong();
     }
 }
