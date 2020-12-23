@@ -136,21 +136,26 @@ void InputWrapper::unload()
 
 void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
 {
-    const unsigned int precision = (sampleType == sample_t::U8) ? 1 : 2; // FIXME
-    bytePerSec = sampleRate * channels * precision;
+    unsigned int precision;
 
     switch (sampleType)
     {
     case sample_t::U8:
         aProcess = new audioProcess8();
+        precision = 1;
         break;
     case sample_t::S16:
         aProcess = new audioProcess16();
+        precision = 2;
         break;
     default:
         aProcess = nullptr;
+        // This should not happen
+        qFatal("Unsupported sample type");
         break;
     }
+
+    bytePerSec = sampleRate * channels * precision;
 
     // Check if soundcard supports requested samplerate
     audioConverter = CFACTORY->get(currentSong->samplerate(), sampleRate, bufferSize,

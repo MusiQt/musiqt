@@ -74,7 +74,7 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     }
 
     QCheckBox* cBox = new QCheckBox(tr("&Play subtunes"), this);
-    cBox->setToolTip(tr("Play all subtune"));
+    cBox->setToolTip(tr("Play all subtunes"));
     cBox->setCheckState(SETTINGS->_subtunes ? Qt::Checked : Qt::Unchecked);
     connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setSubtunes(int)));
     optionLayout->addWidget(cBox);
@@ -92,11 +92,6 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     optionLayout->addWidget(cBox);
 #ifndef HAVE_BS2B
     cBox->setDisabled(true);
-#endif
-#if 0
-    cBox = new QCheckBox(tr("&Album art HQ resizing"), this);
-    cBox->setToolTip(tr("High quality album art resizing"));
-    optionLayout->addWidget(cBox);
 #endif
 
     {
@@ -142,48 +137,7 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     button->setSizePolicy(sizePol);
     buttonGroup->addButton(button, section++);
     buttons->addWidget(button);
-#if 0
-    // Interface settings
-    QWidget* interfacepane=new QWidget();
-    QVBoxLayout* interfaceLayout = new QVBoxLayout();
-    interfacepane->setLayout(interfaceLayout);
-    QLabel* label = new QLabel(tr("Interface settings"), this);
-    interfaceLayout->addWidget(label);
-    //label->setSizePolicy(sizeMin);
 
-    {
-        QFrame* line = new QFrame();
-        line->setFrameShape(QFrame::HLine);
-        line->setFrameShadow(QFrame::Sunken);
-        interfaceLayout->addWidget(line);
-    }
-
-    QHBoxLayout *matrix=new QHBoxLayout();
-    interfaceLayout->addLayout(matrix);
-    label = new QLabel(tr("Alt. color"), this);
-    label->setToolTip("Alternate color for lists");
-    matrix->addWidget(label);
-    colorLabel = new QLabel;
-    colorLabel->setFrameStyle(QFrame::Sunken | QFrame::Panel);
-    matrix->addWidget(colorLabel);
-    QPushButton *colorButton = new QPushButton(tr("Color"));
-    matrix->addWidget(colorButton);
-    connect(colorButton, SIGNAL(clicked()), this, SLOT(setColor()));
-    switcher->addWidget(interfacepane);
-
-    interfaceLayout->addStretch();
-
-    button = new QToolButton(this);
-    button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    button->setIcon(GET_ICON(icon_guioptions));
-    button->setText( tr("Interface")); 
-    button->setToolTip("Interface setting");
-    button->setStatusTip("Interface setting");
-    button->setCheckable(true);
-    button->setSizePolicy(sizePol);
-    buttonGroup->addButton(button, section++);
-    buttons->addWidget(button);
-#endif
     // Audio settings
     QWidget* audiopane = new QWidget();
     QVBoxLayout* audioLayout = new QVBoxLayout();
