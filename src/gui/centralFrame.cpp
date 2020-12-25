@@ -459,7 +459,7 @@ void centralFrame::onCmdPlayPauseSong()
     {
         // if loaded song is not the selected one don't play
         QString songLoaded = _input->songLoaded();
-        const QString song = _playlistModel->data(_playlist->currentIndex(), Qt::UserRole).toString();
+        const QString song = _proxyModel->data(_playlist->currentIndex(), Qt::UserRole).toString();
         qDebug() << "Song: " << song;
         if (!song.isEmpty() && song.compare(songLoaded))
         {
@@ -654,7 +654,7 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
         return;
 
     QString songLoaded = _input->songLoaded();
-    const QString song = _playlistModel->data(currentRow, Qt::UserRole).toString();
+    const QString song = _proxyModel->data(currentRow, Qt::UserRole).toString();
     if (!songLoaded.isEmpty() && !song.compare(songLoaded))
         return;
 
