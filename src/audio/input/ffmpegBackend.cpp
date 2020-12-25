@@ -244,7 +244,7 @@ bool ffmpegBackend::supports(const QString& fileName)
 {
     QString ext = _ext.join("|");
     ext.prepend(".*\\.(").append(")");
-    qDebug() << "sndBackend::supports: " << ext;
+    qDebug() << "ffmpegBackend::supports: " << ext;
 
     QRegExp rx(ext);
     return rx.exactMatch(fileName);
