@@ -129,7 +129,7 @@ bool audio::play(input* i, int pos)
 
     unsigned int selectedCard = 0;
     QString cardName = SETTINGS->card();
-    const QStringList devices = qaudioBackend::devices();
+    const QStringList devices = qaudioBackend::getDevices();
     for (int dev=0; dev<devices.size(); dev++)
     {
         if (!cardName.compare(devices[dev]))
@@ -254,7 +254,7 @@ audioConfig::audioConfig(QWidget* win) :
     matrix()->addWidget(cardList);
 
     {
-        const QStringList deviceNames = qaudioBackend::devices();
+        const QStringList deviceNames = qaudioBackend::getDevices();
         int devices = deviceNames.size();
         cardList->addItems(deviceNames);
         cardList->setMaxVisibleItems((devices > 5) ? 5 : devices);
@@ -270,7 +270,7 @@ audioConfig::audioConfig(QWidget* win) :
     QComboBox *bitBox = new QComboBox(this);
     matrix()->addWidget(bitBox);
     QStringList items;
-    items << "8" << "16"; // TODO get supported values from device QAudioDeviceInfo::supportedSampleSizes() 
+    items << "8" << "16";
     bitBox->addItems(items);
     bitBox->setMaxVisibleItems(items.size());
 

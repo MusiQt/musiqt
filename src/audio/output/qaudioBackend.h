@@ -38,6 +38,8 @@ class qaudioBackend : public QObject
 private:
     QAudioOutput *audioOutput;
 
+    static const QStringList devices;
+
 signals:
     void songEnded();
 
@@ -49,7 +51,7 @@ public:
 
     virtual ~qaudioBackend() {};
 
-    static QStringList devices();
+    static QStringList getDevices() { return devices; }
 
     /// Open
     size_t open(const unsigned int card, unsigned int &sampleRate, const unsigned int channels, const sample_t sType, QIODevice* device);

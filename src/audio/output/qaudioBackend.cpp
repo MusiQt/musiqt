@@ -25,8 +25,7 @@
 
 /*****************************************************************/
 
-QStringList qaudioBackend::devices()
-{
+const QStringList qaudioBackend::devices = [] {
     QStringList devices;
     // Check devices
     for (const QAudioDeviceInfo &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
@@ -37,7 +36,7 @@ QStringList qaudioBackend::devices()
         qDebug() << "SampleSizes: " << deviceInfo.supportedSampleSizes();
     }
     return devices;
-}
+}();
 
 qaudioBackend::qaudioBackend() :
     audioOutput(nullptr)
