@@ -66,10 +66,21 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
         qDebug() << "readData maxSize=0";
         return 0;
     }
-    size_t n = currentSong->fillBuffer((void*)data, maxSize, seconds);
 
-    //if (audioConverter != nullptr)
-    //    size = audioConverter->convert(data, maxSize);
+    size_t n;
+
+    if (audioConverter != nullptr)
+    {
+        currentSong->fillBuffer(
+            audioConverter->buffer(),
+            audioConverter->bufSize(maxSize),
+            seconds);
+        n = audioConverter->convert(data, maxSize);
+    }
+    else
+    {
+        n = currentSong->fillBuffer(data, maxSize, seconds);
+    }
 
     aProcess->process(data, n);
     if (n == 0)
@@ -160,5 +171,4 @@ void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, 
     // Check if soundcard supports requested samplerate
     audioConverter = CFACTORY->get(currentSong->samplerate(), sampleRate, bufferSize,
         currentSong->channels(), currentSong->precision(), sampleType, currentSong->fract());
-
 }

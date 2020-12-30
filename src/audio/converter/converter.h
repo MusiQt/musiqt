@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,16 +21,33 @@
 
 #include <cstdlib>
 
+#include <QDebug>
+
 class converter
 {
+protected:
+    const unsigned int channels;
+    const int frameRatio;
+
+    char *_buffer;
+    size_t bufferSize;
+
+protected:
+    converter(unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision) :
+        channels(channels),
+        frameRatio(inputPrecision/outputPrecision)
+    {
+        qDebug() << "Frame ratio " << frameRatio;
+    }
+
 public:
     virtual ~converter() {}
 
     /// Get pointer to buffer
-    virtual void* buffer() const =0;
+    virtual char* buffer() const =0;
 
     /// Get buffer size
-    virtual size_t bufSize() const =0;
+    virtual size_t bufSize(int size) const =0;
 
     /// Do the conversion
     virtual size_t convert(const void* out, const size_t len) =0;

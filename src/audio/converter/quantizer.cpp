@@ -92,6 +92,7 @@ template quantizerFloat<short>::quantizerFloat();
 template<typename O>
 inline int quantizerFloat<O>::get32(const float sample, const unsigned int channel, const int max)
 {
+    // FIXME
     const float r1 = (float)random(_random[channel][0])/(float)std::numeric_limits<unsigned int>::max();
     const float r2 = (float)random(_random[channel][1])/(float)std::numeric_limits<unsigned int>::max();
 
