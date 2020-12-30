@@ -50,9 +50,7 @@ inline int quantizerFixed<O>::get32(const int sample, const unsigned int channel
     const unsigned int r2 = random(_random[channel][1])&_mask;
 
     // Dither
-    int output = sample+
-        r1+r2+
-        (1L<<(_scalebits-1));
+    int output = sample + r1 + r2;
 
     // Clip
     if (output > _clip-1)
@@ -98,9 +96,7 @@ inline int quantizerFloat<O>::get32(const float sample, const unsigned int chann
     const float r2 = (float)random(_random[channel][1])/(float)std::numeric_limits<unsigned int>::max();
 
     // Dither
-    int output = (int)(sample*(float)max
-        + r1 + r2
-        + 0.5f);
+    int output = (int)(sample*(float)max + r1 + r2);
 
     // Clip
     if (output > max-1)

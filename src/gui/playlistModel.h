@@ -157,7 +157,7 @@ public:
 #endif
 
         int beginRow;
-        
+
         if (row != -1)
             beginRow = row;
         else if (parent.isValid())

@@ -21,7 +21,7 @@
 
 /**
  * Sample types
-*/
+ */
 enum class sample_t
 {
     U8 = 1,       ///< U8 - 8 bit unsigned

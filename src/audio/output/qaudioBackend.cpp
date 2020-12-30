@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,95 +21,75 @@
 #include <QAudioDeviceInfo>
 #include <QAudioFormat>
 #include <QList>
-#include <QString>
-#include <QThread>
 #include <QDebug>
 
-#ifndef _WIN32
-#  include <unistd.h>
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <algorithm>
-
-const char qaudioBackend::name[] = "QAUDIO";
-
 /*****************************************************************/
 
-AudioBuffer::AudioBuffer() {}
-AudioBuffer::~AudioBuffer() {}
-
-qint64 AudioBuffer::readData(char *data, qint64 maxSize)
-{
-    if (sem.available()==BUFFERS)
-        return 0;
-
-    const qint64 size = std::min(length[readIdx], maxSize);
-    memcpy(data, buffer[readIdx].get(), size);
-    const qint64 left = length[readIdx] - size;
-    length[readIdx] = left;
-    if (left==0)
+const QStringList qaudioBackend::devices = [] {
+    QStringList devices;
+    // Check devices
+    for (const QAudioDeviceInfo &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
     {
-        readIdx = 1 - readIdx;
-        sem.release();
+        devices.append(deviceInfo.deviceName().toUtf8().constData());
+        qDebug() << "Device name: " << deviceInfo.deviceName();
+        qDebug() << "SampleRates: " << deviceInfo.supportedSampleRates();
+        qDebug() << "SampleSizes: " << deviceInfo.supportedSampleSizes();
     }
-    else
-    {
-        memcpy(buffer[readIdx].get(), buffer[readIdx].get()+size, left);
-    }
-    return size;
-}
-
-qint64 AudioBuffer::writeData(const char *data, qint64 maxSize)
-{
-    if (!sem.tryAcquire(1, 100))
-        return 0;
-
-    const qint64 size = std::min(bufSize, maxSize);
-    memcpy(buffer[writeIdx].get(), data, size);
-    length[writeIdx] = size;
-    writeIdx = 1 - writeIdx;
-    return size;
-}
-
-bool AudioBuffer::isSequential() const { return true; }
-qint64 AudioBuffer::bytesAvailable() const { return length[readIdx]; }
-
-void AudioBuffer::init(qint64 size)
-{
-    readIdx = 0;
-    writeIdx = 0;
-    bufSize = size;
-    length[0] = 0;
-    length[1] = 0;
-    buffer[0].reset(new char[size]);
-    buffer[1].reset(new char[size]);
-    if (sem.available()<BUFFERS)
-    {
-        sem.release(BUFFERS-sem.available());
-    }
-}
-
-/*****************************************************************/
+    return devices;
+}();
 
 qaudioBackend::qaudioBackend() :
-    outputBackend(name),
-    _audioOutput(nullptr)
-{
-    _buffer = nullptr;
+    audioOutput(nullptr)
+{}
 
-    // Check devices
-    foreach(const QAudioDeviceInfo &deviceInfo, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+void qaudioBackend::onStateChange(QAudio::State newState)
+{
+    qDebug() << "onStateChange: " << newState;
+    switch (newState)
     {
-        addDevice(deviceInfo.deviceName().toUtf8().constData());
+    case QAudio::IdleState:
+        emit songEnded();
+        break;
+    case QAudio::StoppedState:
+        if (audioOutput->error() != QAudio::NoError)
+        {
+            qWarning() << "Error " << audioOutput->error();
+        }
+        break;
+    default:
+        break;
     }
 }
 
 size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
-                           const unsigned int channels, const unsigned int prec)
+                           const unsigned int channels, const sample_t sType, QIODevice* device)
 {
+    int sampleSize;
+    QAudioFormat::SampleType sampleType;
+
+    switch (sType)
+    {
+    case sample_t::U8:
+        sampleSize = 8;
+        sampleType = QAudioFormat::UnSignedInt;
+        break;
+    case sample_t::S16:
+        sampleSize = 16;
+        sampleType = QAudioFormat::SignedInt;
+        break;
+    case sample_t::S24:
+        sampleSize = 24;
+        sampleType = QAudioFormat::SignedInt;
+        break;
+    case sample_t::S32:
+        sampleSize = 32;
+        sampleType = QAudioFormat::SignedInt;
+        break;
+    default:
+        qWarning() << "Unsupported sample type";
+        return 0;
+    }
+
     QAudioFormat format;
 #if QT_VERSION >= 0x050000
     format.setSampleRate(sampleRate);
@@ -118,96 +98,86 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     format.setFrequency(sampleRate);
     format.setChannels(channels);
 #endif
-    format.setSampleSize(prec * 8);
+    format.setSampleSize(sampleSize);
     format.setCodec("audio/pcm");
     format.setByteOrder(QAudioFormat::LittleEndian);
-    format.setSampleType(prec == 1 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
+    format.setSampleType(sampleType);
 
     QList<QAudioDeviceInfo> list = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
 
-    _audioOutput = new QAudioOutput(list[card], format);
-    if (_audioOutput->error() != QAudio::NoError)
+    if (!list[card].isFormatSupported(format))
     {
-        qDebug("error");
-    }
-
-    audioBuffer.open(QIODevice::ReadWrite);
-    _audioOutput->start(&audioBuffer);
-
-    if (_audioOutput->error() != QAudio::NoError)
-    {
-        delete _audioOutput;
-        _audioOutput = nullptr;
+        format = list[card].nearestFormat(format);
+#if QT_VERSION >= 0x050000
+        sampleRate = format.sampleRate();
+#else
+        sampleRate = format.frequency();
+#endif
+        // FIXME
+        qWarning() << "Audio format not supported";
         return 0;
     }
 
-    qDebug() << "bufferSize: " << _audioOutput->bufferSize() << " bytes";
+    audioOutput = new QAudioOutput(list[card], format);
+    if (audioOutput->error() != QAudio::NoError)
+    {
+        qWarning() << "Error creating QAudioOutput";
+        delete audioOutput;
+        audioOutput = nullptr;
+        return 0;
+    }
 
-    _buffer = new char[_audioOutput->bufferSize()];
+    connect(audioOutput, SIGNAL(stateChanged(QAudio::State)), this, SLOT(onStateChange(QAudio::State)));
 
-    audioBuffer.init(_audioOutput->bufferSize());
+    device->open(QIODevice::ReadOnly);
+    audioOutput->start(device);
 
-    return _audioOutput->bufferSize();
+    if (audioOutput->error() != QAudio::NoError)
+    {
+        qWarning() << "Error starting QAudioOutput";
+        delete audioOutput;
+        audioOutput = nullptr;
+        return 0;
+    }
+
+    // suspend audio playback until initialization is done
+    audioOutput->suspend();
+
+    return audioOutput->bufferSize();
 }
 
 void qaudioBackend::close()
 {
-    delete _audioOutput;
-    _audioOutput = nullptr;
-
-    delete [] _buffer;
-}
-
-bool qaudioBackend::write(void* buffer, size_t bufferSize)
-{
-loop:
-    const qint64 n = audioBuffer.write((const char*)buffer, bufferSize);
-
-    if (n < 0)
-        return false;
-
-    if (n == 0)
-    {
-        switch (_audioOutput->state())
-        {
-        case QAudio::ActiveState:
-        case QAudio::IdleState:
-            goto loop;
-        case QAudio::SuspendedState:
-        case QAudio::StoppedState:
-            return true;
-        }
-    }
-
-    bufferSize -= n;
-    if (bufferSize > 0)
-    {
-        buffer = (char*)buffer+n;
-        goto loop;
-    }
-
-    return true;
+    delete audioOutput;
+    audioOutput = nullptr;
 }
 
 void qaudioBackend::pause()
 {
-    _audioOutput->suspend();
+    audioOutput->suspend();
 }
 
 void qaudioBackend::unpause()
 {
-    _audioOutput->resume();
+    audioOutput->resume();
 }
 
 void qaudioBackend::stop()
 {
-    _audioOutput->stop();
+    audioOutput->stop();
 }
 
 void qaudioBackend::volume(int vol)
 {
 #if QT_VERSION >= 0x050000
-    _audioOutput->setVolume(qreal(vol/100.0f));
+#  if QT_VERSION >= 0x050800
+    qreal volume = QAudio::convertVolume(vol / qreal(100.0),
+                                         QAudio::LogarithmicVolumeScale,
+                                         QAudio::LinearVolumeScale);
+#  else
+    qreal volume = qreal(vol/100.0f);
+#  endif
+    audioOutput->setVolume(volume);
 #else
     qDebug("Unimplemented");
 #endif
@@ -216,7 +186,13 @@ void qaudioBackend::volume(int vol)
 int qaudioBackend::volume()
 {
 #if QT_VERSION >= 0x050000
-    return _audioOutput->volume()*100;
+#  if QT_VERSION >= 0x050800
+    return QAudio::convertVolume(audioOutput->volume(),
+                                 QAudio::LinearVolumeScale,
+                                 QAudio::LogarithmicVolumeScale) * 100;
+#  else
+    return audioOutput->volume()*100;
+#  endif
 #else
     qDebug("Unimplemented");
     return 0;

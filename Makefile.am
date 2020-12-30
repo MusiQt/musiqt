@@ -178,6 +178,8 @@ src/audio/audio.cpp \
 src/audio/audio.h \
 src/audio/configFrame.cpp \
 src/audio/configFrame.h \
+src/audio/InputWrapper.cpp \
+src/audio/InputWrapper.h \
 src/audio/converter/converter.h \
 src/audio/converter/converters.cpp \
 src/audio/converter/converters.h \
@@ -206,18 +208,9 @@ ${SIDPLAYFP_SOURCES} \
 $(SNDFILE_SOURCES) \
 $(MPC_SOURCES) \
 $(WAVPACK_SOURCES) \
-src/audio/output/output.h \
-src/audio/output/alsaBackend.cpp \
-src/audio/output/alsaBackend.h \
-src/audio/output/ossBackend.cpp \
-src/audio/output/ossBackend.h \
-src/audio/output/outputBackend.h \
-src/audio/output/outputFactory.cpp \
-src/audio/output/outputFactory.h \
+src/audio/output/audioProcess.h \
 src/audio/output/qaudioBackend.cpp \
 src/audio/output/qaudioBackend.h \
-src/audio/output/wmmBackend.cpp \
-src/audio/output/wmmBackend.h \
 src/gui/aboutDialog.cpp \
 src/gui/aboutDialog.h \
 src/gui/bookmark.cpp \
@@ -264,7 +257,9 @@ nodist_src_musiqt_SOURCES = \
 src/singleApp_moc.cpp \
 src/translator_moc.cpp \
 src/audio/audio_moc.cpp \
+src/audio/InputWrapper_moc.cpp \
 src/audio/configFrame_moc.cpp \
+src/audio/output/qaudioBackend_moc.cpp \
 $(MPG123_MOC) \
 $(FFMPEG_MOC) \
 $(OPENMPT_MOC) \
@@ -290,7 +285,6 @@ src/resources_rcc.cpp
 src_musiqt_LDADD = $(resfile) \
 $(QT_LIBS) \
 $(AUDIO_LIBS) \
-$(ALSA_LIBS) \
 $(BS2B_LIBS) \
 $(OPENMPT_LIBS) \
 $(VORBIS_LIBS) \

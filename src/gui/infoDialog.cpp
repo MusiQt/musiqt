@@ -34,11 +34,11 @@
 #include <QThreadPool>
 #include <QRegExp>
 
-#define IMAGESIZE 150
+constexpr int IMAGESIZE = 150;
 
 void imageLoader::run()
 {
-    QImageReader reader(_name);
+    QImageReader reader(name);
     reader.setScaledSize(QSize(IMAGESIZE, IMAGESIZE));
     QImage* image = new QImage();
     bool res = reader.read(image);
@@ -52,18 +52,18 @@ void imageLoader::run()
 
 infoDialog::infoDialog(QWidget* w) :
     QDialog(w),
-    _imgFrame(nullptr)
+    imgFrame(nullptr)
 {
     QVBoxLayout *main = new QVBoxLayout();
     setLayout(main);
     QHBoxLayout *container = new QHBoxLayout();
     main->addLayout(container);
 
-    _imgFrame = new QLabel(this);
-    _imgFrame->setFixedSize(IMAGESIZE, IMAGESIZE);
-    _imgFrame->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    _imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
-    container->addWidget(_imgFrame);
+    imgFrame = new QLabel(this);
+    imgFrame->setFixedSize(IMAGESIZE, IMAGESIZE);
+    imgFrame->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
+    container->addWidget(imgFrame);
 
     matrix = new QWidget(this);
     QGridLayout* gLayout = new QGridLayout();
@@ -72,12 +72,12 @@ infoDialog::infoDialog(QWidget* w) :
 
     QFont font("monospace");
     font.setStyleHint(QFont::TypeWriter);
-    _text = new QPlainTextEdit(this);
-    _text->setReadOnly(true);
-    _text->setFont(font);
-    //_text->setLineWrapMode(QPlainTextEdit::WidgetWidth);
-    //_text->setLineWrapColumnOrWidth(80);
-    main->addWidget(_text);
+    text = new QPlainTextEdit(this);
+    text->setReadOnly(true);
+    text->setFont(font);
+    //text->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+    //text->setLineWrapColumnOrWidth(80);
+    main->addWidget(text);
 
     {
         QFrame* line = new QFrame();
@@ -95,9 +95,9 @@ infoDialog::~infoDialog() {}
 
 void infoDialog::setInfo(const metaData* mtd)
 {
-    _text->clear();
-    //_text->setVisibleRows(0);
-    //_text->setVisibleColumns(0);
+    text->clear();
+    //text->setVisibleRows(0);
+    //text->setVisibleColumns(0);
 
     // remove old widgets
     while (QWidget* w = matrix->findChild<QWidget*>())
@@ -109,7 +109,7 @@ void infoDialog::setInfo(const metaData* mtd)
     if (location.isEmpty())
     {
         gLayout->addWidget(new QLabel(tr("No song loaded"), matrix));
-        _text->hide();
+        text->hide();
         return;
     }
 
@@ -131,12 +131,12 @@ void infoDialog::setInfo(const metaData* mtd)
             // Convert Mac and Windows EOLs to Unix
             if (s[pos] == '\r')
                 temp.replace(pos, (s[pos+1]=='\n') ? '\0' : '\n');
-            //Count rows and columns
+            // Count rows and columns
             if (s[pos] == '\n')
             {
                 rows++;
                 if (cnt > cols)
-                        cols = cnt;
+                    cols = cnt;
                 cnt = 0;
             } else
                 cnt++;
@@ -151,9 +151,9 @@ void infoDialog::setInfo(const metaData* mtd)
 
         if (rows>1)
         {
-            _text->setPlainText(temp);
-            //_text->setVisibleRows((rows<20)?rows:20);
-            //_text->setLineWrapColumnOrWidth((cols<80)?cols+2:80);
+            text->setPlainText(temp);
+            //text->setVisibleRows((rows<20)?rows:20);
+            //text->setLineWrapColumnOrWidth((cols<80)?cols+2:80);
         }
         else
         {
@@ -168,15 +168,15 @@ void infoDialog::setInfo(const metaData* mtd)
                 palette.setColor(lbl->foregroundRole(), color);
                 lbl->setPalette(palette);
 
-                QLabel *text = new QLabel(matrix);
+                QLabel *textLabel = new QLabel(matrix);
                 if (!QString::compare(info, "comment"))
                 {
                     QRegExp url("(\\b(?:https?://|www\\.)\\S+\\b)");
                     temp.replace(url, "<a href=\"\\1\">\\1</a>");
-                    text->setOpenExternalLinks(true);
+                    textLabel->setOpenExternalLinks(true);
                 }
-                text->setText(temp);
-                gLayout->addWidget(text, j, 1);
+                textLabel->setText(temp);
+                gLayout->addWidget(textLabel, j, 1);
             }
         }
     }
@@ -200,7 +200,7 @@ void infoDialog::setInfo(const metaData* mtd)
     if (!newimg.isNull())
     {
         qDebug() << "Using embedded cover art";
-        _imgFrame->setPixmap(QPixmap::fromImage(newimg));
+        imgFrame->setPixmap(QPixmap::fromImage(newimg));
     }
     else
     {
@@ -222,21 +222,21 @@ void infoDialog::setInfo(const metaData* mtd)
             QApplication::setOverrideCursor(Qt::WaitCursor); // setCursor(Qt::WaitCursor); ???
         }
 
-        _imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
+        imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
     }
 
     if (gLayout->count() == 0)
         gLayout->addWidget(new QLabel(tr("No info"), matrix));
 
-    qDebug() << _text->document()->characterCount();
-    if (_text->document()->characterCount() > 1) // ???
+    qDebug() << "Comment characters " << text->document()->characterCount();
+    if (text->document()->characterCount() > 1)
     {
-        _text->show();
-        //_text->resize(_text->getDefaultWidth(), _text->getDefaultHeight());
+        text->show();
+        //text->resize(text->getDefaultWidth(), text->getDefaultHeight());
     }
     else
     {
-        _text->hide();
+        text->hide();
     }
 
     gLayout->update();
@@ -247,7 +247,7 @@ void infoDialog::onImgLoaded(const QImage* img)
 {
     if (img != nullptr)
     {
-        _imgFrame->setPixmap(QPixmap::fromImage(*img));
+        imgFrame->setPixmap(QPixmap::fromImage(*img));
         delete img;
     }
 

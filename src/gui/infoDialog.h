@@ -33,14 +33,14 @@ class imageLoader : public QObject, public QRunnable
     Q_OBJECT
 
 private:
-    QString _name;
+    QString name;
 
 public:
     void run() override;
 
 public:
     imageLoader(const QString& file) :
-        _name(file)
+        name(file)
     {}
 
 signals:
@@ -54,9 +54,9 @@ class infoDialog : public QDialog
     Q_OBJECT
 
 private:
-    QLabel *_imgFrame;
+    QLabel *imgFrame;
     QWidget *matrix;
-    QPlainTextEdit *_text;
+    QPlainTextEdit *text;
 
 private:
     infoDialog() {}

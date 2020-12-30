@@ -151,7 +151,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
         }
         dl_av_frame_free(&frame);
 
-        qDebug() << "frame_size: " << frame_size;
+        //qDebug() << "frame_size: " << frame_size;
         if (used >= 0)
         {
             n += frame_size;
@@ -244,7 +244,7 @@ bool ffmpegBackend::supports(const QString& fileName)
 {
     QString ext = _ext.join("|");
     ext.prepend(".*\\.(").append(")");
-    qDebug() << "sndBackend::supports: " << ext;
+    qDebug() << "ffmpegBackend::supports: " << ext;
 
     QRegExp rx(ext);
     return rx.exactMatch(fileName);

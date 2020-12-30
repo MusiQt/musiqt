@@ -22,12 +22,15 @@
 
 #include <QFileInfo>
 
-#define APPENDINFO(info) \
-temp = data->getInfo(info); \
-if (!temp.isEmpty()) { \
-    if (!tip.isEmpty() && tip[tip.length()-1]!='\n') \
-        tip.append('\n'); \
-    tip.append(QString("%1: %2").arg((data->getKey(info)), data->getInfo(info))); \
+void appendInfo(const metaData *data, metaData::mpris_t info, QString& tip)
+{
+    QString temp = data->getInfo(info);
+    if (!temp.isEmpty())
+    {
+        if (!(tip.isEmpty() || tip.endsWith('\n')))
+            tip.append('\n');
+        tip.append(QString("%1: %2").arg((data->getKey(info)), data->getInfo(info)));
+    }
 }
 
 void infoLabel::setInfo(const metaData *data)
@@ -52,11 +55,11 @@ void infoLabel::setInfo(const metaData *data)
             QFileInfo fi(data->getInfo(metaData::LOCATION));
             label = fi.fileName();
         }
-        APPENDINFO(metaData::TITLE);
-        APPENDINFO(metaData::ARTIST);
-        APPENDINFO(metaData::ALBUM);
-        APPENDINFO(metaData::YEAR);
-        APPENDINFO(metaData::TRACK);
+        appendInfo(data, metaData::TITLE, tip);
+        appendInfo(data, metaData::ARTIST, tip);
+        appendInfo(data, metaData::ALBUM, tip);
+        appendInfo(data, metaData::YEAR, tip);
+        appendInfo(data, metaData::TRACK, tip);
         if (tip.isEmpty())
             tip = tr("No info");
     }
