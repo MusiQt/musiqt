@@ -118,10 +118,10 @@ https://bitbucket.org/mpyne/game-music-emu/
 libbs2b 2.2.x or 3.x
 http://bs2b.sourceforge.net/
 
-ffmpeg >= 1.2
-libavcodec >= 55
-libavformat >= 55
-avutil >= 53
+ffmpeg >= 3.0
+libavcodec >= 57
+libavformat >= 57.5
+avutil >= 55
 http://www.ffmpeg.org/
 
 ####################################################################
