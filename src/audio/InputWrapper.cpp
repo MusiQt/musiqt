@@ -66,7 +66,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
         qDebug() << "readData maxSize=0";
         return 0;
     }
-
+PROFILE_START
     size_t n;
 
     if (audioConverter != nullptr)
@@ -83,6 +83,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
     }
 
     aProcess->process(data, n);
+PROFILE_END
     if (n == 0)
     {
         if (preloadedSong != nullptr)

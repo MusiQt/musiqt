@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,64 +28,6 @@
 #include <QComboBox>
 #include <QStringList>
 
-/*****************************************************************/
-
-/*
-template<typename T>
-void audio::loop()
-{
-    qDebug() << "loop " << static_cast<int>(sizeof(T)<<3) << " bit";
-    while (isPlaying)
-    {
-PROFILE_START
-        size_t size = i->fillBuffer(
-            _converter != nullptr ? _converter->buffer() : audioOutput->buffer(),
-            _converter != nullptr ? _converter->bufSize() : _bufferSize,
-            _seconds);
-
-        if (!size)
-        {
-            emit songEnded();
-            if (_preload)
-            {
-                i = _preload;
-                _preload = nullptr;
-                _seconds = 0;
-                continue;
-            }
-            else
-                break;
-        }
-
-        if (_converter != nullptr)
-            size = _converter->convert(audioOutput->buffer(), _bufferSize);
-
-        process<T>(size);
-PROFILE_END
-
-        if (!audioOutput->write(audioOutput->buffer(), _bufferSize) && isPlaying)
-        {
-            qWarning() << "Output error";
-            emit outputError();
-            isPlaying = false;
-            break;
-        }
-
-        _buffers -= (1<<DECIMALS);
-        if (_buffers < 0)
-        {
-            do {
-                _buffers += _bufPerSec;
-                _seconds++;
-            } while (_buffers < 0);
-            if (_seconds != i->time()-5)
-                emit updateTime();
-            else
-                emit preloadSong();
-        }
-    }
-}
-*/
 /*****************************************************************/
 
 const char* sampleTypeString(sample_t sampleType)
