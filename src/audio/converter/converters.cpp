@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,28 +27,28 @@ size_t resampler<I, O>::convert(const void* buf, const size_t len)
     size_t idx = 0;
     unsigned int error = 0;
     const size_t m = len/sizeof(O);
-    for (size_t j=0; j<m; j+=_channels)
+    for (size_t j=0; j<m; j+=channels)
     {
-        for (unsigned int c=0; c<_channels; c++)
+        for (unsigned int c=0; c<channels; c++)
         {
             const I val = in[idx+c];
-            out[j+c] = _quantizer->get(val+(I)(((unsigned int)(in[idx+c+_channels]-val)*error)>>16), c);
+            out[j+c] = _quantizer->get(val+(I)(((unsigned int)(in[idx+c+channels]-val)*error)>>16), c);
         }
         error += _rate;
         while (error >= 0x10000)
         {
             error -= 0x10000;
-            idx += _channels;
+            idx += channels;
         }
     }
 
-    const size_t l = _bufsize/sizeof(I);
+    const size_t l = bufferSize/sizeof(I);
     qDebug() << "resamplerDecimal idx: " << static_cast<int>(idx) << "; l: " << static_cast<int>(l);
 
     _data = (l < idx) ? (l-idx)*sizeof(I) : 0;
-    for (size_t j=idx; j<l; j+=_channels)
+    for (size_t j=idx; j<l; j+=channels)
     {
-        for (unsigned int c=0; c<_channels; c++)
+        for (unsigned int c=0; c<channels; c++)
             in[c] = in[j+c];
     }
 
@@ -71,9 +71,9 @@ size_t converterDecimal<I, O>::convert(const void* buf, const size_t len)
     O* const out = (O*)buf;
 
     const size_t m = len/sizeof(O);
-    for (size_t j=0; j<m; j+=_channels)
+    for (size_t j=0; j<m; j+=channels)
     {
-        for (unsigned int c=0; c<_channels; c++)
+        for (unsigned int c=0; c<channels; c++)
         {
             out[j+c] = _quantizer->get(in[j+c], c);
         }

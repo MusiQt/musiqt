@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 extern "C" {
 #ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
 #  include <libavformat/avformat.h>
-#  if LIBAVFORMAT_VERSION_INT <= (56<<16 | 40<<8)
+#  if LIBAVFORMAT_VERSION_INT <= (57<<16 | 5<<8)
 #    error LIBAVFORMAT too old
 #  endif
 #endif
@@ -35,7 +35,6 @@ extern "C" {
 #include "AutoDLL.h"
 
 #define MAX_AUDIO_FRAME_SIZE 192000 // 1 second of 48khz 32bit audio
-
 
 /*****************************************************************/
 
@@ -60,21 +59,22 @@ public:
 class ffmpegBackend : public inputBackend
 {
 private:
-    AVStream *_audioStream;
-    AVFormatContext *_formatContext;
-    int _audioStreamIndex;
-    unsigned int _decodeBufOffset;
-    unsigned char _decodeBuf[MAX_AUDIO_FRAME_SIZE*2];
-    AVPacket _packet;
-    int _packetOffset;
+    AVStream *audioStream;
+    AVFormatContext *formatContext;
+    AVCodecContext *codecContext;
+    int audioStreamIndex;
+    unsigned int decodeBufOffset;
+    unsigned char decodeBuf[MAX_AUDIO_FRAME_SIZE*2];
+    AVPacket packet;
+    int packetOffset;
     sample_t _precision;
 
     int _planar;
     int _sampleSize;
 
-    static const AutoDLL _avformat;
-    static const AutoDLL _avcodec;
-    static const AutoDLL _avutil;
+    static const AutoDLL avformatDll;
+    static const AutoDLL avcodecDll;
+    static const AutoDLL avutilDll;
 
     static QStringList _ext;
 
@@ -94,8 +94,9 @@ private:
     static AVCodec* (*dl_avcodec_find_decoder)(enum AVCodecID);
     static void (*dl_av_init_packet)(AVPacket*);
     static void (*dl_avcodec_flush_buffers)(AVCodecContext*);
-    static int (*dl_avcodec_close)(AVCodecContext*);
     static void (*dl_av_free_packet)(AVPacket*);
+    static AVCodecContext* (*dl_avcodec_alloc_context3)(const AVCodec *codec);
+    static void (*dl_avcodec_free_context)(AVCodecContext **avctx);
     //static int64_t (*dl_av_rescale_q)(int64_t, AVRational, AVRational);
 
 private:
@@ -134,16 +135,16 @@ public:
     /// Get samplerate
     unsigned int samplerate() const
     {
-        return _audioStream ?
-            _audioStream->codec->sample_rate // TODO replace codec with codecpar
+        return audioStream ?
+            audioStream->codecpar->sample_rate
             : 0;
     }
 
     /// Get channels
     unsigned int channels() const
     {
-        return _audioStream ?
-            _audioStream->codec->channels
+        return audioStream ?
+            audioStream->codecpar->channels
             : 0;
     }
 

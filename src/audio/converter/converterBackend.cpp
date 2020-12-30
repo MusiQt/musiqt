@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,25 +20,24 @@
 
 #include <QDebug>
 
-resamplerBackend::resamplerBackend(const unsigned int srIn, const unsigned int srOut, const size_t frames,
-        const unsigned int channels, const unsigned int precision) :
-    _channels(channels),
-    _sampleSize(precision*channels),
+resamplerBackend::resamplerBackend(unsigned int srIn, unsigned int srOut, size_t size,
+        unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision) :
+    converter(channels, inputPrecision, outputPrecision),
     _data(0)
 {
     qDebug() << "Conversion ratio " << (float)(srIn/srOut);
-    qDebug() << "Sample size " << _sampleSize;
 
     _rate = (((unsigned int)srIn)<<16)/srOut;
     qDebug() << "_rate " << _rate;
 
+    size_t frames = size / (outputPrecision*channels);
     unsigned long tmp = ((unsigned long)frames * (unsigned long)_rate);
     if (tmp & 0xFFFFll)
         tmp += 0x10000ll;
 
-    _bufsize = (tmp>>16) * _sampleSize;
-    qDebug() << "input size: " << static_cast<int>(frames) << "; output size " << static_cast<int>(_bufsize/_sampleSize);
-    _buffer = new char[_bufsize];
+    bufferSize = (tmp>>16) * (inputPrecision*channels);
+    qDebug() << "converter buffer size: " << bufferSize;
+    _buffer = new char[bufferSize];
 }
 
 resamplerBackend::~resamplerBackend()
@@ -48,15 +47,13 @@ resamplerBackend::~resamplerBackend()
 
 /******************************************************************************/
 
-converterBackend::converterBackend(const size_t frames, const unsigned int channels, const unsigned int precision) :
-    _channels(channels),
-    _sampleSize(precision*channels)
+converterBackend::converterBackend(size_t size, unsigned int channels,
+                                   unsigned int inputPrecision, unsigned int outputPrecision) :
+    converter(channels, inputPrecision, outputPrecision)
 {
-    qDebug() << "Sample size " << _sampleSize;
-
-    _bufsize = frames * _sampleSize;
-    qDebug() << "input size: " << static_cast<int>(frames) << "; output size " << static_cast<int>(_bufsize/_sampleSize);
-    _buffer = new char[_bufsize];
+    bufferSize = size * frameRatio;
+    qDebug() << "converter buffer size: " << bufferSize;
+    _buffer = new char[bufferSize];
 }
 
 converterBackend::~converterBackend()

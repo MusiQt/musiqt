@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ private:
 public:
     resampler(const unsigned int srIn, const unsigned int srOut, const size_t size,
         const unsigned int channels, quantizer<I, O>* quantizer) :
-        resamplerBackend(srIn, srOut, size/(sizeof(O)*channels), channels, sizeof(I)),
+        resamplerBackend(srIn, srOut, size, channels, sizeof(I), sizeof(O)),
         _quantizer(quantizer)
     {}
     ~resampler() { delete _quantizer; }
@@ -54,7 +54,7 @@ private:
 
 public:
     converterDecimal(const size_t size, const unsigned int channels, quantizer<I, O>* quantizer) :
-        converterBackend(size/(sizeof(O)*channels), channels, sizeof(I)),
+        converterBackend(size, channels, sizeof(I), sizeof(O)),
         _quantizer(quantizer)
     {}
     ~converterDecimal() { delete _quantizer; }

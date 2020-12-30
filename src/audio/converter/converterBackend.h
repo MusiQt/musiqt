@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,15 +24,9 @@
 class resamplerBackend : public converter
 {
 protected:
-    unsigned int _channels;
-    unsigned int _sampleSize;
-
     unsigned int _rate;
 
     unsigned int _data;
-
-    char *_buffer;
-    size_t _bufsize;
 
 private:
     resamplerBackend();
@@ -40,46 +34,39 @@ private:
     resamplerBackend& operator=(const resamplerBackend&);
 
 protected:
-    resamplerBackend(const unsigned int srIn, const unsigned int srOut, const size_t frames,
-        const unsigned int channels, const unsigned int precision);
+    resamplerBackend(unsigned int srIn, unsigned int srOut, size_t size,
+        unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
 
 public:
     virtual ~resamplerBackend();
 
     /// Get pointer to buffer
-    void* buffer() const override { return _buffer+_data; }
+    char* buffer() const override { return _buffer+_data; }
 
     /// Get buffer size
-    size_t bufSize() const override { return _bufsize-_data; }
+    size_t bufSize(int size) const override { return (size*frameRatio)-_data; }
 };
 
 /******************************************************************************/
 
 class converterBackend : public converter
 {
-protected:
-    unsigned int _channels;
-    unsigned int _sampleSize;
-
-    char *_buffer;
-    size_t _bufsize;
-
 private:
     converterBackend();
     converterBackend(const converterBackend&);
     converterBackend& operator=(const converterBackend&);
 
 protected:
-    converterBackend(const size_t frames, const unsigned int channels, const unsigned int precision);
+    converterBackend(size_t size, unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
 
 public:
     virtual ~converterBackend();
 
     /// Get pointer to buffer
-    void* buffer() const override { return _buffer; }
+    char* buffer() const override { return _buffer; }
 
     /// Get buffer size
-    size_t bufSize() const override { return _bufsize; }
+    size_t bufSize(int size) const override { return size*frameRatio; }
 };
 
 #endif
