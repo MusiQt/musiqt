@@ -50,7 +50,7 @@ public:
     virtual size_t bufSize(int size) const =0;
 
     /// Do the conversion
-    virtual size_t convert(const void* out, const size_t len) =0;
+    virtual size_t convert(const void* out, size_t len) =0;
 };
 
 #endif

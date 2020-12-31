@@ -39,7 +39,7 @@ public:
     ~resampler() { delete _quantizer; }
 
     /// Do the conversion
-    size_t convert(const void* buf, const size_t len) override;
+    size_t convert(const void* buf, size_t len) override;
 };
 
 /******************************************************************************/
@@ -60,7 +60,7 @@ public:
     ~converterDecimal() { delete _quantizer; }
 
     /// Do the conversion
-    size_t convert(const void* buf, const size_t len) override;
+    size_t convert(const void* buf, size_t len) override;
 };
 
 #endif

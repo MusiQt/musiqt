@@ -71,11 +71,11 @@ PROFILE_START
 
     if (audioConverter != nullptr)
     {
-        currentSong->fillBuffer(
+        size_t size = currentSong->fillBuffer(
             audioConverter->buffer(),
             audioConverter->bufSize(maxSize),
             seconds);
-        n = audioConverter->convert(data, maxSize);
+        n = audioConverter->convert(data, size);
     }
     else
     {

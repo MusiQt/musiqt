@@ -19,8 +19,10 @@
 #include "converters.h"
 
 template <typename I, typename O>
-size_t resampler<I, O>::convert(const void* buf, const size_t len)
+size_t resampler<I, O>::convert(const void* buf, size_t len)
 {
+    len /= frameRatio;
+
     I* const in = (I*)_buffer;
     O* const out = (O*)buf;
 
@@ -65,8 +67,10 @@ template size_t resampler<float, short>::convert(const void* buf, const size_t l
 /******************************************************************************/
 
 template <typename I, typename O>
-size_t converterDecimal<I, O>::convert(const void* buf, const size_t len)
+size_t converterDecimal<I, O>::convert(const void* buf, size_t len)
 {
+    len /= frameRatio;
+
     I* const in = (I*)_buffer;
     O* const out = (O*)buf;
 
