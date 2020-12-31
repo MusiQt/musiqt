@@ -75,6 +75,7 @@ AVCodecContext* (*ffmpegBackend::dl_avcodec_alloc_context3)(const AVCodec *codec
 void (*ffmpegBackend::dl_avcodec_free_context)(AVCodecContext **avctx)=0;
 int (*ffmpegBackend::dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
                                              int related_stream, AVCodec **decoder_ret, int flags)=0;
+int (*ffmpegBackend::dl_avcodec_parameters_to_context)(AVCodecContext *codec, const AVCodecParameters *par)=0;
 
 QStringList ffmpegBackend::_ext;
 
@@ -196,6 +197,7 @@ bool ffmpegBackend::init()
     LOADSYM(avformatDll, avcodec_free_context, void(*)(AVCodecContext **avctx))
     LOADSYM(avformatDll, av_find_best_stream, int(*)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
                                          int related_stream, AVCodec **decoder_ret, int flags))
+    LOADSYM(avformatDll, avcodec_parameters_to_context, int(*)(AVCodecContext *codec, const AVCodecParameters *par))
     LOADSYM(avutilDll, av_dict_get, AVDictionaryEntry*(*)(AVDictionary*, const char*, const AVDictionaryEntry*, int))
     LOADSYM(avcodecDll, av_init_packet, void(*)(AVPacket*))
     LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
@@ -417,6 +419,12 @@ bool ffmpegBackend::openStream(AVFormatContext* fc)
     if (codecContext == nullptr)
     {
         qWarning() << "Cannot alloc context";
+        return false;
+    }
+
+    if (dl_avcodec_parameters_to_context(codecContext, fc->streams[audioStreamIndex]->codecpar) < 0)
+    {
+        qWarning() << "Error filling the codec context";
         return false;
     }
 

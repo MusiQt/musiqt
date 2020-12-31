@@ -99,6 +99,7 @@ private:
     static void (*dl_avcodec_free_context)(AVCodecContext **avctx);
     static int (*dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
                                          int related_stream, AVCodec **decoder_ret, int flags);
+    static int (*dl_avcodec_parameters_to_context)(AVCodecContext *codec, const AVCodecParameters *par);
     //static int64_t (*dl_av_rescale_q)(int64_t, AVRational, AVRational);
 
 private:
