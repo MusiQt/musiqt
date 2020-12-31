@@ -287,27 +287,31 @@ bool ffmpegBackend::open(const QString& fileName)
 
     AVFormatContext *fc = nullptr;
     if (dl_avformat_open_input(&fc, fileName.toUtf8().constData(), 0, 0) != 0)
+    {
+        qWarning() << "Cannot open input";
         return false;
+    }
 
-    int streamIndex = -1;
     if (dl_avformat_find_stream_info(fc, 0) < 0)
+    {
+        qWarning() << "Cannot find stream info";
         goto error;
+    }
 
-    for (unsigned int i=0; i<fc->nb_streams; i++)
+    for (int i=0; i<fc->nb_streams; i++)
     {
         if (fc->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
         {
-            streamIndex = i;
+            audioStreamIndex = i;
             break;
         }
     }
 
-    if (!openStream(fc, streamIndex))
+    if (!openStream(fc, audioStreamIndex))
         goto error;
 
     formatContext = fc;
-    audioStreamIndex = streamIndex;
-    audioStream = fc->streams[streamIndex];
+    audioStream = fc->streams[audioStreamIndex];
     decodeBufOffset = 0;
     packet.data = 0;
 
@@ -334,6 +338,7 @@ bool ffmpegBackend::open(const QString& fileName)
         _precision = sample_t::SAMPLE_FLOAT;
         break;
     default:
+        qWarning() << "Unrecognized fomat " << audioStream->codecpar->format;
         goto error;
     }
 
@@ -354,6 +359,7 @@ bool ffmpegBackend::open(const QString& fileName)
     return true;
 
 error:
+    dl_avcodec_free_context(&codecContext);
     dl_avformat_close_input(&fc);
 
     return false;
@@ -400,16 +406,31 @@ bool ffmpegBackend::seek(const int pos)
 bool ffmpegBackend::openStream(AVFormatContext* fc, const int streamIndex)
 {
     if ((streamIndex < 0) || (streamIndex >= fc->nb_streams))
+    {
+        qWarning() << "Invalid stream index " << streamIndex;
         return false;
+    }
 
     AVCodecID codecId = fc->streams[streamIndex]->codecpar->codec_id;
     AVCodec* codec = dl_avcodec_find_decoder(codecId);
     if (codec == nullptr)
+    {
+        qWarning() << "Cannot find ecoder";
         return false;
+    }
 
     codecContext = dl_avcodec_alloc_context3(codec);
-    if (dl_avcodec_open2(codecContext, codec, 0) < 0)
+    if (codecContext == nullptr)
+    {
+        qWarning() << "Cannot alloc context";
         return false;
+    }
+
+    if (dl_avcodec_open2(codecContext, codec, 0) < 0)
+    {
+        qWarning() << "Cannot open stream";
+        return false;
+    }
 
     return true;
 }
