@@ -97,13 +97,15 @@ private:
     static void (*dl_av_free_packet)(AVPacket*);
     static AVCodecContext* (*dl_avcodec_alloc_context3)(const AVCodec *codec);
     static void (*dl_avcodec_free_context)(AVCodecContext **avctx);
+    static int (*dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
+                                         int related_stream, AVCodec **decoder_ret, int flags);
     //static int64_t (*dl_av_rescale_q)(int64_t, AVRational, AVRational);
 
 private:
     ffmpegBackend();
 
     /// Open selected stream
-    bool openStream(AVFormatContext* fc, const int streamIndex);
+    bool openStream(AVFormatContext* fc);
 
     QString getMetadata(const char* type);
 

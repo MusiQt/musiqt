@@ -73,6 +73,8 @@ void (*ffmpegBackend::dl_av_free_packet)(AVPacket*)=0;
 // int64_t (*ffmpegBackend::dl_av_rescale_q)(int64_t, AVRational, AVRational)=0;
 AVCodecContext* (*ffmpegBackend::dl_avcodec_alloc_context3)(const AVCodec *codec)=0;
 void (*ffmpegBackend::dl_avcodec_free_context)(AVCodecContext **avctx)=0;
+int (*ffmpegBackend::dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
+                                             int related_stream, AVCodec **decoder_ret, int flags)=0;
 
 QStringList ffmpegBackend::_ext;
 
@@ -192,6 +194,8 @@ bool ffmpegBackend::init()
     LOADSYM(avformatDll, av_seek_frame, int(*)(AVFormatContext*, int, int64_t, int))
     LOADSYM(avformatDll, avcodec_alloc_context3, AVCodecContext*(*)(const AVCodec *codec))
     LOADSYM(avformatDll, avcodec_free_context, void(*)(AVCodecContext **avctx))
+    LOADSYM(avformatDll, av_find_best_stream, int(*)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
+                                         int related_stream, AVCodec **decoder_ret, int flags))
     LOADSYM(avutilDll, av_dict_get, AVDictionaryEntry*(*)(AVDictionary*, const char*, const AVDictionaryEntry*, int))
     LOADSYM(avcodecDll, av_init_packet, void(*)(AVPacket*))
     LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
@@ -286,28 +290,19 @@ bool ffmpegBackend::open(const QString& fileName)
     close();
 
     AVFormatContext *fc = nullptr;
-    if (dl_avformat_open_input(&fc, fileName.toUtf8().constData(), 0, 0) != 0)
+    if (dl_avformat_open_input(&fc, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
     {
         qWarning() << "Cannot open input";
         return false;
     }
 
-    if (dl_avformat_find_stream_info(fc, 0) < 0)
+    if (dl_avformat_find_stream_info(fc, nullptr) < 0)
     {
         qWarning() << "Cannot find stream info";
         goto error;
     }
 
-    for (int i=0; i<fc->nb_streams; i++)
-    {
-        if (fc->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
-        {
-            audioStreamIndex = i;
-            break;
-        }
-    }
-
-    if (!openStream(fc, audioStreamIndex))
+    if (!openStream(fc))
         goto error;
 
     formatContext = fc;
@@ -376,8 +371,8 @@ void ffmpegBackend::close()
     dl_avcodec_free_context(&codecContext);
     dl_avformat_close_input(&formatContext);
 
-    audioStream = 0;
-    formatContext = 0;
+    audioStream = nullptr;
+    formatContext = nullptr;
 
     songLoaded(QString());
 }
@@ -403,19 +398,18 @@ bool ffmpegBackend::seek(const int pos)
     return true;
 }
 
-bool ffmpegBackend::openStream(AVFormatContext* fc, const int streamIndex)
+bool ffmpegBackend::openStream(AVFormatContext* fc)
 {
-    if ((streamIndex < 0) || (streamIndex >= fc->nb_streams))
+    AVCodec* codec;
+    audioStreamIndex = dl_av_find_best_stream(fc, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0);
+    if (audioStreamIndex == AVERROR_STREAM_NOT_FOUND)
     {
-        qWarning() << "Invalid stream index " << streamIndex;
+        qWarning() << "No audio stream found";
         return false;
     }
-
-    AVCodecID codecId = fc->streams[streamIndex]->codecpar->codec_id;
-    AVCodec* codec = dl_avcodec_find_decoder(codecId);
-    if (codec == nullptr)
+    if ((audioStreamIndex == AVERROR_DECODER_NOT_FOUND) || (codec == nullptr))
     {
-        qWarning() << "Cannot find ecoder";
+        qWarning() << "No decoder found";
         return false;
     }
 
@@ -426,7 +420,7 @@ bool ffmpegBackend::openStream(AVFormatContext* fc, const int streamIndex)
         return false;
     }
 
-    if (dl_avcodec_open2(codecContext, codec, 0) < 0)
+    if (dl_avcodec_open2(codecContext, codec, nullptr) < 0)
     {
         qWarning() << "Cannot open stream";
         return false;
