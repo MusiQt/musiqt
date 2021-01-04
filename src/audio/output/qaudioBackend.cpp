@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2020 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -169,6 +169,9 @@ void qaudioBackend::stop()
 
 void qaudioBackend::volume(int vol)
 {
+    if (audioOutput == nullptr)
+        return;
+
 #if QT_VERSION >= 0x050000
 #  if QT_VERSION >= 0x050800
     qreal volume = QAudio::convertVolume(vol / qreal(100.0),
@@ -185,6 +188,9 @@ void qaudioBackend::volume(int vol)
 
 int qaudioBackend::volume()
 {
+    if (audioOutput == nullptr)
+        return 0;
+
 #if QT_VERSION >= 0x050000
 #  if QT_VERSION >= 0x050800
     return QAudio::convertVolume(audioOutput->volume(),
