@@ -957,7 +957,7 @@ void centralFrame::updateSongs()
     if (playing && playDir.compare(fsm->fileName(_dirlist->currentIndex())))
         return;
 
-    const int tunes = _playlistModel->rowCount();
+    const int tunes = _proxyModel->rowCount();
     const int tune = 1 + _playlist->currentIndex().row();
 
     QString text(QString("%1/%2").arg(tune).arg(tunes));
