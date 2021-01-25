@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2020 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,19 @@
 
 #include <QAudio>
 #include <QAudioOutput>
+#include <QRunnable>
 
 #include <memory>
+
+/*****************************************************************/
+
+class deviceLoader : public QObject, public QRunnable
+{
+    Q_OBJECT
+
+public:
+    void run() override;
+};
 
 /*****************************************************************/
 

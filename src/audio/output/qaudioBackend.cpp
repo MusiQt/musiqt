@@ -22,6 +22,14 @@
 #include <QAudioFormat>
 #include <QList>
 #include <QDebug>
+#include <QThreadPool>
+
+/*****************************************************************/
+
+void deviceLoader::run()
+{
+    qaudioBackend::getDevices();
+}
 
 /*****************************************************************/
 
@@ -29,7 +37,6 @@ QStringList devices;
 
 QStringList qaudioBackend::getDevices()
 {
-    // FIXME initialize at startup and reload when not playing 
     if (devices.empty())
     {
         // Check devices
@@ -47,7 +54,12 @@ QStringList qaudioBackend::getDevices()
 
 qaudioBackend::qaudioBackend() :
     audioOutput(nullptr)
-{}
+{
+    // Preload available devices in a separate thread
+    deviceLoader* loader = new deviceLoader();
+    loader->setAutoDelete(true);
+    QThreadPool::globalInstance()->start(loader);
+}
 
 void qaudioBackend::onStateChange(QAudio::State newState)
 {
