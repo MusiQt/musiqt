@@ -25,18 +25,25 @@
 
 /*****************************************************************/
 
-const QStringList qaudioBackend::devices = [] {
-    QStringList devices;
-    // Check devices
-    for (const QAudioDeviceInfo &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+QStringList devices;
+
+QStringList qaudioBackend::getDevices()
+{
+    // FIXME initialize at startup and reload when not playing 
+    if (devices.empty())
     {
-        devices.append(deviceInfo.deviceName().toUtf8().constData());
-        qDebug() << "Device name: " << deviceInfo.deviceName();
-        qDebug() << "SampleRates: " << deviceInfo.supportedSampleRates();
-        qDebug() << "SampleSizes: " << deviceInfo.supportedSampleSizes();
+        // Check devices
+        for (const QAudioDeviceInfo &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+        {
+            devices.append(deviceInfo.deviceName().toUtf8().constData());
+            qDebug() << "Device name: " << deviceInfo.deviceName();
+            qDebug() << "SampleRates: " << deviceInfo.supportedSampleRates();
+            qDebug() << "SampleSizes: " << deviceInfo.supportedSampleSizes();
+        }
     }
+
     return devices;
-}();
+}
 
 qaudioBackend::qaudioBackend() :
     audioOutput(nullptr)
