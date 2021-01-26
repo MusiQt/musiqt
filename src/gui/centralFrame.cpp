@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2020 Leandro Nini
+ *  Copyright (C) 2013-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -49,10 +49,6 @@
 #include <QWidgetAction>
 #include <QDebug>
 
-#if QT_VERSION < 0x050000
-Q_DECLARE_METATYPE(QModelIndex)
-#endif
-
 centralFrame::centralFrame(QWidget *parent) :
     QWidget(parent),
     _input(nullptr),
@@ -99,7 +95,7 @@ centralFrame::centralFrame(QWidget *parent) :
             this, SLOT(onRgtClkDirList(const QPoint&)));
 
     // _playlist
-    _playlist = new QListView(this);
+    _playlist = new playlist(this);
     _playlist->setAlternatingRowColors(true);
     _playlist->setUniformItemSizes(true);
     _playlist->setDragDropMode(QAbstractItemView::DropOnly);
@@ -793,7 +789,7 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     qDebug() << "onRgtClkPlayList";
     QModelIndex item = _playlist->indexAt(pos);
 
-    setProperty("UserData", QVariant::fromValue(item));
+    setProperty("UserData", QVariant::fromValue(item.row()));
 
     QMenu pane(this);
     if (item.isValid())
@@ -851,6 +847,7 @@ void centralFrame::sortDesc()
 void centralFrame::shuffle()
 {
     _proxyModel->sort(-1);
+    // FIXME this loses selection
     _playlistModel->shuffle();
 }
 
@@ -860,6 +857,13 @@ void centralFrame::onCmdAdd()
     if (!item.isValid())
         return;
     _playlistModel->append(fsm->fileInfo(item).absoluteFilePath());
+}
+
+void centralFrame::onCmdDel()
+{
+    int row = property("UserData").toInt();
+    qDebug() << "onCmdDel " << row;
+    _playlistModel->removeRow(row);
 }
 
 void centralFrame::onCmdBmAdd()

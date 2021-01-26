@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2017 Leandro Nini
+ *  Copyright (C) 2013-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include <QThread>
 #include <QListView>
 #include <QWidget>
+#include <QMouseEvent>
 
 class bookmark;
 class playlistModel;
@@ -68,6 +69,31 @@ public:
         iBackend(i),
         fileName(name)
    {}
+};
+
+/*****************************************************************/
+
+class playlist : public QListView
+{
+    Q_OBJECT
+
+private:
+    playlist() {}
+    playlist(const playlist&);
+    playlist& operator=(const playlist&);
+
+public:
+    playlist(QWidget * parent) :
+        QListView(parent)
+    {}
+
+    void mousePressEvent(QMouseEvent *event) override
+    {
+        // Avoid selecting item on right-click
+        if (event->button() == Qt::RightButton)
+            return;
+        QListView::mousePressEvent(event);
+    }
 };
 
 /*****************************************************************/
@@ -138,6 +164,7 @@ private slots:
     void onRgtClkPlayList(const QPoint& pos);
 
     void onCmdAdd();
+    void onCmdDel();
     void onCmdBmAdd();
     void updateSongs();
 
@@ -161,7 +188,7 @@ private:
     QTreeView *_dirlist;
     playlistModel *_playlistModel;
     QSortFilterProxyModel *_proxyModel;
-    QListView *_playlist;
+    playlist *_playlist;
     QComboBox *_fileTypes;
     bookmark *_bookmarkList;
     QPushButton *_editMode;

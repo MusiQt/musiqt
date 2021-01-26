@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019-2020 Leandro Nini
+ *  Copyright (C) 2019-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -187,9 +187,21 @@ public:
 
     bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex()) override
     {
+        if (count != 1)
+            return false;
         beginInsertRows(parent, row, row+count-1);
         locations.append("---");
         endInsertRows();
+        return true;
+    }
+
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override
+    {
+        if (count != 1)
+            return false;
+        beginRemoveRows(parent, row, row+count-1);
+        locations.removeAt(row);
+        endRemoveRows();
         return true;
     }
 
