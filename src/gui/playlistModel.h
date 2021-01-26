@@ -157,27 +157,25 @@ public:
         return true;
     }
 
-    bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex()) override
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override
     {
-        if (count != 1)
-            return false;
         beginInsertRows(parent, row, row+count-1);
-        locations.append("---");
+        for (int i=0; i<count; i++)
+            locations.insert(row, "---");
         endInsertRows();
         return true;
     }
 
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override
     {
-        if (count != 1)
-            return false;
         beginRemoveRows(parent, row, row+count-1);
-        locations.removeAt(row);
+        for (int i=0; i<count; i++)
+            locations.removeAt(row);
         endRemoveRows();
         return true;
     }
 
-    bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole) override
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override
     {
         locations.replace(index.row(), value.toString());
         emit dataChanged(index, index);
