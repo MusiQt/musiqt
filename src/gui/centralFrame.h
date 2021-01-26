@@ -27,6 +27,7 @@
 #include <QListView>
 #include <QWidget>
 #include <QMouseEvent>
+#include <QSortFilterProxyModel>
 
 class bookmark;
 class playlistModel;
@@ -35,10 +36,8 @@ class QComboBox;
 class QModelIndex;
 class QTreeView;
 class QFileSystemModel;
-class QListView;
 class QItemSelectionModel;
 class QPushButton;
-class QSortFilterProxyModel;
 
 /*****************************************************************/
 
@@ -94,6 +93,92 @@ public:
             return;
         QListView::mousePressEvent(event);
     }
+};
+
+/*****************************************************************/
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+#  include <QRandomGenerator>
+#endif
+
+class proxymodel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    enum class sortMode { Ascending, Descending, Random };
+
+private:
+    sortMode mode;
+
+private:
+    proxymodel() {}
+    proxymodel(const proxymodel&);
+    proxymodel& operator=(const proxymodel&);
+
+    static int random()
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+        return QRandomGenerator::global()->generate();
+#else
+        return qrand();
+#endif
+    }
+
+protected:
+    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override
+    {
+        if (mode == sortMode::Random)
+        {
+            if (!source_left.isValid())
+            {
+                qDebug("left invalid");
+                return false;
+            }
+            if (!source_right.isValid())
+            {
+                qDebug("right invalid");
+                // FIXME crashes
+                return true;
+            }
+            return random()%2;
+        }
+        return QSortFilterProxyModel::lessThan(source_left, source_right);
+    }
+
+public:
+    proxymodel(QWidget * parent) :
+        QSortFilterProxyModel(parent),
+        mode(sortMode::Ascending)
+    {}
+
+    void sort(sortMode newMode)
+    {
+        if ((mode == newMode) && (newMode != sortMode::Random))
+            return;
+
+        mode = newMode;
+
+        QSortFilterProxyModel::sort(-1);
+
+        Qt::SortOrder order;
+        switch (mode)
+        {
+        case sortMode::Ascending:
+            order = Qt::AscendingOrder;
+            break;
+        case sortMode::Descending:
+            order = Qt::DescendingOrder;
+            break;
+        case sortMode::Random:
+            order = Qt::AscendingOrder;
+            break;
+        }
+
+        QSortFilterProxyModel::sort(0, order);
+    }
+
+    sortMode getMode() const { return mode; }
 };
 
 /*****************************************************************/
@@ -187,7 +272,7 @@ private:
     QFileSystemModel *fsm;
     QTreeView *_dirlist;
     playlistModel *_playlistModel;
-    QSortFilterProxyModel *_proxyModel;
+    proxymodel *_proxyModel;
     playlist *_playlist;
     QComboBox *_fileTypes;
     bookmark *_bookmarkList;

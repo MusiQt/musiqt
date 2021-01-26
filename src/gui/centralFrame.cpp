@@ -41,7 +41,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSignalMapper>
-#include <QSortFilterProxyModel>
 #include <QStackedWidget>
 #include <QTimer>
 #include <QTreeView>
@@ -102,10 +101,10 @@ centralFrame::centralFrame(QWidget *parent) :
 
     _playlistModel = new playlistModel(this);
 
-    _proxyModel = new QSortFilterProxyModel(this);
+    _proxyModel = new proxymodel(this);
     _proxyModel->setSourceModel(_playlistModel);
     _proxyModel->setDynamicSortFilter(true);
-    _proxyModel->sort(0, Qt::AscendingOrder);
+    _proxyModel->sort(proxymodel::sortMode::Ascending);
     _playlist->setModel(_proxyModel);
 
     //_proxyModel->setFilterRegExp(QRegExp(".*"));
@@ -808,17 +807,17 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     QAction* asc = new QAction(tr("Sort ascending"), &pane);
     asc->setCheckable(true);
     asc->setStatusTip(tr("Sort ascending"));
-    if ((_proxyModel->sortColumn() == 0) && (_proxyModel->sortOrder() == Qt::AscendingOrder)) asc->setChecked(true);
+    if (_proxyModel->getMode() == proxymodel::sortMode::Ascending) asc->setChecked(true);
     connect(asc, SIGNAL(triggered()), this, SLOT(sortAsc()));
     QAction* desc = new QAction(tr("Sort descending"), &pane);
     desc->setCheckable(true);
     desc->setStatusTip(tr("Sort descending"));
-    if ((_proxyModel->sortColumn() == 0) && (_proxyModel->sortOrder() == Qt::DescendingOrder)) desc->setChecked(true);
+    if (_proxyModel->getMode() == proxymodel::sortMode::Descending) desc->setChecked(true);
     connect(desc, SIGNAL(triggered()), this, SLOT(sortDesc()));
     QAction* rnd = new QAction(tr("Shuffle"), &pane);
     rnd->setCheckable(true);
     rnd->setStatusTip(tr("Sort randomly"));
-    if (_proxyModel->sortColumn() < 0) rnd->setChecked(true);
+    if (_proxyModel->getMode() == proxymodel::sortMode::Random) rnd->setChecked(true);
     connect(rnd, SIGNAL(triggered()), this, SLOT(shuffle()));
 
     QActionGroup *radioGroup = new QActionGroup(&pane);
@@ -836,19 +835,17 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
 
 void centralFrame::sortAsc()
 {
-    _proxyModel->sort(0, Qt::AscendingOrder);
+    _proxyModel->sort(proxymodel::sortMode::Ascending);
 }
 
 void centralFrame::sortDesc()
 {
-    _proxyModel->sort(0, Qt::DescendingOrder);
+    _proxyModel->sort(proxymodel::sortMode::Descending);
 }
 
 void centralFrame::shuffle()
 {
-    _proxyModel->sort(-1);
-    // FIXME this loses selection
-    _playlistModel->shuffle();
+    _proxyModel->sort(proxymodel::sortMode::Random);
 }
 
 void centralFrame::onCmdAdd()
