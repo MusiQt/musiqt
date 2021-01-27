@@ -21,44 +21,26 @@
 
 #include "trackListFactory.h"
 
-#include <QAbstractListModel>
+#include <QStringListModel>
 #include <QFileInfo>
 #include <QStringList>
 #include <QMimeData>
 #include <QUrl>
 #include <QDebug>
 
-#include <memory>
-
-class playlistModel : public QAbstractListModel
+class playlistModel : public QStringListModel
 {
     Q_OBJECT
 
-private:
-    QStringList locations;
-
-private:
-    void setStringList(const QStringList &strings)
-    {
-        beginResetModel();
-        locations = strings;
-        endResetModel();
-    }
-
 public:
-    explicit playlistModel(QObject *parent=0) : QAbstractListModel(parent) {}
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override
-    {
-        return parent.isValid() ? 0 : locations.size();
-    }
+    explicit playlistModel(QObject *parent=0) : QStringListModel(parent) {}
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
     {
         if (!index.isValid())
             return QVariant();
 
-        const QFileInfo location(locations.value(index.row()));
+        const QFileInfo location(stringList().value(index.row()));
 
         if (role == Qt::DisplayRole)
             return location.completeBaseName();
@@ -67,7 +49,7 @@ public:
             return location.absoluteFilePath();
 
         if (role == Qt::UserRole)
-            return locations.value(index.row());
+            return stringList().value(index.row());
 
         if (role == Qt::UserRole+1)
             return location.fileName();
@@ -78,26 +60,24 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override
     {
         if (!index.isValid())
-            return Qt::ItemIsDropEnabled;
+            return QAbstractListModel::flags(index) | Qt::ItemIsDropEnabled;
 
-        return Qt::ItemIsDropEnabled|Qt::ItemIsEnabled|Qt::ItemIsSelectable
+        return QAbstractListModel::flags(index) | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled | Qt::ItemIsSelectable
 #if QT_VERSION >= 0x050000
-            |Qt::ItemNeverHasChildren
+            | Qt::ItemNeverHasChildren
 #endif
             ;
     }
 
     void clear()
     {
-        beginResetModel();
-        locations.clear();
-        endResetModel();
+        setStringList(QStringList());
     }
 
     void append(QString data)
     {
-        beginInsertRows(QModelIndex(), locations.size(), locations.size()+1);
-        locations.append(data);
+        beginInsertRows(QModelIndex(), stringList().size(), stringList().size());
+        stringList().append(data);
         endInsertRows();
     }
 
@@ -114,6 +94,11 @@ public:
 #if QT_VERSION >= 0x050000
     bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const override
     {
+        Q_UNUSED(action)
+        Q_UNUSED(row)
+        Q_UNUSED(column)
+        Q_UNUSED(parent)
+
         return data->hasUrls();
     }
 #endif
@@ -154,31 +139,6 @@ public:
             }
         }
 
-        return true;
-    }
-
-    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override
-    {
-        beginInsertRows(parent, row, row+count-1);
-        for (int i=0; i<count; i++)
-            locations.insert(row, "---");
-        endInsertRows();
-        return true;
-    }
-
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override
-    {
-        beginRemoveRows(parent, row, row+count-1);
-        for (int i=0; i<count; i++)
-            locations.removeAt(row);
-        endRemoveRows();
-        return true;
-    }
-
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override
-    {
-        locations.replace(index.row(), value.toString());
-        emit dataChanged(index, index);
         return true;
     }
 
