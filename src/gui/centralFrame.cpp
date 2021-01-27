@@ -866,6 +866,7 @@ void centralFrame::onCmdAdd()
     if (!item.isValid())
         return;
     _playlistModel->append(fsm->fileInfo(item).absoluteFilePath());
+    updateSongs();
 }
 
 void centralFrame::onCmdDel()
@@ -873,6 +874,7 @@ void centralFrame::onCmdDel()
     int row = property("UserData").toInt();
     qDebug() << "onCmdDel " << row;
     _playlistModel->removeRow(row);
+    updateSongs();
 }
 
 void centralFrame::onCmdBmAdd()
