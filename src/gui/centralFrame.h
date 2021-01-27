@@ -130,17 +130,9 @@ protected:
     {
         if (mode == sortMode::Random)
         {
-            if (!source_left.isValid())
-            {
-                qDebug("left invalid");
-                return false;
-            }
-            if (!source_right.isValid())
-            {
-                qDebug("right invalid");
-                // FIXME crashes
-                return true;
-            }
+            // FIXME this is broken
+            // see https://bugs.kde.org/show_bug.cgi?id=413018
+            // https://commits.kde.org/plasma-workspace/a1cf305ffb21b8ae8bbaf4d6ce03bbaa94cff405
             return random()%2;
         }
         return QSortFilterProxyModel::lessThan(source_left, source_right);
