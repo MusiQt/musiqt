@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2018 Leandro Nini
+ *  Copyright (C) 2013-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,19 +30,17 @@
 #include "settings.h"
 #include "timeDisplay.h"
 #include "centralFrame.h"
+#include "input/input.h"
 
 #include <QStatusBar>
 #include <QAction>
 #include <QDir>
 #include <QToolButton>
-#include <QAbstractItemDelegate>
 #include <QFileInfo>
 #include <QLayout>
 #include <QDial>
 #include <QMenu>
 #include <QToolBar>
-#include <QLCDNumber>
-#include <QBitmap>
 
 #ifdef _WIN32
 #  include <windows.h>

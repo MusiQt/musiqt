@@ -20,8 +20,12 @@
 
 #include "iconFactory.h"
 #include "bookmark.h"
+#include "playlist.h"
 #include "playlistModel.h"
+#include "proxymodel.h"
 #include "input/inputFactory.h"
+#include "input/input.h"
+#include "input/metaData.h"
 #include "settings.h"
 #include "trackListFactory.h"
 #include "xdg.h"
@@ -35,18 +39,26 @@
 #include <QFileInfo>
 #include <QFileSystemModel>
 #include <QItemSelectionModel>
-#include <QListWidget>
-#include <QListView>
 #include <QMenu>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QSignalMapper>
 #include <QStackedWidget>
-#include <QTimer>
 #include <QTreeView>
 #include <QHeaderView>
 #include <QWidgetAction>
 #include <QDebug>
+
+
+void loadThread::run()
+{
+    if (!iBackend->open(fileName))
+    {
+        utils::delPtr(iBackend);
+    }
+    emit loaded(iBackend);
+}
+
+/*****************************************************************/
 
 centralFrame::centralFrame(QWidget *parent) :
     QWidget(parent),

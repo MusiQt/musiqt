@@ -19,20 +19,17 @@
 #ifndef CENTRALFRAME_H
 #define CENTRALFRAME_H
 
-#include "input/input.h"
-
 #include "audio.h"
 
 #include <QThread>
-#include <QListView>
 #include <QWidget>
-#include <QMouseEvent>
-#include <QSortFilterProxyModel>
-
-#include <algorithm>
 
 class bookmark;
+class input;
+class metaData;
+class playlist;
 class playlistModel;
+class proxymodel;
 
 class QComboBox;
 class QModelIndex;
@@ -52,14 +49,7 @@ private:
     QString fileName;
 
 protected:
-    void run() override
-    {
-        if (!iBackend->open(fileName))
-        {
-            utils::delPtr(iBackend);
-        }
-        emit loaded(iBackend);
-    }
+    void run();
 
 signals:
     void loaded(input* res);
@@ -70,101 +60,6 @@ public:
         iBackend(i),
         fileName(name)
    {}
-};
-
-/*****************************************************************/
-
-class playlist : public QListView
-{
-    Q_OBJECT
-
-private:
-    playlist() {}
-    playlist(const playlist&);
-    playlist& operator=(const playlist&);
-
-public:
-    playlist(QWidget * parent) :
-        QListView(parent)
-    {}
-
-    void mousePressEvent(QMouseEvent *event) override
-    {
-        // Avoid selecting item on right-click
-        if (event->button() == Qt::RightButton)
-            return;
-        QListView::mousePressEvent(event);
-    }
-};
-
-/*****************************************************************/
-
-class proxymodel : public QSortFilterProxyModel
-{
-    Q_OBJECT
-
-public:
-    enum class sortMode { Ascending, Descending, Random };
-
-private:
-    sortMode mode;
-
-    QVector<int> m_randomOrder;
-
-private:
-    proxymodel() {}
-    proxymodel(const proxymodel&);
-    proxymodel& operator=(const proxymodel&);
-
-protected:
-    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override
-    {
-        if (mode == sortMode::Random)
-        {
-            // NOTE cannot return random value as this function must be consistent
-            // see https://bugs.kde.org/show_bug.cgi?id=413018
-            // https://commits.kde.org/plasma-workspace/a1cf305ffb21b8ae8bbaf4d6ce03bbaa94cff405
-            return m_randomOrder.indexOf(source_left.row()) < m_randomOrder.indexOf(source_right.row());
-        }
-        return QSortFilterProxyModel::lessThan(source_left, source_right);
-    }
-
-public:
-    proxymodel(QWidget * parent) :
-        QSortFilterProxyModel(parent),
-        mode(sortMode::Ascending)
-    {}
-
-    void sort(sortMode newMode)
-    {
-        if ((mode == newMode) && (newMode != sortMode::Random))
-            return;
-
-        mode = newMode;
-
-        QSortFilterProxyModel::sort(-1);
-
-        Qt::SortOrder order;
-        switch (mode)
-        {
-        case sortMode::Ascending:
-            order = Qt::AscendingOrder;
-            break;
-        case sortMode::Descending:
-            order = Qt::DescendingOrder;
-            break;
-        case sortMode::Random:
-            order = Qt::AscendingOrder;
-            m_randomOrder.resize(sourceModel()->rowCount());
-            std::iota(m_randomOrder.begin(), m_randomOrder.end(), 0);
-            std::random_shuffle(m_randomOrder.begin(), m_randomOrder.end());
-            break;
-        }
-
-        QSortFilterProxyModel::sort(0, order);
-    }
-
-    sortMode getMode() const { return mode; }
 };
 
 /*****************************************************************/

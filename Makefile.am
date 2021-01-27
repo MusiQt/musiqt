@@ -226,7 +226,9 @@ src/gui/infoLabel.cpp \
 src/gui/infoLabel.h \
 src/gui/mainWindow.cpp \
 src/gui/mainWindow.h \
+src/gui/playlist.h \
 src/gui/playlistModel.h \
+src/gui/proxymodel.h \
 src/gui/settings.cpp \
 src/gui/settings.h \
 src/gui/timeDisplay.h \
@@ -277,7 +279,9 @@ src/gui/centralFrame_moc.cpp \
 src/gui/infoDialog_moc.cpp \
 src/gui/infoLabel_moc.cpp \
 src/gui/mainWindow_moc.cpp \
+src/gui/playlist_moc.cpp \
 src/gui/playlistModel_moc.cpp \
+src/gui/proxymodel_moc.cpp \
 src/gui/settings_moc.cpp \
 src/gui/timeDisplay_moc.cpp \
 src/resources_rcc.cpp
