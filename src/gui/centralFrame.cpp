@@ -126,7 +126,7 @@ centralFrame::centralFrame(QWidget *parent) :
     connect(selectionModel, SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)),
             this, SLOT(onCmdSongSelected(const QModelIndex&)));
     connect(_playlist, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onCmdPlayPauseSong()));
-    //connect(_playlist, SIGNAL(changed()), this, SLOT(updateSongs()));
+    connect(_playlist, SIGNAL(changed()), this, SLOT(updateSongs()));
 
     _playlist->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(_playlist, SIGNAL(customContextMenuRequested(const QPoint&)),
@@ -692,7 +692,6 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     }
 
     load(song);
-    updateSongs();
 }
 
 void centralFrame::onUpdateTime()
@@ -740,7 +739,6 @@ void centralFrame::songEnded()
         if (index.isValid())
         {
             _playlist->setCurrentIndex(index);
-            updateSongs(); 
             return;
         }
     }
@@ -866,7 +864,6 @@ void centralFrame::onCmdAdd()
     if (!item.isValid())
         return;
     _playlistModel->append(fsm->fileInfo(item).absoluteFilePath());
-    updateSongs();
 }
 
 void centralFrame::onCmdDel()
@@ -874,7 +871,6 @@ void centralFrame::onCmdDel()
     int row = property("UserData").toInt();
     qDebug() << "onCmdDel " << row;
     _playlistModel->removeRow(row);
-    updateSongs();
 }
 
 void centralFrame::onCmdBmAdd()
