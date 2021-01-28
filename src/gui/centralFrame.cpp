@@ -78,7 +78,6 @@ centralFrame::centralFrame(QWidget *parent) :
     // dir view
     fsm = new QFileSystemModel(this);
     fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot|QDir::Files);
-    fsm->setRootPath(QDir::rootPath());
     fsm->setNameFilterDisables(false);
     fsm->setNameFilters(TFACTORY->plExt());
 
@@ -1000,5 +999,6 @@ void centralFrame::dirLoaded(const QString &path)
 
 void centralFrame::init()
 {
+    qDebug() << "*** init ***";
     fsm->setRootPath(QDir::rootPath());
 }
