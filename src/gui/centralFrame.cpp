@@ -332,6 +332,9 @@ void centralFrame::onHome()
 
 void centralFrame::onCmdCurrentDir()
 {
+    if (_editMode->isChecked())
+        return;
+
     qDebug() << "onCmdCurrentDir";
     QString file = _input->songLoaded();
     if (file.isEmpty())
