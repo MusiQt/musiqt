@@ -936,7 +936,7 @@ void centralFrame::onCmdPlEdit(bool checked)
     {
         fsm->setNameFilters(TFACTORY->plExt());
         setProperty("AutoBackend", QVariant(false));
-        onDirSelected(_dirlist->currentIndex());
+        onCmdCurrentDir();
     }
 }
 
