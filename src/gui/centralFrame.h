@@ -134,7 +134,7 @@ private slots:
     void onCmdBmAdd();
     void updateSongs();
 
-    void scroll(const QString &);
+    void dirLoaded(const QString &);
 
 private:
     void load(const QString& filename);

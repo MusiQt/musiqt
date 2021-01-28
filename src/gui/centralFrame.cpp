@@ -43,6 +43,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QStackedWidget>
+#include <QTimer>
 #include <QTreeView>
 #include <QHeaderView>
 #include <QWidgetAction>
@@ -981,19 +982,19 @@ void centralFrame::updateSongs()
 void centralFrame::setDir(const QModelIndex& index)
 {
     qDebug("centralFrame::setDir");
-    connect(fsm, SIGNAL(directoryLoaded(const QString &)), this, SLOT(scroll(const QString &)));
+    connect(fsm, SIGNAL(directoryLoaded(const QString &)), this, SLOT(dirLoaded(const QString &)));
     _dirlist->setCurrentIndex(index);
     _dirlist->scrollTo(index);
 }
 
-void centralFrame::scroll(const QString &path)
+void centralFrame::dirLoaded(const QString &path)
 {
-    qDebug() << "scroll: " << path;
+    qDebug() << "dirLoaded: " << path;
     if (path.compare(fsm->fileInfo(_dirlist->currentIndex()).absolutePath()) == 0)
     {
         qDebug() << "scrollTo" << path;
         fsm->disconnect(SIGNAL(directoryLoaded(const QString &)));
-        _dirlist->scrollTo(fsm->index(path)); // FIXME
+        QTimer::singleShot(50, [this](){_dirlist->scrollTo(_dirlist->currentIndex());});
     }
 }
 
