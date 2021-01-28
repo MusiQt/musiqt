@@ -931,12 +931,17 @@ void centralFrame::onCmdPlEdit(bool checked)
             result << str.prepend("*.");
         }
         fsm->setNameFilters(result);
+
+        setProperty("SelectedDir", QVariant(fsm->filePath(_dirlist->currentIndex())));
     }
     else
     {
         fsm->setNameFilters(TFACTORY->plExt());
         setProperty("AutoBackend", QVariant(false));
-        onCmdCurrentDir();
+        _dirlist->setCurrentIndex(QModelIndex());
+        QString dir = property("SelectedDir").toString();
+        qDebug() << "dir " << dir;
+        _dirlist->setCurrentIndex(fsm->index(dir));
     }
 }
 
