@@ -36,6 +36,9 @@ signals:
     void preloadSong();
     void switchSong();
 
+private:
+    qint64 fillBuffer(char *data, qint64 maxSize);
+
 protected:
     qint64 readData(char *data, qint64 maxSize) override;
     qint64 writeData(const char *data, qint64 maxSize) override;

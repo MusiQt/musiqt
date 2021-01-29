@@ -59,13 +59,8 @@ void InputWrapper::enableBs2b()
         aProcess->init(currentSong->samplerate());
 }
 
-qint64 InputWrapper::readData(char *data, qint64 maxSize)
+qint64 InputWrapper::fillBuffer(char *data, qint64 maxSize)
 {
-    if (maxSize == 0)
-    {
-        qDebug() << "readData maxSize=0";
-        return 0;
-    }
 PROFILE_START
     size_t n;
 
@@ -84,6 +79,20 @@ PROFILE_START
 
     aProcess->process(data, n);
 PROFILE_END
+
+    return n;
+}
+
+qint64 InputWrapper::readData(char *data, qint64 maxSize)
+{
+    if (maxSize == 0)
+    {
+        qDebug() << "readData maxSize=0";
+        return 0;
+    }
+
+    size_t n = fillBuffer(data, maxSize);
+
     if (n == 0)
     {
         if (preloadedSong != nullptr)
@@ -91,7 +100,7 @@ PROFILE_END
             currentSong = preloadedSong;
             preloadedSong = nullptr;
             seconds = 0;
-            n = currentSong->fillBuffer((void*)data, maxSize, seconds);
+            n = fillBuffer(data, maxSize);
             emit switchSong();
         }
         else
