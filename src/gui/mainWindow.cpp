@@ -399,6 +399,9 @@ void mainWindow::onConfig()
 
 void mainWindow::onInfo()
 {
+    if (_infoDialog != nullptr)
+        return;
+
     _infoDialog = new infoDialog(this);
     _infoDialog->setInfo(cFrame->getInput()->getMetaData());
     _infoDialog->setAttribute(Qt::WA_QuitOnClose, false);
