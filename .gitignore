@@ -13,3 +13,4 @@ aclocal.m4
 config.log
 config.status
 musiqt.desktop
+musiqt-*.tar.gz
