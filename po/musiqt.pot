@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: musiqt 0.3.0\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2021-01-29 14:14+0100\n"
+"POT-Creation-Date: 2021-01-31 15:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:182 src/gui/centralFrame.cpp:955
+#: src/gui/centralFrame.cpp:182 src/gui/centralFrame.cpp:957
 msgid "Save playlist"
 msgstr ""
 
@@ -124,55 +124,55 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:785
+#: src/gui/centralFrame.cpp:787
 msgid "Add to playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:786
+#: src/gui/centralFrame.cpp:788
 msgid "Add song to the playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:790
+#: src/gui/centralFrame.cpp:792
 msgid "Add to bookmarks"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:791
+#: src/gui/centralFrame.cpp:793
 msgid "Add directory to the bookmarks"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:815
+#: src/gui/centralFrame.cpp:817
 msgid "Remove item"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:816
+#: src/gui/centralFrame.cpp:818
 msgid "Remove selected item from playlist"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:820 src/gui/centralFrame.cpp:822
+#: src/gui/centralFrame.cpp:822 src/gui/centralFrame.cpp:824
 msgid "Sort ascending"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:825 src/gui/centralFrame.cpp:827
+#: src/gui/centralFrame.cpp:827 src/gui/centralFrame.cpp:829
 msgid "Sort descending"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:830
+#: src/gui/centralFrame.cpp:832
 msgid "Shuffle"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:832
+#: src/gui/centralFrame.cpp:834
 msgid "Sort randomly"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:841
+#: src/gui/centralFrame.cpp:843
 msgid "Sorting"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:971
+#: src/gui/centralFrame.cpp:973
 msgid "Error"
 msgstr ""
 
-#: src/gui/centralFrame.cpp:971
+#: src/gui/centralFrame.cpp:973
 msgid "Error saving playlist"
 msgstr ""
 
@@ -233,7 +233,7 @@ msgid "Songs"
 msgstr ""
 
 #: src/gui/mainWindow.cpp:217 src/gui/mainWindow.cpp:325
-#: src/gui/mainWindow.cpp:444
+#: src/gui/mainWindow.cpp:447
 msgid "Stopped"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgstr ""
 msgid "&Play"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:303 src/gui/mainWindow.cpp:425
+#: src/gui/mainWindow.cpp:303 src/gui/mainWindow.cpp:428
 msgid "Play"
 msgstr ""
 
@@ -309,35 +309,35 @@ msgstr ""
 msgid "Switch to full UI mode"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:430
+#: src/gui/mainWindow.cpp:433
 msgid "Pause"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:448
+#: src/gui/mainWindow.cpp:451
 msgid "Playing"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:452
+#: src/gui/mainWindow.cpp:455
 msgid "Paused"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:491
+#: src/gui/mainWindow.cpp:494
 msgid "Loading..."
 msgstr ""
 
-#: src/gui/mainWindow.cpp:521
+#: src/gui/mainWindow.cpp:524
 msgid "Song mode"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:522
+#: src/gui/mainWindow.cpp:525
 msgid "Switch to song mode"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:527
+#: src/gui/mainWindow.cpp:530
 msgid "Playlist mode"
 msgstr ""
 
-#: src/gui/mainWindow.cpp:528
+#: src/gui/mainWindow.cpp:531
 msgid "Switch to playlist mode"
 msgstr ""
 
