@@ -20,10 +20,11 @@
 #define QAUDIOBACKEND_H
 
 #include "inputTypes.h"
+#include "AudioOutputWrapper.h"
 
 #include <QAudio>
-#include <QAudioOutput>
 #include <QRunnable>
+#include <QThread>
 
 #include <memory>
 
@@ -47,7 +48,8 @@ class qaudioBackend : public QObject
     Q_OBJECT
 
 private:
-    QAudioOutput *audioOutput;
+    AudioOutputWrapper *audioOutput;
+    QThread* thread;
 
 signals:
     void songEnded();
@@ -58,7 +60,7 @@ public slots:
 public:
     qaudioBackend();
 
-    virtual ~qaudioBackend() {};
+    virtual ~qaudioBackend() { delete thread; }
 
     static QStringList getDevices();
 

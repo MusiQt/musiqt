@@ -211,6 +211,7 @@ $(WAVPACK_SOURCES) \
 src/audio/output/audioProcess.h \
 src/audio/output/qaudioBackend.cpp \
 src/audio/output/qaudioBackend.h \
+src/audio/output/AudioOutputWrapper.h \
 src/gui/aboutDialog.cpp \
 src/gui/aboutDialog.h \
 src/gui/bookmark.cpp \
@@ -262,6 +263,7 @@ src/audio/audio_moc.cpp \
 src/audio/InputWrapper_moc.cpp \
 src/audio/configFrame_moc.cpp \
 src/audio/output/qaudioBackend_moc.cpp \
+src/audio/output/AudioOutputWrapper_moc.cpp \
 $(MPG123_MOC) \
 $(FFMPEG_MOC) \
 $(OPENMPT_MOC) \
