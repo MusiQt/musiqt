@@ -315,6 +315,8 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
                 _playlist->setCurrentIndex(items.at(0));
                 _playlist->scrollTo(items.at(0));
             }
+            else if (!playing)
+                _playlist->setCurrentIndex(_proxyModel->index(0, 0));
         }
     }
 }
