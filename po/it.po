@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2021-01-31 15:34+0100\n"
+"POT-Creation-Date: 2021-02-01 10:27+0100\n"
 "PO-Revision-Date: 2018-09-04 21:20+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -561,11 +561,11 @@ msgstr "Il percorso non esiste"
 msgid "publisher"
 msgstr "editore"
 
-#: src/audio/input/mpg123Backend.cpp:423
+#: src/audio/input/mpg123Backend.cpp:426
 msgid "Decoder"
 msgstr "Decoder"
 
-#: src/audio/input/mpg123Backend.cpp:443
+#: src/audio/input/mpg123Backend.cpp:446
 msgid "Fast scan"
 msgstr "Scan veloce"
 

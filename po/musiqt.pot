@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: musiqt 0.3.0\n"
 "Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2021-01-31 15:34+0100\n"
+"POT-Creation-Date: 2021-02-01 10:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -550,11 +550,11 @@ msgstr ""
 msgid "publisher"
 msgstr ""
 
-#: src/audio/input/mpg123Backend.cpp:423
+#: src/audio/input/mpg123Backend.cpp:426
 msgid "Decoder"
 msgstr ""
 
-#: src/audio/input/mpg123Backend.cpp:443
+#: src/audio/input/mpg123Backend.cpp:446
 msgid "Fast scan"
 msgstr ""
 
