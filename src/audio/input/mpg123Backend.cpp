@@ -88,7 +88,10 @@ size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize, const un
     size_t n;
     const int err = mpg123_read(_handle, (unsigned char*)buffer, bufferSize, &n);
     if (err != MPG123_OK)
+    {
+        qWarning() << mpg123_plain_strerror(err);
         return 0;
+    }
 
     return n;
 }
@@ -359,7 +362,7 @@ bool mpg123Backend::open(const QString& fileName)
     return true;
 
 error:
-    qWarning() << mpg123_plain_strerror(err);
+    qWarning() << mpg123_strerror(_handle);
     _file.close();
     return false;
 }
