@@ -672,6 +672,9 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 
     _playlist->scrollTo(currentRow);
 
+    if (!_playlist->isVisible())
+        updateSongs();
+
     if (!preloaded.isEmpty())
     {
         if (preloaded.compare(song))
