@@ -14,8 +14,10 @@ jobs:
     - uses: jurplel/install-qt-action@v2
     - name: fixpkg
       run: for file in $(ls $Qt5_DIR/lib/pkgconfig/*); do sed -i "s|^prefix=.*|prefix=$Qt5_DIR|" $file; done;
-    - name: deps
+    - name: bootstrap_deps
       run: sudo apt-get install autopoint gettext
+    - name: build_deps
+      run: sudo apt-get libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libbs2b-dev
     - uses: actions/checkout@v2
     - name: bootstrap
       run: autoreconf -vfi
