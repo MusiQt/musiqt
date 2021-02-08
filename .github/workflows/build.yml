@@ -17,7 +17,7 @@ jobs:
     - name: bootstrap_deps
       run: sudo apt-get install autopoint gettext
     - name: build_deps
-      run: sudo apt-get libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libbs2b-dev
+      run: sudo apt-get install libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libbs2b-dev
     - uses: actions/checkout@v2
     - name: bootstrap
       run: autoreconf -vfi
