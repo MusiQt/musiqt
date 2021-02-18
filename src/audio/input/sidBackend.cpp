@@ -933,19 +933,23 @@ void sidConfig::onCmdRom(int val)
 {
     const char* text;
     QString* romPath;
+    QLineEdit* romEdit;
     switch (val)
     {
     case ID_KERNAL:
         text = "Kernal";
         romPath = &SIDSETTINGS.kernalPath;
+        romEdit = kernalRomPath;
         break;
     case ID_BASIC:
         text = "BASIC";
         romPath = &SIDSETTINGS.basicPath;
+        romEdit = basicRomPath;
         break;
     case ID_CHARGEN:
         text = "Chargen";
         romPath = &SIDSETTINGS.chargenPath;
+        romEdit = chargenRomPath;
         break;
     default:
         return;
@@ -954,6 +958,8 @@ void sidConfig::onCmdRom(int val)
     QString file = QFileDialog::getOpenFileName(this, QString(tr("Select %1 Rom file")).arg(text), *romPath);
     if (!file.isNull())
         *romPath = file;
+
+    romEdit->setText(*romPath);
 }
 
 void sidConfig::onCmdForceC64Model(bool val)
