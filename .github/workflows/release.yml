@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  release:
+     types: [published]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: jurplel/install-qt-action@v2
+    - name: fixpkg
+      run: for file in $(ls $Qt5_DIR/lib/pkgconfig/*); do sed -i "s|^prefix=.*|prefix=$Qt5_DIR|" $file; done;
+    - name: bootstrap_deps
+      run: sudo apt-get install autopoint gettext
+    - name: build_deps
+      run: |
+        sudo apt-get install libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libbs2b-dev
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.ref }}
+    - name: bootstrap
+      run: autoreconf -vfi
+    - name: configure
+      run: ./configure
+    - name: make dist
+      id: package-generator
+      run: |
+        make dist
+        RELEASE_TARBALL=$(ls musiqt-*.tar.gz)
+        echo ::set-output name=filename::${RELEASE_TARBALL}
+    - name: Upload to release
+      uses: JasonEtco/upload-to-release@master
+      with:
+        args: ${{ steps.package-generator.outputs.filename }} application/gzip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
