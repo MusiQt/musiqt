@@ -90,7 +90,7 @@ zlib 1.2.x
 http://www.zlib.org/
 
 libsidplayfp >= 1.0
-http://sourceforge.net/projects/sidplay-residfp/
+https://github.com/libsidplayfp/libsidplayfp/
 
 libvorbisfile >= 1.1.x
 http://www.xiph.org/
