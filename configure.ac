@@ -218,9 +218,6 @@ AS_IF([test "x$enable_gme_plugin" = xyes -o "x$enable_sidplayfp_plugin" != xno],
         [libstilview >= 1.0],
         [AC_DEFINE([HAVE_STILVIEW], 1, [Define to 1 if you have libstilview (-lstilview).])],
         [AC_MSG_WARN([$STILVIEW_PKG_ERRORS])]
-    )
-    AS_IF([test "x$pkg_cv_STILVIEW_LIBS" = "x"],
-        internal_stil=yes
     )]
 )
 
