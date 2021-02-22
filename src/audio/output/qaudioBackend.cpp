@@ -113,13 +113,8 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     }
 
     QAudioFormat format;
-#if QT_VERSION >= 0x050000
     format.setSampleRate(sampleRate);
     format.setChannelCount(channels);
-#else
-    format.setFrequency(sampleRate);
-    format.setChannels(channels);
-#endif
     format.setSampleSize(sampleSize);
     format.setCodec("audio/pcm");
     format.setByteOrder(QAudioFormat::LittleEndian);
@@ -130,11 +125,8 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     if (!list[card].isFormatSupported(format))
     {
         format = list[card].nearestFormat(format);
-#if QT_VERSION >= 0x050000
         sampleRate = format.sampleRate();
-#else
-        sampleRate = format.frequency();
-#endif
+
         // FIXME
         qWarning() << "Audio format not supported";
         return 0;
@@ -207,18 +199,14 @@ void qaudioBackend::volume(int vol)
     if (audioOutput == nullptr)
         return;
 
-#if QT_VERSION >= 0x050000
-#  if QT_VERSION >= 0x050800
+#if QT_VERSION >= 0x050800
     qreal volume = QAudio::convertVolume(vol / qreal(100.0),
                                          QAudio::LogarithmicVolumeScale,
                                          QAudio::LinearVolumeScale);
-#  else
-    qreal volume = qreal(vol/100.0f);
-#  endif
-    QMetaObject::invokeMethod(audioOutput, "setVolume", Q_ARG(qreal, volume));
 #else
-    qDebug("Unimplemented");
+    qreal volume = qreal(vol/100.0f);
 #endif
+    QMetaObject::invokeMethod(audioOutput, "setVolume", Q_ARG(qreal, volume));
 }
 
 int qaudioBackend::volume()
@@ -226,18 +214,13 @@ int qaudioBackend::volume()
     if (audioOutput == nullptr)
         return 0;
 
-#if QT_VERSION >= 0x050000
-#  if QT_VERSION >= 0x050800
+#if QT_VERSION >= 0x050800
     return QAudio::convertVolume(audioOutput->volume(),
                                  QAudio::LinearVolumeScale,
                                  QAudio::LogarithmicVolumeScale) * 100;
-#  else
+#else
     qreal volume;
     QMetaObject::invokeMethod(audioOutput, "volume", Qt::BlockingQueuedConnection, Q_RETURN_ARG(qreal, volume));
     return volume*100;
-#  endif
-#else
-    qDebug("Unimplemented");
-    return 0;
 #endif
 }

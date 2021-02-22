@@ -1,6 +1,6 @@
 # Process this file with autoconf to create configure.
 
-AC_INIT([musiqt],[0.3.0],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
+AC_INIT([musiqt],[0.4.0],[https://github.com/drfiemost/musiqt/issues/],[musiqt],[https://github.com/drfiemost/musiqt/])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR([config])
@@ -239,14 +239,7 @@ PKG_CHECK_MODULES(QT, [Qt5Core Qt5Gui Qt5Network Qt5Widgets Qt5Multimedia >= 5.6
   AC_PATH_PROGS(MOC, [moc-qt5 moc], [moc], [$QT5_PATH])
   AC_PATH_PROGS(RCC, [rcc-qt5 rcc], [rcc], [$QT5_PATH])
   AC_PATH_PROGS(UIC, [uic-qt5 uic], [uic], [$QT5_PATH])
-],
-  [PKG_CHECK_MODULES(QT, [QtCore QtGui QtNetwork QtMultimedia >= 4.6.0], [
-    QT4_PATH="$( eval $PKG_CONFIG --variable=exec_prefix QtCore )/bin"
-    AC_PATH_PROGS(MOC, [moc-qt4 moc], [moc], [$QT4_PATH])
-    AC_PATH_PROGS(RCC, [rcc-qt4 rcc], [rcc], [$QT4_PATH])
-    AC_PATH_PROGS(UIC, [uic-qt4 uic], [uic], [$QT4_PATH])
-  ])]
-)
+])
 
 AC_CONFIG_FILES([
 po/Makefile.in

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020 Leandro Nini
+ *  Copyright (C) 2020-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 
 //#define PROFILE
 
-#if defined(PROFILE) && QT_VERSION >= 0x040700
+#if defined(PROFILE)
 #  include <QElapsedTimer>
 
 #  define PROFILE_START QElapsedTimer timer; \

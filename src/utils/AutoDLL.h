@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,10 +20,6 @@
 #define AUTODLL_H
 
 #include <QLibrary>
-
-#if QT_VERSION < 0x050000
-# define QFunctionPointer void*
-#endif
 
 class AutoDLL
 {

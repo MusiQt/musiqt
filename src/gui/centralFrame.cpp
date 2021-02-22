@@ -90,11 +90,7 @@ centralFrame::centralFrame(QWidget *parent) :
     _dirlist->setUniformRowHeights(true);
     _dirlist->setDragEnabled(true);
     _dirlist->setContextMenuPolicy(Qt::CustomContextMenu);
-#if QT_VERSION >= 0x050000
     _dirlist->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-#else
-    _dirlist->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-#endif
     _dirlist->header()->setStretchLastSection(false);
     QItemSelectionModel* selectionModel = _dirlist->selectionModel();
 
