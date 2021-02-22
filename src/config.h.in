@@ -1,0 +1,145 @@
+/* src/config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define to 1 if you want the Hively backend. */
+#cmakedefine  BUILD_HVL
+
+/* Define to 1 if translation of program messages to the user's native
+   language is requested. */
+#cmakedefine  ENABLE_NLS
+
+/* Define to 1 if you have libsndfile>=1.0.21 on MinGW. */
+#cmakedefine  ENABLE_SNDFILE_WINDOWS_PROTOTYPES @ENABLE_SNDFILE_WINDOWS_PROTOTYPES@
+
+/* Define to 1 if you have libbs2b (-lbs2b). */
+#cmakedefine  HAVE_BS2B
+
+/* Define to 1 if you have the Mac OS X function CFLocaleCopyCurrent in the
+   CoreFoundation framework. */
+#cmakedefine  HAVE_CFLOCALECOPYCURRENT
+
+/* Define to 1 if you have the Mac OS X function CFPreferencesCopyAppValue in
+   the CoreFoundation framework. */
+#cmakedefine  HAVE_CFPREFERENCESCOPYAPPVALUE
+
+/* define if the compiler supports basic C++11 syntax */
+#cmakedefine  HAVE_CXX11
+
+/* Define if the GNU dcgettext() function is already present or preinstalled.
+   */
+#cmakedefine  HAVE_DCGETTEXT
+
+/* Define if the GNU gettext() function is already present or preinstalled. */
+#cmakedefine  HAVE_GETTEXT
+
+/* Define to 1 if you have libgme (-lgme). */
+#cmakedefine  HAVE_GME
+
+/* Define if you have the iconv() function and it works. */
+#cmakedefine  HAVE_ICONV
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine  HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <libavformat/avformat.h> header file. */
+#cmakedefine  HAVE_LIBAVFORMAT_AVFORMAT_H
+
+/* Define to 1 if you have the `mpcdec' library (-lmpcdec). */
+#cmakedefine  HAVE_LIBMPCDEC
+
+/* Define to 1 if you have the `z' library (-lz). */
+#cmakedefine  HAVE_LIBZ
+
+/* Define to 1 if you have the <mpcdec/mpcdec.h> header file. */
+#cmakedefine  HAVE_MPCDEC_MPCDEC_H
+
+/* Define to 1 if you have the <mpc/mpcdec.h> header file. */
+#cmakedefine  HAVE_MPC_MPCDEC_H
+
+/* Define to 1 if you have libmpg123 (-lmpg123). */
+#cmakedefine  HAVE_MPG123
+
+/* Define to 1 if you have libopenmpt (-lopenmp). */
+#cmakedefine  HAVE_OPENMPT
+
+/* Define to 1 if you have libopusfile (-lopusfile). */
+#cmakedefine  HAVE_OPUS
+
+/* Define to 1 if you have libsidplayfp (-lsidplayfp). */
+#cmakedefine  HAVE_SIDPLAYFP
+
+/* Define to 1 if you have the <sidplayfp/builders/exsid.h> header file. */
+#cmakedefine  HAVE_SIDPLAYFP_BUILDERS_EXSID_H
+
+/* Define to 1 if you have the <sidplayfp/builders/hardsid.h> header file. */
+#cmakedefine  HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
+
+/* Define to 1 if you have the <sidplayfp/builders/residfp.h> header file. */
+#cmakedefine  HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
+
+/* Define to 1 if you have the <sidplayfp/builders/resid.h> header file. */
+#cmakedefine  HAVE_SIDPLAYFP_BUILDERS_RESID_H
+
+/* Define to 1 if you have libsndfile (-lsndfile). */
+#cmakedefine  HAVE_SNDFILE
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine  HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#cmakedefine  HAVE_STDIO_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#cmakedefine  HAVE_STDLIB_H
+
+/* Define to 1 if you have libstilview (-lstilview). */
+#cmakedefine  HAVE_STILVIEW
+
+/* Define to 1 if you have the <strings.h> header file. */
+#cmakedefine  HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#cmakedefine  HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#cmakedefine  HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#cmakedefine  HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine  HAVE_UNISTD_H
+
+/* Define to 1 if you have libvorbisfile (-lvorbisfile). */
+#cmakedefine  HAVE_VORBIS
+
+/* Define to 1 if you have wavpack (-lwavpack). */
+#cmakedefine  HAVE_WAVPACK
+
+/* Name of package */
+#cmakedefine  PACKAGE "@PACKAGE@"
+
+/* Define to the address where bug reports for this package should be sent. */
+#cmakedefine  PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
+
+/* Define to the full name of this package. */
+#cmakedefine  PACKAGE_NAME "@PACKAGE_NAME@"
+
+/* Define to the full name and version of this package. */
+#cmakedefine  PACKAGE_STRING "@PACKAGE_STRING@"
+
+/* Define to the one symbol short name of this package. */
+#cmakedefine  PACKAGE_TARNAME "@PACKAGE_TARNAME@"
+
+/* Define to the home page for this package. */
+#cmakedefine  PACKAGE_URL "@PACKAGE_URL@"
+
+/* Define to the version of this package. */
+#cmakedefine  PACKAGE_VERSION "@PACKAGE_VERSION@"
+
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
+#cmakedefine  STDC_HEADERS
+
+/* Version number of package */
+#cmakedefine  VERSION

@@ -108,12 +108,6 @@ ENDIF(DEBUG)
 #####################################################
 
 include(GNUInstallDirs)
-ADD_DEFINITIONS(-DPACKAGE_NAME="${PROJECT_NAME}")
-ADD_DEFINITIONS(-DPACKAGE="${PROJECT_NAME}")
-ADD_DEFINITIONS(-DPACKAGE_STRING="${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
-ADD_DEFINITIONS(-DPACKAGE_VERSION="${CMAKE_PROJECT_VERSION}")
-ADD_DEFINITIONS(-DPACKAGE_BUGREPORT="${PROJECT_HOMEPAGE_URL}")
-ADD_DEFINITIONS(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 
 set(PACKAGE_NAME "${PROJECT_NAME}")
 set(PACKAGE "${PROJECT_NAME}")
@@ -122,9 +116,6 @@ set(PACKAGE_VERSION "${CMAKE_PROJECT_VERSION}")
 set(PACKAGE_BUGREPORT "${PROJECT_HOMEPAGE_URL}")
 set(LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}")
 set(top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}")
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/resfile.rc.in ${CMAKE_CURRENT_BINARY_DIR}/src/resfile.rc @ONLY)
-#CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/config.h)
 
 #####################################################
 # Check for gettext
@@ -147,6 +138,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/audio)
 include_directories(${CMAKE_SOURCE_DIR}/src/gui)
 include_directories(${CMAKE_SOURCE_DIR}/src/trackList)
 include_directories(${CMAKE_SOURCE_DIR}/src/utils)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 
 find_package(PkgConfig REQUIRED)
 
@@ -165,7 +157,8 @@ target_link_libraries(musiqt Qt5::Widgets Qt5::Network Qt5::Multimedia)
 
 find_package(ZLIB)
 IF(ZLIB_FOUND)
-    ADD_DEFINITIONS(-DNOUNCRYPT -DHAVE_LIBZ)
+    ADD_DEFINITIONS(-DNOUNCRYPT)
+    SET(HAVE_LIBZ 1)
     target_sources(musiqt PRIVATE
         src/libs/unzip/ioapi.h
         src/libs/unzip/ioapi.c
@@ -189,14 +182,14 @@ IF(SNDFILE)
     find_package(SndFile 1.0)
     if(SNDFILE_FOUND)
         MESSAGE(STATUS "Found sndfile, version " ${SndFile_VERSION})
-        ADD_DEFINITIONS(-DHAVE_SNDFILE)
+        SET(HAVE_SNDFILE 1)
         target_sources(musiqt PRIVATE
             src/audio/input/sndBackend.cpp
             src/audio/input/sndBackend.h
         )
         target_link_libraries(musiqt SndFile::sndfile)
         if(MINGW AND ${SndFile_VERSION} VERSION_GREATER_EQUAL "1.0.21")
-            ADD_DEFINITIONS(-DENABLE_SNDFILE_WINDOWS_PROTOTYPES)
+            SET(ENABLE_SNDFILE_WINDOWS_PROTOTYPES 1)
         endif()
     endif(SNDFILE_FOUND)
 ENDIF(SNDFILE)
@@ -208,7 +201,7 @@ OPTION(MPG123 "Build mpg123 backend if available" ON)
 IF(MPG123)
     pkg_check_modules(libmpg123 IMPORTED_TARGET libmpg123>=1.6)
     if(libmpg123_FOUND)
-        ADD_DEFINITIONS(-DHAVE_MPG123)
+        SET(HAVE_MPG123 1)
         target_sources(musiqt PRIVATE
             src/audio/input/mpg123Backend.cpp
             src/audio/input/mpg123Backend.h
@@ -224,7 +217,7 @@ OPTION(VORBIS "Build ogg-vorbis backend if available" ON)
 IF(VORBIS)
     pkg_check_modules(vorbisfile IMPORTED_TARGET vorbisfile>=1.1)
     if(vorbisfile_FOUND)
-        ADD_DEFINITIONS(-DHAVE_VORBIS)
+        SET(HAVE_VORBIS 1)
         target_sources(musiqt PRIVATE
             src/audio/input/oggBackend.cpp
             src/audio/input/oggBackend.h
@@ -240,7 +233,7 @@ OPTION(OPUS "Build opus backend if available" ON)
 IF(OPUS)
     pkg_check_modules(opusfile IMPORTED_TARGET opusfile>=0.7)
     if(opusfile_FOUND)
-        ADD_DEFINITIONS(-DHAVE_OPUS)
+        SET(HAVE_OPUS 1)
         target_sources(musiqt PRIVATE
             src/audio/input/opusBackend.cpp
             src/audio/input/opusBackend.h
@@ -256,7 +249,7 @@ OPTION(GME "Build Game Music Engine backend if available" ON)
 IF(GME)
     pkg_check_modules(libgme IMPORTED_TARGET libgme>=0.6)
     if(libgme_FOUND)
-        ADD_DEFINITIONS(-DHAVE_GME)
+        SET(HAVE_GME 1)
         target_sources(musiqt PRIVATE
             src/audio/input/gmeBackend.cpp
             src/audio/input/gmeBackend.h
@@ -272,7 +265,7 @@ OPTION(OPENMPT "Build openmpt backend if available" ON)
 IF(OPENMPT)
     pkg_check_modules(libopenmpt IMPORTED_TARGET libopenmpt>=0.2)
     if(libopenmpt_FOUND)
-        ADD_DEFINITIONS(-DHAVE_OPENMPT)
+        SET(HAVE_OPENMPT 1)
         target_sources(musiqt PRIVATE
             src/audio/input/openmptBackend.cpp
             src/audio/input/openmptBackend.h
@@ -288,7 +281,7 @@ OPTION(WAVPACK "Build wavpack backend if available" ON)
 IF(WAVPACK)
     pkg_check_modules(wavpack IMPORTED_TARGET wavpack>=4)
     if(wavpack_FOUND)
-        ADD_DEFINITIONS(-DHAVE_WAVPACK)
+        SET(HAVE_WAVPACK 1)
         target_sources(musiqt PRIVATE
             src/audio/input/wvBackend.cpp
             src/audio/input/wvBackend.h
@@ -305,6 +298,7 @@ IF(FFMPEG)
     INCLUDE(CheckIncludeFile)
     CHECK_INCLUDE_FILE(libavformat/avformat.h HAVE_AVFORMAT_H -D__STDC_CONSTANT_MACROS)
     if(HAVE_AVFORMAT_H)
+        SET(HAVE_LIBAVFORMAT_AVFORMAT_H 1)
         ADD_DEFINITIONS(-D__STDC_CONSTANT_MACROS)
         target_sources(musiqt PRIVATE
             src/audio/input/ffmpegBackend.cpp
@@ -320,7 +314,7 @@ OPTION(SIDPLAYFP "Build sidplayfp backend if available" ON)
 IF(SIDPLAYFP)
     pkg_check_modules(libsidplayfp IMPORTED_TARGET libsidplayfp>=1.0)
     if(libsidplayfp_FOUND)
-        ADD_DEFINITIONS(-DHAVE_SIDPLAYFP)
+        SET(HAVE_SIDPLAYFP 1)
         target_sources(musiqt PRIVATE
             src/audio/input/sidBackend.cpp
             src/audio/input/sidBackend.h
@@ -342,7 +336,7 @@ ENDIF(SIDPLAYFP)
 if(libsidplayfp_FOUND OR libgme_FOUND)
     pkg_check_modules(libstilview IMPORTED_TARGET libstilview>=1.0)
     if(libstilview_FOUND)
-        ADD_DEFINITIONS(-DHAVE_STILVIEW)
+        SET(HAVE_STILVIEW 1)
         target_link_libraries(musiqt PkgConfig::libstilview)
     endif(libstilview_FOUND)
 endif()
@@ -352,7 +346,7 @@ endif()
 
 option(HVL "Build Hively backend" ON)
 if(HVL)
-    ADD_DEFINITIONS(-DBUILD_HVL)
+    SET(BUILD_HVL 1)
     target_sources(musiqt PRIVATE
         src/libs/hvl_replay/hvl_replay.h
         src/libs/hvl_replay/hvl_replay.c
@@ -392,6 +386,13 @@ ENDIF(MPC)
 
 pkg_check_modules(libbs2b IMPORTED_TARGET libbs2b>=2.2)
 if(libbs2b_FOUND)
-    ADD_DEFINITIONS(-DHAVE_BS2B)
+    SET(HAVE_BS2B 1)
     target_link_libraries(musiqt PkgConfig::libbs2b)
 endif(libbs2b_FOUND)
+
+##################################################################
+
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/resfile.rc.in ${CMAKE_CURRENT_BINARY_DIR}/src/resfile.rc @ONLY)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/config.h @ONLY)
+
+ADD_DEFINITIONS(-DHAVE_CONFIG_H)
