@@ -38,11 +38,11 @@ translator::translator(QObject* parent) :
     char* locale = setlocale(LC_ALL, "");
     qDebug() << "locale: " << locale;
 #ifndef _WIN32
-    char* basedir = bindtextdomain(PACKAGE, LOCALEDIR);
+    const char* basedir = bindtextdomain(PACKAGE, LOCALEDIR);
 #else
     QString localedir = QString(QCoreApplication::applicationDirPath()).append("/locale");
     qDebug() << "localedir: " << localedir;
-    char* basedir = bindtextdomain(PACKAGE, localedir.toLocal8Bit().constData());
+    const char* basedir = bindtextdomain(PACKAGE, localedir.toLocal8Bit().constData());
 #endif
     qDebug() << "basedir: " << basedir;
 
