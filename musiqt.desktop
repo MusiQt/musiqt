@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=MusiQt
+Comment=Audio player
+Comment[it]=Player audio
+
+TryExec=musiqt
+Exec=musiqt %f
+Icon=musiqt.png
+
+StartupNotify=false
+Type=Application
+Categories=Audio;Player;AudioVideo;

@@ -141,6 +141,9 @@ include_directories(${CMAKE_SOURCE_DIR}/src/utils)
 
 find_package(PkgConfig REQUIRED)
 
+INSTALL(FILES musiqt.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+INSTALL(FILES musiqt.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons)
+
 ##################################################################
 # Check for Qt
 
