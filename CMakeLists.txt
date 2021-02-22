@@ -114,8 +114,9 @@ set(PACKAGE "${PROJECT_NAME}")
 set(PACKAGE_STRING "${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
 set(PACKAGE_VERSION "${CMAKE_PROJECT_VERSION}")
 set(PACKAGE_BUGREPORT "${PROJECT_HOMEPAGE_URL}")
-set(LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}")
 set(top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}")
+
+ADD_DEFINITIONS(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 
 #####################################################
 # Check for gettext
@@ -179,19 +180,20 @@ ENDIF(ZLIB_FOUND)
 
 OPTION(SNDFILE "Build sndfile backend if available" ON)
 IF(SNDFILE)
-    find_package(SndFile 1.0)
-    if(SNDFILE_FOUND)
-        MESSAGE(STATUS "Found sndfile, version " ${SndFile_VERSION})
+    #find_package(SndFile 1.0)
+    pkg_check_modules(sndfile IMPORTED_TARGET sndfile>=1.0)
+    if(sndfile_FOUND)
+        #MESSAGE(STATUS "Found sndfile, version " ${SndFile_VERSION})
         SET(HAVE_SNDFILE 1)
         target_sources(musiqt PRIVATE
             src/audio/input/sndBackend.cpp
             src/audio/input/sndBackend.h
         )
-        target_link_libraries(musiqt SndFile::sndfile)
-        if(MINGW AND ${SndFile_VERSION} VERSION_GREATER_EQUAL "1.0.21")
+        target_link_libraries(musiqt PkgConfig::sndfile)
+        if(MINGW AND ${sndfile_VERSION} VERSION_GREATER_EQUAL "1.0.21")
             SET(ENABLE_SNDFILE_WINDOWS_PROTOTYPES 1)
         endif()
-    endif(SNDFILE_FOUND)
+    endif(sndfile_FOUND)
 ENDIF(SNDFILE)
 
 ##################################################################
@@ -365,7 +367,9 @@ IF(MPC)
     INCLUDE(CheckLibraryExists)
     CHECK_INCLUDE_FILE(mpc/mpcdec.h HAVE_MPC_MPCDEC_H)
     if(HAVE_MPC_MPCDEC_H)
+        set(CMAKE_REQUIRED_LIBRARIES -lm) # ???
         CHECK_LIBRARY_EXISTS(mpcdec mpc_demux_init "" HAVE_LIBMPCDEC)
+        set(MPCDEC_SV8 1)
     else(HAVE_MPC_MPCDEC_H)
         CHECK_INCLUDE_FILE(mpcdec/mpcdec.h HAVE_MPCDEC_MPCDEC_H)
         if(HAVE_MPCDEC_MPCDEC_H)
@@ -378,6 +382,7 @@ IF(MPC)
             src/audio/input/mpcBackend.cpp
             src/audio/input/mpcBackend.h
         )
+        target_link_libraries(musiqt mpcdec)
     endif(HAVE_LIBMPCDEC)
 ENDIF(MPC)
 

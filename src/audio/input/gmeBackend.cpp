@@ -253,7 +253,7 @@ bool gmeBackend::subtune(const unsigned int i)
 
 void gmeBackend::openAsma(const QString& asmaPath)
 {
-#if HAVE_STILVIEW
+#ifdef HAVE_STILVIEW
     if (asmaPath.isEmpty())
         return;
 
@@ -364,7 +364,7 @@ gmeConfig::gmeConfig(QWidget* win) :
     button->setToolTip(tr("Select ASMA directory"));
     hf->addWidget(button);
     connect(button, SIGNAL(clicked()), this, SLOT(onCmdAsma()));
-#if !HAVE_STILVIEW
+#ifndef HAVE_STILVIEW
      asmaPath->setEnabled(false);
      button->setEnabled(false);
 #endif

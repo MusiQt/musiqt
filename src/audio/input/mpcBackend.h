@@ -23,11 +23,10 @@
 #  include "config.h"
 #endif
 
-#ifdef HAVE_MPC_MPCDEC_H
+#ifdef MPCDEC_SV8
 #  include <mpc/mpcdec.h>
 #  define DATAPARM mpc_reader *p_reader
 #  define DATAFILE (p_reader->data)
-#  define SV8
 #else
 #  include <mpcdec/mpcdec.h>
 #  define DATAPARM void *data
@@ -63,7 +62,7 @@ class mpcBackend : public inputBackend
     friend class mpcConfig;
 
 private:
-#ifdef SV8
+#ifdef MPCDEC_SV8
     mpc_demux* _demux;
 #else
     mpc_decoder _decoder;

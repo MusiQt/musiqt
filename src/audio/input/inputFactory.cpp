@@ -52,7 +52,7 @@
 #ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
 #  include "ffmpegBackend.h"
 #endif
-#if defined(HAVE_MPCDEC_MPCDEC_H) || defined(HAVE_MPC_MPCDEC_H)
+#ifdef HAVE_LIBMPCDEC
 #  include "mpcBackend.h"
 #endif
 
@@ -124,7 +124,7 @@ iFactory::iFactory()
         regBackend<ffmpegBackend>();
 #endif
     
-#if defined(HAVE_MPCDEC_MPCDEC_H) || defined(HAVE_MPC_MPCDEC_H)
+#ifdef HAVE_LIBMPCDEC
     regBackend<mpcBackend>();
 #endif
 }

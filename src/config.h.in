@@ -1,4 +1,3 @@
-/* src/config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you want the Hively backend. */
 #cmakedefine  BUILD_HVL
@@ -12,21 +11,6 @@
 
 /* Define to 1 if you have libbs2b (-lbs2b). */
 #cmakedefine  HAVE_BS2B
-
-/* Define to 1 if you have the Mac OS X function CFLocaleCopyCurrent in the
-   CoreFoundation framework. */
-#cmakedefine  HAVE_CFLOCALECOPYCURRENT
-
-/* Define to 1 if you have the Mac OS X function CFPreferencesCopyAppValue in
-   the CoreFoundation framework. */
-#cmakedefine  HAVE_CFPREFERENCESCOPYAPPVALUE
-
-/* define if the compiler supports basic C++11 syntax */
-#cmakedefine  HAVE_CXX11
-
-/* Define if the GNU dcgettext() function is already present or preinstalled.
-   */
-#cmakedefine  HAVE_DCGETTEXT
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #cmakedefine  HAVE_GETTEXT
@@ -46,14 +30,10 @@
 /* Define to 1 if you have the `mpcdec' library (-lmpcdec). */
 #cmakedefine  HAVE_LIBMPCDEC
 
+#cmakedefine  MPCDEC_SV8
+
 /* Define to 1 if you have the `z' library (-lz). */
 #cmakedefine  HAVE_LIBZ
-
-/* Define to 1 if you have the <mpcdec/mpcdec.h> header file. */
-#cmakedefine  HAVE_MPCDEC_MPCDEC_H
-
-/* Define to 1 if you have the <mpc/mpcdec.h> header file. */
-#cmakedefine  HAVE_MPC_MPCDEC_H
 
 /* Define to 1 if you have libmpg123 (-lmpg123). */
 #cmakedefine  HAVE_MPG123
@@ -135,11 +115,3 @@
 
 /* Define to the version of this package. */
 #cmakedefine  PACKAGE_VERSION "@PACKAGE_VERSION@"
-
-/* Define to 1 if all of the C90 standard headers exist (not just the ones
-   required in a freestanding environment). This macro is provided for
-   backward compatibility; new code need not use it. */
-#cmakedefine  STDC_HEADERS
-
-/* Version number of package */
-#cmakedefine  VERSION
