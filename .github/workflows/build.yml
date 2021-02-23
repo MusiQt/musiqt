@@ -14,16 +14,13 @@ jobs:
     - uses: jurplel/install-qt-action@v2
     - name: fixpkg
       run: for file in $(ls $Qt5_DIR/lib/pkgconfig/*); do sed -i "s|^prefix=.*|prefix=$Qt5_DIR|" $file; done;
-    - name: bootstrap_deps
-      run: sudo apt-get install autopoint gettext
-    - name: build_deps
-      run: sudo apt-get install libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libbs2b-dev
+    - name: install_deps
+      run: sudo apt-get install cmake gettext libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libbs2b-dev
     - uses: actions/checkout@v2
-    - name: bootstrap
-      run: autoreconf -vfi
     - name: configure
-      run: ./configure
-    - name: make
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+    - name: build
       run: make
-    - name: make distcheck
-      run: make distcheck
