@@ -4,7 +4,7 @@
 
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
-#cmakedefine  ENABLE_NLS
+#cmakedefine  ENABLE_NLS @ENABLE_NLS@
 
 /* Define to 1 if you have libsndfile>=1.0.21 on MinGW. */
 #cmakedefine  ENABLE_SNDFILE_WINDOWS_PROTOTYPES @ENABLE_SNDFILE_WINDOWS_PROTOTYPES@
@@ -12,17 +12,8 @@
 /* Define to 1 if you have libbs2b (-lbs2b). */
 #cmakedefine  HAVE_BS2B
 
-/* Define if the GNU gettext() function is already present or preinstalled. */
-#cmakedefine  HAVE_GETTEXT
-
 /* Define to 1 if you have libgme (-lgme). */
 #cmakedefine  HAVE_GME
-
-/* Define if you have the iconv() function and it works. */
-#cmakedefine  HAVE_ICONV
-
-/* Define to 1 if you have the <inttypes.h> header file. */
-#cmakedefine  HAVE_INTTYPES_H
 
 /* Define to 1 if you have the <libavformat/avformat.h> header file. */
 #cmakedefine  HAVE_LIBAVFORMAT_AVFORMAT_H
@@ -30,6 +21,7 @@
 /* Define to 1 if you have the `mpcdec' library (-lmpcdec). */
 #cmakedefine  HAVE_LIBMPCDEC
 
+/* Define to 1 if mpcdec supports new SV8 format. */
 #cmakedefine  MPCDEC_SV8
 
 /* Define to 1 if you have the `z' library (-lz). */
@@ -62,32 +54,8 @@
 /* Define to 1 if you have libsndfile (-lsndfile). */
 #cmakedefine  HAVE_SNDFILE
 
-/* Define to 1 if you have the <stdint.h> header file. */
-#cmakedefine  HAVE_STDINT_H
-
-/* Define to 1 if you have the <stdio.h> header file. */
-#cmakedefine  HAVE_STDIO_H
-
-/* Define to 1 if you have the <stdlib.h> header file. */
-#cmakedefine  HAVE_STDLIB_H
-
 /* Define to 1 if you have libstilview (-lstilview). */
 #cmakedefine  HAVE_STILVIEW
-
-/* Define to 1 if you have the <strings.h> header file. */
-#cmakedefine  HAVE_STRINGS_H
-
-/* Define to 1 if you have the <string.h> header file. */
-#cmakedefine  HAVE_STRING_H
-
-/* Define to 1 if you have the <sys/stat.h> header file. */
-#cmakedefine  HAVE_SYS_STAT_H
-
-/* Define to 1 if you have the <sys/types.h> header file. */
-#cmakedefine  HAVE_SYS_TYPES_H
-
-/* Define to 1 if you have the <unistd.h> header file. */
-#cmakedefine  HAVE_UNISTD_H
 
 /* Define to 1 if you have libvorbisfile (-lvorbisfile). */
 #cmakedefine  HAVE_VORBIS

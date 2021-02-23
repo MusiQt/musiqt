@@ -109,10 +109,12 @@ ENDIF(DEBUG)
 
 include(GNUInstallDirs)
 
-set(PACKAGE_NAME "${PROJECT_NAME}")
 set(PACKAGE "${PROJECT_NAME}")
+set(PACKAGE_NAME "${PROJECT_NAME}")
+set(PACKAGE_TARNAME "${PROJECT_NAME}")
 set(PACKAGE_STRING "${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
 set(PACKAGE_VERSION "${CMAKE_PROJECT_VERSION}")
+set(PACKAGE_URL "${PROJECT_HOMEPAGE_URL}")
 set(PACKAGE_BUGREPORT "${PROJECT_HOMEPAGE_URL}")
 set(top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -120,6 +122,11 @@ ADD_DEFINITIONS(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 
 #####################################################
 # Check for gettext
+
+OPTION(NLS "Enable Native Language Support" ON)
+IF(NLS)
+    SET(ENABLE_NLS 1)
+ENDIF(NLS)
 
 find_package(Gettext)
 IF(Gettext_FOUND)
