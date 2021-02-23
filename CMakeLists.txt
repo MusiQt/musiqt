@@ -121,23 +121,6 @@ set(top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}")
 ADD_DEFINITIONS(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 
 #####################################################
-# Check for gettext
-
-OPTION(NLS "Enable Native Language Support" ON)
-IF(NLS)
-    SET(ENABLE_NLS 1)
-ENDIF(NLS)
-
-find_package(Gettext)
-IF(Gettext_FOUND)
-    set(LANGUAGE_FILES
-        po/it.po
-        po/es.po
-    )
-    GETTEXT_CREATE_TRANSLATIONS(po/musiqt.pot ALL ${LANGUAGE_FILES})
-ENDIF(Gettext_FOUND)
-
-#####################################################
 
 add_executable(musiqt ${MUSIQT_SOURCES})
 
@@ -153,6 +136,24 @@ find_package(PkgConfig REQUIRED)
 INSTALL(TARGETS musiqt RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES musiqt.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 INSTALL(FILES musiqt.png DESTINATION ${CMAKE_INSTALL_DATADIR}/icons)
+
+#####################################################
+# Check for gettext
+
+OPTION(NLS "Enable Native Language Support" ON)
+IF(NLS)
+    find_package(Gettext)
+    IF(Gettext_FOUND)
+        SET(ENABLE_NLS 1)
+        FILE(GLOB PO_FILES ${CMAKE_SOURCE_DIR}/po/*.po)
+        GETTEXT_CREATE_TRANSLATIONS(po/musiqt.pot ALL ${PO_FILES})
+        FIND_PACKAGE(Intl REQUIRED)
+        include_directories(${LIBINTL_INCLUDE_DIRS})
+        target_link_libraries(musiqt ${Intl_LIBRARIES})
+    ELSE(Gettext_FOUND)
+        MESSAGE(STATUS "gettext not found, NLS disabled")
+    ENDIF(Gettext_FOUND)
+ENDIF(NLS)
 
 ##################################################################
 # Check for Qt
