@@ -30,6 +30,7 @@ jobs:
           mingw-w64-x86_64-libgme
           mingw-w64-x86_64-libmpcdec
           mingw-w64-x86_64-wavpack
+          mingw-w64-x86_64-ffmpeg
           mingw-w64-x86_64-libbs2b
           # libsidplayfp
           # libopenmpt
@@ -45,11 +46,21 @@ jobs:
         cd build
         cmake -G 'MSYS Makefiles' -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-static" ..
         make
-        zip musiqt-${{ steps.get_tag_name.outputs.tagname }}.zip musiqt.exe
+    - name: package
+      run: |
+        export PACKAGE_NAME=musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64
+        mkdir ${PACKAGE_NAME}
+        cp README ${PACKAGE_NAME}
+        cp build/musiqt.exe ${PACKAGE_NAME}
+        mkdir -p ${PACKAGE_NAME}/locale/es/LC_MESSAGES
+        cp build/es.gmo ${PACKAGE_NAME}/locale/es/LC_MESSAGES/musiqt.mo
+        mkdir -p ${PACKAGE_NAME}/locale/it/LC_MESSAGES
+        cp build/it.gmo ${PACKAGE_NAME}/locale/it/LC_MESSAGES/musiqt.mo
+        zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
     - uses: svenstaro/upload-release-action@v1-release
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/musiqt-${{ steps.get_tag_name.outputs.tagname }}.zip
+        file: musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64.zip
         tag: ${{ github.ref }}
         file_glob: true
         overwrite: true
