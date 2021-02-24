@@ -94,8 +94,6 @@ centralFrame::centralFrame(QWidget *parent) :
     _dirlist->header()->setStretchLastSection(false);
     QItemSelectionModel* selectionModel = _dirlist->selectionModel();
 
-    setProperty("AutoBackend", QVariant(true));
-
     connect(selectionModel, SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)),
             this, SLOT(onDirSelected(const QModelIndex&)));
     connect(_dirlist, SIGNAL(customContextMenuRequested(const QPoint&)),
@@ -115,7 +113,22 @@ centralFrame::centralFrame(QWidget *parent) :
     _proxyModel->sort(proxymodel::sortMode::Ascending);
     _playlist->setModel(_proxyModel);
 
-    //_proxyModel->setFilterRegExp(QRegExp(".*"));
+    QString filter;
+    for (int i=0; i<IFACTORY->num(); i++)
+    {
+        input* ib = IFACTORY->get(i);
+
+        QString filt(ib->ext().join("|"));
+        qDebug() << IFACTORY->name(i) << ": " << filt;
+        filter.append(filt).append("|");
+
+        delete ib;
+    }
+    filter.chop(1);
+    filter.prepend(".*\\.(").append(")");
+    qDebug() << "filter: " << filter;
+
+    _proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive));
     _proxyModel->setFilterRole(Qt::UserRole+1);
 
     selectionModel = _playlist->selectionModel();
@@ -162,9 +175,6 @@ centralFrame::centralFrame(QWidget *parent) :
     {
         QHBoxLayout *buttons = new QHBoxLayout(wButtons);
         buttons->setContentsMargins(0,0,0,0);
-        _fileTypes = new QComboBox(this);
-        _fileTypes->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        buttons->addWidget(_fileTypes);
         _editMode = new QPushButton(this);
         _editMode->setIcon(GET_ICON(icon_editlist));
         _editMode->setToolTip(tr("Edit"));;
@@ -191,12 +201,6 @@ centralFrame::centralFrame(QWidget *parent) :
         connect(b1, SIGNAL(clicked()), this, SLOT(onHome()));
         buttons->addWidget(b1);
         buttons->setSpacing(0);
-
-        for (int i=0; i<IFACTORY->num(); i++)
-            _fileTypes->addItem(IFACTORY->name(i));
-
-        _fileTypes->setMaxVisibleItems((_fileTypes->count() > 5) ? 5 : _fileTypes->count());
-        connect(_fileTypes, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdFiletype(int)));
     }
 
     // Left view - file list/bookmarks
@@ -213,14 +217,14 @@ centralFrame::centralFrame(QWidget *parent) :
     hbox->addWidget(w2);
     hbox->addWidget(_dirlist);
 
-    setBackend(0, 0);
+    _input = IFACTORY->get(0);
 }
 
 centralFrame::~centralFrame()
 {
     _bookmarkList->save();
 
-    QSettings settings; // FIXME
+    QSettings settings;
     QString file = _input->songLoaded();
     settings.setValue("General Settings/file", file);
 
@@ -231,9 +235,6 @@ centralFrame::~centralFrame()
 void centralFrame::onDirSelected(const QModelIndex& idx)
 {
     _bookmarkList->setCurrentRow(-1);
-
-    bool autoBk = property("AutoBackend").toBool();
-    setProperty("AutoBackend", QVariant(true));
 
     if (_editMode->isChecked())
         return;
@@ -251,35 +252,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
 
     if (_proxyModel->rowCount() == 0)
     {
-        if (playing || !SETTINGS->autoBk() || !autoBk)
-            return;
-        int bk = 0;
-        int items = 0;
-        QRegExp currentFilt(_proxyModel->filterRegExp());
-        do {
-            if (bk != _fileTypes->currentIndex())
-            {
-                input* i = IFACTORY->get(bk);
-
-                QString filt(i->ext().join("|"));
-                filt.prepend(".*\\.(").append(")");
-                qDebug() << "filter: " << filt;
-                _proxyModel->setFilterRegExp(QRegExp(filt, Qt::CaseInsensitive));
-
-                items = _proxyModel->rowCount();
-
-                delete i;
-            }
-        } while ((++bk < _fileTypes->count()) && (items == 0));
-        if (items != 0)
-        {
-            setBackend(bk-1, 0);
-        }
-        else
-        {
-            _proxyModel->setFilterRegExp(currentFilt);
-            return;
-        }
+        return;
     }
 
     const QString fileName = _dirlist->property("UserData").toString();
@@ -319,13 +292,10 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
 
 void centralFrame::onHome()
 {
-    if (_input != nullptr)
-    {
-        const QString musicDir = _input->getMusicDir();
-        QString home = musicDir.isEmpty() ? xdg::getMusicDir() : musicDir;
-        qDebug() << "home dir: " << home;
-        setDir(fsm->index(home));
-    }
+    // FIXME use a list of music dirs
+    QString musicDir = xdg::getMusicDir();
+    qDebug() << "music dir: " << musicDir;
+    setDir(fsm->index(musicDir));
 }
 
 void centralFrame::onCmdCurrentDir()
@@ -408,33 +378,15 @@ void centralFrame::setFile(const QString& file, const bool play)
 
         if (!fName.isEmpty())
         {
-            QRegExp regexp(_input->ext().join("|"));
-            regexp.setPatternSyntax(QRegExp::Wildcard);
-            if ((_input != nullptr)
-                && regexp.exactMatch(fName))
+            QRegExp regexp = _proxyModel->filterRegExp();
+            if (!regexp.exactMatch(fName))
             {
-                goto ok;
+                // file is not supported, ignore message
+                return;
             }
-
-            for (int i=0; i<IFACTORY->num(); i++)
-            {
-                qDebug() << "check factory " << i;
-                if (IFACTORY->supports(i, fName))
-                {
-                    setBackend(i, dirSelected ? 1 : 0);
-                    items = _playlistModel->match(_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(file), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
-                    if (!items.empty())
-                        val = items.at(0);
-                    curItem = QModelIndex();
-                    goto ok;
-                }
-            }
-
-            // file is not supported, ignore message
-            return;
         }
     }
-ok:
+
     if (dirSelected)
     {
         if (val.isValid())
@@ -483,7 +435,6 @@ void centralFrame::onCmdPlayPauseSong()
         }
     }
 
-    _fileTypes->setEnabled(false);
     emit stateChanged(_audio->state());
 }
 
@@ -493,13 +444,11 @@ void centralFrame::onCmdStopSong()
     if (_audio->stop())
     {
         playing = false;
-        _fileTypes->setEnabled(true);
         emit updateTime(0);
         emit stateChanged(_audio->state());
         QModelIndex curr = _dirlist->currentIndex();
         if (playDir.compare(fsm->fileName(curr)))
         {
-            setProperty("AutoBackend", QVariant(true));
             onDirSelected(curr);
         }
         playDir = QString();
@@ -549,52 +498,24 @@ void centralFrame::onCmdChangeSong(dir_t dir)
     }
 }
 
-void centralFrame::setBackend(int val, int refresh)
-{
-    qDebug() << "setBackend " << val;
-    if ((val < 0) || (val > _fileTypes->count()))
-        return;
-
-    _fileTypes->setCurrentIndex(val);
-
-    if (_input != nullptr)
-    {
-        _bookmarkList->save();
-        emit clearDisplay(false);
-        delete _input;
-        delete _preload;
-    }
-
-    _input = IFACTORY->get(val);
-    _preload = nullptr;
-
-    QString filt(_input->ext().join("|"));
-    filt.prepend(".*\\.(").append(")");
-    qDebug() << "filter: " << filt;
-    _proxyModel->setFilterRegExp(QRegExp(filt, Qt::CaseInsensitive));
-
-    _bookmarkList->load(IFACTORY->name(val));
-
-    if (refresh != 0)
-    {
-        QModelIndex selected = _dirlist->currentIndex();
-        qDebug() << "selected " << selected;
-        if (selected.isValid())
-        {
-            setProperty("AutoBackend", QVariant((refresh != 2)));
-            onDirSelected(selected);
-            //_dirlist->selectionModel()->select(selected, QItemSelectionModel::ClearAndSelect);
-        }
-    }
-}
-
 void centralFrame::load(const QString& filename)
 {
     qDebug() << "Loading " << filename;
 
-    _fileTypes->setEnabled(false);
+    input *ib = nullptr;
+    for (int i=0; i<IFACTORY->num(); i++)
+    {
+        if (IFACTORY->supports(i, filename))
+        {
+            ib = IFACTORY->get(i);
+            break;
+        }
+    }
+    
+    if (ib == nullptr)
+        return;
 
-    loadThread* loader = new loadThread(IFACTORY->get(_fileTypes->currentIndex()), filename);
+    loadThread* loader = new loadThread(ib, filename);
     connect(loader, SIGNAL(loaded(input*)), this, SLOT(onCmdSongLoaded(input*)));
     connect(loader, SIGNAL(finished()), loader, SLOT(deleteLater()));
 
@@ -647,8 +568,6 @@ void centralFrame::onCmdSongLoaded(input* res)
         qWarning() << "Error loading song";
     }
 
-    if (!playing)
-        _fileTypes->setEnabled(true);
     QApplication::restoreOverrideCursor();
 }
 
@@ -761,11 +680,6 @@ void centralFrame::setOpts()
         _playlist->setCurrentIndex(QModelIndex());
         _playlist->setCurrentIndex(curItem);
     }
-}
-
-void centralFrame::onCmdFiletype(int val)
-{
-    setBackend(val, 2);
 }
 
 void centralFrame::onRgtClkDirList(const QPoint& pos)
@@ -917,7 +831,6 @@ void centralFrame::changeSubtune(dir_t dir)
 
 void centralFrame::onCmdPlEdit(bool checked)
 {
-    _fileTypes->setEnabled(!checked);
     _playlist->setAcceptDrops(checked);
     _playlist->setDropIndicatorShown(checked);
 
@@ -938,7 +851,6 @@ void centralFrame::onCmdPlEdit(bool checked)
     else
     {
         fsm->setNameFilters(TFACTORY->plExt());
-        setProperty("AutoBackend", QVariant(false));
         _dirlist->setCurrentIndex(QModelIndex());
         QString dir = property("SelectedDir").toString();
         qDebug() << "dir " << dir;

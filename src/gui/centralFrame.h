@@ -118,8 +118,6 @@ private slots:
     void onDirSelected(const QModelIndex&);
     void onHome();
     void onCmdCurrentDir();
-    void onCmdFiletype(int val);
-    void setBackend(int val, int refresh);
     void gotoDir(const QString &dir);
     void onCmdSongLoaded(input* res);
     void onCmdSongSelected(const QModelIndex& currentRow);
@@ -155,7 +153,6 @@ private:
     playlistModel *_playlistModel;
     proxymodel *_proxyModel;
     playlist *_playlist;
-    QComboBox *_fileTypes;
     bookmark *_bookmarkList;
     QPushButton *_editMode;
 };

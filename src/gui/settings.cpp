@@ -79,12 +79,6 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setSubtunes(int)));
     optionLayout->addWidget(cBox);
 
-    cBox = new QCheckBox(tr("&Auto backend"), this);
-    cBox->setToolTip(tr("Automatic backend selection"));
-    cBox->setCheckState(SETTINGS->_autoBk ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setAutobk(int)));
-    optionLayout->addWidget(cBox);
-
     cBox = new QCheckBox(tr("&Bauer stereophonic-to-binaural DSP"), this);
     cBox->setToolTip(tr("Bauer stereophonic-to-binaural DSP"));
     cBox->setCheckState(SETTINGS->_bs2b ? Qt::Checked : Qt::Unchecked);
@@ -222,11 +216,6 @@ void settingsWindow::setSubtunes(int val)
     SETTINGS->_subtunes = val == Qt::Checked;
 }
 
-void settingsWindow::setAutobk(int val)
-{
-    SETTINGS->_autoBk = val == Qt::Checked;
-}
-
 void settingsWindow::setBs2b(int val)
 {
     SETTINGS->_bs2b = val == Qt::Checked;
@@ -267,7 +256,6 @@ void settings::load(const QSettings& appSettings)
     _bits = appSettings.value("Audio Settings/bits", 16).toInt();
 
     _subtunes = appSettings.value("General Settings/play subtunes", false).toBool();
-    _autoBk = appSettings.value("General Settings/auto backend", true).toBool();
     _replayGain = appSettings.value("General Settings/Replaygain", false).toBool();
     QString replayGainMode=appSettings.value("General Settings/Replaygain mode", "Album").toString();
     _replayGainMode = (!replayGainMode.compare("Track")) ? 1 : 0;
@@ -281,7 +269,6 @@ void settings::save(QSettings& appSettings)
     appSettings.setValue("Audio Settings/bits", _bits);
 
     appSettings.setValue("General Settings/play subtunes", _subtunes);
-    appSettings.setValue("General Settings/auto backend", _autoBk);
     appSettings.setValue("General Settings/Replaygain", _replayGain);
     appSettings.setValue("General Settings/Replaygain mode", (_replayGainMode == 0) ? "Album" : "Track");
     appSettings.setValue("General Settings/Bauer DSP", _bs2b);

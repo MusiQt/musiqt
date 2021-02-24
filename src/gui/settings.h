@@ -44,7 +44,6 @@ private:
 
 private slots:
     void setSubtunes(int val);
-    void setAutobk(int val);
     void setBs2b(int val);
     void setReplaygain(bool val);
     void setReplaygainMode(int val);
@@ -73,7 +72,6 @@ private:
     unsigned int _bits;
 
     bool   _subtunes;
-    bool   _autoBk;
     bool   _bs2b;
     bool   _replayGain;
     int    _replayGainMode;
@@ -101,9 +99,6 @@ public:
 
     /// Play subtunes
     bool subtunes() const { return _subtunes; }
-
-    /// Automatic backend selection
-    bool autoBk() const { return _autoBk; }
 
     /// Replay Gain
     bool replayGain() const { return _replayGain; }

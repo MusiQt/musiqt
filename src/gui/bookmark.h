@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ class bookmark : public QListWidget
     Q_OBJECT
 
 private:
-    const char  *_type;
     QSettings   settings;
 
 private:
@@ -50,7 +49,7 @@ public:
     void add(const QString& dirName);
 
     /// Load bookmarks
-    void load(const char* type);
+    void load();
 
     /// Save and clear bookmarks
     void save();
