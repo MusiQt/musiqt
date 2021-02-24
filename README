@@ -77,7 +77,7 @@ Please report problems, suggestions and patches at https://github.com/drfiemost/
 
 Required dependencies:
 
-Qt 4 or 5
+Qt 5
 http://www.qt.io/
 
 
@@ -99,7 +99,7 @@ libopusfile >= 0.7
 http://opus-codec.org/
 
 libsndfile 1.0.x
-http://www.mega-nerd.com/libsndfile/
+https://github.com/libsndfile/libsndfile
 
 libmpcdec 1.2.x (SV7)
 or

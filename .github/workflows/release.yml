@@ -6,34 +6,61 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
 
     steps:
-    - uses: jurplel/install-qt-action@v2
-    - name: fixpkg
-      run: for file in $(ls $Qt5_DIR/lib/pkgconfig/*); do sed -i "s|^prefix=.*|prefix=$Qt5_DIR|" $file; done;
-    - name: bootstrap_deps
-      run: sudo apt-get install autopoint gettext
-    - name: build_deps
-      run: |
-        sudo apt-get install libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libbs2b-dev
+    - uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          git
+          zip
+          base-devel
+          mingw-w64-x86_64-toolchain
+          mingw-w64-x86_64-cmake
+          gettext-devel
+          mingw-w64-x86_64-qt5-static
+          mingw-w64-x86_64-libsndfile
+          mingw-w64-x86_64-mpg123
+          mingw-w64-x86_64-libvorbis
+          mingw-w64-x86_64-opusfile
+          mingw-w64-x86_64-libgme
+          mingw-w64-x86_64-libmpcdec
+          mingw-w64-x86_64-wavpack
+          mingw-w64-x86_64-ffmpeg
+          mingw-w64-x86_64-libbs2b
+          # libsidplayfp
+          # libopenmpt
     - uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }}
-    - name: bootstrap
-      run: autoreconf -vfi
-    - name: configure
-      run: ./configure
-    - name: make dist
-      id: package-generator
+    - name: Get the tag name
+      id: get_tag_name
+      run: echo ::set-output name=tagname::${GITHUB_REF#refs/tags/v}
+    - name: build
       run: |
-        make dist
-        RELEASE_TARBALL=$(ls musiqt-*.tar.gz)
-        echo ::set-output name=filename::${RELEASE_TARBALL}
-    - name: Upload to release
-      uses: JasonEtco/upload-to-release@master
+        mkdir build
+        cd build
+        cmake -G 'MSYS Makefiles' -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-static" ..
+        make
+    - name: package
+      run: |
+        export PACKAGE_NAME=musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64
+        mkdir ${PACKAGE_NAME}
+        cp README ${PACKAGE_NAME}
+        cp build/musiqt.exe ${PACKAGE_NAME}
+        mkdir -p ${PACKAGE_NAME}/locale/es/LC_MESSAGES
+        cp build/es.gmo ${PACKAGE_NAME}/locale/es/LC_MESSAGES/musiqt.mo
+        mkdir -p ${PACKAGE_NAME}/locale/it/LC_MESSAGES
+        cp build/it.gmo ${PACKAGE_NAME}/locale/it/LC_MESSAGES/musiqt.mo
+        zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
+    - uses: svenstaro/upload-release-action@v1-release
       with:
-        args: ${{ steps.package-generator.outputs.filename }} application/gzip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64.zip
+        tag: ${{ github.ref }}
+        file_glob: true
+        overwrite: true

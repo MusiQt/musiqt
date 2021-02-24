@@ -22,7 +22,7 @@
 #include "utils.h"
 #include "tag.h"
 
-#ifndef SV8
+#ifndef MPCDEC_SV8
 #  include <math.h>
 #endif
 
@@ -77,7 +77,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
     do {
         if (_bufIndex >= _bufLen)
         {
-#ifdef SV8
+#ifdef MPCDEC_SV8
             mpc_frame_info frame;
             frame.buffer = _buffer;
             const mpc_status err = mpc_demux_decode(_demux, &frame);
@@ -161,7 +161,7 @@ bool mpcBackend::open(const QString& fileName)
 
     _file.seek(0);
 
-#ifdef SV8
+#ifdef MPCDEC_SV8
     _demux = mpc_demux_init(&_mpcReader);
     if (!_demux)
         goto error;
@@ -189,7 +189,7 @@ bool mpcBackend::open(const QString& fileName)
     {
         // Replaygain reference level (is this correct?)
         const double referenceLevel = 89.0;
-#ifdef SV8
+#ifdef MPCDEC_SV8
         mpc_set_replay_level(_demux, referenceLevel, MPC_TRUE,
                 (SETTINGS->replayGainMode() == 0) ? MPC_FALSE : MPC_TRUE,
                 MPC_TRUE);
@@ -224,7 +224,7 @@ void mpcBackend::close()
 {
     _file.close();
 
-#ifdef SV8
+#ifdef MPCDEC_SV8
     if (!songLoaded().isNull())
         mpc_demux_exit(_demux);
 #endif
@@ -234,7 +234,7 @@ void mpcBackend::close()
 
 bool mpcBackend::rewind()
 {
-#ifdef SV8
+#ifdef MPCDEC_SV8
     if (mpc_demux_seek_sample(_demux, 0) != MPC_STATUS_OK)
 #else
     if (!mpc_decoder_seek_seconds(&_decoder, 0))

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011-2019 Leandro Nini
+ *  Copyright (C) 2011-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,44 +21,26 @@
 #include <QDesktopServices>
 #include <QUrl>
 
-#if QT_VERSION >= 0x050000
-#  include <QStandardPaths>
-#endif
+#include <QStandardPaths>
 
 const QString xdg::getCacheDir()
 {
-#if QT_VERSION >= 0x050000
     return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-#else
-    return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
-#endif
 }
 
 const QString xdg::getRuntimeDir()
 {
-#if QT_VERSION >= 0x050000
     return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
-#else
-    return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
-#endif
 }
 
 const QString xdg::getConfigDir()
 {
-#if QT_VERSION >= 0x050000
     return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-#else
-    return QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-#endif
 }
 
 const QString xdg::getMusicDir()
 {
-#if QT_VERSION >= 0x050000
     return QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
-#else
-    return QDesktopServices::storageLocation(QDesktopServices::MusicLocation);
-#endif
 }
 
 bool xdg::open(const QString& link)

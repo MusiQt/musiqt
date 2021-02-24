@@ -62,11 +62,7 @@ public:
         if (!index.isValid())
             return QAbstractListModel::flags(index) | Qt::ItemIsDropEnabled;
 
-        return QAbstractListModel::flags(index) | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled | Qt::ItemIsSelectable
-#if QT_VERSION >= 0x050000
-            | Qt::ItemNeverHasChildren
-#endif
-            ;
+        return QAbstractListModel::flags(index) | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
     }
 
     void clear()
@@ -91,7 +87,6 @@ public:
             setStringList(tracklist->load());
     }
 
-#if QT_VERSION >= 0x050000
     bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const override
     {
         Q_UNUSED(action)
@@ -101,17 +96,11 @@ public:
 
         return data->hasUrls();
     }
-#endif
 
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override
     {
         if (action == Qt::IgnoreAction)
             return true;
-
-#if QT_VERSION < 0x050000
-        if (!data->hasUrls())
-            return false;
-#endif
 
         int beginRow;
 
