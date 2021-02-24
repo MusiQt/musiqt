@@ -17,10 +17,9 @@ jobs:
     - name: install_deps
       run: sudo apt-get install cmake gettext libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libbs2b-dev
     - uses: actions/checkout@v2
-    - name: configure
+    - name: build
       run: |
         mkdir build
         cd build
         cmake ..
-    - name: build
-      run: make
+        make
