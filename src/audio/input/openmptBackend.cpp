@@ -389,41 +389,41 @@ openmptConfig::openmptConfig(QWidget* win) :
     mat->addWidget(new QLabel(tr("Master Gain"), this), 0, 0);
     knob = new QDial(this);
     knob->setRange(0, 100);
-    //knob->setTickDelta(10);
+    knob->setValue(MPTSETTINGS.masterGain);
     mat->addWidget(knob, 1, 0);
     tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
+    tf->setNum(MPTSETTINGS.masterGain);
     mat->addWidget(tf, 2, 0);
     connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
     connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdMasterGain(int)));
-    knob->setValue(MPTSETTINGS.masterGain);
 
     mat->addWidget(new QLabel(tr("Stereo Separation"), this), 0, 1);
     knob = new QDial(this);
     knob->setRange(0, 200);
-    //knob->setTickDelta(20);
+    knob->setValue(MPTSETTINGS.stereoSeparation);
     mat->addWidget(knob, 1, 1);
     tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
+    tf->setNum(MPTSETTINGS.stereoSeparation);
     mat->addWidget(tf, 2, 1);
     connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
     connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdStereoSeparation(int)));
-    knob->setValue(MPTSETTINGS.stereoSeparation);
 
     mat->addWidget(new QLabel(tr("Volume Ramping"), this), 0, 2);
     knob = new QDial(this);
     knob->setRange(-1, 10);
-    //knob->setTickDelta(1);
+    knob->setValue(MPTSETTINGS.volumeRamping);
     mat->addWidget(knob, 1, 2);
     tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
+    tf->setNum(MPTSETTINGS.volumeRamping);
     mat->addWidget(tf, 2, 2);
     connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
     connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdVolumeRamping(int)));
-    knob->setValue(MPTSETTINGS.volumeRamping);
 }
 
 void openmptConfig::onCmdFrequency(int val)
