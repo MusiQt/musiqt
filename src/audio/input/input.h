@@ -100,7 +100,7 @@ public:
     virtual bool gapless() const =0;
 
     /// Get Music directory
-    virtual const QString getMusicDir(void) =0;
+    virtual const QString getMusicDir() =0;
 };
 
 #endif
