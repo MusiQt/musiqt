@@ -32,7 +32,6 @@
 
 #include <QApplication>
 #include <QButtonGroup>
-#include <QComboBox>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QFileDialog>
@@ -669,16 +668,30 @@ void centralFrame::songEnded()
     onCmdStopSong();
 }
 
-void centralFrame::setOpts()
+void centralFrame::saveSettings()
 {
-    _input->saveSettings();
+    for (int i=0; i<IFACTORY->num(); i++)
+    {
+        input* ib = IFACTORY->get(i);
+        ib->saveSettings();
+    }
+
     if (_playlistModel->rowCount())
     {
-        // if settings changes we must reload the song
+        // we must reload the song
         _input->close();
         const QModelIndex curItem = _playlist->currentIndex();
         _playlist->setCurrentIndex(QModelIndex());
         _playlist->setCurrentIndex(curItem);
+    }
+}
+
+void centralFrame::reloadSettings()
+{
+    for (int i=0; i<IFACTORY->num(); i++)
+    {
+        input* ib = IFACTORY->get(i);
+        ib->loadSettings();
     }
 }
 
@@ -920,3 +933,5 @@ void centralFrame::init()
     qDebug() << "*** init ***";
     fsm->setRootPath(QDir::rootPath());
 }
+
+const metaData* centralFrame::getMetaData() const { return _input->getMetaData(); }

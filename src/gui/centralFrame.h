@@ -79,8 +79,10 @@ public:
     centralFrame(QWidget *parent = 0);
     ~centralFrame();
 
-    input* getInput() const { return _input; }
-    void setOpts();
+    const metaData* getMetaData() const;
+
+    void saveSettings();
+    void reloadSettings();
 
     void setPlayMode(bool mode) { playMode = mode; }
     bool getPlayMode() const { return playMode; }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2018 Leandro Nini
+ *  Copyright (C) 2008-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ protected:
     bool event(QEvent *e) override;
 
 public:
-    settingsWindow(QWidget* win, inputConfig* i);
+    settingsWindow(QWidget* win);
     virtual ~settingsWindow() {}
 };
 

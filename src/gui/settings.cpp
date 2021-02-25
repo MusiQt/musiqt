@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2020 Leandro Nini
+ *  Copyright (C) 2008-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include "audio.h"
 #include "input/input.h"
+#include "input/inputFactory.h"
 #include "iconFactory.h"
 
 #include <QDebug>
@@ -29,6 +30,7 @@
 #include <QFrame>
 #include <QGroupBox>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QPushButton>
 #include <QToolButton>
 #include <QRadioButton>
@@ -38,8 +40,9 @@
 #include <QMainWindow>
 #include <QStatusBar>
 #include <QStatusTipEvent>
+#include <QHBoxLayout>
 
-settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
+settingsWindow::settingsWindow(QWidget* win) :
     QDialog(win)
 {
     setWindowTitle(tr("Settings"));
@@ -174,7 +177,26 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
         backendLayout->addWidget(line);
     }
 
-    backendLayout->addWidget(i->config(backendpane));
+    QStackedWidget *beSwitcher = new QStackedWidget();
+
+    {
+        QComboBox *backends = new QComboBox();
+        for (int i=0; i<IFACTORY->num(); i++)
+        {
+            backends->addItem(IFACTORY->name(i));
+            inputConfig *ic = IFACTORY->get(i);
+            beSwitcher->addWidget(ic->config(nullptr));
+        }
+        connect(backends, SIGNAL(currentIndexChanged(int)), beSwitcher, SLOT(setCurrentIndex(int)));
+
+        QWidget *w = new QWidget(this);
+        QHBoxLayout *backendSelection = new QHBoxLayout(w);
+        backendSelection->addWidget(new QLabel(tr("Backend")));
+        backendSelection->addWidget(backends);
+        backendLayout->addWidget(w);
+    }
+
+    backendLayout->addWidget(beSwitcher);
 
     backendLayout->addStretch();
 
@@ -182,10 +204,10 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
 
     button = new QToolButton(this);
     button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    button->setIcon(i->icon());
+    button->setIcon(IFACTORY->get(0)->icon()); // FIXME
     button->setText(tr("Backend")); 
-    button->setToolTip(tr("Backend setting"));
-    button->setStatusTip("Backend setting");
+    button->setToolTip(tr("Backend settings"));
+    button->setStatusTip("Backend settings");
     button->setCheckable(true);
     button->setSizePolicy(sizePol);
     buttonGroup->addButton(button, section++);
