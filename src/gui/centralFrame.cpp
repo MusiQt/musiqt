@@ -707,7 +707,8 @@ void centralFrame::saveSettings()
         delete ib;
     }
 
-    if (_playlistModel->rowCount())
+    QString songLoaded = _input->songLoaded();
+    if (!songLoaded.isEmpty())
     {
         // we must reload the song
         _input->close();
