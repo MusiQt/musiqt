@@ -113,6 +113,7 @@ centralFrame::centralFrame(QWidget *parent) :
     _playlist->setModel(_proxyModel);
 
     QString filter;
+    QStringList musicDirs;
     for (int i=0; i<IFACTORY->num(); i++)
     {
         input* ib = IFACTORY->get(i);
@@ -120,6 +121,8 @@ centralFrame::centralFrame(QWidget *parent) :
         QString filt(ib->ext().join("|"));
         qDebug() << IFACTORY->name(i) << ": " << filt;
         filter.append(filt).append("|");
+
+        musicDirs << ib->getMusicDir();
 
         delete ib;
     }
@@ -205,10 +208,8 @@ centralFrame::centralFrame(QWidget *parent) :
         QActionGroup *homeGroup = new QActionGroup(menu);
         for (int i=0; i<IFACTORY->num(); i++)
         {
-            input* ib = IFACTORY->get(i);
-
             QString name = IFACTORY->name(i);
-            QString musicDir = ib->getMusicDir();
+            QString musicDir = musicDirs[i];
             if (!musicDir.isEmpty())
             {
                 QAction *action = menu->addAction(name.append(tr(" music location")));
