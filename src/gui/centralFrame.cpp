@@ -932,6 +932,8 @@ void centralFrame::init()
 {
     qDebug() << "*** init ***";
     fsm->setRootPath(QDir::rootPath());
+
+    _bookmarkList->load();
 }
 
 const metaData* centralFrame::getMetaData() const { return _input->getMetaData(); }
