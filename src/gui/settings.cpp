@@ -204,7 +204,7 @@ settingsWindow::settingsWindow(QWidget* win) :
 
     button = new QToolButton(this);
     button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    button->setIcon(IFACTORY->get(0)->icon()); // FIXME
+    button->setIcon(GET_ICON(icon_backend));
     button->setText(tr("Backend")); 
     button->setToolTip(tr("Backend settings"));
     button->setStatusTip("Backend settings");

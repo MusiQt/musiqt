@@ -3,6 +3,7 @@
   <qresource>
      <file>icons/action-cancel.gif</file>
      <file>icons/application-exit.gif</file>
+     <file>icons/backend.gif</file>
      <file>icons/bookmark.gif</file>
      <file>icons/card.gif</file>
      <file>icons/current-playlist.gif</file>
