@@ -231,6 +231,8 @@ settingsWindow::settingsWindow(QWidget* win) :
     connect(initial, SIGNAL(clicked()), this, SLOT(accept()));
 
     buttons->addStretch();
+
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 void settingsWindow::setSubtunes(int val)
