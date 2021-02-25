@@ -879,7 +879,8 @@ void centralFrame::onCmdPlEdit(bool checked)
     {
         _playlistModel->clear();
          // FIXME this sucks
-        QStringList ext = _input->ext();
+        QString pattern = _proxyModel->filterRegExp().pattern();
+        QStringList ext = pattern.split("|");
         QStringList result;
         for (QString str: ext)
         {
