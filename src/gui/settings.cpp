@@ -186,7 +186,8 @@ settingsWindow::settingsWindow(QWidget* win) :
             backends->addItem(IFACTORY->name(i));
             backends->setItemIcon(i, IFACTORY->get(i)->icon());
             inputConfig *ic = IFACTORY->get(i);
-            beSwitcher->addWidget(ic->config(nullptr));
+            inputConfigs.append(ic);
+            beSwitcher->addWidget(ic->config());
         }
         connect(backends, SIGNAL(currentIndexChanged(int)), beSwitcher, SLOT(setCurrentIndex(int)));
 
@@ -228,12 +229,32 @@ settingsWindow::settingsWindow(QWidget* win) :
     QPushButton* b = new QPushButton(GET_ICON(icon_dialogcancel), tr("&Cancel"), this);
     bottom->addWidget(b);
     initial->setFocus();
-    connect(b, SIGNAL(clicked()), this, SLOT(reject()));
-    connect(initial, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(b, SIGNAL(clicked()), this, SLOT(onReject()));
+    connect(initial, SIGNAL(clicked()), this, SLOT(onAccept()));
 
     buttons->addStretch();
 
     layout()->setSizeConstraint(QLayout::SetFixedSize);
+}
+
+void settingsWindow::onAccept()
+{
+    //SETTINGS->save();
+    for (inputConfig* ic: inputConfigs)
+    {
+        ic->saveSettings();
+    }
+    accept();
+}
+
+void settingsWindow::onReject()
+{
+    //SETTINGS->load();
+    for (inputConfig* ic: inputConfigs)
+    {
+        ic->loadSettings();
+    }
+    reject();
 }
 
 void settingsWindow::setSubtunes(int val)

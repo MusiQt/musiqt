@@ -37,12 +37,17 @@ class settingsWindow : public QDialog
 private:
     QLabel *colorLabel;
 
+    QList<inputConfig*> inputConfigs;
+
 private:
     settingsWindow() {}
     settingsWindow(const settingsWindow&);
     settingsWindow& operator=(const settingsWindow&);
 
 private slots:
+    void onAccept();
+    void onReject();
+
     void setSubtunes(int val);
     void setBs2b(int val);
     void setReplaygain(bool val);

@@ -380,20 +380,21 @@ void mainWindow::onAbout()
 void mainWindow::onConfig()
 {
     settingsWindow *config = new settingsWindow(this);
-    config->setAttribute(Qt::WA_DeleteOnClose);
-    int result = config->exec();
+    //config->setAttribute(Qt::WA_DeleteOnClose);
+    int result = config->exec(); // FIXME use open()
     switch (result)
     {
     case QDialog::Accepted:
         cFrame->onCmdStopSong();
         SETTINGS->save(settings);
-        cFrame->saveSettings();
+        cFrame->reloadSong();
         break;
     case QDialog::Rejected:
         SETTINGS->load(settings);
-        cFrame->reloadSettings();
         break;
     }
+
+    delete config;
 }
 
 void mainWindow::onInfo()

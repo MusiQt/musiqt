@@ -697,16 +697,8 @@ void centralFrame::songEnded()
     onCmdStopSong();
 }
 
-void centralFrame::saveSettings()
+void centralFrame::reloadSong()
 {
-    // FIXME this sucks
-    for (int i=0; i<IFACTORY->num(); i++)
-    {
-        input* ib = IFACTORY->get(i);
-        ib->saveSettings();
-        delete ib;
-    }
-
     QString songLoaded = _input->songLoaded();
     if (!songLoaded.isEmpty())
     {
@@ -715,15 +707,6 @@ void centralFrame::saveSettings()
         const QModelIndex curItem = _playlist->currentIndex();
         _playlist->setCurrentIndex(QModelIndex());
         _playlist->setCurrentIndex(curItem);
-    }
-}
-
-void centralFrame::reloadSettings()
-{
-    for (int i=0; i<IFACTORY->num(); i++)
-    {
-        input* ib = IFACTORY->get(i);
-        ib->loadSettings();
     }
 }
 

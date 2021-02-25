@@ -33,7 +33,7 @@ class inputConfig
 {
 public:
     /// Open config dialog
-    virtual QWidget* config(QWidget* win) =0;
+    virtual QWidget* config(QWidget* parent=nullptr) =0;
 
     /// Get filetype icon
     virtual QIcon icon() const =0;

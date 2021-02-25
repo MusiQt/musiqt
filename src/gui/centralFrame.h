@@ -81,8 +81,7 @@ public:
 
     const metaData* getMetaData() const;
 
-    void saveSettings();
-    void reloadSettings();
+    void reloadSong();
 
     void setPlayMode(bool mode) { playMode = mode; }
     bool getPlayMode() const { return playMode; }
