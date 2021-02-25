@@ -155,10 +155,11 @@ inline QStringList sidBackend::ext() const { return QString(EXT).split("|"); }
 sidBackend::sidBackend() :
     inputBackend(name, iconSid, 126),
     _sidplayfp(nullptr),
+    _tune(nullptr),
     _stil(nullptr),
     _db(nullptr),
     _length(0),
-    _tune(nullptr)
+    newSonglengthDB(false)
 {
     loadSettings();
 
@@ -461,7 +462,14 @@ void sidBackend::loadTune(const int num)
 {
     _tune->selectSong(num);
     _sidplayfp->load(_tune);
+#if LIBSIDPLAYFP_VERSION_MAJ > 1
+    if (_db != nullptr)
+        _length = newSonglengthDB ? (_db->lengthMs(*_tune) / 1000) : _db->length(*_tune);
+    else
+        _length = 0;
+#else
     _length = _db != nullptr ? _db->length(_md5, _tune->getInfo()->currentSong()) : 0;
+#endif
     time(_length);
 }
 
@@ -482,9 +490,13 @@ void sidBackend::openHvsc(const QString& hvscPath)
     if (_db == nullptr)
         _db = new SidDatabase();
 
-    if (!_db->open(
-            QString("%1%2DOCUMENTS%2Songlengths.txt").arg(hvscPath).arg(QDir::separator()).toUtf8().constData())
-        )
+    QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath).arg(QDir::separator()));
+    qDebug() << "SL DB path: " << slDbPath;
+    if (_db->open(slDbPath.append(".md5").toUtf8().constData()))
+    {
+        newSonglengthDB = true;
+    }
+    else if (!_db->open(slDbPath.append(".txt").toUtf8().constData()))
     {
         qWarning() << _db->error();
         utils::delPtr(_db);

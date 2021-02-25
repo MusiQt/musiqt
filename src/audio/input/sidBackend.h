@@ -129,13 +129,14 @@ private:
 private:
     sidplayfp *_sidplayfp;
 
+    SidTune *_tune;
+
     STIL *_stil;
 
     SidDatabase *_db;
     unsigned int _length;
     char _md5[SidTune::MD5_LENGTH+1];
-
-    SidTune *_tune;
+    bool newSonglengthDB;
 
 private:
     sidBackend();
