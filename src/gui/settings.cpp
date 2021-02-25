@@ -184,6 +184,7 @@ settingsWindow::settingsWindow(QWidget* win) :
         for (int i=0; i<IFACTORY->num(); i++)
         {
             backends->addItem(IFACTORY->name(i));
+            backends->setItemIcon(i, IFACTORY->get(i)->icon());
             inputConfig *ic = IFACTORY->get(i);
             beSwitcher->addWidget(ic->config(nullptr));
         }

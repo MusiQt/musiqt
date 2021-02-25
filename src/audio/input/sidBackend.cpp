@@ -69,7 +69,7 @@ extern const unsigned char iconSid[126] =
 // HVSC path to BUGlist.
 #define HVSC_BUGLIST "/DOCUMENTS/BUGlist.txt"
 
-#define CREDITS "Sidplayfp\nCopyright \u00A9 Simon White, Antti Lankila, Leandro Nini"
+#define CREDITS "Sidplayfp<br>Copyright \u00A9 Simon White, Antti Lankila, Leandro Nini"
 #define LINK    "https://github.com/libsidplayfp/libsidplayfp/"
 
 const char sidBackend::name[] = "Sidplayfp";

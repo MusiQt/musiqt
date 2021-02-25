@@ -23,7 +23,7 @@
 #include <QDebug>
 #include <QLabel>
 
-#define CREDITS "libsndfile\nCopyright \302\251 Erik de Castro Lopo"
+#define CREDITS "libsndfile<br>Copyright \302\251 Erik de Castro Lopo"
 #define LINK    "http://www.mega-nerd.com/libsndfile/"
 
 QStringList sndBackend::_ext;

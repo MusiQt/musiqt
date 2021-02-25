@@ -37,7 +37,7 @@ OpusFileCallbacks opusBackend::opus_callbacks =
 
 #define EXT "opus"
 
-#define CREDITS "Opus\nCopyright \302\251 Xiph.org Foundation"
+#define CREDITS "Opus<br>Copyright \302\251 Xiph.org Foundation"
 #define LINK    "http://opus-codec.org/"
 
 const char opusBackend::name[] = "Opus";

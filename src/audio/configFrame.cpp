@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,21 +32,24 @@ configFrame::configFrame(QWidget* p, const char* title, const char* credits, con
 
     if (credits != nullptr)
     {
-        QLabel* cred = new QLabel(credits, this);
-        cred->setAlignment(Qt::AlignCenter);
-        cred->setStyleSheet("background-color : white;");
-        main->addWidget(cred);
-    }
+        QFrame * creditBox = new QFrame();
+        creditBox->setFrameStyle(QFrame::Box);
+        main->addWidget(creditBox);
 
-    if (link != nullptr)
-    {
-        QString text = QString("<a href=\"%1\">%1</a>").arg(link);
-        QLabel* lnk = new QLabel(text, this);
-        lnk->setAlignment(Qt::AlignCenter);
-        lnk->setStyleSheet("background-color: white;");
-        lnk->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-        lnk->setOpenExternalLinks(true);
-        main->addWidget(lnk);
+        QVBoxLayout* credLayout = new QVBoxLayout();
+        creditBox->setLayout(credLayout);
+
+        QLabel* cred = new QLabel();
+        QString text = QString(credits);
+        if (link != nullptr)
+        {
+            text.append("<br><br>").append(QString("<a href=\"%1\">%1</a>").arg(link));
+            cred->setOpenExternalLinks(true);
+        }
+        cred->setText(text);
+        cred->setTextFormat(Qt::RichText);
+        cred->setAlignment(Qt::AlignCenter);
+        credLayout->addWidget(cred);
     }
 
     QHBoxLayout* top = new QHBoxLayout();
