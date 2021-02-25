@@ -197,7 +197,12 @@ centralFrame::centralFrame(QWidget *parent) :
         b1->setIcon(GET_ICON(icon_gohome));
         b1->setToolTip(tr("Home"));
         b1->setStatusTip(tr("Home"));
-        connect(b1, SIGNAL(clicked()), this, SLOT(onHome()));
+
+        QMenu *menu = new QMenu();
+        QAction *action = menu->addAction(tr("Music location"), this, SLOT(onHome()));
+        action->setStatusTip(tr("Go tot the system music location"));
+
+        b1->setMenu(menu);
         buttons->addWidget(b1);
         buttons->setSpacing(0);
     }
