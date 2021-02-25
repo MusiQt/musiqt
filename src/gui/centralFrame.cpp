@@ -698,10 +698,12 @@ void centralFrame::songEnded()
 
 void centralFrame::saveSettings()
 {
+    // FIXME this sucks
     for (int i=0; i<IFACTORY->num(); i++)
     {
         input* ib = IFACTORY->get(i);
         ib->saveSettings();
+        delete ib;
     }
 
     if (_playlistModel->rowCount())
