@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -596,7 +596,7 @@ sidConfig::sidConfig(QWidget* win) :
     resBox->setCurrentIndex(val);
     connect(resBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdSampling(int)));
 
-    matrix()->addWidget(new QLabel(tr("C64 model"), this));
+    matrix()->addWidget(new QLabel(tr("Default C64 model"), this));
     QComboBox *clockBox = new QComboBox(this);
     matrix()->addWidget(clockBox);
     {
@@ -630,7 +630,7 @@ sidConfig::sidConfig(QWidget* win) :
     matrix()->addWidget(cBox);
     connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdForceC64Model(bool)));
 
-    matrix()->addWidget(new QLabel(tr("SID Model"), this));
+    matrix()->addWidget(new QLabel(tr("Default SID Model"), this));
     QComboBox *modelBox = new QComboBox(this);
     matrix()->addWidget(modelBox);
     {
