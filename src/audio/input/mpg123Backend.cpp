@@ -70,7 +70,7 @@ extern const unsigned char iconMpg123[560] =
 // mp3|mp2
 #define EXT "mp3"
 
-#define CREDITS "MPEG Audio Decoder library\nCopyright \302\251 the mpg123 project"
+#define CREDITS "MPEG Audio Decoder library<br>Copyright \302\251 the mpg123 project"
 #define LINK    "http://mpg123.org/"
 
 const char mpg123Backend::name[] = "Mpg123";

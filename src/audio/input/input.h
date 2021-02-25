@@ -33,7 +33,7 @@ class inputConfig
 {
 public:
     /// Open config dialog
-    virtual QWidget* config(QWidget* win) =0;
+    virtual QWidget* config(QWidget* parent=nullptr) =0;
 
     /// Get filetype icon
     virtual QIcon icon() const =0;
@@ -100,7 +100,7 @@ public:
     virtual bool gapless() const =0;
 
     /// Get Music directory
-    virtual const QString getMusicDir(void) =0;
+    virtual const QString getMusicDir() =0;
 };
 
 #endif

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2020 Leandro Nini
+ *  Copyright (C) 2008-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include "audio.h"
 #include "input/input.h"
+#include "input/inputFactory.h"
 #include "iconFactory.h"
 
 #include <QDebug>
@@ -29,6 +30,7 @@
 #include <QFrame>
 #include <QGroupBox>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QPushButton>
 #include <QToolButton>
 #include <QRadioButton>
@@ -38,8 +40,9 @@
 #include <QMainWindow>
 #include <QStatusBar>
 #include <QStatusTipEvent>
+#include <QHBoxLayout>
 
-settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
+settingsWindow::settingsWindow(QWidget* win) :
     QDialog(win)
 {
     setWindowTitle(tr("Settings"));
@@ -77,12 +80,6 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     cBox->setToolTip(tr("Play all subtunes"));
     cBox->setCheckState(SETTINGS->_subtunes ? Qt::Checked : Qt::Unchecked);
     connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setSubtunes(int)));
-    optionLayout->addWidget(cBox);
-
-    cBox = new QCheckBox(tr("&Auto backend"), this);
-    cBox->setToolTip(tr("Automatic backend selection"));
-    cBox->setCheckState(SETTINGS->_autoBk ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setAutobk(int)));
     optionLayout->addWidget(cBox);
 
     cBox = new QCheckBox(tr("&Bauer stereophonic-to-binaural DSP"), this);
@@ -180,7 +177,28 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
         backendLayout->addWidget(line);
     }
 
-    backendLayout->addWidget(i->config(backendpane));
+    QStackedWidget *beSwitcher = new QStackedWidget();
+
+    {
+        QComboBox *backends = new QComboBox();
+        for (int i=0; i<IFACTORY->num(); i++)
+        {
+            backends->addItem(IFACTORY->name(i));
+            inputConfig *ic = IFACTORY->get(i);
+            backends->setItemIcon(i, ic->icon());
+            inputConfigs.append(ic);
+            beSwitcher->addWidget(ic->config());
+        }
+        connect(backends, SIGNAL(currentIndexChanged(int)), beSwitcher, SLOT(setCurrentIndex(int)));
+
+        QWidget *w = new QWidget(this);
+        QHBoxLayout *backendSelection = new QHBoxLayout(w);
+        backendSelection->addWidget(new QLabel(tr("Backend")));
+        backendSelection->addWidget(backends);
+        backendLayout->addWidget(w);
+    }
+
+    backendLayout->addWidget(beSwitcher);
 
     backendLayout->addStretch();
 
@@ -188,10 +206,10 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
 
     button = new QToolButton(this);
     button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    button->setIcon(i->icon());
+    button->setIcon(GET_ICON(icon_backend));
     button->setText(tr("Backend")); 
-    button->setToolTip(tr("Backend setting"));
-    button->setStatusTip("Backend setting");
+    button->setToolTip(tr("Backend settings"));
+    button->setStatusTip("Backend settings");
     button->setCheckable(true);
     button->setSizePolicy(sizePol);
     buttonGroup->addButton(button, section++);
@@ -211,20 +229,37 @@ settingsWindow::settingsWindow(QWidget* win, inputConfig* i) :
     QPushButton* b = new QPushButton(GET_ICON(icon_dialogcancel), tr("&Cancel"), this);
     bottom->addWidget(b);
     initial->setFocus();
-    connect(b, SIGNAL(clicked()), this, SLOT(reject()));
-    connect(initial, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(b, SIGNAL(clicked()), this, SLOT(onReject()));
+    connect(initial, SIGNAL(clicked()), this, SLOT(onAccept()));
 
     buttons->addStretch();
+
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
+}
+
+void settingsWindow::onAccept()
+{
+    //SETTINGS->save();
+    for (inputConfig* ic: inputConfigs)
+    {
+        ic->saveSettings();
+    }
+    accept();
+}
+
+void settingsWindow::onReject()
+{
+    //SETTINGS->load();
+    for (inputConfig* ic: inputConfigs)
+    {
+        ic->loadSettings();
+    }
+    reject();
 }
 
 void settingsWindow::setSubtunes(int val)
 {
     SETTINGS->_subtunes = val == Qt::Checked;
-}
-
-void settingsWindow::setAutobk(int val)
-{
-    SETTINGS->_autoBk = val == Qt::Checked;
 }
 
 void settingsWindow::setBs2b(int val)
@@ -267,7 +302,6 @@ void settings::load(const QSettings& appSettings)
     _bits = appSettings.value("Audio Settings/bits", 16).toInt();
 
     _subtunes = appSettings.value("General Settings/play subtunes", false).toBool();
-    _autoBk = appSettings.value("General Settings/auto backend", true).toBool();
     _replayGain = appSettings.value("General Settings/Replaygain", false).toBool();
     QString replayGainMode=appSettings.value("General Settings/Replaygain mode", "Album").toString();
     _replayGainMode = (!replayGainMode.compare("Track")) ? 1 : 0;
@@ -281,7 +315,6 @@ void settings::save(QSettings& appSettings)
     appSettings.setValue("Audio Settings/bits", _bits);
 
     appSettings.setValue("General Settings/play subtunes", _subtunes);
-    appSettings.setValue("General Settings/auto backend", _autoBk);
     appSettings.setValue("General Settings/Replaygain", _replayGain);
     appSettings.setValue("General Settings/Replaygain mode", (_replayGainMode == 0) ? "Album" : "Track");
     appSettings.setValue("General Settings/Bauer DSP", _bs2b);

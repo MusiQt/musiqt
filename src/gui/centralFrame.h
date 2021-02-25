@@ -79,8 +79,9 @@ public:
     centralFrame(QWidget *parent = 0);
     ~centralFrame();
 
-    input* getInput() const { return _input; }
-    void setOpts();
+    const metaData* getMetaData() const;
+
+    void reloadSong();
 
     void setPlayMode(bool mode) { playMode = mode; }
     bool getPlayMode() const { return playMode; }
@@ -117,9 +118,8 @@ public slots:
 private slots:
     void onDirSelected(const QModelIndex&);
     void onHome();
+    void onHome(QAction* action);
     void onCmdCurrentDir();
-    void onCmdFiletype(int val);
-    void setBackend(int val, int refresh);
     void gotoDir(const QString &dir);
     void onCmdSongLoaded(input* res);
     void onCmdSongSelected(const QModelIndex& currentRow);
@@ -155,7 +155,6 @@ private:
     playlistModel *_playlistModel;
     proxymodel *_proxyModel;
     playlist *_playlist;
-    QComboBox *_fileTypes;
     bookmark *_bookmarkList;
     QPushButton *_editMode;
 };

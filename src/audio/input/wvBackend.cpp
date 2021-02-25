@@ -56,7 +56,7 @@ extern const unsigned char iconWv[375] =
 
 #define	BUFFER_LENGTH 4096
 
-#define CREDITS "WAVPACK\nHybrid Lossless Wavefile Compressor\nCopyright \302\251 Conifer Software."
+#define CREDITS "WAVPACK<br>Hybrid Lossless Wavefile Compressor<br>Copyright \302\251 Conifer Software."
 #define LINK    "http://www.wavpack.com/"
 
 const char wvBackend::name[] = "Wavpack";

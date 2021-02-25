@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2017 Leandro Nini
+ *  Copyright (C) 2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 static constexpr const char *icon_actioncancel        = ":/icons/action-cancel.gif";
 static constexpr const char *icon_applicationexit     = ":/icons/application-exit.gif";
+static constexpr const char *icon_backend             = ":/icons/backend.gif";
 static constexpr const char *icon_bookmark            = ":/icons/bookmark.gif";
 static constexpr const char *icon_card                = ":/icons/card.gif";
 static constexpr const char *icon_currentplaylist     = ":/icons/current-playlist.gif";

@@ -36,7 +36,6 @@
 #include <QScrollArea>
 
 #define AUTHOR  "Leandro Nini"
-#define WEBSITE "https://github.com/drfiemost/musiqt/"
 #define YEAR    "2006-2021"
 
 aboutDialog::aboutDialog(QWidget *parent) :
@@ -58,14 +57,11 @@ aboutDialog::aboutDialog(QWidget *parent) :
     infoLayout->addWidget(iconAppLabel);
 
     // Contact
-    QLabel *contactLabel = new QLabel(QString(tr("Bugs: <a href=\"%1\">%1</a>")).arg(PACKAGE_BUGREPORT), this);
+    QLabel *contactLabel = new QLabel(QString(tr("Website: <a href=\"%1\">%1</a><br><br>Bugs: <a href=\"%2\">%2</a>")).arg(PACKAGE_URL).arg(PACKAGE_BUGREPORT), this);
     contactLabel->setOpenExternalLinks(true);
-    QLabel *websiteLabel = new QLabel(QString("<a href=\"%1\">%1</a>").arg(WEBSITE), this);
-    websiteLabel->setOpenExternalLinks(true);
 
     QWidget *contactWidget = new QWidget(this);
     QVBoxLayout *contactLayout = new QVBoxLayout(contactWidget);
-    contactLayout->addWidget(websiteLabel);
     contactLayout->addWidget(contactLabel);
 
     // Credits
@@ -136,4 +132,6 @@ aboutDialog::aboutDialog(QWidget *parent) :
     vbox->setContentsMargins(0,0,0,0);
 
     resize(minimumSize());
+
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 }

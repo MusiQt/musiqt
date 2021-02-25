@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2018 Leandro Nini
+ *  Copyright (C) 2008-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,14 +37,18 @@ class settingsWindow : public QDialog
 private:
     QLabel *colorLabel;
 
+    QList<inputConfig*> inputConfigs;
+
 private:
     settingsWindow() {}
     settingsWindow(const settingsWindow&);
     settingsWindow& operator=(const settingsWindow&);
 
 private slots:
+    void onAccept();
+    void onReject();
+
     void setSubtunes(int val);
-    void setAutobk(int val);
     void setBs2b(int val);
     void setReplaygain(bool val);
     void setReplaygainMode(int val);
@@ -53,7 +57,7 @@ protected:
     bool event(QEvent *e) override;
 
 public:
-    settingsWindow(QWidget* win, inputConfig* i);
+    settingsWindow(QWidget* win);
     virtual ~settingsWindow() {}
 };
 
@@ -73,7 +77,6 @@ private:
     unsigned int _bits;
 
     bool   _subtunes;
-    bool   _autoBk;
     bool   _bs2b;
     bool   _replayGain;
     int    _replayGainMode;
@@ -101,9 +104,6 @@ public:
 
     /// Play subtunes
     bool subtunes() const { return _subtunes; }
-
-    /// Automatic backend selection
-    bool autoBk() const { return _autoBk; }
 
     /// Replay Gain
     bool replayGain() const { return _replayGain; }

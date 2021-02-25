@@ -41,7 +41,7 @@
 // ASMA path to BUGlist.
 #define ASMA_BUGLIST "/Docs/Bugs.txt"
 
-#define CREDITS "Game_Music_Emu library\nCopyright \302\251 Shay Green, Michael Pyne."
+#define CREDITS "Game_Music_Emu library<br>Copyright \302\251 Shay Green, Michael Pyne."
 #define LINK    "https://bitbucket.org/mpyne/game-music-emu/"
 
 const char gmeBackend::name[] = "Gme";

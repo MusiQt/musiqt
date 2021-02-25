@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,13 +30,11 @@
 #include <QUrl>
 #include <QWidgetAction>
 
-#define SECTION QString("%1 Bookmarks").arg(_type)
-#define KEY(i)  QString("%1 Bookmarks/bm%2").arg(_type).arg(i)
+#define SECTION QString("Bookmarks")
+#define KEY(i)  QString("Bookmarks/bm%2").arg(i)
 
-void bookmark::load(const char* type)
+void bookmark::load()
 {
-    _type = type;
-
     QString bm;
     int i = 0;
     while (!(bm=settings.value(KEY(i++)).toString()).isEmpty())

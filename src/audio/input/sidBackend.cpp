@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ extern const unsigned char iconSid[126] =
 // HVSC path to BUGlist.
 #define HVSC_BUGLIST "/DOCUMENTS/BUGlist.txt"
 
-#define CREDITS "Sidplayfp\nCopyright \u00A9 Simon White, Antti Lankila, Leandro Nini"
+#define CREDITS "Sidplayfp<br>Copyright \u00A9 Simon White, Antti Lankila, Leandro Nini"
 #define LINK    "https://github.com/libsidplayfp/libsidplayfp/"
 
 const char sidBackend::name[] = "Sidplayfp";
@@ -155,10 +155,11 @@ inline QStringList sidBackend::ext() const { return QString(EXT).split("|"); }
 sidBackend::sidBackend() :
     inputBackend(name, iconSid, 126),
     _sidplayfp(nullptr),
+    _tune(nullptr),
     _stil(nullptr),
     _db(nullptr),
     _length(0),
-    _tune(nullptr)
+    newSonglengthDB(false)
 {
     loadSettings();
 
@@ -461,7 +462,14 @@ void sidBackend::loadTune(const int num)
 {
     _tune->selectSong(num);
     _sidplayfp->load(_tune);
+#if LIBSIDPLAYFP_VERSION_MAJ > 1
+    if (_db != nullptr)
+        _length = newSonglengthDB ? (_db->lengthMs(*_tune) / 1000) : _db->length(*_tune);
+    else
+        _length = 0;
+#else
     _length = _db != nullptr ? _db->length(_md5, _tune->getInfo()->currentSong()) : 0;
+#endif
     time(_length);
 }
 
@@ -482,9 +490,13 @@ void sidBackend::openHvsc(const QString& hvscPath)
     if (_db == nullptr)
         _db = new SidDatabase();
 
-    if (!_db->open(
-            QString("%1%2DOCUMENTS%2Songlengths.txt").arg(hvscPath).arg(QDir::separator()).toUtf8().constData())
-        )
+    QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath).arg(QDir::separator()));
+    qDebug() << "SL DB path: " << slDbPath;
+    if (_db->open(slDbPath.append(".md5").toUtf8().constData()))
+    {
+        newSonglengthDB = true;
+    }
+    else if (!_db->open(slDbPath.append(".txt").toUtf8().constData()))
     {
         qWarning() << _db->error();
         utils::delPtr(_db);
@@ -596,7 +608,7 @@ sidConfig::sidConfig(QWidget* win) :
     resBox->setCurrentIndex(val);
     connect(resBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdSampling(int)));
 
-    matrix()->addWidget(new QLabel(tr("C64 model"), this));
+    matrix()->addWidget(new QLabel(tr("Default C64 model"), this));
     QComboBox *clockBox = new QComboBox(this);
     matrix()->addWidget(clockBox);
     {
@@ -630,7 +642,7 @@ sidConfig::sidConfig(QWidget* win) :
     matrix()->addWidget(cBox);
     connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdForceC64Model(bool)));
 
-    matrix()->addWidget(new QLabel(tr("SID Model"), this));
+    matrix()->addWidget(new QLabel(tr("Default SID Model"), this));
     QComboBox *modelBox = new QComboBox(this);
     matrix()->addWidget(modelBox);
     {

@@ -63,7 +63,7 @@ extern const unsigned char iconMpc[417] =
 
 #define EXT "mpc"
 
-#define CREDITS "Musepack\nCopyright \302\251 The Musepack Development Team"
+#define CREDITS "Musepack<br>Copyright \302\251 The Musepack Development Team"
 #define LINK    "http://www.musepack.com/"
 
 const char mpcBackend::name[] = "Musepack";

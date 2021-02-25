@@ -37,7 +37,7 @@ ov_callbacks oggBackend::vorbis_callbacks =
 
 #define EXT "ogg"
 
-#define CREDITS "OggVorbis\nCopyright \302\251 Xiph.org Foundation"
+#define CREDITS "OggVorbis<br>Copyright \302\251 Xiph.org Foundation"
 #define LINK    "http://www.xiph.org/"
 
 const char oggBackend::name[] = "Ogg-Vorbis";

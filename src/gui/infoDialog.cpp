@@ -89,6 +89,8 @@ infoDialog::infoDialog(QWidget* w) :
     QPushButton* b = new QPushButton(GET_ICON(icon_dialogcancel), tr("&Close"), this);
     main->addWidget(b);
     connect(b, SIGNAL(clicked()), this, SLOT(close()));
+
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 infoDialog::~infoDialog() {}

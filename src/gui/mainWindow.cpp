@@ -379,22 +379,22 @@ void mainWindow::onAbout()
 
 void mainWindow::onConfig()
 {
-    settingsWindow *config = new settingsWindow(this, cFrame->getInput());
-    config->setAttribute(Qt::WA_DeleteOnClose);
-    int result = config->exec();
+    settingsWindow *config = new settingsWindow(this);
+    //config->setAttribute(Qt::WA_DeleteOnClose);
+    int result = config->exec(); // FIXME use open()
     switch (result)
     {
     case QDialog::Accepted:
-        // emit stop();
         cFrame->onCmdStopSong();
         SETTINGS->save(settings);
-        cFrame->setOpts();
+        cFrame->reloadSong();
         break;
     case QDialog::Rejected:
         SETTINGS->load(settings);
-        cFrame->getInput()->loadSettings();
         break;
     }
+
+    delete config;
 }
 
 void mainWindow::onInfo()
@@ -403,7 +403,7 @@ void mainWindow::onInfo()
         return;
 
     _infoDialog = new infoDialog(this);
-    _infoDialog->setInfo(cFrame->getInput()->getMetaData());
+    _infoDialog->setInfo(cFrame->getMetaData());
     _infoDialog->setAttribute(Qt::WA_QuitOnClose, false);
     connect(_infoDialog, SIGNAL(finished(int)), this, SLOT(onCloseInfo()));
     _infoDialog->show();
