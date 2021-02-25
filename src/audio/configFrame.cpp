@@ -63,4 +63,6 @@ configFrame::configFrame(QWidget* p, const char* title, const char* credits, con
 
     _extraBottom = new QVBoxLayout();
     main->addLayout(_extraBottom);
+
+    main->addStretch();
 }
