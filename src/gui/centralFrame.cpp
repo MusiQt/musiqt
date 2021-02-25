@@ -205,6 +205,7 @@ centralFrame::centralFrame(QWidget *parent) :
         QAction *action = menu->addAction(tr("System music location"), this, SLOT(onHome()));
         action->setStatusTip(tr("Go to the system music location"));
 
+        // FIXME regenerate menu on settings change
         QActionGroup *homeGroup = new QActionGroup(menu);
         for (int i=0; i<IFACTORY->num(); i++)
         {
