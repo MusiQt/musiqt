@@ -199,8 +199,24 @@ centralFrame::centralFrame(QWidget *parent) :
         b1->setStatusTip(tr("Home"));
 
         QMenu *menu = new QMenu();
-        QAction *action = menu->addAction(tr("Music location"), this, SLOT(onHome()));
-        action->setStatusTip(tr("Go tot the system music location"));
+        QAction *action = menu->addAction(tr("System music location"), this, SLOT(onHome()));
+        action->setStatusTip(tr("Go to the system music location"));
+
+        QActionGroup *homeGroup = new QActionGroup(menu);
+        for (int i=0; i<IFACTORY->num(); i++)
+        {
+            input* ib = IFACTORY->get(i);
+
+            QString name = IFACTORY->name(i);
+            QString musicDir = ib->getMusicDir();
+            if (!musicDir.isEmpty())
+            {
+                QAction *action = menu->addAction(name.append(tr(" music location")));
+                action->setData(musicDir);
+                homeGroup->addAction(action);
+            }
+        }
+        connect(homeGroup, SIGNAL(triggered(QAction*)), this, SLOT(onHome(QAction*)));
 
         b1->setMenu(menu);
         buttons->addWidget(b1);
@@ -296,8 +312,14 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
 
 void centralFrame::onHome()
 {
-    // FIXME use a list of music dirs
     QString musicDir = xdg::getMusicDir();
+    qDebug() << "music dir: " << musicDir;
+    setDir(fsm->index(musicDir));
+}
+
+void centralFrame::onHome(QAction* action)
+{
+    QString musicDir = action->data().toString();
     qDebug() << "music dir: " << musicDir;
     setDir(fsm->index(musicDir));
 }
