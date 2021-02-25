@@ -381,12 +381,14 @@ openmptConfig::openmptConfig(QWidget* win) :
     QDial *knob;
     QLabel *tf;
 
-    QVBoxLayout *vert = new QVBoxLayout();
-    hf->addLayout(vert);
-    QGridLayout *mat = new QGridLayout();
-    vert->addLayout(mat);
+    hf->addStretch();
 
-    mat->addWidget(new QLabel(tr("Master Gain"), this), 0, 0);
+    QGridLayout *mat = new QGridLayout();
+    hf->addLayout(mat);
+
+    tf = new QLabel(tr("Master Gain"), this);
+    tf->setAlignment(Qt::AlignCenter);
+    mat->addWidget(tf, 0, 0);
     knob = new QDial(this);
     knob->setRange(0, 100);
     knob->setValue(MPTSETTINGS.masterGain);
@@ -399,7 +401,9 @@ openmptConfig::openmptConfig(QWidget* win) :
     connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
     connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdMasterGain(int)));
 
-    mat->addWidget(new QLabel(tr("Stereo Separation"), this), 0, 1);
+    tf = new QLabel(tr("Stereo Separation"), this);
+    tf->setAlignment(Qt::AlignCenter);
+    mat->addWidget(tf, 0, 1);
     knob = new QDial(this);
     knob->setRange(0, 200);
     knob->setValue(MPTSETTINGS.stereoSeparation);
@@ -412,7 +416,9 @@ openmptConfig::openmptConfig(QWidget* win) :
     connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
     connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdStereoSeparation(int)));
 
-    mat->addWidget(new QLabel(tr("Volume Ramping"), this), 0, 2);
+    tf = new QLabel(tr("Volume Ramping"), this);
+    tf->setAlignment(Qt::AlignCenter);
+    mat->addWidget(tf, 0, 2);
     knob = new QDial(this);
     knob->setRange(-1, 10);
     knob->setValue(MPTSETTINGS.volumeRamping);
@@ -424,6 +430,8 @@ openmptConfig::openmptConfig(QWidget* win) :
     mat->addWidget(tf, 2, 2);
     connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
     connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdVolumeRamping(int)));
+
+    hf->addStretch();
 }
 
 void openmptConfig::onCmdFrequency(int val)
