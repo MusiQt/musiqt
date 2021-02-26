@@ -100,7 +100,7 @@ size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize, const un
 
 bool mpg123Backend::supports(const QString& fileName)
 {
-    QRegExp rx("*." EXT);
+    QRegExp rx("*." EXT, Qt::CaseInsensitive);
     rx.setPatternSyntax(QRegExp::Wildcard);
     return rx.exactMatch(fileName);
 }

@@ -71,7 +71,7 @@ bool hvlBackend::supports(const QString& fileName)
     ext.prepend(".*\\.(").append(")");
     qDebug() << "hvlBackend::supports: " << ext;
 
-    QRegExp rx(ext);
+    QRegExp rx(ext, Qt::CaseInsensitive);
     return rx.exactMatch(fileName);
 }
 

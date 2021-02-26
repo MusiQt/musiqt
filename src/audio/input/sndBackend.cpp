@@ -65,7 +65,7 @@ bool sndBackend::supports(const QString& fileName)
     ext.prepend(".*\\.(").append(")");
     qDebug() << "sndBackend::supports: " << ext;
 
-    QRegExp rx(ext);
+    QRegExp rx(ext, Qt::CaseInsensitive);
     return rx.exactMatch(fileName);
 }
 

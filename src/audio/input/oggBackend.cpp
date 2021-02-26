@@ -65,7 +65,7 @@ size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
 
 bool oggBackend::supports(const QString& fileName)
 {
-    QRegExp rx("*." EXT);
+    QRegExp rx("*." EXT, Qt::CaseInsensitive);
     rx.setPatternSyntax(QRegExp::Wildcard);
     return rx.exactMatch(fileName);
 }

@@ -150,7 +150,7 @@ bool openmptBackend::supports(const QString& fileName)
     ext.prepend(".*\\.(").append(")");
     qDebug() << "openmptBackend::supports: " << ext;
 
-    QRegExp rx(ext);
+    QRegExp rx(ext, Qt::CaseInsensitive);
     return rx.exactMatch(fileName);
 }
 

@@ -146,7 +146,7 @@ bool sidBackend::supports(const QString& fileName)
     ext.prepend(".*\\.(").append(")");
     qDebug() << "sidBackend::supports: " << ext;
 
-    QRegExp rx(ext);
+    QRegExp rx(ext, Qt::CaseInsensitive);
     return rx.exactMatch(fileName);
 }
 
