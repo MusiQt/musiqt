@@ -160,9 +160,10 @@ bool gmeBackend::open(const QString& fileName)
     QFileInfo fInfo(fileName);
     gme_load_m3u(_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
 
+    _hasStilInfo = _stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
+
     getInfo();
 
-    _hasStilInfo = _stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
     if (_hasStilInfo)
     {
         qDebug("Retrieving STIL info");
