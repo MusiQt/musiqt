@@ -195,7 +195,7 @@ public:
     QWidget* config(QWidget* win) override { return new sidConfig(win); }
 
     /// Get Music directory
-    const QString getMusicDir(void) override { return _settings.hvscPath; }
+    const QString getMusicDir(void) const override { return _settings.hvscPath; }
 
     void loadSettings();
 

@@ -81,7 +81,7 @@ public:
 
     const metaData* getMetaData() const;
 
-    void reloadSong();
+    void onSettingsChanged();
 
     void setPlayMode(bool mode) { playMode = mode; }
     bool getPlayMode() const { return playMode; }
@@ -137,6 +137,7 @@ private slots:
     void dirLoaded(const QString &);
 
 private:
+    void createHomeMenu();
     void load(const QString& filename);
     void onCmdChangeSong(dir_t);
     void setDir(const QModelIndex& index);
@@ -157,6 +158,7 @@ private:
     playlist *_playlist;
     bookmark *_bookmarkList;
     QPushButton *_editMode;
+    QPushButton *m_home;
 };
 
 #endif

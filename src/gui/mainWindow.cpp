@@ -387,7 +387,7 @@ void mainWindow::onConfig()
     case QDialog::Accepted:
         cFrame->onCmdStopSong();
         SETTINGS->save(settings);
-        cFrame->reloadSong();
+        cFrame->onSettingsChanged();
         break;
     case QDialog::Rejected:
         SETTINGS->load(settings);

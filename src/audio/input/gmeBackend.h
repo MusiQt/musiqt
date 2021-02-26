@@ -151,7 +151,7 @@ public:
     QWidget* config(QWidget* win) override { return new gmeConfig(win); }
 
     /// Get Music directory
-    const QString getMusicDir() const { return _settings.asmaPath; }
+    const QString getMusicDir() const override { return _settings.asmaPath; }
 
     void loadSettings();
 

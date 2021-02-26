@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,6 +37,9 @@ public:
 
     /// Get filetype icon
     virtual QIcon icon() const =0;
+
+    /// Get Music directory
+    virtual const QString getMusicDir() const =0;
 
     virtual void loadSettings() =0;
 
@@ -98,9 +101,6 @@ public:
 
     /// Gapless support
     virtual bool gapless() const =0;
-
-    /// Get Music directory
-    virtual const QString getMusicDir() =0;
 };
 
 #endif

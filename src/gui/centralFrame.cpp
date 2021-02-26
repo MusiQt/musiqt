@@ -113,7 +113,6 @@ centralFrame::centralFrame(QWidget *parent) :
     _playlist->setModel(_proxyModel);
 
     QString filter;
-    QStringList musicDirs;
     for (int i=0; i<IFACTORY->num(); i++)
     {
         input* ib = IFACTORY->get(i);
@@ -121,8 +120,6 @@ centralFrame::centralFrame(QWidget *parent) :
         QString filt(ib->ext().join("|"));
         qDebug() << IFACTORY->name(i) << ": " << filt;
         filter.append(filt).append("|");
-
-        musicDirs << ib->getMusicDir();
 
         delete ib;
     }
@@ -196,32 +193,15 @@ centralFrame::centralFrame(QWidget *parent) :
         b1->setStatusTip(tr("Return to current playlist"));
         connect(b1, SIGNAL(clicked()), this, SLOT(onCmdCurrentDir()));
         buttons->addWidget(b1);
-        b1 = new QPushButton(this);
-        b1->setIcon(GET_ICON(icon_gohome));
-        b1->setToolTip(tr("Home"));
-        b1->setStatusTip(tr("Home"));
+        m_home = new QPushButton(this);
+        m_home->setIcon(GET_ICON(icon_gohome));
+        m_home->setToolTip(tr("Home"));
+        m_home->setStatusTip(tr("Home"));
+        m_home->setMenu(new QMenu());
 
-        QMenu *menu = new QMenu();
-        QAction *action = menu->addAction(tr("System music location"), this, SLOT(onHome()));
-        action->setStatusTip(tr("Go to the system music location"));
+        createHomeMenu();
 
-        // FIXME regenerate menu on settings change
-        QActionGroup *homeGroup = new QActionGroup(menu);
-        for (int i=0; i<IFACTORY->num(); i++)
-        {
-            QString name = IFACTORY->name(i);
-            QString musicDir = musicDirs[i];
-            if (!musicDir.isEmpty())
-            {
-                QAction *action = menu->addAction(name.append(tr(" music location")));
-                action->setData(musicDir);
-                homeGroup->addAction(action);
-            }
-        }
-        connect(homeGroup, SIGNAL(triggered(QAction*)), this, SLOT(onHome(QAction*)));
-
-        b1->setMenu(menu);
-        buttons->addWidget(b1);
+        buttons->addWidget(m_home);
         buttons->setSpacing(0);
     }
 
@@ -252,6 +232,32 @@ centralFrame::~centralFrame()
 
     delete _audio;
     delete _input;
+}
+
+void centralFrame::createHomeMenu()
+{
+    QMenu *menu = m_home->menu();
+    menu->clear();
+    QAction *action = menu->addAction(tr("System music location"), this, SLOT(onHome()));
+    action->setStatusTip(tr("Go to the system music location"));
+
+    QActionGroup *homeGroup = new QActionGroup(menu);
+    for (int i=0; i<IFACTORY->num(); i++)
+    {
+        inputConfig* ic = IFACTORY->get(i);
+
+        QString musicDir = ic->getMusicDir();
+        if (!musicDir.isEmpty())
+        {
+            QString name = IFACTORY->name(i);
+            QAction *action = menu->addAction(name.append(tr(" music location")));
+            action->setData(musicDir);
+            homeGroup->addAction(action);
+        }
+
+        delete ic;
+    }
+    connect(homeGroup, SIGNAL(triggered(QAction*)), this, SLOT(onHome(QAction*)));
 }
 
 void centralFrame::onDirSelected(const QModelIndex& idx)
@@ -697,8 +703,10 @@ void centralFrame::songEnded()
     onCmdStopSong();
 }
 
-void centralFrame::reloadSong()
+void centralFrame::onSettingsChanged()
 {
+    createHomeMenu();
+
     QString songLoaded = _input->songLoaded();
     if (!songLoaded.isEmpty())
     {

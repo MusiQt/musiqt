@@ -123,7 +123,7 @@ public:
     virtual bool gapless() const override { return false; }
 
     /// Get Music directory
-    virtual const QString getMusicDir() override { return QString(); }
+    virtual const QString getMusicDir() const override { return QString(); }
 
     virtual void loadSettings() {}
 
