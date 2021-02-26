@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2019 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -415,13 +415,13 @@ void gmeConfig::onCmdAsma()
 
 void gmeConfig::onCmdAsmaEdited()
 {
-    QString val = asmaPath->text();
-    if (!QFileInfo(val).exists())
+    QString path = asmaPath->text();
+    if (!path.isEmpty() && !QFileInfo(path).exists())
     {
         QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
     }
     else
     {
-        GMESETTINGS.asmaPath = val;
+        GMESETTINGS.asmaPath = path;
     }
 }
