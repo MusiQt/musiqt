@@ -130,7 +130,7 @@ public:
     unsigned int subtunes() const override { return _emu ? gme_track_count(_emu) : 0; }
 
     /// Get current subtune
-    unsigned int subtune() const override { return _currentTrack; }
+    unsigned int subtune() const override { return _currentTrack+1; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;
