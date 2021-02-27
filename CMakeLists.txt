@@ -274,7 +274,7 @@ ENDIF(GME)
 
 OPTION(OPENMPT "Build openmpt backend if available" ON)
 IF(OPENMPT)
-    pkg_check_modules(libopenmpt IMPORTED_TARGET libopenmpt>=0.2)
+    pkg_check_modules(libopenmpt IMPORTED_TARGET libopenmpt<0.5)
     if(libopenmpt_FOUND)
         SET(HAVE_OPENMPT 1)
         target_sources(musiqt PRIVATE
