@@ -117,7 +117,6 @@ public slots:
 
 private slots:
     void onDirSelected(const QModelIndex&);
-    void onHome();
     void onHome(QAction* action);
     void onCmdCurrentDir();
     void gotoDir(const QString &dir);

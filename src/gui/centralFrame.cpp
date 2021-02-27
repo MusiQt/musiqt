@@ -238,10 +238,18 @@ void centralFrame::createHomeMenu()
 {
     QMenu *menu = m_home->menu();
     menu->clear();
-    QAction *action = menu->addAction(tr("System music location"), this, SLOT(onHome()));
-    action->setStatusTip(tr("Go to the system music location"));
 
     QActionGroup *homeGroup = new QActionGroup(menu);
+
+    QString musicDir = xdg::getMusicDir();
+    if (!musicDir.isEmpty())
+    {
+        QAction *action = menu->addAction(tr("System music location"));
+        action->setData(musicDir);
+        action->setStatusTip(musicDir);
+            homeGroup->addAction(action);
+    }
+
     for (int i=0; i<IFACTORY->num(); i++)
     {
         inputConfig* ic = IFACTORY->get(i);
@@ -252,6 +260,7 @@ void centralFrame::createHomeMenu()
             QString name = IFACTORY->name(i);
             QAction *action = menu->addAction(name.append(tr(" music location")));
             action->setData(musicDir);
+            action->setStatusTip(musicDir);
             homeGroup->addAction(action);
         }
 
@@ -318,18 +327,15 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
     }
 }
 
-void centralFrame::onHome()
-{
-    QString musicDir = xdg::getMusicDir();
-    qDebug() << "music dir: " << musicDir;
-    setDir(fsm->index(musicDir));
-}
-
 void centralFrame::onHome(QAction* action)
 {
     QString musicDir = action->data().toString();
-    qDebug() << "music dir: " << musicDir;
-    setDir(fsm->index(musicDir));
+    qDebug() << "go to music dir: " << musicDir;
+    QModelIndex idx = fsm->index(musicDir);
+    if (idx.isValid())
+        setDir(idx);
+    else
+        QMessageBox::warning(this, tr("Error"), QString(tr("Path %1 dos not exist")).arg(musicDir));
 }
 
 void centralFrame::onCmdCurrentDir()
@@ -368,8 +374,9 @@ void centralFrame::setFile(const QString& file, const bool play)
     // Check if requested file/directory exists
     if (!fileInfo.exists())
     {
-        if (curItem.isValid()) // ???
-            onHome();
+        // ???
+        //if (curItem.isValid())
+        //    onHome();
         return;
     }
 
