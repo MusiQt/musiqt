@@ -642,12 +642,12 @@ sidConfig::sidConfig(QWidget* win) :
     matrix()->addWidget(cBox);
     connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdForceC64Model(bool)));
 
-    matrix()->addWidget(new QLabel(tr("Default SID Model"), this));
+    matrix()->addWidget(new QLabel(tr("Default SID model"), this));
     QComboBox *modelBox = new QComboBox(this);
     matrix()->addWidget(modelBox);
     {
         QStringList items;
-        items << "MOS 6581" << "MOS 8580" << "Drean";
+        items << "MOS 6581" << "MOS 8580";
         modelBox->addItems(items);
         modelBox->setMaxVisibleItems(items.size());
     }
