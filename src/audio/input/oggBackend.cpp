@@ -134,38 +134,39 @@ bool oggBackend::open(const QString& fileName)
     while (*ptr)
     {
         qDebug() << *ptr;
-        if (!getComment(*ptr, &title, "title"))
-        if (!getComment(*ptr, &artist, "artist"))
-        if (!getComment(*ptr, &year, "date"))
-        if (!getComment(*ptr, &album, "album"))
-        if (!getComment(*ptr, &genre, "genre"))
-        if (!getComment(*ptr, &comment, "comment"))
+        if (!getMetadata(*ptr, &title, "title"))
+        if (!getMetadata(*ptr, &artist, "artist"))
+        if (!getMetadata(*ptr, &year, "date"))
+        if (!getMetadata(*ptr, &album, "album"))
+        if (!getMetadata(*ptr, &genre, "genre"))
+        if (!getMetadata(*ptr, &comment, "comment"))
         {
             if (!compareTag(*ptr, "tracknumber"))
             {
                 _metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
             }
+            else if (!compareTag(*ptr, "UNSYNCEDLYRICS"))
+            {
+                // TODO
+            }
             else if (!compareTag(*ptr, "METADATA_BLOCK_PICTURE"))
             {
-                qDebug() << "METADATA_BLOCK_PICTURE";
                 // TODO
             }
             else if (!compareTag(*ptr, "COVERARTMIME"))
             {
-                qDebug() << "COVERARTMIME";
                 mime = QString(*ptr+13);
             }
             else if (!compareTag(*ptr, "COVERART"))
             {
-                qDebug() << "COVERART";
                 image = QByteArray::fromBase64(*ptr+9);
             }
             else if (!compareTag(*ptr, "BINARY_COVERART"))
             {
-                qDebug() << "BINARY_COVERART";
                 //mime = QString(*ptr+17);
                 //image = QByteArray::fromBase64(*ptr+16);
             }
+
         }
         ++ptr;
     }
@@ -203,7 +204,7 @@ bool oggBackend::open(const QString& fileName)
     return true;
 }
 
-bool oggBackend::getComment(const char* orig, QString* dest, const char* type)
+bool oggBackend::getMetadata(const char* orig, QString* dest, const char* type)
 {
     const int n = qstrlen(type);
     if (qstrnicmp(orig, type, n))

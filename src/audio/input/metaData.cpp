@@ -40,7 +40,7 @@ const char* metaDataImpl::mprisTags[LAST_ID] =
 
 void metaDataImpl::addInfo(QString type, QString info)
 {
-    qDebug() << "adding type: " << type << ", value: "<< info;
+    qDebug() << "adding metadata: " << type << ", value: "<< info;
 
     if (!info.isEmpty())
     {

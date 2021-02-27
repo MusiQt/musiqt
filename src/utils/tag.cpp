@@ -475,7 +475,7 @@ int tag::getLE32(const char* frame)
         | ((unsigned int)(unsigned char)frame[2]<<16) | ((unsigned int)(unsigned char)frame[3]<<24);
 }
 
-bool tag::getComment(const char* orig, QString* dest, const char* type, int& len)
+bool tag::getMetadata(const char* orig, QString* dest, const char* type, int& len)
 {
     if (QString::compare(orig, type))
         return false;
@@ -504,12 +504,12 @@ int tag::getAPEItem(const char* buf)
     //int flags = getLE32(buf+4);
 
     const char *ptr = buf+8;
-    if (!getComment(ptr, &_title, "title", itemSize))
-    if (!getComment(ptr, &_artist, "artist", itemSize))
-    if (!getComment(ptr, &_year, "year", itemSize))
-    if (!getComment(ptr, &_album, "album", itemSize))
-    if (!getComment(ptr, &_genre, "genre", itemSize))
-    if (!getComment(ptr, &_comment, "comment", itemSize))
+    if (!getMetadata(ptr, &_title, "title", itemSize))
+    if (!getMetadata(ptr, &_artist, "artist", itemSize))
+    if (!getMetadata(ptr, &_year, "year", itemSize))
+    if (!getMetadata(ptr, &_album, "album", itemSize))
+    if (!getMetadata(ptr, &_genre, "genre", itemSize))
+    if (!getMetadata(ptr, &_comment, "comment", itemSize))
     {
         if (!QString::compare(ptr, "track"))
         {

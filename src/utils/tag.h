@@ -67,7 +67,7 @@ private:
     int getLE32(const char* frame);
 
     ///
-    bool getComment(const char* orig, QString* dest, const char* type, int& len);
+    bool getMetadata(const char* orig, QString* dest, const char* type, int& len);
 
     ///
     int getAPEItem(const char* buf);
