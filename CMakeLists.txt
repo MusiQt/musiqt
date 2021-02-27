@@ -155,6 +155,22 @@ IF(NLS)
     ENDIF(Gettext_FOUND)
 ENDIF(NLS)
 
+find_program(XGETTEXT_CMD xgettext)
+SET(POT_FILE ${CMAKE_SOURCE_DIR}/po/${PROJECT_NAME}.pot)
+file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+add_custom_target(update_pot 
+    COMMAND ${XGETTEXT_CMD} -C -s -j
+        -d ${PROJECT_NAME}
+        -o ${POT_FILE}
+        --from-code=utf-8
+        --keyword=tr
+        --package-name=${PROJECT_NAME}
+        --package-version=${CMAKE_PROJECT_VERSION}
+        ${SRC_FILES}
+    DEPENDS ${SRC_FILES}
+    COMMENT "Extract translatable messages to ${POT_FILE}"
+)
+
 ##################################################################
 # Check for Qt
 
