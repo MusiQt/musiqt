@@ -128,6 +128,7 @@ bool oggBackend::open(const QString& fileName)
     QString genre = QString();
     QString comment = QString();
     QString mime = QString();
+    QString lyrics = QString();
     QByteArray image;
 
     char **ptr = ov_comment(_vf, -1)->user_comments;
@@ -147,7 +148,7 @@ bool oggBackend::open(const QString& fileName)
             }
             else if (!compareTag(*ptr, "UNSYNCEDLYRICS"))
             {
-                // TODO
+                lyrics = QString(*ptr+15);
             }
             else if (!compareTag(*ptr, "METADATA_BLOCK_PICTURE"))
             {
@@ -199,6 +200,9 @@ bool oggBackend::open(const QString& fileName)
 
     if (!mime.isNull())
         _metaData.addInfo(new QByteArray((char*)image.data(), image.size()));
+
+    if (!lyrics.isEmpty())
+         _metaData.addInfo("lyrics", lyrics);
 
     songLoaded(fileName);
     return true;
