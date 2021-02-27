@@ -258,7 +258,7 @@ void centralFrame::createHomeMenu()
         if (!musicDir.isEmpty())
         {
             QString name = IFACTORY->name(i);
-            QAction *action = menu->addAction(name.append(tr(" music location")));
+            QAction *action = menu->addAction(ic->icon(), name.append(tr(" music location")));
             action->setData(musicDir);
             action->setStatusTip(musicDir);
             homeGroup->addAction(action);
@@ -335,7 +335,7 @@ void centralFrame::onHome(QAction* action)
     if (idx.isValid())
         setDir(idx);
     else
-        QMessageBox::warning(this, tr("Error"), QString(tr("Path %1 dos not exist")).arg(musicDir));
+        QMessageBox::warning(this, tr("Warning"), QString(tr("Path %1 dos not exist")).arg(musicDir));
 }
 
 void centralFrame::onCmdCurrentDir()
