@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"Report-Msgid-Bugs-To: https://github.com/drfiemost/musiqt/issues/\n"
-"POT-Creation-Date: 2021-02-01 10:27+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-27 18:22+0100\n"
 "PO-Revision-Date: 2018-09-04 21:19+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Lokalize 1.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/gui/aboutDialog.cpp:46
-msgid "About %1"
-msgstr "Acerca de %1"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:261
+msgid " music location"
+msgstr ""
 
-#: src/gui/aboutDialog.cpp:49
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:48
 msgid ""
 "%1\n"
 "\n"
@@ -31,737 +31,713 @@ msgid ""
 "Copyright %3 %4"
 msgstr ""
 
-#: src/gui/aboutDialog.cpp:61
-msgid "Bugs: <a href=\"%1\">%1</a>"
-msgstr ""
-
-#: src/gui/aboutDialog.cpp:87
-msgid ""
-"This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt."
-"io/</a>"
-msgstr ""
-
-#: src/gui/aboutDialog.cpp:114 src/gui/mainWindow.cpp:310
-msgid "&Info"
-msgstr "&Info"
-
-#: src/gui/aboutDialog.cpp:115
-msgid "&Contact"
-msgstr "&Contato"
-
-#: src/gui/aboutDialog.cpp:116
-msgid "C&redits"
-msgstr "C&reditos"
-
-#: src/gui/aboutDialog.cpp:117
-msgid "&Qt"
-msgstr "&Qt"
-
-#: src/gui/aboutDialog.cpp:118
-msgid "&License"
-msgstr "&Licencia"
-
-#: src/gui/bookmark.cpp:108
-msgid "No item selected"
-msgstr "Ningún elemento seleccionado"
-
-#: src/gui/bookmark.cpp:116
-msgid "Delete"
-msgstr "Borrar"
-
-#: src/gui/bookmark.cpp:117
-msgid "Delete selected bookmark"
-msgstr "Borrar marcador seleccionado"
-
-#: src/gui/bookmark.cpp:120
-msgid "Clear"
-msgstr "Limpiar"
-
-#: src/gui/bookmark.cpp:121
-msgid "Clear all bookmarks"
-msgstr "Limpiar marcadores"
-
-#: src/gui/bookmark.cpp:139
-msgid "Clear bookmarks"
-msgstr "Limpiar marcadores"
-
-#: src/gui/bookmark.cpp:140
-msgid "Are you sure you want to delete all bookmarks?"
-msgstr "¿Esta seguro de borrar todos los marcadores?"
-
-#: src/gui/centralFrame.cpp:150 src/gui/mainWindow.cpp:198
-msgid "Playlist"
-msgstr "Lista de reproducción"
-
-#: src/gui/centralFrame.cpp:156
-msgid "Bookmarks"
-msgstr "&Marcadores"
-
-#: src/gui/centralFrame.cpp:174
-msgid "Edit"
-msgstr "Editar"
-
-#: src/gui/centralFrame.cpp:175
-msgid "Edit playlist"
-msgstr "Editar la lista de reproducción"
-
-#: src/gui/centralFrame.cpp:181
-msgid "Save"
-msgstr "Guardar"
-
-#: src/gui/centralFrame.cpp:182 src/gui/centralFrame.cpp:957
-msgid "Save playlist"
-msgstr "Guardar lista de reproducción"
-
-#: src/gui/centralFrame.cpp:187
-msgid "Current playlist"
-msgstr "Lista de reproducción actual"
-
-#: src/gui/centralFrame.cpp:188
-msgid "Return to current playlist"
-msgstr "Volver a la lista de reproducción actual"
-
-#: src/gui/centralFrame.cpp:193 src/gui/centralFrame.cpp:194
-msgid "Home"
-msgstr "Inicio"
-
-#: src/gui/centralFrame.cpp:787
-msgid "Add to playlist"
-msgstr "&Añadir a la lista de reproducción"
-
-#: src/gui/centralFrame.cpp:788
-msgid "Add song to the playlist"
-msgstr "Añade la canción a la lista de reproducción."
-
-#: src/gui/centralFrame.cpp:792
-msgid "Add to bookmarks"
-msgstr "&Añadir a marcadores"
-
-#: src/gui/centralFrame.cpp:793
-msgid "Add directory to the bookmarks"
-msgstr "Anade el directorio a los marcadores."
-
-#: src/gui/centralFrame.cpp:817
-msgid "Remove item"
-msgstr "Eliminar elemento"
-
-#: src/gui/centralFrame.cpp:818
-msgid "Remove selected item from playlist"
-msgstr "Eliminar el elemento seleccionado de la lista de reproducción"
-
-#: src/gui/centralFrame.cpp:822 src/gui/centralFrame.cpp:824
-msgid "Sort ascending"
-msgstr "Ordenación ascendente"
-
-#: src/gui/centralFrame.cpp:827 src/gui/centralFrame.cpp:829
-msgid "Sort descending"
-msgstr "Ordenación descendente"
-
-#: src/gui/centralFrame.cpp:832
-msgid "Shuffle"
-msgstr "Aleatorio"
-
-#: src/gui/centralFrame.cpp:834
-msgid "Sort randomly"
-msgstr "Ordenación aleatoria"
-
-#: src/gui/centralFrame.cpp:843
-msgid "Sorting"
-msgstr "Ordenación"
-
-#: src/gui/centralFrame.cpp:973
-msgid "Error"
-msgstr "Error"
-
-#: src/gui/centralFrame.cpp:973
-msgid "Error saving playlist"
-msgstr "Error guardando la lista de reproducción"
-
-#: src/gui/infoDialog.cpp:89
-msgid "&Close"
-msgstr "&Cerrar"
-
-#: src/gui/infoDialog.cpp:111
-msgid "No song loaded"
-msgstr "Ninguna canción cargada"
-
-#: src/gui/infoDialog.cpp:229 src/gui/infoLabel.cpp:64
-msgid "No info"
-msgstr "Sin información"
-
-#: src/gui/mainWindow.cpp:171 src/gui/mainWindow.cpp:172
-#: src/gui/mainWindow.cpp:349
-msgid "Compact"
-msgstr "Modo compacto"
-
-#: src/gui/mainWindow.cpp:173 src/gui/mainWindow.cpp:350
-msgid "Switch to compact view"
-msgstr "Cambiar a modo compacto"
-
-#: src/gui/mainWindow.cpp:176 src/gui/mainWindow.cpp:177
-#: src/gui/settings.cpp:45
-msgid "Settings"
-msgstr "Configuración"
-
-#: src/gui/mainWindow.cpp:178
-msgid "Program settings"
-msgstr "Configuración del programa"
-
-#: src/gui/mainWindow.cpp:188 src/gui/mainWindow.cpp:189
-#: src/gui/mainWindow.cpp:295
-msgid "Previous"
-msgstr "Precedente"
-
-#: src/gui/mainWindow.cpp:190
-msgid "Go to previous subtune"
-msgstr "Ir al subcanción anterior"
-
-#: src/gui/mainWindow.cpp:193 src/gui/mainWindow.cpp:194
-#: src/gui/mainWindow.cpp:299
-msgid "Next"
-msgstr "Siguiente"
-
-#: src/gui/mainWindow.cpp:195
-msgid "Go to next subtune"
-msgstr "Ir al siguiente subtono"
-
-#: src/gui/mainWindow.cpp:207
-msgid "Subtunes"
-msgstr "Subcanción"
-
-#: src/gui/mainWindow.cpp:212
-msgid "Songs"
-msgstr "Canción"
-
-#: src/gui/mainWindow.cpp:217 src/gui/mainWindow.cpp:325
-#: src/gui/mainWindow.cpp:447
-msgid "Stopped"
-msgstr "Detenido"
-
-#: src/gui/mainWindow.cpp:225
-msgid "Volume"
-msgstr "Volumen"
-
-#: src/gui/mainWindow.cpp:289
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:289
 msgid "&About"
 msgstr "Acerca de"
 
-#: src/gui/mainWindow.cpp:290 src/gui/mainWindow.cpp:291
-msgid "About"
-msgstr "Acerca de"
-
-#: src/gui/mainWindow.cpp:294
-msgid "P&revious"
-msgstr "Precedente"
-
-#: src/gui/mainWindow.cpp:296
-msgid "Go to previous song"
-msgstr "Ir a la canción anterior"
-
-#: src/gui/mainWindow.cpp:298
-msgid "&Next"
-msgstr "Siguiente"
-
-#: src/gui/mainWindow.cpp:300
-msgid "Go to next song"
-msgstr "Ir a la siguiente canción"
-
-#: src/gui/mainWindow.cpp:302
-msgid "&Play"
-msgstr "Reproducir"
-
-#: src/gui/mainWindow.cpp:303 src/gui/mainWindow.cpp:428
-msgid "Play"
-msgstr "Reproducir"
-
-#: src/gui/mainWindow.cpp:304
-msgid "Play song"
-msgstr "Reproduciendo"
-
-#: src/gui/mainWindow.cpp:306
-msgid "&Stop"
-msgstr "Detener"
-
-#: src/gui/mainWindow.cpp:307 src/gui/mainWindow.cpp:308
-msgid "Stop"
-msgstr "Detener"
-
-#: src/gui/mainWindow.cpp:311
-msgid "Info"
-msgstr "&Info"
-
-#: src/gui/mainWindow.cpp:312
-msgid "Song info"
-msgstr "Información de la canción"
-
-#: src/gui/mainWindow.cpp:315
-msgid "&Quit"
-msgstr ""
-
-#: src/gui/mainWindow.cpp:316 src/gui/mainWindow.cpp:317
-msgid "Exit"
-msgstr "Salir"
-
-#: src/gui/mainWindow.cpp:360
-msgid "Full mode"
-msgstr "Modo completo"
-
-#: src/gui/mainWindow.cpp:361
-msgid "Switch to full UI mode"
-msgstr "Cambiar a modo completo"
-
-#: src/gui/mainWindow.cpp:433
-msgid "Pause"
-msgstr "Pausa"
-
-#: src/gui/mainWindow.cpp:451
-msgid "Playing"
-msgstr "Reproduciendo"
-
-#: src/gui/mainWindow.cpp:455
-msgid "Paused"
-msgstr "Pausado"
-
-#: src/gui/mainWindow.cpp:494
-msgid "Loading..."
-msgstr "Cargando..."
-
-#: src/gui/mainWindow.cpp:524
-msgid "Song mode"
-msgstr "Modo canción"
-
-#: src/gui/mainWindow.cpp:525
-msgid "Switch to song mode"
-msgstr "Cambiar a modo canción"
-
-#: src/gui/mainWindow.cpp:530
-msgid "Playlist mode"
-msgstr "Modo lista de reproducción"
-
-#: src/gui/mainWindow.cpp:531
-msgid "Switch to playlist mode"
-msgstr "Cambiar a modo lista de reproducción"
-
-#: src/gui/settings.cpp:67
-msgid "General settings"
-msgstr "Configuración general"
-
-#: src/gui/settings.cpp:76
-msgid "&Play subtunes"
-msgstr "Re&producir subtonos"
-
-#: src/gui/settings.cpp:77
-#, fuzzy
-msgid "Play all subtunes"
-msgstr "Reproducir todos los subtonos"
-
-#: src/gui/settings.cpp:82
-msgid "&Auto backend"
-msgstr "&Auto decodificador"
-
-#: src/gui/settings.cpp:83
-msgid "Automatic backend selection"
-msgstr "Selección automática del decodificador"
-
-#: src/gui/settings.cpp:88
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:85
 msgid "&Bauer stereophonic-to-binaural DSP"
 msgstr "Filtro Bauer estéreo a binaural DSP"
 
-#: src/gui/settings.cpp:89
-msgid "Bauer stereophonic-to-binaural DSP"
-msgstr "Filtro Bauer estéreo a binaural DSP"
-
-#: src/gui/settings.cpp:99
-msgid "Replaygain"
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:364
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:793
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:804
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:815
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:826
+msgid "&Browse"
 msgstr ""
 
-#: src/gui/settings.cpp:101
-msgid "Enable replaygain loudness normalization"
-msgstr ""
-
-#: src/gui/settings.cpp:108
-msgid "Album gain"
-msgstr ""
-
-#: src/gui/settings.cpp:109
-msgid "Preserve album dynamics"
-msgstr ""
-
-#: src/gui/settings.cpp:113
-msgid "Track gain"
-msgstr ""
-
-#: src/gui/settings.cpp:114
-msgid "All tracks equal loudness"
-msgstr ""
-
-#: src/gui/settings.cpp:132
-msgid "General"
-msgstr "General"
-
-#: src/gui/settings.cpp:133
-msgid "General setting"
-msgstr "Configuración general"
-
-#: src/gui/settings.cpp:145
-msgid "Audio settings"
-msgstr "Configuración Audio"
-
-#: src/gui/settings.cpp:160
-msgid "Audio"
-msgstr "Audio"
-
-#: src/gui/settings.cpp:161
-msgid "Audio setting"
-msgstr "Configuración Audio"
-
-#: src/gui/settings.cpp:174
-msgid "Backend settings"
-msgstr "Configurar decodificador"
-
-#: src/gui/settings.cpp:192
-msgid "Backend"
-msgstr "Decodificador"
-
-#: src/gui/settings.cpp:193
-msgid "Backend setting"
-msgstr "Configurar decodificador"
-
-#: src/gui/settings.cpp:209
-msgid "&OK"
-msgstr "&Aceptar"
-
-#: src/gui/settings.cpp:211
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:229
 msgid "&Cancel"
 msgstr "&Cancelar"
 
-#: src/audio/audio.cpp:194
+#: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:89
+msgid "&Close"
+msgstr "&Cerrar"
+
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:111
+msgid "&Contact"
+msgstr "&Contato"
+
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:110
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:310
+msgid "&Info"
+msgstr "&Info"
+
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:114
+msgid "&License"
+msgstr "&Licencia"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:298
+msgid "&Next"
+msgstr "Siguiente"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:227
+msgid "&OK"
+msgstr "&Aceptar"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:302
+msgid "&Play"
+msgstr "Reproducir"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:79
+msgid "&Play subtunes"
+msgstr "Re&producir subtonos"
+
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:113
+msgid "&Qt"
+msgstr "&Qt"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:315
+msgid "&Quit"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:306
+msgid "&Stop"
+msgstr "Detener"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:405
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:419
+msgid "2nd SID address"
+msgstr "Posición segundo SID"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:404
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:418
+msgid "2nd SID model"
+msgstr "Modelo segundo SID"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:410
+msgid "3rd SID address"
+msgstr "Posición tercer SID"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:409
+msgid "3rd SID model"
+msgstr "Modelo tercer SID"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:359
+msgid "ASMA path:"
+msgstr "Ruta ASMA:"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:290
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:291
+msgid "About"
+msgstr "Acerca de"
+
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:45
+msgid "About %1"
+msgstr "Acerca de %1"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:749
+msgid "Add directory to the bookmarks"
+msgstr "Anade el directorio a los marcadores."
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:744
+msgid "Add song to the playlist"
+msgstr "Añade la canción a la lista de reproducción."
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:748
+msgid "Add to bookmarks"
+msgstr "&Añadir a marcadores"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:743
+msgid "Add to playlist"
+msgstr "&Añadir a la lista de reproducción"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:105
+msgid "Album gain"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:111
+msgid "All tracks equal loudness"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/gui/bookmark.cpp:138
+msgid "Are you sure you want to delete all bookmarks?"
+msgstr "¿Esta seguro de borrar todos los marcadores?"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:157
+msgid "Audio"
+msgstr "Audio"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:158
+msgid "Audio setting"
+msgstr "Configuración Audio"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:142
+msgid "Audio settings"
+msgstr "Configuración Audio"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:809
+msgid "BASIC Rom:"
+msgstr "Rom BASIC:"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:196
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:210
+msgid "Backend"
+msgstr "Decodificador"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:171
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:211
+msgid "Backend settings"
+msgstr "Configurar decodificador"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:86
+msgid "Bauer stereophonic-to-binaural DSP"
+msgstr "Filtro Bauer estéreo a binaural DSP"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/oggBackend.cpp:291
+msgid "Bits"
+msgstr "Bits"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:164
+msgid "Bookmarks"
+msgstr "&Marcadores"
+
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:112
+msgid "C&redits"
+msgstr "C&reditos"
+
+#: /mnt/devel/projects/musiqt/src/audio/audio.cpp:194
 msgid "Card"
 msgstr "Tarjeta"
 
-#: src/audio/audio.cpp:211
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:337
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:552
+msgid "Channels"
+msgstr "Canales"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:820
+msgid "Chargen Rom:"
+msgstr "Rom caracteres:"
+
+#: /mnt/devel/projects/musiqt/src/gui/bookmark.cpp:118
+msgid "Clear"
+msgstr "Limpiar"
+
+#: /mnt/devel/projects/musiqt/src/gui/bookmark.cpp:119
+msgid "Clear all bookmarks"
+msgstr "Limpiar marcadores"
+
+#: /mnt/devel/projects/musiqt/src/gui/bookmark.cpp:137
+msgid "Clear bookmarks"
+msgstr "Limpiar marcadores"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:171
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:172
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:349
+msgid "Compact"
+msgstr "Modo compacto"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:192
+msgid "Current playlist"
+msgstr "Lista de reproducción actual"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:728
+msgid "DAC Bias for reSID"
+msgstr "Distorsión DAC para reSID"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/mpg123Backend.cpp:426
+msgid "Decoder"
+msgstr "Decodificador"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:611
+#, fuzzy
+msgid "Default C64 model"
+msgstr "Modelo C64"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:645
+#, fuzzy
+msgid "Default SID model"
+msgstr "Modelo SID"
+
+#: /mnt/devel/projects/musiqt/src/audio/audio.cpp:211
 msgid "Default bitdepth"
 msgstr ""
 "Profundidad de bits\n"
 " por defecto"
 
-#: src/audio/input/metaData.cpp:27
-msgid "location"
-msgstr ""
+#: /mnt/devel/projects/musiqt/src/gui/bookmark.cpp:114
+msgid "Delete"
+msgstr "Borrar"
 
-#: src/audio/input/metaData.cpp:28
-msgid "title"
-msgstr "Título"
+#: /mnt/devel/projects/musiqt/src/gui/bookmark.cpp:115
+msgid "Delete selected bookmark"
+msgstr "Borrar marcador seleccionado"
 
-#: src/audio/input/metaData.cpp:29
-msgid "artist"
-msgstr "Artista"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:179
+msgid "Edit"
+msgstr "Editar"
 
-#: src/audio/input/metaData.cpp:30
-msgid "album"
-msgstr "Album"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:180
+msgid "Edit playlist"
+msgstr "Editar la lista de reproducción"
 
-#: src/audio/input/metaData.cpp:31
-msgid "track"
-msgstr "Pista"
-
-#: src/audio/input/metaData.cpp:32
-msgid "time"
-msgstr "Duración"
-
-#: src/audio/input/metaData.cpp:33
-msgid "mtime"
-msgstr "tiempo"
-
-#: src/audio/input/metaData.cpp:34
-msgid "genre"
-msgstr "Género"
-
-#: src/audio/input/metaData.cpp:35
-msgid "comment"
-msgstr "Comentario"
-
-#: src/audio/input/metaData.cpp:36
-msgid "rating"
-msgstr "valoración"
-
-#: src/audio/input/metaData.cpp:37
-msgid "year"
-msgstr "Año"
-
-#: src/audio/input/metaData.cpp:38
-msgid "arturl"
-msgstr "Rutaimagen"
-
-#: src/audio/input/ffmpegBackend.cpp:348 src/audio/input/gmeBackend.cpp:201
-#: src/audio/input/sndBackend.cpp:107
-msgid "copyright"
-msgstr "Copyright"
-
-#: src/audio/input/ffmpegBackend.cpp:445 src/audio/input/mpcBackend.cpp:281
-#: src/audio/input/opusBackend.cpp:274 src/audio/input/sndBackend.cpp:149
-#: src/audio/input/wvBackend.cpp:250
-msgid "No settings available"
-msgstr "Sin configuración disponible"
-
-#: src/audio/input/gmeBackend.cpp:202
-msgid "system"
-msgstr "sistema"
-
-#: src/audio/input/gmeBackend.cpp:203
-msgid "game"
-msgstr "juego"
-
-#: src/audio/input/gmeBackend.cpp:204
-msgid "dumper"
-msgstr "dumper"
-
-#: src/audio/input/gmeBackend.cpp:282 src/audio/input/hvlBackend.cpp:171
-msgid "Samplerate"
-msgstr "Frecuencia de muestreo"
-
-#: src/audio/input/gmeBackend.cpp:312
-msgid "Equalizer"
-msgstr ""
-
-#: src/audio/input/gmeBackend.cpp:314
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:315
 msgid "Enable equalizer"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:358
-msgid "ASMA path:"
-msgstr "Ruta ASMA:"
-
-#: src/audio/input/gmeBackend.cpp:363 src/audio/input/sidBackend.cpp:781
-#: src/audio/input/sidBackend.cpp:792 src/audio/input/sidBackend.cpp:803
-#: src/audio/input/sidBackend.cpp:814
-msgid "&Browse"
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:98
+msgid "Enable replaygain loudness normalization"
 msgstr ""
 
-#: src/audio/input/gmeBackend.cpp:364 src/audio/input/gmeBackend.cpp:409
-msgid "Select ASMA directory"
-msgstr "Selecciona el directorio ASMA"
-
-#: src/audio/input/gmeBackend.cpp:421 src/audio/input/sidBackend.cpp:998
-msgid "Warning"
-msgstr "Advertencia"
-
-#: src/audio/input/gmeBackend.cpp:421 src/audio/input/sidBackend.cpp:998
-msgid "Path does not exists"
-msgstr ""
-
-#: src/audio/input/mpcBackend.cpp:157
-msgid "publisher"
-msgstr "editor"
-
-#: src/audio/input/mpg123Backend.cpp:426
-msgid "Decoder"
-msgstr "Decodificador"
-
-#: src/audio/input/mpg123Backend.cpp:446
-msgid "Fast scan"
-msgstr ""
-
-#: src/audio/input/oggBackend.cpp:291
-msgid "Bits"
-msgstr "Bits"
-
-#: src/audio/input/openmptBackend.cpp:309 src/audio/input/sidBackend.cpp:512
-msgid "Frequency"
-msgstr "Frecuencia"
-
-#: src/audio/input/openmptBackend.cpp:337 src/audio/input/sidBackend.cpp:540
-msgid "Channels"
-msgstr "Canales"
-
-#: src/audio/input/openmptBackend.cpp:349
-msgid "Resampling"
-msgstr "Remuestreo"
-
-#: src/audio/input/openmptBackend.cpp:389
-msgid "Master Gain"
-msgstr ""
-
-#: src/audio/input/openmptBackend.cpp:402
-msgid "Stereo Separation"
-msgstr ""
-
-#: src/audio/input/openmptBackend.cpp:415
-#, fuzzy
-msgid "Volume Ramping"
-msgstr "Volumen"
-
-#: src/audio/input/sidBackend.cpp:348
-msgid "released"
-msgstr "publicado"
-
-#: src/audio/input/sidBackend.cpp:396
-msgid "speed"
-msgstr "velocidad"
-
-#: src/audio/input/sidBackend.cpp:397
-msgid "file format"
-msgstr "formato de archivo"
-
-#: src/audio/input/sidBackend.cpp:398
-msgid "song clock"
-msgstr "clock canción"
-
-#: src/audio/input/sidBackend.cpp:400 src/audio/input/sidBackend.cpp:414
-msgid "SID model"
-msgstr "Modelo SID"
-
-#: src/audio/input/sidBackend.cpp:403 src/audio/input/sidBackend.cpp:417
-msgid "2nd SID model"
-msgstr "Modelo segundo SID"
-
-#: src/audio/input/sidBackend.cpp:404 src/audio/input/sidBackend.cpp:418
-msgid "2nd SID address"
-msgstr "Posición segundo SID"
-
-#: src/audio/input/sidBackend.cpp:408
-msgid "3rd SID model"
-msgstr "Modelo tercer SID"
-
-#: src/audio/input/sidBackend.cpp:409
-msgid "3rd SID address"
-msgstr "Posición tercer SID"
-
-#: src/audio/input/sidBackend.cpp:552
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:564
 msgid "Engine"
 msgstr "Motor"
 
-#: src/audio/input/sidBackend.cpp:577
-msgid "Sampling method"
-msgstr "Método de muestreo"
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:313
+msgid "Equalizer"
+msgstr ""
 
-#: src/audio/input/sidBackend.cpp:599
-msgid "C64 model"
-msgstr "Modelo C64"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:928
+msgid "Error"
+msgstr "Error"
 
-#: src/audio/input/sidBackend.cpp:627
-msgid "Force C64 model"
-msgstr "Fuerza modelo C64"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:928
+msgid "Error saving playlist"
+msgstr "Error guardando la lista de reproducción"
 
-#: src/audio/input/sidBackend.cpp:633
-msgid "SID Model"
-msgstr "Modelo SID"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:316
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:317
+msgid "Exit"
+msgstr "Salir"
 
-#: src/audio/input/sidBackend.cpp:655
-msgid "Force SID model"
-msgstr "Fuerza modelo SID"
-
-#: src/audio/input/sidBackend.cpp:661
-msgid "Second SID address"
-msgstr "Posición segundo SID"
-
-#: src/audio/input/sidBackend.cpp:677
-msgid "Third SID address"
-msgstr "Posición tercer SID"
-
-#: src/audio/input/sidBackend.cpp:703
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:715
 #, fuzzy
 msgid "Fast sampling"
 msgstr "Remuestreo"
 
-#: src/audio/input/sidBackend.cpp:708
+#: /mnt/devel/projects/musiqt/src/audio/input/mpg123Backend.cpp:446
+msgid "Fast scan"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:720
 msgid "Filter"
 msgstr "Filtro:"
 
-#: src/audio/input/sidBackend.cpp:716
-msgid "DAC Bias for reSID"
-msgstr "Distorsión DAC para reSID"
-
-#: src/audio/input/sidBackend.cpp:736
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:748
 msgid "Filter curves for reSIDfp"
 msgstr "Curvas filtro para reSIDfp"
 
-#: src/audio/input/sidBackend.cpp:776
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:639
+msgid "Force C64 model"
+msgstr "Fuerza modelo C64"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:667
+msgid "Force SID model"
+msgstr "Fuerza modelo SID"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:309
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:524
+msgid "Frequency"
+msgstr "Frecuencia"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:360
+msgid "Full mode"
+msgstr "Modo completo"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:129
+msgid "General"
+msgstr "General"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:130
+msgid "General setting"
+msgstr "Configuración general"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:70
+msgid "General settings"
+msgstr "Configuración general"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:300
+msgid "Go to next song"
+msgstr "Ir a la siguiente canción"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:195
+msgid "Go to next subtune"
+msgstr "Ir al siguiente subtono"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:296
+msgid "Go to previous song"
+msgstr "Ir a la canción anterior"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:190
+msgid "Go to previous subtune"
+msgstr "Ir al subcanción anterior"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:788
 msgid "HVSC path:"
 msgstr "Ruta HVSC:"
 
-#: src/audio/input/sidBackend.cpp:786
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:198
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:199
+msgid "Home"
+msgstr "Inicio"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:311
+msgid "Info"
+msgstr "&Info"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:798
 msgid "Kernal Rom:"
 msgstr "Rom Kernal:"
 
-#: src/audio/input/sidBackend.cpp:797
-msgid "BASIC Rom:"
-msgstr "Rom BASIC:"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:494
+msgid "Loading..."
+msgstr "Cargando..."
 
-#: src/audio/input/sidBackend.cpp:808
-msgid "Chargen Rom:"
-msgstr "Rom caracteres:"
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:389
+msgid "Master Gain"
+msgstr ""
 
-#: src/audio/input/sidBackend.cpp:925
-msgid "Select HVSC directory"
-msgstr "Selecciona directorio HVSC"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:193
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:194
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:299
+msgid "Next"
+msgstr "Siguiente"
 
-#: src/audio/input/sidBackend.cpp:954
+#: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:231
+#: /mnt/devel/projects/musiqt/src/gui/infoLabel.cpp:64
+msgid "No info"
+msgstr "Sin información"
+
+#: /mnt/devel/projects/musiqt/src/gui/bookmark.cpp:106
+msgid "No item selected"
+msgstr "Ningún elemento seleccionado"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/ffmpegBackend.cpp:445
+#: /mnt/devel/projects/musiqt/src/audio/input/mpcBackend.cpp:281
+#: /mnt/devel/projects/musiqt/src/audio/input/opusBackend.cpp:274
+#: /mnt/devel/projects/musiqt/src/audio/input/sndBackend.cpp:149
+#: /mnt/devel/projects/musiqt/src/audio/input/wvBackend.cpp:250
+msgid "No settings available"
+msgstr "Sin configuración disponible"
+
+#: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:113
+msgid "No song loaded"
+msgstr "Ninguna canción cargada"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:294
+msgid "P&revious"
+msgstr "Precedente"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:338
+msgid "Path %1 dos not exist"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:422
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1016
+msgid "Path does not exists"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:433
+msgid "Pause"
+msgstr "Pausa"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:455
+msgid "Paused"
+msgstr "Pausado"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:303
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:428
+msgid "Play"
+msgstr "Reproducir"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:80
+#, fuzzy
+msgid "Play all subtunes"
+msgstr "Reproducir todos los subtonos"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:304
+msgid "Play song"
+msgstr "Reproduciendo"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:451
+msgid "Playing"
+msgstr "Reproduciendo"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:158
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:198
+msgid "Playlist"
+msgstr "Lista de reproducción"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:530
+msgid "Playlist mode"
+msgstr "Modo lista de reproducción"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:106
+msgid "Preserve album dynamics"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:188
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:189
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:295
+msgid "Previous"
+msgstr "Precedente"
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:178
+msgid "Program settings"
+msgstr "Configuración del programa"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:773
+msgid "Remove item"
+msgstr "Eliminar elemento"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:774
+msgid "Remove selected item from playlist"
+msgstr "Eliminar el elemento seleccionado de la lista de reproducción"
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:96
+msgid "Replaygain"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:349
+msgid "Resampling"
+msgstr "Remuestreo"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:193
+msgid "Return to current playlist"
+msgstr "Volver a la lista de reproducción actual"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:401
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:415
+msgid "SID model"
+msgstr "Modelo SID"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:283
+#: /mnt/devel/projects/musiqt/src/audio/input/hvlBackend.cpp:171
+msgid "Samplerate"
+msgstr "Frecuencia de muestreo"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:589
+msgid "Sampling method"
+msgstr "Método de muestreo"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:186
+msgid "Save"
+msgstr "Guardar"
+
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:187
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:912
+msgid "Save playlist"
+msgstr "Guardar lista de reproducción"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:673
+msgid "Second SID address"
+msgstr "Posición segundo SID"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:970
 msgid "Select %1 Rom file"
 msgstr "Selecciona la ficha Rom %1"
 
-#~ msgid "&Album art HQ resizing"
-#~ msgstr "Redimensionamiento carátulas HQ"
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:365
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:410
+msgid "Select ASMA directory"
+msgstr "Selecciona el directorio ASMA"
 
-#~ msgid "High quality album art resizing"
-#~ msgstr "Redimensionamiento de carátulas de alta calidad"
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:937
+msgid "Select HVSC directory"
+msgstr "Selecciona directorio HVSC"
 
-#~ msgid "Interface settings"
-#~ msgstr "Configuración Apariencia"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:176
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:177
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:48
+msgid "Settings"
+msgstr "Configuración"
 
-#~ msgid "Interface"
-#~ msgstr "Apariencia"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:788
+msgid "Shuffle"
+msgstr "Aleatorio"
 
-#~ msgid "API"
-#~ msgstr "API"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:312
+msgid "Song info"
+msgstr "Información de la canción"
 
-#~ msgid "File exists, owerwrite?"
-#~ msgstr "El archivo ya existe, ¿sobrescribirlo?"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:524
+msgid "Song mode"
+msgstr "Modo canción"
 
-#~ msgid "Fast sampling\tFaster but inaccurate sampling"
-#~ msgstr "Optimización\tMás rápido, pero inexacta emulación"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:212
+msgid "Songs"
+msgstr "Canción"
 
-#~ msgid "Filter\tEmulate SID filter"
-#~ msgstr "Filtro\tEmula el filtro SID"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:778
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:780
+msgid "Sort ascending"
+msgstr "Ordenación ascendente"
 
-#~ msgid "Using the Qt C++ GUI Library"
-#~ msgstr "Usando la libreria GUI C++ Qt"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:783
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:785
+msgid "Sort descending"
+msgstr "Ordenación descendente"
 
-#~ msgid "Version"
-#~ msgstr "Versión"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:790
+msgid "Sort randomly"
+msgstr "Ordenación aleatoria"
 
-#~ msgid "&Fox"
-#~ msgstr "&Fox"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:799
+msgid "Sorting"
+msgstr "Ordenación"
 
-#~ msgid "Copyright"
-#~ msgstr "Copyright"
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:404
+msgid "Stereo Separation"
+msgstr ""
 
-#~ msgid "E-mail"
-#~ msgstr "E-mail"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:307
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:308
+msgid "Stop"
+msgstr "Detener"
 
-#~ msgid "General\tGeneral settings\tGeneral settings"
-#~ msgstr "General\tConfiguración general\tConfiguración general"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:217
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:325
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:447
+msgid "Stopped"
+msgstr "Detenido"
 
-#~ msgid "Alt. color\tAlternate color for lists"
-#~ msgstr "Color alternativo\tColor alternativo para las listas"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:207
+msgid "Subtunes"
+msgstr "Subcanción"
 
-#~ msgid "Interface\tInterface settings\tInterface settings"
-#~ msgstr "Apariencia\tConfiguración Apariencia\tConfiguración Apariencia"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:173
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:350
+msgid "Switch to compact view"
+msgstr "Cambiar a modo compacto"
 
-#~ msgid "Audio\tAudio settings\tAudio settings"
-#~ msgstr "Audio\tConfiguración audio\tConfiguración audio"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:361
+msgid "Switch to full UI mode"
+msgstr "Cambiar a modo completo"
 
-#~ msgid "Backend\tBackend settings\tBackend settings"
-#~ msgstr "Decodificador\tConfigurar decodificador\tConfigurar decodificador"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:531
+msgid "Switch to playlist mode"
+msgstr "Cambiar a modo lista de reproducción"
 
-#~ msgid "Clear\t\tClear all bookmarks"
-#~ msgstr "Limpiar\t\tEliminar todos los marcadores"
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:525
+msgid "Switch to song mode"
+msgstr "Cambiar a modo canción"
 
-#~ msgid "\tStop\tStop playing"
-#~ msgstr "\tDetener\tDetener reproducción"
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:247
+msgid "System music location"
+msgstr ""
 
-#~ msgid "\tPlay\tPlay selected song"
-#~ msgstr "\tReproducir\tReproducir la canción seleccionada"
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:689
+msgid "Third SID address"
+msgstr "Posición tercer SID"
+
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:83
+msgid ""
+"This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt."
+"io/</a>"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/gui/settings.cpp:110
+msgid "Track gain"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:225
+msgid "Volume"
+msgstr "Volumen"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:419
+#, fuzzy
+msgid "Volume Ramping"
+msgstr "Volumen"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:422
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1016
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:338
+msgid "Warning"
+msgstr "Advertencia"
+
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:60
+msgid "Website: <a href=\"%1\">%1</a><br><br>Bugs: <a href=\"%2\">%2</a>"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:30
+msgid "album"
+msgstr "Album"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:29
+msgid "artist"
+msgstr "Artista"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:38
+msgid "arturl"
+msgstr "Rutaimagen"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:35
+msgid "comment"
+msgstr "Comentario"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/ffmpegBackend.cpp:348
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:202
+#: /mnt/devel/projects/musiqt/src/audio/input/sndBackend.cpp:107
+msgid "copyright"
+msgstr "Copyright"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:205
+msgid "dumper"
+msgstr "dumper"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:398
+msgid "file format"
+msgstr "formato de archivo"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:204
+msgid "game"
+msgstr "juego"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:34
+msgid "genre"
+msgstr "Género"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:27
+msgid "location"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:33
+msgid "mtime"
+msgstr "tiempo"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/mpcBackend.cpp:157
+msgid "publisher"
+msgstr "editor"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:36
+msgid "rating"
+msgstr "valoración"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:349
+msgid "released"
+msgstr "publicado"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:399
+msgid "song clock"
+msgstr "clock canción"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:397
+msgid "speed"
+msgstr "velocidad"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:203
+msgid "system"
+msgstr "sistema"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:32
+msgid "time"
+msgstr "Duración"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:28
+msgid "title"
+msgstr "Título"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:31
+msgid "track"
+msgstr "Pista"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:37
+msgid "year"
+msgstr "Año"
+
+#~ msgid "\t\tSave playlist"
+#~ msgstr "\t\tGuardar la lista de reproducción"
 
 #~ msgid "\tAbout\tAbout"
 #~ msgstr "\tAcerca de\tInformación del programa"
@@ -772,47 +748,23 @@ msgstr "Selecciona la ficha Rom %1"
 #~ msgid "\tInfo\tSong info"
 #~ msgstr "\tInfo\tInformación de la canción"
 
-#~ msgid "\t\tSave playlist"
-#~ msgstr "\t\tGuardar la lista de reproducción"
+#~ msgid "\tPlay\tPlay selected song"
+#~ msgstr "\tReproducir\tReproducir la canción seleccionada"
 
-#~ msgid "&Dirlist"
-#~ msgstr "&Explorador"
+#~ msgid "\tStop\tStop playing"
+#~ msgstr "\tDetener\tDetener reproducción"
+
+#~ msgid "&Album art HQ resizing"
+#~ msgstr "Redimensionamiento carátulas HQ"
+
+#~ msgid "&Auto backend"
+#~ msgstr "&Auto decodificador"
 
 #~ msgid "&Browse\tSelect ASMA directory"
 #~ msgstr "&Explorar\tSelecciona el directorio ASMA"
 
-#~ msgid ""
-#~ "Fast scan\tScan only few frame of file, time detection may be inaccurate"
-#~ msgstr ""
-#~ "Exploración rápida\tExplora sólo una parte de archivo, la detección de la "
-#~ "duración puede ser inexacta"
-
-#~ msgid "Oversampling"
-#~ msgstr "Sobremuestreo"
-
-#~ msgid "Noise reduction"
-#~ msgstr "Reducción de ruido"
-
-#~ msgid "Reverb"
-#~ msgstr "Reverberación"
-
-#~ msgid "Depth"
-#~ msgstr "Profundidad"
-
-#~ msgid "Delay"
-#~ msgstr "Retraso"
-
-#~ msgid "Bass exp"
-#~ msgstr "Expansión bajo"
-
-#~ msgid "Amount"
-#~ msgstr "Cantidad"
-
-#~ msgid "Range"
-#~ msgstr "Rango"
-
-#~ msgid "Surround"
-#~ msgstr "Surround"
+#~ msgid "&Browse\tSelect Chargen Rom file"
+#~ msgstr "&Explorar\tSeleciona la ficha Rom caracteres "
 
 #~ msgid "&Browse\tSelect HVSC directory"
 #~ msgstr "&Explorar\tSeleciona el directorio HVSC"
@@ -820,27 +772,123 @@ msgstr "Selecciona la ficha Rom %1"
 #~ msgid "&Browse\tSelect Kernal Rom file"
 #~ msgstr "&Explorar\tSelecciona la ficha Rom Kernal"
 
-#~ msgid "&Browse\tSelect Chargen Rom file"
-#~ msgstr "&Explorar\tSeleciona la ficha Rom caracteres "
+#~ msgid "&Dirlist"
+#~ msgstr "&Explorador"
 
-#~ msgid "MSN Messenger Now Playing"
-#~ msgstr "MSN Messenger Reproduciendo ahora"
+#~ msgid "&Fox"
+#~ msgstr "&Fox"
 
-#~ msgid "Live Messenger"
-#~ msgstr "Live Messenger"
+#~ msgid "API"
+#~ msgstr "API"
+
+#~ msgid "Alt. color\tAlternate color for lists"
+#~ msgstr "Color alternativo\tColor alternativo para las listas"
+
+#~ msgid "Amount"
+#~ msgstr "Cantidad"
+
+#~ msgid "Audio\tAudio settings\tAudio settings"
+#~ msgstr "Audio\tConfiguración audio\tConfiguración audio"
+
+#~ msgid "Automatic backend selection"
+#~ msgstr "Selección automática del decodificador"
+
+#~ msgid "Backend\tBackend settings\tBackend settings"
+#~ msgstr "Decodificador\tConfigurar decodificador\tConfigurar decodificador"
+
+#~ msgid "Backend setting"
+#~ msgstr "Configurar decodificador"
+
+#~ msgid "Bass exp"
+#~ msgstr "Expansión bajo"
 
 #~ msgid "Cancel\t\tCancel action"
 #~ msgstr "Cancelar\t\tCancelar acción"
 
-#, fuzzy
-#~ msgid "info"
-#~ msgstr "Sin información"
+#~ msgid "Clear\t\tClear all bookmarks"
+#~ msgstr "Limpiar\t\tEliminar todos los marcadores"
+
+#~ msgid "Copyright"
+#~ msgstr "Copyright"
+
+#~ msgid "Delay"
+#~ msgstr "Retraso"
+
+#~ msgid "Depth"
+#~ msgstr "Profundidad"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
 
 #~ msgid "Environment"
 #~ msgstr "Ambiente"
 
+#~ msgid "Fast sampling\tFaster but inaccurate sampling"
+#~ msgstr "Optimización\tMás rápido, pero inexacta emulación"
+
+#~ msgid ""
+#~ "Fast scan\tScan only few frame of file, time detection may be inaccurate"
+#~ msgstr ""
+#~ "Exploración rápida\tExplora sólo una parte de archivo, la detección de la "
+#~ "duración puede ser inexacta"
+
+#~ msgid "File exists, owerwrite?"
+#~ msgstr "El archivo ya existe, ¿sobrescribirlo?"
+
+#~ msgid "Filter\tEmulate SID filter"
+#~ msgstr "Filtro\tEmula el filtro SID"
+
+#~ msgid "General\tGeneral settings\tGeneral settings"
+#~ msgstr "General\tConfiguración general\tConfiguración general"
+
+#~ msgid "High quality album art resizing"
+#~ msgstr "Redimensionamiento de carátulas de alta calidad"
+
+#~ msgid "Interface"
+#~ msgstr "Apariencia"
+
+#~ msgid "Interface\tInterface settings\tInterface settings"
+#~ msgstr "Apariencia\tConfiguración Apariencia\tConfiguración Apariencia"
+
+#~ msgid "Interface settings"
+#~ msgstr "Configuración Apariencia"
+
+#~ msgid "Live Messenger"
+#~ msgstr "Live Messenger"
+
+#~ msgid "MSN Messenger Now Playing"
+#~ msgstr "MSN Messenger Reproduciendo ahora"
+
+#~ msgid "Noise reduction"
+#~ msgstr "Reducción de ruido"
+
 #~ msgid "Optimisation\tFaster but inaccurate emulation"
 #~ msgstr "Optimización\tMás rápido, pero inexacta emulación"
 
+#~ msgid "Oversampling"
+#~ msgstr "Sobremuestreo"
+
+#~ msgid "Range"
+#~ msgstr "Rango"
+
+#~ msgid "Reverb"
+#~ msgstr "Reverberación"
+
+#~ msgid "SID Model"
+#~ msgstr "Modelo SID"
+
 #~ msgid "Select filter ini file"
 #~ msgstr "Selecciona el archivo de inicio del filtro"
+
+#~ msgid "Surround"
+#~ msgstr "Surround"
+
+#~ msgid "Using the Qt C++ GUI Library"
+#~ msgstr "Usando la libreria GUI C++ Qt"
+
+#~ msgid "Version"
+#~ msgstr "Versión"
+
+#, fuzzy
+#~ msgid "info"
+#~ msgstr "Sin información"
