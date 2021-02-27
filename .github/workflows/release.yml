@@ -32,8 +32,6 @@ jobs:
           mingw-w64-x86_64-wavpack
           mingw-w64-x86_64-ffmpeg
           mingw-w64-x86_64-libbs2b
-          # libsidplayfp
-          # libopenmpt
     - uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }}
