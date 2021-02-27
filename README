@@ -71,10 +71,6 @@ or in the same folder as musiqt binary.
 
 ####################################################################
 
-Please report problems, suggestions and patches at https://github.com/drfiemost/musiqt/
-
-####################################################################
-
 Required dependencies:
 
 Qt 5
@@ -83,7 +79,7 @@ http://www.qt.io/
 
 Optional dependencies:
 
-libopenmpt >= 0.2
+libopenmpt < 0.5
 http://lib.openmpt.org/libopenmpt/
 
 zlib 1.2.x
