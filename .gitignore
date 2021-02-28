@@ -1,15 +1,1 @@
-configure
-Makefile.in
-Makefile
-*.o
-config
-*moc.cpp
-*rcc.cpp
-.deps
-.dirstamp
-*.gmo
-autom4te.cache
-aclocal.m4
-config.log
-config.status
-musiqt-*.tar.gz
+build
