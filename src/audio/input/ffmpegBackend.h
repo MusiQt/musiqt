@@ -124,19 +124,19 @@ public:
     static bool supports(const QString& fileName);
 
     /// Get supported extension
-    QStringList ext() const;
+    QStringList ext() const override;
 
     /// Open file
-    bool open(const QString& fileName);
+    bool open(const QString& fileName) override;
 
     /// Close file
-    void close();
+    void close() override;
 
     /// Seek specified position
-    bool seek(const int pos);
+    bool seek(const int pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const
+    unsigned int samplerate() const override
     {
         return audioStream ?
             audioStream->codecpar->sample_rate
@@ -144,7 +144,7 @@ public:
     }
 
     /// Get channels
-    unsigned int channels() const
+    unsigned int channels() const override
     {
         return audioStream ?
             audioStream->codecpar->channels
@@ -152,13 +152,13 @@ public:
     }
 
     /// Get precision
-    sample_t precision() const { return _precision; }
+    sample_t precision() const override { return _precision; }
 
     /// Callback function
-    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds);
+    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override;
 
     /// Open config dialog
-    QWidget* config(QWidget* win) { return new ffmpegConfig(win); }
+    QWidget* config(QWidget* win) override { return new ffmpegConfig(win); }
 };
 
 #endif

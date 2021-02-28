@@ -125,9 +125,9 @@ public:
     /// Get Music directory
     virtual const QString getMusicDir() const override { return QString(); }
 
-    virtual void loadSettings() {}
+    virtual void loadSettings() override {}
 
-    virtual void saveSettings() {}
+    virtual void saveSettings() override {}
 };
 
 #endif

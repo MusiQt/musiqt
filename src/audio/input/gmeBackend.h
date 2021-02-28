@@ -153,9 +153,9 @@ public:
     /// Get Music directory
     const QString getMusicDir() const override { return _settings.asmaPath; }
 
-    void loadSettings();
+    void loadSettings() override;
 
-    void saveSettings();
+    void saveSettings() override;
 };
 
 #endif

@@ -122,9 +122,9 @@ public:
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new oggConfig(win); }
 
-    void loadSettings();
+    void loadSettings() override;
 
-    void saveSettings();
+    void saveSettings() override;
 };
 
 #endif

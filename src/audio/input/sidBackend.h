@@ -197,9 +197,9 @@ public:
     /// Get Music directory
     const QString getMusicDir(void) const override { return _settings.hvscPath; }
 
-    void loadSettings();
+    void loadSettings() override;
 
-    void saveSettings();
+    void saveSettings() override;
 };
 
 #endif
