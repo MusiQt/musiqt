@@ -60,6 +60,7 @@ private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void onAbout();
     void onConfig();
+    void onCloseConfig(int result);
     void onInfo();
     void onCloseInfo();
     void setPlayButton(state_t state);

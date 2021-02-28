@@ -380,8 +380,13 @@ void mainWindow::onAbout()
 void mainWindow::onConfig()
 {
     settingsWindow *config = new settingsWindow(this);
-    //config->setAttribute(Qt::WA_DeleteOnClose);
-    int result = config->exec(); // FIXME use open()
+    config->setAttribute(Qt::WA_DeleteOnClose);
+    connect(config, SIGNAL(finished(int)), this, SLOT(onCloseConfig(int)));
+    config->open();
+}
+
+void mainWindow::onCloseConfig(int result)
+{
     switch (result)
     {
     case QDialog::Accepted:
@@ -393,8 +398,6 @@ void mainWindow::onConfig()
         SETTINGS->load(settings);
         break;
     }
-
-    delete config;
 }
 
 void mainWindow::onInfo()
