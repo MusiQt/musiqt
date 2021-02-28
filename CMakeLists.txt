@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(musiqt VERSION 0.4.0 HOMEPAGE_URL https://github.com/drfiemost/musiqt)
+project(musiqt VERSION 0.4.1 HOMEPAGE_URL https://github.com/drfiemost/musiqt)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 11)
