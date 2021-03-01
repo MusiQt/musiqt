@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,8 +25,6 @@
 
 #ifdef HAVE_STILVIEW
 #  include <stilview/stil.h>
-#else
-#  include "stilview/stil.h"
 #endif
 
 // fix compiling with gme 0.6.3
@@ -86,10 +84,9 @@ private:
 private:
     Music_Emu *_emu;
     int _currentTrack;
-    bool _hasStilInfo;
-
+#ifdef HAVE_STILVIEW
     STIL *_stil;
-
+#endif
     static QStringList _ext;
 
 private:

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,8 +29,6 @@
 
 #ifdef HAVE_STILVIEW
 #  include <stilview/stil.h>
-#else
-#  include "stilview/stil.h"
 #endif
 
 #if (LIBSIDPLAYFP_VERSION_MAJ > 1) || (LIBSIDPLAYFP_VERSION_MAJ == 1 && LIBSIDPLAYFP_VERSION_MIN > 7)

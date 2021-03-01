@@ -93,9 +93,10 @@ inline QStringList gmeBackend::ext() const { return QString(EXT).split("|"); }
 gmeBackend::gmeBackend() :
     inputBackend(name),
     _emu(nullptr),
-    _currentTrack(0),
-    _hasStilInfo(false),
-    _stil(nullptr)
+    _currentTrack(0)
+#ifdef HAVE_STILVIEW
+    , _stil(nullptr)
+#endif
 {
     loadSettings();
     openAsma(_settings.asmaPath);
@@ -104,8 +105,9 @@ gmeBackend::gmeBackend() :
 gmeBackend::~gmeBackend()
 {
     close();
-
+#ifdef HAVE_STILVIEW
     delete _stil;
+#endif
 }
 
 void gmeBackend::loadSettings()
@@ -160,11 +162,9 @@ bool gmeBackend::open(const QString& fileName)
     QFileInfo fInfo(fileName);
     gme_load_m3u(_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
 
-    _hasStilInfo = _stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
-
-    getInfo();
-
-    if (_hasStilInfo)
+#ifdef HAVE_STILVIEW
+    bool hasStilInfo = _stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
+    if (hasStilInfo)
     {
         qDebug("Retrieving STIL info");
         QString comment = QString::fromLatin1(_stil->getAbsGlobalComment(fileName.toLocal8Bit().constData()));
@@ -182,6 +182,9 @@ bool gmeBackend::open(const QString& fileName)
             _metaData.addInfo(metaData::COMMENT, comment);
         }
     }
+#endif
+
+    getInfo();
 
     songLoaded(fileName);
     return true;
@@ -203,7 +206,9 @@ void gmeBackend::getInfo()
     _metaData.addInfo(gettext("system"), ti->system);
     _metaData.addInfo(gettext("game"), ti->game);
     _metaData.addInfo(gettext("dumper"), ti->dumper);
-    if (!_hasStilInfo)
+
+    QString comment = _metaData.getInfo(metaData::COMMENT);
+    if (comment.isEmpty())
         _metaData.addInfo(metaData::COMMENT, ti->comment);
 
     time(ti->length/1000);
