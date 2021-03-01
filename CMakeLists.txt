@@ -92,20 +92,6 @@ if(MINGW)
 endif(MINGW)
 
 #####################################################
-# Check for debug build
-
-OPTION(DEBUG "Compile for debugging" OFF)
-IF(DEBUG)
-    ADD_DEFINITIONS(-DDEBUG)
-    IF(MINGW)
-        target_link_libraries(musiqt -mconsole)
-    ENDIF(MINGW)
-ELSE(DEBUG)
-    ADD_DEFINITIONS(-DNDEBUG)
-    ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
-ENDIF(DEBUG)
-
-#####################################################
 
 include(GNUInstallDirs)
 
@@ -136,6 +122,20 @@ find_package(PkgConfig REQUIRED)
 INSTALL(TARGETS musiqt RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 INSTALL(FILES musiqt.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 INSTALL(FILES musiqt.png DESTINATION ${CMAKE_INSTALL_DATADIR}/icons)
+
+#####################################################
+# Check for debug build
+
+OPTION(DEBUG "Compile for debugging" OFF)
+IF(DEBUG)
+    ADD_DEFINITIONS(-DDEBUG)
+    IF(MINGW)
+        target_link_libraries(musiqt -mconsole)
+    ENDIF(MINGW)
+ELSE(DEBUG)
+    ADD_DEFINITIONS(-DNDEBUG)
+    ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
+ENDIF(DEBUG)
 
 #####################################################
 # Check for gettext
