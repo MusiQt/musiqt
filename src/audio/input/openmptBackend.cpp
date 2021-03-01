@@ -18,6 +18,10 @@
 
 #include "openmptBackend.h"
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #include "settings.h"
 #include "utils.h"
 

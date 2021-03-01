@@ -19,6 +19,10 @@
 #ifndef SID_H
 #define SID_H
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #include <sidplayfp/sidplayfp.h>
 #include <sidplayfp/SidDatabase.h>
 #include <sidplayfp/SidTune.h>
