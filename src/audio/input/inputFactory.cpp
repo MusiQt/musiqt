@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2019 Leandro Nini
+ *  Copyright (C) 2007-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -132,4 +132,17 @@ iFactory::iFactory()
 input* iFactory::get(const int i)
 {
     return _inputs[i].factory();
+}
+
+input* iFactory::get(const QString& filename)
+{
+    for (int i=0; i<_inputs.size(); i++)
+    {
+        if (_inputs[i].supports(filename))
+        {
+            return _inputs[i].factory();
+        }
+    }
+
+    return nullptr;
 }

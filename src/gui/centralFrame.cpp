@@ -543,16 +543,7 @@ void centralFrame::load(const QString& filename)
 {
     qDebug() << "Loading " << filename;
 
-    input *ib = nullptr;
-    for (int i=0; i<IFACTORY->num(); i++)
-    {
-        if (IFACTORY->supports(i, filename))
-        {
-            ib = IFACTORY->get(i);
-            break;
-        }
-    }
-    
+    input *ib =  IFACTORY->get(filename);
     if (ib == nullptr)
         return;
 
