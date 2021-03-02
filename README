@@ -67,7 +67,7 @@ Some Linux distro already ships these libraries.
 
 On Windows you have to manually put them under the System folder
 or in the same folder as musiqt binary.
-(avcodec-56.dll, avformat-56.dll and avutil-54.dll)
+(avcodec-58.dll, avformat-58.dll and avutil-56.dll)
 
 ####################################################################
 
