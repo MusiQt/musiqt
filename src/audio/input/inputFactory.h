@@ -21,7 +21,6 @@
 
 #include "input.h"
 
-#include <new>
 #include <QList>
 
 #define IFACTORY iFactory::instance()
@@ -30,15 +29,15 @@ class inputBackend;
 
 class iFactory
 {
-typedef inputBackend* (*inputFactory)();
-typedef QStringList (*extFunc)();
+    typedef inputBackend* (*inputFactory)();
+    typedef QStringList (*extFunc)();
 
-typedef struct
-{
-    const char* name;
-    extFunc supportedExt;
-    inputFactory factory;
-} inputs_t;
+    typedef struct
+    {
+        const char* name;
+        extFunc supportedExt;
+        inputFactory factory;
+    } inputs_t;
 
 private:
     template <class backend>
