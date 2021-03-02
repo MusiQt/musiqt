@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ private:
     inputBackend(const inputBackend&);
     inputBackend& operator=(const inputBackend&);
 
-    inline QString SECTION(const char* key) { return QString("%1 Settings/%2").arg(_name).arg(key); }
+    inline QString section(const char* key) { return QString("%1 Settings/%2").arg(_name).arg(key); }
 
 protected:
     inputBackend(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0);
@@ -59,25 +59,25 @@ protected:
     /// Load int setting
     int load(const char* key, int defVal)
     {
-        return settings.value(SECTION(key), defVal).toInt();
+        return settings.value(section(key), defVal).toInt();
     }
 
     /// Load string setting
     QString load(const char* key, QString defVal)
     {
-        return settings.value(SECTION(key), defVal).toString();
+        return settings.value(section(key), defVal).toString();
     }
 
     /// Save int setting
     void save(const char* key, int value)
     {
-        settings.setValue(SECTION(key), value);
+        settings.setValue(section(key), value);
     }
 
     /// Save string setting
     void save(const char* key, QString value)
     {
-        settings.setValue(SECTION(key), value);
+        settings.setValue(section(key), value);
     }
 
     /// Song is loaded
