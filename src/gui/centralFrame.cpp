@@ -112,8 +112,7 @@ centralFrame::centralFrame(QWidget *parent) :
     _proxyModel->sort(proxymodel::sortMode::Ascending);
     _playlist->setModel(_proxyModel);
 
-    QString filter = IFACTORY->getFilter();
-    _proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive));
+    _proxyModel->setFilterRegExp(QRegExp(getFilter(), Qt::CaseInsensitive));
     _proxyModel->setFilterRole(Qt::UserRole+1);
 
     selectionModel = _playlist->selectionModel();
@@ -855,15 +854,8 @@ void centralFrame::onCmdPlEdit(bool checked)
     if (checked)
     {
         _playlistModel->clear();
-         // FIXME this sucks
-        QString pattern = _proxyModel->filterRegExp().pattern();
-        QStringList ext = pattern.split("|");
-        QStringList result;
-        for (QString str: ext)
-        {
-            result << str.prepend("*.");
-        }
-        fsm->setNameFilters(result);
+
+        fsm->setNameFilters(getPattern());
 
         setProperty("SelectedDir", QVariant(fsm->filePath(_dirlist->currentIndex())));
     }
@@ -943,3 +935,22 @@ void centralFrame::init()
 }
 
 const metaData* centralFrame::getMetaData() const { return _input->getMetaData(); }
+
+QString centralFrame::getFilter() const
+{
+    QString filter(IFACTORY->getExtensions().join("|"));
+    filter.prepend(".*\\.(").append(")");
+    qDebug() << "filter: " << filter;
+    return filter;
+}
+
+QStringList centralFrame::getPattern() const
+{
+    QStringList result;
+    for (QString str: IFACTORY->getExtensions())
+    {
+        result << str.prepend("*.");
+    }
+    qDebug() << "pattern: " << result;
+    return result;
+}

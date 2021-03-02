@@ -63,8 +63,8 @@ public:
     /// Get backend's name
     const char* name(const int i) const { return _inputs[i].name; }
 
-    /// Get supported extensions filter
-    QString getFilter() const;
+    /// Get supported extensions
+    QStringList getExtensions() const;
 
     /// Instantiate empty backend
     input* get();

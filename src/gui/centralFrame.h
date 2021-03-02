@@ -140,6 +140,8 @@ private:
     void load(const QString& filename);
     void onCmdChangeSong(dir_t);
     void setDir(const QModelIndex& index);
+    QString getFilter() const;
+    QStringList getPattern() const;
 
 private:
     input *_input;

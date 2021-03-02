@@ -161,7 +161,7 @@ bool supports(const QStringList& _ext, const QString& fileName)
     return rx.exactMatch(fileName);
 }
 
-QString iFactory::getFilter() const
+QStringList iFactory::getExtensions() const
 {
     QStringList extensions;
     for (inputs_t i: _inputs)
@@ -169,10 +169,7 @@ QString iFactory::getFilter() const
         extensions.append(i.supportedExt());
     }
     extensions.removeDuplicates();
-    QString filter(extensions.join("|"));
-    filter.prepend(".*\\.(").append(")");
-    qDebug() << "filter: " << filter;
-    return filter;
+    return extensions;
 }
 
 input* iFactory::get()
