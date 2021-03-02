@@ -20,9 +20,6 @@
 #include "iconFactory.h"
 
 #include <QLabel>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QGridLayout>
 
 configFrame::configFrame(QWidget* p, const char* title, const char* credits, const char* link) :
     QWidget(p)

@@ -25,7 +25,6 @@
 
 #include <QDebug>
 #include <QButtonGroup>
-#include <QColorDialog>
 #include <QEvent>
 #include <QFrame>
 #include <QGroupBox>
@@ -39,7 +38,6 @@
 #include <QStatusTipEvent>
 #include <QMainWindow>
 #include <QStatusBar>
-#include <QStatusTipEvent>
 #include <QHBoxLayout>
 
 settingsWindow::settingsWindow(QWidget* win) :

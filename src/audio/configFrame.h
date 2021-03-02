@@ -20,10 +20,9 @@
 #define CONFIG_FRAME_H
 
 #include <QWidget>
-
-class QGridLayout;
-class QHBoxLayout;
-class QVBoxLayout;
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QGridLayout>
 
 class configFrame : public QWidget
 {

@@ -25,7 +25,6 @@
 
 #include <QDialog>
 #include <QObject>
-#include <QVBoxLayout>
 #include <QLabel>
 
 class inputConfig;

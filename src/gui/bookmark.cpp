@@ -22,7 +22,6 @@
 
 #include <QDebug>
 #include <QDropEvent>
-#include <QFileInfo>
 #include <QLabel>
 #include <QMenu>
 #include <QMimeData>
