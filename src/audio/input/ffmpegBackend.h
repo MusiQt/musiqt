@@ -118,7 +118,7 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new ffmpegBackend(); }
+    static inputBackend* factory() { return new ffmpegBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

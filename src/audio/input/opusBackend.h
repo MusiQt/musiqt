@@ -84,7 +84,7 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new opusBackend(); }
+    static inputBackend* factory() { return new opusBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

@@ -72,7 +72,7 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new sndBackend(); }
+    static inputBackend* factory() { return new sndBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

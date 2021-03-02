@@ -110,7 +110,7 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new gmeBackend(); }
+    static inputBackend* factory() { return new gmeBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

@@ -112,7 +112,7 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new openmptBackend(); }
+    static inputBackend* factory() { return new openmptBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

@@ -115,13 +115,13 @@ centralFrame::centralFrame(QWidget *parent) :
     QString filter;
     for (int i=0; i<IFACTORY->num(); i++)
     {
-        input* ib = IFACTORY->get(i);
+        inputConfig* ic = IFACTORY->getConfig(i);
 
-        QString filt(ib->ext().join("|"));
+        QString filt(ic->ext().join("|"));
         qDebug() << IFACTORY->name(i) << ": " << filt;
         filter.append(filt).append("|");
 
-        delete ib;
+        delete ic;
     }
     filter.chop(1);
     filter.prepend(".*\\.(").append(")");
@@ -252,7 +252,7 @@ void centralFrame::createHomeMenu()
 
     for (int i=0; i<IFACTORY->num(); i++)
     {
-        inputConfig* ic = IFACTORY->get(i);
+        inputConfig* ic = IFACTORY->getConfig(i);
 
         QString musicDir = ic->getMusicDir();
         if (!musicDir.isEmpty())

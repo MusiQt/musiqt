@@ -80,7 +80,7 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new hvlBackend(); }
+    static inputBackend* factory() { return new hvlBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

@@ -33,7 +33,7 @@
 
 /*****************************************************************/
 
-class inputBackend : public input
+class inputBackend : public input, public inputConfig
 {
 private:
     QSettings settings;

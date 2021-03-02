@@ -123,7 +123,7 @@ iFactory::iFactory()
     if (ffmpegBackend::init())
         regBackend<ffmpegBackend>();
 #endif
-    
+
 #ifdef HAVE_LIBMPCDEC
     regBackend<mpcBackend>();
 #endif
@@ -145,4 +145,9 @@ input* iFactory::get(const QString& filename)
     }
 
     return nullptr;
+}
+
+inputConfig* iFactory::getConfig(const int i)
+{
+    return _inputs[i].factory();
 }

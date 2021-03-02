@@ -92,7 +92,7 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new mpcBackend(); }
+    static inputBackend* factory() { return new mpcBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

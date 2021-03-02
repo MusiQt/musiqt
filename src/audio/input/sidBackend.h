@@ -155,7 +155,7 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new sidBackend(); }
+    static inputBackend* factory() { return new sidBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

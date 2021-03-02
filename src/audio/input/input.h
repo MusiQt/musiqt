@@ -32,11 +32,16 @@
 class inputConfig
 {
 public:
+    virtual ~inputConfig() {}
+
     /// Open config dialog
     virtual QWidget* config(QWidget* parent=nullptr) =0;
 
     /// Get filetype icon
     virtual QIcon icon() const =0;
+
+    /// Get supported extensions
+    virtual QStringList ext() const =0;
 
     /// Get Music directory
     virtual const QString getMusicDir() const =0;
@@ -49,13 +54,10 @@ public:
 /**
  * interface class for input backends
  */
-class input : public inputConfig
+class input
 {
 public:
     virtual ~input() {}
-
-    /// Get supported extensions
-    virtual QStringList ext() const =0;
 
     /// Get song info
     virtual const metaData* getMetaData() const =0;

@@ -70,7 +70,7 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new wvBackend(); }
+    static inputBackend* factory() { return new wvBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

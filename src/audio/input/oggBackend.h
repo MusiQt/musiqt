@@ -87,7 +87,7 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new oggBackend(); }
+    static inputBackend* factory() { return new oggBackend(); }
 
     /// Check if we support ext
     static bool supports(const QString& fileName);

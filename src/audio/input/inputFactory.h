@@ -26,9 +26,11 @@
 
 #define IFACTORY iFactory::instance()
 
+class inputBackend;
+
 class iFactory
 {
-typedef input* (*inputFactory)();
+typedef inputBackend* (*inputFactory)();
 typedef bool (*supportsFunc)(const QString&);
 
 typedef struct
@@ -69,6 +71,9 @@ public:
 
     /// Instantiate backend
     input* get(const QString& filename);
+
+    /// Instantiate backend config
+    inputConfig* getConfig(const int i);
 };
 
 #endif
