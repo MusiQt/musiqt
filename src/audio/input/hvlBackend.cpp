@@ -158,9 +158,9 @@ bool hvlBackend::subtune(const unsigned int i)
 hvlConfig::hvlConfig(QWidget* win) :
     configFrame(win, hvlBackend::name, CREDITS, LINK)
 {
-    matrix()->addWidget(new QLabel(tr("Samplerate"), this));
+    matrix()->addWidget(new QLabel(tr("Samplerate"), this), 0, 0);
     QComboBox *freqBox = new QComboBox(this);
-    matrix()->addWidget(freqBox);
+    matrix()->addWidget(freqBox, 0, 1);
     QStringList items;
     items << "11025" << "22050" << "44100" << "48000";
     freqBox->addItems(items);

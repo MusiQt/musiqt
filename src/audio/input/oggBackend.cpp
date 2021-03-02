@@ -286,9 +286,9 @@ long oggBackend::tell_func(void *datasource)
 oggConfig::oggConfig(QWidget* win) :
     configFrame(win, oggBackend::name, CREDITS, LINK)
 {
-    matrix()->addWidget(new QLabel(tr("Bits"), this));
+    matrix()->addWidget(new QLabel(tr("Bits"), this), 0, 0);
     QComboBox* _bitBox = new QComboBox(this);
-    matrix()->addWidget(_bitBox);
+    matrix()->addWidget(_bitBox, 0, 1);
 
     QStringList items;
     items << "8" << "16";
