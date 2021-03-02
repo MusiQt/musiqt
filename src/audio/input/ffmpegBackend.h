@@ -121,7 +121,7 @@ public:
     static inputBackend* factory() { return new ffmpegBackend(); }
 
     /// Get supported extension
-    static QStringList ext() const;
+    static QStringList ext();
 
     /// Open file
     bool open(const QString& fileName) override;
