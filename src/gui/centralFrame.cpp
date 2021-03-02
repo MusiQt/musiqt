@@ -62,7 +62,7 @@ void loadThread::run()
 
 centralFrame::centralFrame(QWidget *parent) :
     QWidget(parent),
-    _input(nullptr),
+    _input(IFACTORY->get()),
     _preload(nullptr),
     _audio(new audio),
     playing(false),
@@ -218,8 +218,6 @@ centralFrame::centralFrame(QWidget *parent) :
     hbox->setContentsMargins(0,0,0,0);
     hbox->addWidget(w2);
     hbox->addWidget(_dirlist);
-
-    _input = IFACTORY->get(0);
 }
 
 centralFrame::~centralFrame()

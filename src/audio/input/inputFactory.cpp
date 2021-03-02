@@ -58,6 +58,28 @@
 
 #include <QDebug>
 
+class nullInput : public input
+{
+public:
+    const metaData* getMetaData() const override { return nullptr; }
+    unsigned int time() const override { return 0; }
+    unsigned int samplerate() const override { return 0; }
+    unsigned int channels() const override { return 0; }
+    sample_t precision() const override { return sample_t::S16; }
+    unsigned int fract() const override { return 0; }
+    bool open(const QString& fileName) override { return true; }
+    void close() override {}
+    bool seek(const int pos) override { return true; }
+    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override { return 0; }
+    QString songLoaded() const override { return QString(); }
+    unsigned int subtunes() const override { return 0; }
+    unsigned int subtune() const override { return 0; }
+    bool subtune(const unsigned int i) override { return true; }
+    bool gapless() const override { return true; }
+};
+
+/*****************************************************************/
+
 iFactory* iFactory::instance()
 {
     static iFactory i;
@@ -129,9 +151,9 @@ iFactory::iFactory()
 #endif
 }
 
-input* iFactory::get(const int i)
+input* iFactory::get()
 {
-    return _inputs[i].factory();
+    return new nullInput();
 }
 
 input* iFactory::get(const QString& filename)

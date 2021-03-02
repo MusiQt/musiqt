@@ -66,8 +66,8 @@ public:
     /// Check if backend supports file
     bool supports(const int i, const QString& file) const { return _inputs[i].supports(file); }
 
-    /// Instantiate backend
-    input* get(const int i);
+    /// Instantiate empty backend
+    input* get();
 
     /// Instantiate backend
     input* get(const QString& filename);
