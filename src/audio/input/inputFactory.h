@@ -63,9 +63,6 @@ public:
     /// Get backend's name
     const char* name(const int i) const { return _inputs[i].name; }
 
-    /// Check if backend supports file
-    bool supports(const int i, const QString& file) const { return _inputs[i].supports(file); }
-
     /// Instantiate empty backend
     input* get();
 
