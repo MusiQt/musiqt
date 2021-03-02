@@ -163,13 +163,13 @@ bool supports(const QStringList& _ext, const QString& fileName)
 
 QString iFactory::getFilter() const
 {
-    QString filter;
+    QStringList extensions;
     for (inputs_t i: _inputs)
     {
-        QString filt(i.supportedExt().join("|"));
-        filter.append(filt).append("|");
+        extensions.append(i.supportedExt());
     }
-    filter.chop(1);
+    extensions.removeDuplicates();
+    QString filter(extensions.join("|"));
     filter.prepend(".*\\.(").append(")");
     qDebug() << "filter: " << filter;
     return filter;
