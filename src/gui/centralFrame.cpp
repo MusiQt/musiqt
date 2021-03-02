@@ -112,21 +112,7 @@ centralFrame::centralFrame(QWidget *parent) :
     _proxyModel->sort(proxymodel::sortMode::Ascending);
     _playlist->setModel(_proxyModel);
 
-    QString filter;
-    for (int i=0; i<IFACTORY->num(); i++)
-    {
-        inputConfig* ic = IFACTORY->getConfig(i);
-
-        QString filt(ic->ext().join("|"));
-        qDebug() << IFACTORY->name(i) << ": " << filt;
-        filter.append(filt).append("|");
-
-        delete ic;
-    }
-    filter.chop(1);
-    filter.prepend(".*\\.(").append(")");
-    qDebug() << "filter: " << filter;
-
+    QString filter = IFACTORY->getFilter();
     _proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive));
     _proxyModel->setFilterRole(Qt::UserRole+1);
 

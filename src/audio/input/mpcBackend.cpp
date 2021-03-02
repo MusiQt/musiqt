@@ -114,14 +114,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
 
 /*****************************************************************/
 
-bool mpcBackend::supports(const QString& fileName)
-{
-    QRegExp rx("*." EXT, Qt::CaseInsensitive);
-    rx.setPatternSyntax(QRegExp::Wildcard);
-    return rx.exactMatch(fileName);
-}
-
-inline QStringList mpcBackend::ext() const { return QStringList(EXT); }
+QStringList mpcBackend::ext() { return QStringList(EXT); }
 
 mpcBackend::mpcBackend() :
     inputBackend(name, iconMpc, 417)

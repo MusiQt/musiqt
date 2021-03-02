@@ -55,18 +55,7 @@ bool sndBackend::init()
         }
     }
 
-    qDebug() << "Sndfile extensions supported: " << _ext;
     return true;
-}
-
-bool sndBackend::supports(const QString& fileName)
-{
-    QString ext = _ext.join("|");
-    ext.prepend(".*\\.(").append(")");
-    qDebug() << "sndBackend::supports: " << ext;
-
-    QRegExp rx(ext, Qt::CaseInsensitive);
-    return rx.exactMatch(fileName);
 }
 
 sndBackend::~sndBackend()

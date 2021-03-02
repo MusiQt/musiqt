@@ -120,11 +120,8 @@ public:
     /// Factory method
     static inputBackend* factory() { return new ffmpegBackend(); }
 
-    /// Check if we support ext
-    static bool supports(const QString& fileName);
-
     /// Get supported extension
-    QStringList ext() const override;
+    static QStringList ext() const;
 
     /// Open file
     bool open(const QString& fileName) override;

@@ -140,17 +140,7 @@ const char* getClockString(SidTuneInfo::clock_t clock)
 
 /*****************************************************************/
 
-bool sidBackend::supports(const QString& fileName)
-{
-    QString ext(EXT);
-    ext.prepend(".*\\.(").append(")");
-    qDebug() << "sidBackend::supports: " << ext;
-
-    QRegExp rx(ext, Qt::CaseInsensitive);
-    return rx.exactMatch(fileName);
-}
-
-inline QStringList sidBackend::ext() const { return QString(EXT).split("|"); }
+QStringList sidBackend::ext() { return QString(EXT).split("|"); }
 
 sidBackend::sidBackend() :
     inputBackend(name, iconSid, 126),

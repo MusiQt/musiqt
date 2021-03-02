@@ -248,17 +248,7 @@ bool ffmpegBackend::init()
     return true;
 }
 
-bool ffmpegBackend::supports(const QString& fileName)
-{
-    QString ext = _ext.join("|");
-    ext.prepend(".*\\.(").append(")");
-    qDebug() << "ffmpegBackend::supports: " << ext;
-
-    QRegExp rx(ext, Qt::CaseInsensitive);
-    return rx.exactMatch(fileName);
-}
-
-inline QStringList ffmpegBackend::ext() const { return _ext; }
+QStringList ffmpegBackend::ext() { return _ext; }
 
 ffmpegBackend::ffmpegBackend() :
     inputBackend(name, iconFfmpeg, 86),

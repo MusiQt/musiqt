@@ -78,17 +78,7 @@ bool gmeBackend::init()
     return true;
 }
 
-bool gmeBackend::supports(const QString& fileName)
-{
-    QString ext = _ext.join("|");
-    ext.prepend(".*\\.(").append(")");
-    qDebug() << "gmeBackend::supports: " << ext;
-
-    QRegExp rx(ext, Qt::CaseInsensitive);
-    return rx.exactMatch(fileName);
-}
-
-inline QStringList gmeBackend::ext() const { return QString(EXT).split("|"); }
+QStringList gmeBackend::ext() { return QString(EXT).split("|"); }
 
 gmeBackend::gmeBackend() :
     inputBackend(name),

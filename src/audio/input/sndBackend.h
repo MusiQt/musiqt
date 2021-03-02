@@ -74,11 +74,8 @@ public:
     /// Factory method
     static inputBackend* factory() { return new sndBackend(); }
 
-    /// Check if we support ext
-    static bool supports(const QString& fileName);
-
     /// Get supported extension
-    QStringList ext() const override { return _ext; }
+    static QStringList ext() { return _ext; }
 
     /// Open file
     bool open(const QString& fileName) override;

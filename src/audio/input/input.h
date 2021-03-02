@@ -40,9 +40,6 @@ public:
     /// Get filetype icon
     virtual QIcon icon() const =0;
 
-    /// Get supported extensions
-    virtual QStringList ext() const =0;
-
     /// Get Music directory
     virtual const QString getMusicDir() const =0;
 

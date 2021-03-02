@@ -94,11 +94,8 @@ public:
     /// Factory method
     static inputBackend* factory() { return new mpcBackend(); }
 
-    /// Check if we support ext
-    static bool supports(const QString& fileName);
-
     /// Get supported extension
-    QStringList ext() const;
+    static QStringList ext();
 
     /// Open file
     bool open(const QString& fileName) override;

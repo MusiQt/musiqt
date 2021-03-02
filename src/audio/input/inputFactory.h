@@ -31,12 +31,12 @@ class inputBackend;
 class iFactory
 {
 typedef inputBackend* (*inputFactory)();
-typedef bool (*supportsFunc)(const QString&);
+typedef QStringList (*extFunc)();
 
 typedef struct
 {
     const char* name;
-    supportsFunc supports;
+    extFunc supportedExt;
     inputFactory factory;
 } inputs_t;
 
@@ -62,6 +62,9 @@ public:
 
     /// Get backend's name
     const char* name(const int i) const { return _inputs[i].name; }
+
+    /// Get supported extensions filter
+    QString getFilter() const;
 
     /// Instantiate empty backend
     input* get();

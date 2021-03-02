@@ -65,17 +65,7 @@ size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
 
 /*****************************************************************/
 
-bool hvlBackend::supports(const QString& fileName)
-{
-    QString ext(EXT);
-    ext.prepend(".*\\.(").append(")");
-    qDebug() << "hvlBackend::supports: " << ext;
-
-    QRegExp rx(ext, Qt::CaseInsensitive);
-    return rx.exactMatch(fileName);
-}
-
-inline QStringList hvlBackend::ext() const { return QString(EXT).split("|"); }
+QStringList hvlBackend::ext() { return QString(EXT).split("|"); }
 
 hvlBackend::hvlBackend() :
     inputBackend(name),

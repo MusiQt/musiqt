@@ -65,14 +65,7 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsi
 
 /*****************************************************************/
 
-bool opusBackend::supports(const QString& fileName)
-{
-    QRegExp rx("*." EXT, Qt::CaseInsensitive);
-    rx.setPatternSyntax(QRegExp::Wildcard);
-    return rx.exactMatch(fileName);
-}
-
-inline QStringList opusBackend::ext() const { return QStringList(EXT); }
+QStringList opusBackend::ext() { return QStringList(EXT); }
 
 opusBackend::opusBackend() :
     inputBackend(name),

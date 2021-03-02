@@ -109,14 +109,7 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
 
 /*****************************************************************/
 
-bool wvBackend::supports(const QString& fileName)
-{
-    QRegExp rx("*." EXT, Qt::CaseInsensitive);
-    rx.setPatternSyntax(QRegExp::Wildcard);
-    return rx.exactMatch(fileName);
-}
-
-inline QStringList wvBackend::ext() const { return QStringList(EXT); }
+QStringList wvBackend::ext() { return QStringList(EXT); }
 
 wvBackend::wvBackend() :
     inputBackend(name, iconWv, 375),
