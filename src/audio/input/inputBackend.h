@@ -27,8 +27,6 @@
 #include <QString>
 #include <QSettings>
 
-#define SECTION(key)	QString("%1 Settings/%2").arg(_name).arg(key)
-
 #define gettext(x) x
 
 /*****************************************************************/
@@ -49,6 +47,8 @@ private:
     inputBackend();
     inputBackend(const inputBackend&);
     inputBackend& operator=(const inputBackend&);
+
+    inline QString SECTION(const char* key) { return QString("%1 Settings/%2").arg(_name).arg(key); }
 
 protected:
     inputBackend(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0);
@@ -93,7 +93,7 @@ public:
     const char* name() const { return _name; }
 
     /// Get song info
-    virtual const metaData* getMetaData() const override { return &_metaData; };
+    virtual const metaData* getMetaData() const override { return &_metaData; }
 
     /// Get song duration
     unsigned int time() const override { return _time; }
