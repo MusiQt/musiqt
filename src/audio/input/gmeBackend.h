@@ -23,7 +23,7 @@
 #  include "config.h"
 #endif
 
-#include "gme/gme.h"
+#include <gme/gme.h>
 
 #include "inputBackend.h"
 
