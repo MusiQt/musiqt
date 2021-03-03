@@ -241,6 +241,7 @@ void settingsWindow::onAccept()
     for (inputConfig* ic: inputConfigs)
     {
         ic->saveSettings();
+        delete ic;
     }
     accept();
 }
@@ -251,6 +252,7 @@ void settingsWindow::onReject()
     for (inputConfig* ic: inputConfigs)
     {
         ic->loadSettings();
+        delete ic;
     }
     reject();
 }
