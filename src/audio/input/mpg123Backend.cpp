@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2019 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -373,15 +373,23 @@ void mpg123Backend::close()
     songLoaded(QString());
 }
 
-bool mpg123Backend::rewind()
+bool mpg123Backend::seek(int pos)
 {
-    if (!songLoaded().isEmpty())
+    if (songLoaded().isEmpty())
+        return false;
+
+    off_t frames = mpg123_length(_handle);
+    if (frames < 0)
+        return false;
+
+    off_t offset = (frames * pos) / 100;
+    if (mpg123_seek(_handle, offset, SEEK_SET) < 0)
     {
-        mpg123_seek(_handle, 0, SEEK_SET);
-        return true;
+        qWarning() << mpg123_strerror(_handle);
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 ssize_t mpg123Backend::read_func(void* handle, void* ptr, size_t size)

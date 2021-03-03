@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2020 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ bool audio::play(input* i, int pos)
 
     qDebug() << "audio::play";
 
-    i->seek(pos);
+    i->seek(pos); // TODO check return code
 
     unsigned int selectedCard = 0;
     QString cardName = SETTINGS->card();

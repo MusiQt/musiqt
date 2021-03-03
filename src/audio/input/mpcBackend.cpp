@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -225,12 +225,16 @@ void mpcBackend::close()
     songLoaded(QString());
 }
 
-bool mpcBackend::rewind()
+bool mpcBackend::seek(int pos)
 {
+    mpc_int64_t length = mpc_streaminfo_get_length_samples(&_si);
+
 #ifdef MPCDEC_SV8
-    if (mpc_demux_seek_sample(_demux, 0) != MPC_STATUS_OK)
+    mpc_uint64_t sample = (length * pos) / 100;
+    if (mpc_demux_seek_sample(_demux, sample) != MPC_STATUS_OK)
 #else
-    if (!mpc_decoder_seek_seconds(&_decoder, 0))
+    mpc_int64_t sample = (length * pos) / 100;
+    if (!mpc_decoder_seek_sample(&_decoder, sample))
 #endif
         return false;
 

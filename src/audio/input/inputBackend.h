@@ -105,7 +105,7 @@ public:
     QIcon icon() const override { return _icon; }
 
     /// Seek specified position
-    virtual bool seek(const int pos) override { return rewind(); }
+    virtual bool seek(int pos) override { return rewind(); }
 
     /// Song is loaded
     QString songLoaded() const override { return _metaData.getInfo(metaData::LOCATION); }

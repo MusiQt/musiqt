@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2017 Leandro Nini
+ *  Copyright (C) 2007-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -218,12 +218,18 @@ void wvBackend::close()
     songLoaded(QString());
 }
 
-bool wvBackend::rewind()
+bool wvBackend::seek(int pos)
 {
     if (_wvContext == nullptr)
         return false;
 
-    if (!WavpackSeekSample(_wvContext, 0))
+    uint32_t samples = WavpackGetNumSamples(_wvContext);
+
+    if (samples == -1)
+        return false;
+
+    uint32_t sample = (samples * pos) / 100;
+    if (!WavpackSeekSample(_wvContext, sample))
     {
         close();
         return false;

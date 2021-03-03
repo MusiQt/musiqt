@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2019 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -231,12 +231,18 @@ void oggBackend::close()
     songLoaded(QString());
 }
 
-bool oggBackend::rewind()
+bool oggBackend::seek(int pos)
 {
     if (_vf == nullptr)
         return false;
 
-    if (ov_raw_seek(_vf, 0))
+    ogg_int64_t length = ov_pcm_total(_vf, -1);
+
+    if (length < 0)
+        return false;
+
+    ogg_int64_t offset = (length * pos) / 100;
+    if (ov_pcm_seek(_vf, offset) != 0)
         return false;
 
     return true;

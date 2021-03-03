@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2020 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -100,7 +100,7 @@ private:
     static int (*dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
                                          int related_stream, AVCodec **decoder_ret, int flags);
     static int (*dl_avcodec_parameters_to_context)(AVCodecContext *codec, const AVCodecParameters *par);
-    //static int64_t (*dl_av_rescale_q)(int64_t, AVRational, AVRational);
+    static int64_t (*dl_av_rescale_q)(int64_t, AVRational, AVRational);
 
 private:
     ffmpegBackend();
@@ -130,7 +130,7 @@ public:
     void close() override;
 
     /// Seek specified position
-    bool seek(const int pos) override;
+    bool seek(int pos) override;
 
     /// Get samplerate
     unsigned int samplerate() const override

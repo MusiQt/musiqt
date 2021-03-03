@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2020 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ AVCodec* (*ffmpegBackend::dl_avcodec_find_decoder)(enum AVCodecID)=0;
 void (*ffmpegBackend::dl_av_init_packet)(AVPacket*)=0;
 void (*ffmpegBackend::dl_avcodec_flush_buffers)(AVCodecContext*)=0;
 void (*ffmpegBackend::dl_av_free_packet)(AVPacket*)=0;
-// int64_t (*ffmpegBackend::dl_av_rescale_q)(int64_t, AVRational, AVRational)=0;
+int64_t (*ffmpegBackend::dl_av_rescale_q)(int64_t, AVRational, AVRational)=0;
 AVCodecContext* (*ffmpegBackend::dl_avcodec_alloc_context3)(const AVCodec *codec)=0;
 void (*ffmpegBackend::dl_avcodec_free_context)(AVCodecContext **avctx)=0;
 int (*ffmpegBackend::dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
@@ -203,7 +203,7 @@ bool ffmpegBackend::init()
     LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
     LOADSYM(avcodecDll, avcodec_flush_buffers, void(*)(AVCodecContext*))
     LOADSYM(avcodecDll, av_free_packet, void(*)(AVPacket*))
-    //LOADSYM(avcodecDll, av_rescale_q, int64_t (*)(int64_t, AVRational, AVRational)) // FIXME in libavutil now?
+    LOADSYM(avutilDll, av_rescale_q, int64_t (*)(int64_t, AVRational, AVRational))
 
     AVInputFormat *(*dl_av_find_input_format)(const char*);
     LOADSYM(avformatDll, av_find_input_format, AVInputFormat*(*)(const char*))
@@ -369,13 +369,13 @@ void ffmpegBackend::close()
     songLoaded(QString());
 }
 
-bool ffmpegBackend::seek(const int pos)
+bool ffmpegBackend::seek(int pos)
 {
+    int64_t timestamp = (formatContext->duration/1000000) * pos) / 100;
     if (dl_av_seek_frame(formatContext,
-        audioStreamIndex,
-        //dl_av_rescale_q(pos, AV_TIME_BASE_Q, audioStream->time_base),
-        0,
-        AVSEEK_FLAG_ANY) < 0)
+            audioStreamIndex,
+            dl_av_rescale_q(timestamp, AV_TIME_BASE_Q, audioStream->time_base),
+            AVSEEK_FLAG_ANY) < 0)
         return false;
 
     decodeBufOffset = 0;

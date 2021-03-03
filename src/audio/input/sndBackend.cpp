@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -116,12 +116,13 @@ void sndBackend::close()
     songLoaded(QString());
 }
 
-bool sndBackend::rewind()
+bool sndBackend::seek(int pos)
 {
     if (_sf == nullptr)
         return false;
 
-    if (sf_seek(_sf, 0, SEEK_SET) < 0)
+    sf_count_t frames = (_si.frames * pos) / 100;
+    if (sf_seek(_sf, frames, SEEK_SET) < 0)
     {
         qWarning() << sf_strerror(_sf);
         return false;

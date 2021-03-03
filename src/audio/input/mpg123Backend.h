@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2018 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -100,8 +100,8 @@ public:
     /// Close file
     void close() override;
 
-    /// Rewind to start
-    bool rewind() override;
+    /// Seek specified position
+    bool seek(int pos) override;
 
     /// Get samplerate
     unsigned int samplerate() const override { return _samplerate; }
