@@ -371,7 +371,7 @@ void ffmpegBackend::close()
 
 bool ffmpegBackend::seek(int pos)
 {
-    int64_t timestamp = (formatContext->duration/1000000) * pos) / 100;
+    int64_t timestamp = ((formatContext->duration/1000000) * pos) / 100;
     if (dl_av_seek_frame(formatContext,
             audioStreamIndex,
             dl_av_rescale_q(timestamp, AV_TIME_BASE_Q, audioStream->time_base),
