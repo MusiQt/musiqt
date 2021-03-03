@@ -129,7 +129,7 @@ bool gmeBackend::open(const QString& fileName)
     close();
 
     gme_type_t fileType;
-    if (!check(gme_identify_file(fileName.toUtf8().constData(), &fileType)))
+    if (!checkRetCode(gme_identify_file(fileName.toUtf8().constData(), &fileType)))
         return false;
 
     qDebug() << "System " << gme_type_system(fileType);
@@ -142,9 +142,9 @@ bool gmeBackend::open(const QString& fileName)
         gme_equalizer_t eq = { _settings.treble_dB, _settings.bass_freq };
         gme_set_equalizer(_emu, &eq);
     }
-    if (!check(gme_load_file(_emu, fileName.toUtf8().constData())))
+    if (!checkRetCode(gme_load_file(_emu, fileName.toUtf8().constData())))
         return false;
-    if (!check(gme_start_track(_emu, 0)))
+    if (!checkRetCode(gme_start_track(_emu, 0)))
         return false;
 
     _currentTrack = 0;
@@ -206,7 +206,7 @@ void gmeBackend::getInfo()
     gme_free_info(ti);
 }
 
-bool gmeBackend::check(const char* error)
+bool gmeBackend::checkRetCode(const char* error)
 {
     if (error)
     {
@@ -239,7 +239,7 @@ bool gmeBackend::subtune(const unsigned int i)
     if ((_emu != nullptr) && (i > 0) && (i <= (unsigned int)gme_track_count(_emu)))
     {
         _currentTrack = i - 1;
-        if (!check(gme_start_track(_emu, _currentTrack)))
+        if (!checkRetCode(gme_start_track(_emu, _currentTrack)))
             return false;
         getInfo();
         return true;

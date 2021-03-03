@@ -31,9 +31,6 @@
 #  include <stilview/stil.h>
 #endif
 
-// fix compiling with gme 0.6.3
-#undef check
-
 /*****************************************************************/
 
 typedef struct
@@ -100,7 +97,7 @@ private:
 
     void getInfo();
 
-    bool check(const char* error);
+    bool checkRetCode(const char* error);
 
 public:
     ~gmeBackend();
