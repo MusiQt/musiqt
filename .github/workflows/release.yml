@@ -18,10 +18,11 @@ jobs:
         install: >-
           git
           zip
+          upx
           base-devel
           mingw-w64-x86_64-toolchain
           mingw-w64-x86_64-cmake
-          gettext-devel
+          mingw-w64-x86_64-gettext
           mingw-w64-x86_64-qt5-static
           mingw-w64-x86_64-libsndfile
           mingw-w64-x86_64-mpg123
@@ -32,6 +33,7 @@ jobs:
           mingw-w64-x86_64-wavpack
           mingw-w64-x86_64-ffmpeg
           mingw-w64-x86_64-libbs2b
+          mingw-w64-x86_64-libsidplayfp
     - uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }}
@@ -50,6 +52,7 @@ jobs:
         mkdir ${PACKAGE_NAME}
         cp README ${PACKAGE_NAME}
         cp build/musiqt.exe ${PACKAGE_NAME}
+        upx ${PACKAGE_NAME}/musiqt.exe
         mkdir -p ${PACKAGE_NAME}/locale/es/LC_MESSAGES
         cp build/es.gmo ${PACKAGE_NAME}/locale/es/LC_MESSAGES/musiqt.mo
         mkdir -p ${PACKAGE_NAME}/locale/it/LC_MESSAGES
