@@ -291,6 +291,26 @@ bool openmptBackend::rewind()
     return false;
 }
 
+unsigned int openmptBackend::subtunes() const
+{
+    return (_module != nullptr) ? _module->get_num_subsongs() : 0;
+}
+
+unsigned int openmptBackend::subtune() const
+{
+    return (_module != nullptr) ? _module->get_selected_subsong() : 0;
+}
+
+bool subtune(const unsigned int i)
+{
+    if (_module != nullptr)
+    {
+        _module->select_subsong(i);
+        return true;
+    }
+    return false;
+}
+
 /*****************************************************************/
 
 #define MPTSETTINGS openmptBackend::_settings

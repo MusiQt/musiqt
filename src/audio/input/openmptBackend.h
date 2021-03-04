@@ -126,6 +126,15 @@ public:
     /// Rewind to start
     bool rewind() override;
 
+    /// Number of subtunes
+    unsigned int subtunes() const override;
+
+    /// Current subtune
+    unsigned int subtune() const override;
+
+    /// Change subtune
+    bool subtune(const unsigned int i) override;
+
     /// Get samplerate
     unsigned int samplerate() const override { return _settings.samplerate; }
 
