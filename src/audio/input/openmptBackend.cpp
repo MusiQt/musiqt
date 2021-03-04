@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2018 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -164,10 +164,10 @@ void openmptBackend::loadSettings()
 {
     _settings.samplerate = load("Frequency", 44100);
     _settings.channels = load("Channels", 2);
-    _settings.resamplingMode = load("Resampling", 8);
+    _settings.resamplingMode = load("Resampling", 0);
     _settings.masterGain = load("Master gain", 0);
-    _settings.stereoSeparation = load("Stereo separation", 40);
-    _settings.volumeRamping = load("Volume ramping", 0);
+    _settings.stereoSeparation = load("Stereo separation", 100);
+    _settings.volumeRamping = load("Volume ramping", -1);
 }
 
 void openmptBackend::saveSettings()
@@ -291,6 +291,26 @@ bool openmptBackend::rewind()
     return false;
 }
 
+unsigned int openmptBackend::subtunes() const
+{
+    return (_module != nullptr) ? _module->get_num_subsongs() : 0;
+}
+
+unsigned int openmptBackend::subtune() const
+{
+    return (_module != nullptr) ? _module->get_selected_subsong() : 0;
+}
+
+bool openmptBackend::subtune(const unsigned int i)
+{
+    if (_module != nullptr)
+    {
+        _module->select_subsong(i);
+        return true;
+    }
+    return false;
+}
+
 /*****************************************************************/
 
 #define MPTSETTINGS openmptBackend::_settings
@@ -345,27 +365,11 @@ openmptConfig::openmptConfig(QWidget* win) :
     matrix()->addWidget(resBox);
     {
         QStringList items;
-        items << "Zero order hold" << "Linear" << "Cubic Spline" << "Sinc 8 taps";
+        items << "Default" << "Zero order hold" << "Linear" << "Cubic Spline" << "Sinc 8 taps";
         resBox->addItems(items);
         resBox->setMaxVisibleItems(items.size());
     }
-    switch (MPTSETTINGS.resamplingMode)
-    {
-    case 1:
-        val = 0;
-        break;
-    case 2:
-        val = 1;
-        break;
-    default:
-    case 4:
-        val = 2;
-        break;
-    case 8:
-        val = 3;
-        break;
-    }
-    resBox->setCurrentIndex(val);
+    resBox->setCurrentIndex(MPTSETTINGS.resamplingMode);
     connect(resBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdResampling(int)));
 
     //
@@ -454,21 +458,7 @@ void openmptConfig::onCmdChannels(int val)
 
 void openmptConfig::onCmdResampling(int val)
 {
-    switch (val)
-    {
-    case 0:
-        MPTSETTINGS.resamplingMode = 1;
-        break;
-    case 1:
-        MPTSETTINGS.resamplingMode = 2;
-        break;
-    case 2:
-        MPTSETTINGS.resamplingMode = 4;
-        break;
-    case 3:
-        MPTSETTINGS.resamplingMode = 8;
-        break;
-    }
+    MPTSETTINGS.resamplingMode = val;
 }
 
 void openmptConfig::onCmdMasterGain(int val)

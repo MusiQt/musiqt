@@ -155,6 +155,11 @@ void InputWrapper::unload()
     preloadedSong = nullptr;
 }
 
+void InputWrapper::setPos(int pos)
+{
+    seconds = (pos * currentSong->time()) / 100;
+}
+
 void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
 {
     unsigned int precision;

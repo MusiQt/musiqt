@@ -41,6 +41,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QSlider>
 #include <QStackedWidget>
 #include <QTimer>
 #include <QTreeView>
@@ -199,10 +200,25 @@ centralFrame::centralFrame(QWidget *parent) :
     vbox->addWidget(wButtons);
     vbox->setSpacing(0);
 
-    QHBoxLayout *hbox = new QHBoxLayout(this);
+    QWidget *cFrame = new QWidget(this);
+    QHBoxLayout *hbox = new QHBoxLayout(cFrame);
     hbox->setContentsMargins(0,0,0,0);
     hbox->addWidget(w2);
     hbox->addWidget(_dirlist);
+
+    QVBoxLayout *main = new QVBoxLayout(this);
+    main->setContentsMargins(0,0,0,0);
+    m_slider = new QSlider(Qt::Horizontal);
+    m_slider->setMinimum(0);
+    m_slider->setMaximum(100);
+    m_slider->setTickInterval(10);
+    m_slider->setTickPosition(QSlider::TicksBelow);
+    m_slider->setTracking(false);
+    //m_slider->setDisabled(true); // FIXME enable only when playing seekable streams
+    connect(m_slider, SIGNAL(sliderReleased()), this, SLOT(onSeek()));
+    connect(this, SIGNAL(updateSlider(int)), m_slider, SLOT(setValue(int)));
+    main->addWidget(m_slider);
+    main->addWidget(cFrame);
 }
 
 centralFrame::~centralFrame()
@@ -230,7 +246,7 @@ void centralFrame::createHomeMenu()
         QAction *action = menu->addAction(tr("System music location"));
         action->setData(musicDir);
         action->setStatusTip(musicDir);
-            homeGroup->addAction(action);
+        homeGroup->addAction(action);
     }
 
     for (int i=0; i<IFACTORY->num(); i++)
@@ -469,6 +485,7 @@ void centralFrame::onCmdStopSong()
     {
         playing = false;
         emit updateTime(0);
+        emit updateSlider(0);
         emit stateChanged(_audio->state());
         QModelIndex curr = _dirlist->currentIndex();
         if (playDir.compare(fsm->fileName(curr)))
@@ -638,7 +655,19 @@ void centralFrame::onUpdateTime()
     if (_audio->state() != state_t::STOP)
     {
         emit updateTime(_audio->seconds());
+
+        if (!m_slider->isSliderDown())
+            emit updateSlider((100*_audio->seconds())/_input->time());
     }
+}
+
+void centralFrame::onSeek()
+{
+    int pos = m_slider->sliderPosition();
+    qDebug() << "onSeek: " << pos;
+    _input->seek(pos);
+    _audio->seek(pos); // FIXME this sucks
+    m_slider->setValue(pos);
 }
 
 void centralFrame::preloadSong()

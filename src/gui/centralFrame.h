@@ -37,6 +37,7 @@ class QTreeView;
 class QFileSystemModel;
 class QItemSelectionModel;
 class QPushButton;
+class QSlider;
 
 /*****************************************************************/
 
@@ -98,6 +99,7 @@ signals:
     void setDisplay(input*);
     void clearDisplay(bool);
     void updateTime(int);
+    void updateSlider(int);
     void setInfo(const metaData*);
     void songUpdated(const QString&);
 
@@ -132,6 +134,7 @@ private slots:
     void onCmdDel();
     void onCmdBmAdd();
     void updateSongs();
+    void onSeek();
 
     void dirLoaded(const QString &);
 
@@ -160,6 +163,7 @@ private:
     bookmark *_bookmarkList;
     QPushButton *_editMode;
     QPushButton *m_home;
+    QSlider *m_slider;
 };
 
 #endif

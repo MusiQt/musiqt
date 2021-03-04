@@ -60,14 +60,14 @@ audio::~audio()
     delete audioOutput;
 }
 
-bool audio::play(input* i, int pos)
+bool audio::play(input* i)
 {
     if ((i->songLoaded().isEmpty()) || (_state == state_t::PLAY))
         return false;
 
     qDebug() << "audio::play";
 
-    i->seek(pos); // TODO check return code
+    i->rewind(); // TODO check return code
 
     unsigned int selectedCard = 0;
     QString cardName = SETTINGS->card();
@@ -183,6 +183,8 @@ void audio::volume(const int vol)
 bool audio::gapless(input* const i) { return iw->tryPreload(i); }
 
 int audio::seconds() const { return iw->getSeconds(); }
+
+void audio::seek(int pos) { return iw->setPos(pos); }
 
 void audio::unload() { iw->unload(); }
 
