@@ -665,8 +665,10 @@ void centralFrame::onSeek()
 {
     int pos = m_slider->sliderPosition();
     qDebug() << "onSeek: " << pos;
+    _audio->pause();
     _input->seek(pos);
     _audio->seek(pos); // FIXME this sucks
+    _audio->pause();
     m_slider->setValue(pos);
 }
 
