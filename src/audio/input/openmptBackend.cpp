@@ -301,7 +301,7 @@ unsigned int openmptBackend::subtune() const
     return (_module != nullptr) ? _module->get_selected_subsong() : 0;
 }
 
-bool subtune(const unsigned int i)
+bool openmptBackend::subtune(const unsigned int i)
 {
     if (_module != nullptr)
     {
