@@ -59,7 +59,7 @@ public:
     ~audio();
 
     /// Start stream
-    bool play(input* i, int pos=0);
+    bool play(input* i);
 
     /// Pause stream
     void pause();
@@ -70,7 +70,7 @@ public:
     /// Get state
     state_t state() const { return _state; }
 
-    /// Get seconds
+    /// Get current position in seconds
     int seconds() const;
 
     /// Set volume
@@ -83,6 +83,9 @@ public:
     bool gapless(input* const i);
 
     void unload();
+
+    /// Set current position
+    void seek(int pos);
 };
 
 /*****************************************************************/

@@ -80,6 +80,9 @@ public:
     /// Close file
     virtual void close() =0;
 
+    /// Rewind to start
+    virtual bool rewind() =0;
+
     /// Seek specified position
     virtual bool seek(const int pos) =0;
 

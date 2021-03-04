@@ -83,9 +83,6 @@ protected:
     /// Song is loaded
     void songLoaded(const QString& location);
 
-    /// Rewind to start
-    virtual bool rewind() { return false; }; // called only by seek(), will be removed
-
 public:
     virtual ~inputBackend();
 
@@ -104,8 +101,11 @@ public:
     /// Get filetype icon
     QIcon icon() const override { return _icon; }
 
+    /// Rewind to start
+    virtual bool rewind() override { return seek(0); };
+
     /// Seek specified position
-    virtual bool seek(int pos) override { return rewind(); }
+    virtual bool seek(int pos) override { return false; }
 
     /// Song is loaded
     QString songLoaded() const override { return _metaData.getInfo(metaData::LOCATION); }

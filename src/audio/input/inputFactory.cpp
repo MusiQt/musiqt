@@ -69,6 +69,7 @@ public:
     unsigned int fract() const override { return 0; }
     bool open(const QString& fileName) override { return true; }
     void close() override {}
+    bool rewind() override { return true; }
     bool seek(const int pos) override { return true; }
     size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override { return 0; }
     QString songLoaded() const override { return QString(); }

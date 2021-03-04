@@ -56,6 +56,8 @@ public:
 
     int getSeconds() const { return seconds; }
 
+    void setPos(int pos);
+
 private:
     input *currentSong;
     input *preloadedSong;
