@@ -215,7 +215,7 @@ centralFrame::centralFrame(QWidget *parent) :
     m_slider->setTickPosition(QSlider::TicksBelow);
     m_slider->setTracking(false);
     //m_slider->setDisabled(true); // FIXME enable only when playing seekable streams
-    connect(m_slider, SIGNAL(sliderReleased()), this, SLOT(onSeek()));
+    connect(m_slider, SIGNAL(actionTriggered(int)), this, SLOT(onSeek()));
     connect(this, SIGNAL(updateSlider(int)), m_slider, SLOT(setValue(int)));
     main->addWidget(m_slider);
     main->addWidget(cFrame);
@@ -669,7 +669,6 @@ void centralFrame::onSeek()
     _input->seek(pos);
     _audio->seek(pos); // FIXME this sucks
     _audio->pause();
-    m_slider->setValue(pos);
 }
 
 void centralFrame::preloadSong()
