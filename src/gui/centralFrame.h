@@ -127,9 +127,6 @@ private:
     void onRgtClkDirList(const QPoint& pos);
     void onRgtClkPlayList(const QPoint& pos);
 
-    void onCmdAdd();
-    void onCmdDel();
-    void onCmdBmAdd();
     void updateSongs();
     void onSeek();
 
@@ -140,10 +137,6 @@ private:
     QString getFilter() const;
     QStringList getPattern() const;
     void changeState();
-
-    void sortAsc();
-    void sortDesc();
-    void shuffle();
 
 private:
     input *_input;

@@ -756,16 +756,26 @@ void centralFrame::onRgtClkDirList(const QPoint& pos)
 
     if ((_editMode->isChecked()) && (!fsm->isDir(item)))
     {
-        QAction *additem = pane.addAction(GET_ICON(icon_listadd), tr("Add to playlist"), this, &centralFrame::onCmdAdd);
+        QAction *additem = pane.addAction(
+            GET_ICON(icon_listadd), tr("Add to playlist"), this,
+            [this, item]()
+            {
+                _playlistModel->append(fsm->fileInfo(item).absoluteFilePath());
+            }
+        );
         additem->setStatusTip(tr("Add song to the playlist"));
     }
     else
     {
-        QAction *additem = pane.addAction(GET_ICON(icon_bookmark), tr("Add to bookmarks"), this, &centralFrame::onCmdBmAdd);
+        QAction *additem = pane.addAction(
+            GET_ICON(icon_bookmark), tr("Add to bookmarks"), this, 
+            [this, item]()
+            {
+                _bookmarkList->add(fsm->fileInfo(item).absoluteFilePath());
+            }
+        );
         additem->setStatusTip(tr("Add directory to the bookmarks"));
     }
-
-    //setUserData((void*)item);
 
     pane.exec(_dirlist->mapToGlobal(pos));
 }
@@ -775,18 +785,25 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     qDebug() << "onRgtClkPlayList";
     QModelIndex item = _playlist->indexAt(pos);
 
-    setProperty("UserData", QVariant::fromValue(item.row()));
-
     QMenu pane(this);
     if (item.isValid())
     {
+        const int itemRow = item.row();
+
         QWidgetAction *wa = new QWidgetAction(&pane);
         QLabel *label = new QLabel(utils::shrink(_playlistModel->data(item, Qt::UserRole).toString()));
         label->setAlignment(Qt::AlignCenter);
         wa->setDefaultWidget(label);
         pane.addAction(wa);
         pane.addSeparator();
-        QAction *delitem = pane.addAction(GET_ICON(icon_listremove), tr("Remove item"), this, &centralFrame::onCmdDel);
+        QAction *delitem = pane.addAction(
+            GET_ICON(icon_listremove), tr("Remove item"), this,
+            [this, itemRow]()
+            {
+                qDebug() << "remove item " << itemRow;
+                _playlistModel->removeRow(itemRow);
+            }
+        );
         delitem->setStatusTip(tr("Remove selected item from playlist"));
         pane.addSeparator();
     }
@@ -795,17 +812,32 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     asc->setCheckable(true);
     asc->setStatusTip(tr("Sort ascending"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Ascending) asc->setChecked(true);
-    connect(asc, &QAction::triggered, this, &centralFrame::sortAsc);
+    connect(asc, &QAction::triggered, this,
+        [this]()
+        {
+            _proxyModel->sort(proxymodel::sortMode::Ascending);
+        }
+    );
     QAction* desc = new QAction(tr("Sort descending"), &pane);
     desc->setCheckable(true);
     desc->setStatusTip(tr("Sort descending"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Descending) desc->setChecked(true);
-    connect(desc, &QAction::triggered, this, &centralFrame::sortDesc);
+    connect(desc, &QAction::triggered, this,
+        [this]()
+        {
+            _proxyModel->sort(proxymodel::sortMode::Descending);
+        }
+    );
     QAction* rnd = new QAction(tr("Shuffle"), &pane);
     rnd->setCheckable(true);
     rnd->setStatusTip(tr("Sort randomly"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Random) rnd->setChecked(true);
-    connect(rnd, &QAction::triggered, this, &centralFrame::shuffle);
+    connect(rnd, &QAction::triggered, this,
+        [this]()
+        {
+            _proxyModel->sort(proxymodel::sortMode::Random);
+        }
+    );
 
     QActionGroup *radioGroup = new QActionGroup(&pane);
     radioGroup->addAction(asc);
@@ -818,44 +850,6 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     pane.addAction(rnd);
 
     pane.exec(_playlist->mapToGlobal(pos));
-}
-
-void centralFrame::sortAsc()
-{
-    _proxyModel->sort(proxymodel::sortMode::Ascending);
-}
-
-void centralFrame::sortDesc()
-{
-    _proxyModel->sort(proxymodel::sortMode::Descending);
-}
-
-void centralFrame::shuffle()
-{
-    _proxyModel->sort(proxymodel::sortMode::Random);
-}
-
-void centralFrame::onCmdAdd()
-{
-    const QModelIndex item = _dirlist->currentIndex();
-    if (!item.isValid())
-        return;
-    _playlistModel->append(fsm->fileInfo(item).absoluteFilePath());
-}
-
-void centralFrame::onCmdDel()
-{
-    int row = property("UserData").toInt();
-    qDebug() << "onCmdDel " << row;
-    _playlistModel->removeRow(row);
-}
-
-void centralFrame::onCmdBmAdd()
-{
-    const QModelIndex item = _dirlist->currentIndex();
-    if (!item.isValid())
-        return;
-    _bookmarkList->add(fsm->fileInfo(item).absoluteFilePath());
 }
 
 void centralFrame::changeSubtune(dir_t dir)
