@@ -952,14 +952,17 @@ void centralFrame::updateSongs()
 void centralFrame::setDir(const QModelIndex& index)
 {
     qDebug("centralFrame::setDir");
-    QMetaObject::Connection connection = connect(
+    QMetaObject::Connection * const connection = new QMetaObject::Connection;
+    *connection = connect(
         fsm, &QFileSystemModel::directoryLoaded,
-        [connection, this](const QString &path) {
+        [connection, this](const QString &path)
+        {
             qDebug() << "dirLoaded: " << path;
             if (path.compare(fsm->fileInfo(_dirlist->currentIndex()).absolutePath()) == 0)
             {
                 qDebug() << "scrollTo" << path;
-                QObject::disconnect(connection);
+                QObject::disconnect(*connection);
+                delete connection;
                 QTimer::singleShot(50, [this](){_dirlist->scrollTo(_dirlist->currentIndex());});
             }
         }
