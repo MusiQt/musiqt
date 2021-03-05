@@ -39,16 +39,10 @@ typedef struct
 
 class mpg123Config : public configFrame
 {
-    Q_OBJECT
-
 private:
     mpg123Config() {}
     mpg123Config(const mpg123Config&);
     mpg123Config& operator=(const mpg123Config&);
-
-private slots:
-    void onCmdDecoder(int val);
-    void onCmdFastscan(int val);
 
 public:
     mpg123Config(QWidget* win);

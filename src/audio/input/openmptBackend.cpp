@@ -346,7 +346,25 @@ openmptConfig::openmptConfig(QWidget* win) :
         break;
     }
     freqBox->setCurrentIndex(val);
-    connect(freqBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdFrequency(int)));
+    connect(freqBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            switch (val)
+            {
+            case 0:
+                MPTSETTINGS.samplerate = 11025;
+                break;
+            case 1:
+                MPTSETTINGS.samplerate = 22050;
+                break;
+            case 2:
+                MPTSETTINGS.samplerate = 44100;
+                break;
+            case 3:
+                MPTSETTINGS.samplerate = 48000;
+                break;
+            }
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Channels"), this));
     QComboBox *chanBox = new QComboBox(this);
@@ -358,7 +376,11 @@ openmptConfig::openmptConfig(QWidget* win) :
         chanBox->setMaxVisibleItems(items.size());
     }
     chanBox->setCurrentIndex(MPTSETTINGS.channels-1);
-    connect(chanBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdChannels(int)));
+    connect(chanBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            MPTSETTINGS.channels = val+1;
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Resampling"), this));
     QComboBox *resBox = new QComboBox(this);
@@ -370,7 +392,11 @@ openmptConfig::openmptConfig(QWidget* win) :
         resBox->setMaxVisibleItems(items.size());
     }
     resBox->setCurrentIndex(MPTSETTINGS.resamplingMode);
-    connect(resBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdResampling(int)));
+    connect(resBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            MPTSETTINGS.resamplingMode = val;
+        }
+    );
 
     //
     QHBoxLayout *hf = new QHBoxLayout();
@@ -396,8 +422,12 @@ openmptConfig::openmptConfig(QWidget* win) :
     tf->setAlignment(Qt::AlignCenter);
     tf->setNum(MPTSETTINGS.masterGain);
     mat->addWidget(tf, 2, 0);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
-    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdMasterGain(int)));
+    connect(knob, &QDial::valueChanged,
+        [](int val) {
+            MPTSETTINGS.masterGain = val;
+            tf->setNum(val);
+        }
+    );
 
     tf = new QLabel(tr("Stereo Separation"), this);
     tf->setAlignment(Qt::AlignCenter);
@@ -411,8 +441,12 @@ openmptConfig::openmptConfig(QWidget* win) :
     tf->setAlignment(Qt::AlignCenter);
     tf->setNum(MPTSETTINGS.stereoSeparation);
     mat->addWidget(tf, 2, 1);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
-    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdStereoSeparation(int)));
+    connect(knob, &QDial::valueChanged,
+        [](int val) {
+            MPTSETTINGS.stereoSeparation = val;
+            tf->setNum(val);
+        }
+    );
 
     tf = new QLabel(tr("Volume Ramping"), this);
     tf->setAlignment(Qt::AlignCenter);
@@ -426,52 +460,12 @@ openmptConfig::openmptConfig(QWidget* win) :
     tf->setAlignment(Qt::AlignCenter);
     tf->setNum(MPTSETTINGS.volumeRamping);
     mat->addWidget(tf, 2, 2);
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
-    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(onCmdVolumeRamping(int)));
+    connect(knob, &QDial::valueChanged,
+        [](int val) {
+            MPTSETTINGS.volumeRamping = val;
+            tf->setNum(val);
+        }
+    );
 
     hf->addStretch();
-}
-
-void openmptConfig::onCmdFrequency(int val)
-{
-    switch (val)
-    {
-    case 0:
-        MPTSETTINGS.samplerate = 11025;
-        break;
-    case 1:
-        MPTSETTINGS.samplerate = 22050;
-        break;
-    case 2:
-        MPTSETTINGS.samplerate = 44100;
-        break;
-    case 3:
-        MPTSETTINGS.samplerate = 48000;
-        break;
-    }
-}
-
-void openmptConfig::onCmdChannels(int val)
-{
-    MPTSETTINGS.channels = val+1;
-}
-
-void openmptConfig::onCmdResampling(int val)
-{
-    MPTSETTINGS.resamplingMode = val;
-}
-
-void openmptConfig::onCmdMasterGain(int val)
-{
-    MPTSETTINGS.masterGain = val;
-}
-
-void openmptConfig::onCmdStereoSeparation(int val)
-{
-    MPTSETTINGS.stereoSeparation = val;
-}
-
-void openmptConfig::onCmdVolumeRamping(int val)
-{
-    MPTSETTINGS.volumeRamping = val;
 }

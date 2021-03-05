@@ -47,8 +47,6 @@ typedef struct
 
 class openmptConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     openmptConfig() {}
     openmptConfig(const openmptConfig&);
@@ -57,15 +55,6 @@ private:
 public:
     openmptConfig(QWidget* win);
     virtual ~openmptConfig() {}
-
-private slots:
-    void onCmdFrequency(int val);
-    void onCmdChannels(int val);
-    void onCmdResampling(int val);
-
-    void onCmdMasterGain(int val);
-    void onCmdStereoSeparation(int val);
-    void onCmdVolumeRamping(int val);
 };
 
 /*****************************************************************/

@@ -313,18 +313,17 @@ oggConfig::oggConfig(QWidget* win) :
         break;
     }
     _bitBox->setCurrentIndex(val);
-    connect(_bitBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdBits(int)));
-}
-
-void oggConfig::onCmdBits(int val)
-{
-    switch (val)
-    {
-    case 0:
-        OGGSETTINGS.precision = sample_t::U8;
-        break;
-    case 1:
-        OGGSETTINGS.precision = sample_t::S16;
-        break;
-    }
+    connect(_bitBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            switch (val)
+            {
+            case 0:
+                OGGSETTINGS.precision = sample_t::U8;
+                break;
+            case 1:
+                OGGSETTINGS.precision = sample_t::S16;
+                break;
+            }
+        }
+    );
 }

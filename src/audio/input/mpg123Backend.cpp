@@ -433,7 +433,11 @@ mpg123Config::mpg123Config(QWidget* win) :
     const int curItem = decBox->findText(MPGSETTINGS.decoder);
     if (curItem >= 0)
         decBox->setCurrentIndex(curItem);
-    connect(decBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdDecoder(int)));
+    connect(decBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            MPGSETTINGS.decoder = mpg123Backend::_decoders.at(val);
+        }
+    );
 
     {
         QFrame* line = new QFrame();
@@ -448,15 +452,9 @@ mpg123Config::mpg123Config(QWidget* win) :
     cBox->setChecked(MPGSETTINGS.fastscan);
     cBox->setToolTip("Scan only few frame of file, time detection may be inaccurate");
     vert->addWidget(cBox);
-    connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(onCmdFastscan(int)));
-}
-
-void mpg123Config::onCmdDecoder(int val)
-{
-    MPGSETTINGS.decoder = mpg123Backend::_decoders.at(val);
-}
-
-void mpg123Config::onCmdFastscan(int val)
-{
-    MPGSETTINGS.fastscan = val == Qt::Checked;
+    connect(cBox, &QCheckBox::stateChanged,
+        [](int val) {
+            MPGSETTINGS.fastscan = val == Qt::Checked;
+        }
+    );
 }

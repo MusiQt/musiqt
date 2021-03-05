@@ -537,7 +537,25 @@ sidConfig::sidConfig(QWidget* win) :
         break;
     }
     freqBox->setCurrentIndex(val);
-    connect(freqBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdFrequency(int)));
+    connect(freqBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            switch (val)
+            {
+            case 0:
+                SIDSETTINGS.samplerate = 11025;
+                break;
+            case 1:
+                SIDSETTINGS.samplerate = 22050;
+                break;
+            case 2:
+                SIDSETTINGS.samplerate = 44100;
+                break;
+            case 3:
+                SIDSETTINGS.samplerate = 48000;
+                break;
+            }
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Channels"), this));
     QComboBox *chanBox = new QComboBox(this);
@@ -549,7 +567,11 @@ sidConfig::sidConfig(QWidget* win) :
         chanBox->setMaxVisibleItems(items.size());
     }
     chanBox->setCurrentIndex(SIDSETTINGS.channels-1);
-    connect(chanBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdChannels(int)));
+    connect(chanBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            SIDSETTINGS.channels = val+1;
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Engine"), this));
     QComboBox *engBox = new QComboBox(this);
@@ -574,7 +596,11 @@ sidConfig::sidConfig(QWidget* win) :
     const int curItem=engBox->findData(SIDSETTINGS.engine);
     if (curItem >= 0)
         engBox->setCurrentIndex(curItem);
-    connect(engBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdEngine(int)));
+    connect(engBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [engBox](int val) {
+            SIDSETTINGS.engine = engBox->itemText(val);
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Sampling method"), this));
     QComboBox *resBox = new QComboBox(this);
@@ -596,7 +622,19 @@ sidConfig::sidConfig(QWidget* win) :
         break;
     }
     resBox->setCurrentIndex(val);
-    connect(resBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdSampling(int)));
+    connect(resBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            switch (val)
+            {
+            case 0:
+                SIDSETTINGS.samplingMethod = SidConfig::INTERPOLATE;
+                break;
+            case 1:
+                SIDSETTINGS.samplingMethod = SidConfig::RESAMPLE_INTERPOLATE;
+                break;
+            }
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Default C64 model"), this));
     QComboBox *clockBox = new QComboBox(this);
@@ -624,13 +662,35 @@ sidConfig::sidConfig(QWidget* win) :
         break;
     }
     clockBox->setCurrentIndex(val);
-    connect(clockBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdClock(int)));
+    connect(clockBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            switch (val)
+            {
+            case 0:
+                SIDSETTINGS.c64Model = SidConfig::PAL;
+                break;
+            case 1:
+                SIDSETTINGS.c64Model = SidConfig::NTSC;
+                break;
+            case 2:
+                SIDSETTINGS.c64Model = SidConfig::OLD_NTSC;
+                break;
+            case 3:
+                SIDSETTINGS.c64Model = SidConfig::DREAN;
+                break;
+            }
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Force C64 model"), this));
     QCheckBox *cBox = new QCheckBox(this);
     cBox->setChecked(SIDSETTINGS.forceC64Model);
     matrix()->addWidget(cBox);
-    connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdForceC64Model(bool)));
+    connect(cBox, &QCheckBox::toggled,
+        [](bool val) {
+            SIDSETTINGS.forceC64Model = val;
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Default SID model"), this));
     QComboBox *modelBox = new QComboBox(this);
@@ -652,13 +712,29 @@ sidConfig::sidConfig(QWidget* win) :
         break;
     }
     modelBox->setCurrentIndex(val);
-    connect(modelBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdModel(int)));
+    connect(modelBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            switch (val)
+            {
+            case 0:
+                SIDSETTINGS.sidModel = SidConfig::MOS6581;
+                break;
+            case 1:
+                SIDSETTINGS.sidModel = SidConfig::MOS8580;
+                break;
+            }
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Force SID model"), this));
     cBox = new QCheckBox(this);
     cBox->setChecked(SIDSETTINGS.forceSidModel);
     matrix()->addWidget(cBox);
-    connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdForceSidModel(bool)));
+    connect(cBox, &QCheckBox::toggled,
+        [](bool val) {
+            SIDSETTINGS.forceSidModel = val;
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Second SID address"), this));
     QComboBox *sidAddress = new QComboBox(this);
@@ -674,7 +750,11 @@ sidConfig::sidConfig(QWidget* win) :
             break;
     }
     sidAddress->setCurrentIndex(val);
-    connect(sidAddress, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdAddress2(int)));
+    connect(sidAddress, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            SIDSETTINGS.secondSidAddress = sidAddresses[val];
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Third SID address"), this));
     sidAddress = new QComboBox(this);
@@ -688,7 +768,11 @@ sidConfig::sidConfig(QWidget* win) :
             break;
     }
     sidAddress->setCurrentIndex(val);
-    connect(sidAddress, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdAddress3(int)));
+    connect(sidAddress, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            SIDSETTINGS.thirdSidAddress = sidAddresses[val];
+        }
+    );
 #ifndef ENABLE_3SID
     sidAddress->setDisabled(true);
 #endif
@@ -706,12 +790,20 @@ sidConfig::sidConfig(QWidget* win) :
     cBox->setChecked(SIDSETTINGS.fastSampling);
     cBox->setToolTip("Faster but inaccurate sampling");
     vert->addWidget(cBox);
-    connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdFastSampling(bool)));
+    connect(cBox, &QCheckBox::toggled,
+        [](bool val) {
+            SIDSETTINGS.fastSampling = val;
+        }
+    );
     cBox = new QCheckBox(tr("Filter"));
     cBox->setChecked(SIDSETTINGS.filter);
     cBox->setToolTip("Emulate SID filter");
     vert->addWidget(cBox);
-    connect(cBox, SIGNAL(toggled(bool)), this, SLOT(onCmdFilter(bool)));
+    connect(cBox, &QCheckBox::toggled,
+        [](bool val) {
+            SIDSETTINGS.filter = val;
+        }
+    );
 
     _biasFrame = new QVBoxLayout();
     vert->addLayout(_biasFrame);
@@ -720,7 +812,6 @@ sidConfig::sidConfig(QWidget* win) :
     _biasFrame->setAlignment(label, Qt::AlignHCenter);
     QDial* knob = new QDial(this);
     knob->setRange(-500, 500);
-    //knob->setNotchTarget(100);
     knob->setValue(SIDSETTINGS.bias);
     _biasFrame->addWidget(knob);
     _biasFrame->setAlignment(knob, Qt::AlignHCenter);
@@ -730,8 +821,12 @@ sidConfig::sidConfig(QWidget* win) :
     tf->setNum(SIDSETTINGS.bias);
     _biasFrame->addWidget(tf);
     knob->setMaximumSize(tf->height(), tf->height());
-    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setBias(int)));
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+    connect(knob, &QDial::valueChanged,
+        [tf](int val) {
+            SIDSETTINGS.bias = val;
+            tf->setNum(val);
+        }
+    );
 
     _filterCurveFrame = new QVBoxLayout();
     vert->addLayout(_filterCurveFrame);
@@ -743,7 +838,6 @@ sidConfig::sidConfig(QWidget* win) :
 
     knob = new QDial(this);
     knob->setRange(0, 1000);
-    //knob->setTickDelta(100);
     knob->setValue(SIDSETTINGS.filter6581Curve);
     mat->addWidget(knob, 1, 0, 1, 1, Qt::AlignCenter);
     tf = new QLabel(this);
@@ -752,12 +846,15 @@ sidConfig::sidConfig(QWidget* win) :
     tf->setNum(SIDSETTINGS.filter6581Curve);
     mat->addWidget(tf, 2, 0);
     knob->setMaximumSize(tf->height(), tf->height());
-    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setFilter6581Curve(int)));
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+    connect(knob, &QDial::valueChanged,
+        [tf](int val) {
+            SIDSETTINGS.filter6581Curve = val;
+            tf->setNum(val);
+        }
+    );
 
     knob = new QDial(this);
     knob->setRange(8000, 16000);
-    //knob->setTickDelta(500);
     knob->setValue(SIDSETTINGS.filter8580Curve);
     mat->addWidget(knob, 1, 1, 1, 1, Qt::AlignCenter);
     tf = new QLabel(this);
@@ -766,8 +863,12 @@ sidConfig::sidConfig(QWidget* win) :
     tf->setNum(SIDSETTINGS.filter8580Curve);
     mat->addWidget(tf, 2, 1);
     knob->setMaximumSize(tf->height(), tf->height());
-    connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setFilter8580Curve(int)));
-    connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+    connect(knob, &QDial::valueChanged,
+        [tf](int val) {
+            SIDSETTINGS.filter8580Curve = val;
+            tf->setNum(val);
+        }
+    );
 
     QGridLayout *frame = new QGridLayout();
     extraBottom()->addLayout(frame);
@@ -776,20 +877,43 @@ sidConfig::sidConfig(QWidget* win) :
     QButtonGroup* group = new QButtonGroup(this);
 
     frame->addWidget(new QLabel(tr("HVSC path:"), this), 0, 0);
-    hvscPath = new QLineEdit(this);
+    QLineEdit *hvscPath = new QLineEdit(this);
     hvscPath->setText(SIDSETTINGS.hvscPath);
     frame->addWidget(hvscPath, 0, 1);
-    connect(hvscPath, SIGNAL(editingFinished()), this, SLOT(onCmdHvscEdited()));
+    connect(hvscPath, &QLineEdit::editingFinished,
+        [hvscPath, this]() {
+            QString val = hvscPath->text();
+            if (checkPath(val))
+            {
+                SIDSETTINGS.hvscPath = val;
+            }
+        }
+    );
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select HVSC directory");
     frame->addWidget(button, 0, 2);
-    connect(button, SIGNAL(clicked()), this, SLOT(onCmdHvsc()));
+    connect(button, &QPushButton::clicked,
+        [hvscPath, this]() {
+            QString dir = QFileDialog::getExistingDirectory(this, tr("Select HVSC directory"), SIDSETTINGS.hvscPath);
+            if (!dir.isNull())
+                SIDSETTINGS.hvscPath = dir;
+
+            hvscPath->setText(SIDSETTINGS.hvscPath);
+        }
+    );
 
     frame->addWidget(new QLabel(tr("Kernal Rom:"), this));
-    kernalRomPath = new QLineEdit(this);
-    //kernalRomPath->setMaxLength(40);
+    QLineEdit *kernalRomPath = new QLineEdit(this);
     kernalRomPath->setText(SIDSETTINGS.kernalPath);
-    connect(kernalRomPath, SIGNAL(editingFinished()), this, SLOT(onCmdKernalRomEdited()));
+    connect(kernalRomPath, &QLineEdit::editingFinished,
+        [kernalRomPath, this]() {
+            QString val = kernalRomPath->text();
+            if (checkPath(val))
+            {
+                SIDSETTINGS.kernalPath = val;
+            }
+        }
+    );
     frame->addWidget(kernalRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select Kernal Rom file");
@@ -797,10 +921,17 @@ sidConfig::sidConfig(QWidget* win) :
     group->addButton(button, ID_KERNAL);
 
     frame->addWidget(new QLabel(tr("BASIC Rom:"), this));
-    basicRomPath = new QLineEdit(this);
-    //basicRomPath->setMaxLength(40);
+    QLineEdit *basicRomPath = new QLineEdit(this);
     basicRomPath->setText(SIDSETTINGS.basicPath);
-    connect(basicRomPath, SIGNAL(editingFinished()), this, SLOT(onCmdBasicRomEdited()));
+    connect(basicRomPath, &QLineEdit::editingFinished,
+        [kernalRomPath, this]() {
+            QString val = kernalRomPath->text();
+            if (checkPath(val))
+            {
+                SIDSETTINGS.basicPath = val;
+            }
+        }
+    );
     frame->addWidget(basicRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select BASIC Rom file");
@@ -808,195 +939,56 @@ sidConfig::sidConfig(QWidget* win) :
     group->addButton(button, ID_BASIC);
 
     frame->addWidget(new QLabel(tr("Chargen Rom:"), this));
-    chargenRomPath = new QLineEdit(this);
-    //chargenRomPath->setMaxLength(40);
+    QLineEdit *chargenRomPath = new QLineEdit(this);
     chargenRomPath->setText(SIDSETTINGS.chargenPath);
-    connect(chargenRomPath, SIGNAL(editingFinished()), this, SLOT(onCmdChargenRomEdited()));
+    connect(chargenRomPath, &QLineEdit::editingFinished,
+        [kernalRomPath, this]() {
+            QString val = kernalRomPath->text();
+            if (checkPath(val))
+            {
+                SIDSETTINGS.chargenPath = val;
+            }
+        }
+    );
     frame->addWidget(chargenRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip("Select Chargen Rom file");
     frame->addWidget(button);
     group->addButton(button, ID_CHARGEN);
 
-    connect(group, SIGNAL(buttonClicked(int)), this, SLOT(onCmdRom(int)));
-}
+    connect(group, &QButtonGroup::idClicked,
+        [kernalRomPath, basicRomPath, chargenRomPath, this](int val) {
+            const char* text;
+            QString* romPath;
+            QLineEdit* romEdit;
+            switch (val)
+            {
+            case ID_KERNAL:
+                text = "Kernal";
+                romPath = &SIDSETTINGS.kernalPath;
+                romEdit = kernalRomPath;
+                break;
+            case ID_BASIC:
+                text = "BASIC";
+                romPath = &SIDSETTINGS.basicPath;
+                romEdit = basicRomPath;
+                break;
+            case ID_CHARGEN:
+                text = "Chargen";
+                romPath = &SIDSETTINGS.chargenPath;
+                romEdit = chargenRomPath;
+                break;
+            default:
+                return;
+            }
 
-void sidConfig::onCmdFrequency(int val)
-{
-    switch (val)
-    {
-    case 0:
-        SIDSETTINGS.samplerate = 11025;
-        break;
-    case 1:
-        SIDSETTINGS.samplerate = 22050;
-        break;
-    case 2:
-        SIDSETTINGS.samplerate = 44100;
-        break;
-    case 3:
-        SIDSETTINGS.samplerate = 48000;
-        break;
-    }
-}
+            QString file = QFileDialog::getOpenFileName(this, QString(tr("Select %1 Rom file")).arg(text), *romPath);
+            if (!file.isNull())
+                *romPath = file;
 
-void sidConfig::onCmdChannels(int val)
-{
-    SIDSETTINGS.channels = val+1;
-}
-
-void sidConfig::onCmdSampling(int val)
-{
-    switch (val)
-    {
-    case 0:
-        SIDSETTINGS.samplingMethod = SidConfig::INTERPOLATE;
-        break;
-    case 1:
-        SIDSETTINGS.samplingMethod = SidConfig::RESAMPLE_INTERPOLATE;
-        break;
-    }
-}
-
-void sidConfig::onCmdEngine(int val)
-{
-    QComboBox *engBox = static_cast<QComboBox*>(sender());
-    SIDSETTINGS.engine = engBox->itemText(val);
-
-    /*if (!SIDSETTINGS.engine.compare(sidBackend::engines[0]))
-    {
-        _biasFrame->show();
-        _filterCurveFrame->hide();
-    }
-    else if (!SIDSETTINGS.engine.compare(sidBackend::engines[2]))
-    {
-        _biasFrame->hide();
-        _filterCurveFrame->show();
-    }
-    else
-    {
-        _biasFrame->hide();
-        _filterCurveFrame->hide();
-    }*/
-}
-
-void sidConfig::onCmdClock(int val)
-{
-    switch (val)
-    {
-    case 0:
-        SIDSETTINGS.c64Model = SidConfig::PAL;
-        break;
-    case 1:
-        SIDSETTINGS.c64Model = SidConfig::NTSC;
-        break;
-    case 2:
-        SIDSETTINGS.c64Model = SidConfig::OLD_NTSC;
-        break;
-    case 3:
-        SIDSETTINGS.c64Model = SidConfig::DREAN;
-        break;
-    }
-}
-
-void sidConfig::onCmdModel(int val)
-{
-    switch (val)
-    {
-    case 0:
-        SIDSETTINGS.sidModel = SidConfig::MOS6581;
-        break;
-    case 1:
-        SIDSETTINGS.sidModel = SidConfig::MOS8580;
-        break;
-    }
-}
-
-void sidConfig::onCmdAddress2(int val)
-{
-    SIDSETTINGS.secondSidAddress = sidAddresses[val];
-}
-
-void sidConfig::onCmdAddress3(int val)
-{
-    SIDSETTINGS.thirdSidAddress = sidAddresses[val];
-}
-
-void sidConfig::onCmdHvsc()
-{
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Select HVSC directory"), SIDSETTINGS.hvscPath);
-    if (!dir.isNull())
-        SIDSETTINGS.hvscPath = dir;
-
-    hvscPath->setText(SIDSETTINGS.hvscPath);
-}
-
-void sidConfig::onCmdRom(int val)
-{
-    const char* text;
-    QString* romPath;
-    QLineEdit* romEdit;
-    switch (val)
-    {
-    case ID_KERNAL:
-        text = "Kernal";
-        romPath = &SIDSETTINGS.kernalPath;
-        romEdit = kernalRomPath;
-        break;
-    case ID_BASIC:
-        text = "BASIC";
-        romPath = &SIDSETTINGS.basicPath;
-        romEdit = basicRomPath;
-        break;
-    case ID_CHARGEN:
-        text = "Chargen";
-        romPath = &SIDSETTINGS.chargenPath;
-        romEdit = chargenRomPath;
-        break;
-    default:
-        return;
-    }
-
-    QString file = QFileDialog::getOpenFileName(this, QString(tr("Select %1 Rom file")).arg(text), *romPath);
-    if (!file.isNull())
-        *romPath = file;
-
-    romEdit->setText(*romPath);
-}
-
-void sidConfig::onCmdForceC64Model(bool val)
-{
-    SIDSETTINGS.forceC64Model = val;
-}
-
-void sidConfig::onCmdForceSidModel(bool val)
-{
-    SIDSETTINGS.forceSidModel = val;
-}
-
-void sidConfig::onCmdFastSampling(bool val)
-{
-    SIDSETTINGS.fastSampling = val;
-}
-
-void sidConfig::onCmdFilter(bool val)
-{
-    SIDSETTINGS.filter = val;
-}
-
-void sidConfig::setBias(int val)
-{
-    SIDSETTINGS.bias = val;
-}
-
-void sidConfig::setFilter6581Curve(int val)
-{
-    SIDSETTINGS.filter6581Curve = val;
-}
-
-void sidConfig::setFilter8580Curve(int val)
-{
-    SIDSETTINGS.filter8580Curve = val;
+            romEdit->setText(*romPath);
+        }
+    );
 }
 
 bool sidConfig::checkPath(const QString& path)
@@ -1007,40 +999,4 @@ bool sidConfig::checkPath(const QString& path)
         return false;
     }
     return true;
-}
-
-void sidConfig::onCmdHvscEdited()
-{
-    QString val = hvscPath->text();
-    if (checkPath(val))
-    {
-        SIDSETTINGS.hvscPath = val;
-    }
-}
-
-void sidConfig::onCmdKernalRomEdited()
-{
-    QString val = kernalRomPath->text();
-    if (checkPath(val))
-    {
-        SIDSETTINGS.kernalPath = val;
-    }
-}
-
-void sidConfig::onCmdBasicRomEdited()
-{
-    QString val = basicRomPath->text();
-    if (checkPath(val))
-    {
-        SIDSETTINGS.basicPath = val;
-    }
-}
-
-void sidConfig::onCmdChargenRomEdited()
-{
-    QString val = chargenRomPath->text();
-    if (checkPath(val))
-    {
-        SIDSETTINGS.chargenPath = val;
-    }
 }

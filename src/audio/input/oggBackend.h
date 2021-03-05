@@ -38,8 +38,6 @@ typedef struct
 
 class oggConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     oggConfig() {}
     oggConfig(const oggConfig&);
@@ -48,9 +46,6 @@ private:
 public:
     oggConfig(QWidget* win);
     virtual ~oggConfig() {}
-
-private slots:
-    void onCmdBits(int val);
 };
 
 /*****************************************************************/

@@ -73,15 +73,9 @@ class QLineEdit;
 
 class sidConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     QVBoxLayout* _biasFrame;
     QVBoxLayout* _filterCurveFrame;
-    QLineEdit* hvscPath;
-    QLineEdit* kernalRomPath;
-    QLineEdit* basicRomPath;
-    QLineEdit* chargenRomPath;
 
 private:
     sidConfig() {}
@@ -94,29 +88,6 @@ private:
 public:
     sidConfig(QWidget* win);
     virtual ~sidConfig() {}
-
-private slots:
-    void onCmdFrequency(int val);
-    void onCmdChannels(int val);
-    void onCmdSampling(int val);
-    void onCmdEngine(int val);
-    void onCmdClock(int val);
-    void onCmdModel(int val);
-    void onCmdAddress2(int val);
-    void onCmdAddress3(int val);
-    void onCmdHvsc();
-    void onCmdRom(int val);
-    void onCmdForceSidModel(bool val);
-    void onCmdForceC64Model(bool val);
-    void onCmdFastSampling(bool val);
-    void onCmdFilter(bool val);
-    void setBias(int val);
-    void setFilter6581Curve(int val);
-    void setFilter8580Curve(int val);
-    void onCmdHvscEdited();
-    void onCmdKernalRomEdited();
-    void onCmdBasicRomEdited();
-    void onCmdChargenRomEdited();
 };
 
 /*****************************************************************/

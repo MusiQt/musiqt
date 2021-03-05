@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2017 Leandro Nini
+ *  Copyright (C) 2007-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -186,24 +186,23 @@ hvlConfig::hvlConfig(QWidget* win) :
 
     freqBox->setCurrentIndex(val);
 
-    connect(freqBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdSamplerate(int)));
-}
-
-void hvlConfig::onCmdSamplerate(int val)
-{
-    switch (val)
-    {
-    case 0:
-        HVLSETTINGS.samplerate = 11025;
-        break;
-    case 1:
-        HVLSETTINGS.samplerate = 22050;
-        break;
-    case 2:
-        HVLSETTINGS.samplerate = 44100;
-        break;
-    case 3:
-        HVLSETTINGS.samplerate = 48000;
-        break;
-    }
+    connect(freqBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            switch (val)
+            {
+            case 0:
+                HVLSETTINGS.samplerate = 11025;
+                break;
+            case 1:
+                HVLSETTINGS.samplerate = 22050;
+                break;
+            case 2:
+                HVLSETTINGS.samplerate = 44100;
+                break;
+            case 3:
+                HVLSETTINGS.samplerate = 48000;
+                break;
+            }
+        }
+    );
 }

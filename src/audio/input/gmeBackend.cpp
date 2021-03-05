@@ -301,7 +301,25 @@ gmeConfig::gmeConfig(QWidget* win) :
         break;
     }
     freqBox->setCurrentIndex(val);
-    connect(freqBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdSamplerate(int)));
+    connect(freqBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [this](int val) {
+            switch (val)
+            {
+            case 0:
+                GMESETTINGS.samplerate = 11025;
+                break;
+            case 1:
+                GMESETTINGS.samplerate = 22050;
+                break;
+            case 2:
+                GMESETTINGS.samplerate = 44100;
+                break;
+            case 3:
+                GMESETTINGS.samplerate = 48000;
+                break;
+            }
+        }
+    );
 
     {
         QVBoxLayout *equalizerBox = new QVBoxLayout();
@@ -310,7 +328,11 @@ gmeConfig::gmeConfig(QWidget* win) :
         group->setToolTip(tr("Enable equalizer"));
         group->setChecked(GMESETTINGS.equalizer);
         group->setLayout(equalizerBox);
-        connect(group, SIGNAL(toggled(bool)), this, SLOT(setEqualizer(bool)));
+        connect(group, &QGroupBox::toggled,
+            [](bool val) {
+                GMESETTINGS.equalizer = val;
+            }
+        );
 
         QGridLayout* mat = new QGridLayout();
         equalizerBox->addLayout(mat);
@@ -328,8 +350,12 @@ gmeConfig::gmeConfig(QWidget* win) :
         tf->setNum(GMESETTINGS.treble_dB);
         mat->addWidget(tf, 2, 0);
         knob->setMaximumSize(tf->height(), tf->height());
-        connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setTrebledB(int)));
-        connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+        connect(knob, &QDial::valueChanged,
+            [tf](int val) {
+                GMESETTINGS.treble_dB = val;
+                tf->setNum(val);
+            }
+        );
 
         knob = new QDial(this);
         knob->setRange(1, 16000);
@@ -342,8 +368,12 @@ gmeConfig::gmeConfig(QWidget* win) :
         tf->setNum(GMESETTINGS.bass_freq);
         mat->addWidget(tf, 2, 1);
         knob->setMaximumSize(tf->height(), tf->height());
-        connect(knob, SIGNAL(valueChanged(int)), this, SLOT(setBassFreq(int)));
-        connect(knob, SIGNAL(valueChanged(int)), tf, SLOT(setNum(int)));
+        connect(knob, &QDial::valueChanged,
+            [tf](int val) {
+                GMESETTINGS.bass_freq = val;
+                tf->setNum(val);
+            }
+        );
 
         matrix()->addWidget(group);
     }
@@ -352,72 +382,36 @@ gmeConfig::gmeConfig(QWidget* win) :
     extraBottom()->addLayout(hf);
 
     hf->addWidget(new QLabel(tr("ASMA path:"), this));
-    asmaPath = new QLineEdit(this);
+    QLineEdit *asmaPath = new QLineEdit(this);
     asmaPath->setText(GMESETTINGS.asmaPath);
     hf->addWidget(asmaPath);
-    connect(asmaPath, SIGNAL(editingFinished()), this, SLOT(onCmdAsmaEdited()));
+    connect(asmaPath, &QLineEdit::editingFinished,
+        [asmaPath, this]() {
+            QString path = asmaPath->text();
+            if (!path.isEmpty() && !QFileInfo(path).exists())
+            {
+                QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
+            }
+            else
+            {
+                GMESETTINGS.asmaPath = path;
+            }
+        }
+    );
     QPushButton* button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
     button->setToolTip(tr("Select ASMA directory"));
     hf->addWidget(button);
-    connect(button, SIGNAL(clicked()), this, SLOT(onCmdAsma()));
+    connect(button, &QPushButton::clicked,
+        [asmaPath, this]() {
+            QString dir = QFileDialog::getExistingDirectory(this, tr("Select ASMA directory"), GMESETTINGS.asmaPath);
+            if (!dir.isNull())
+                GMESETTINGS.asmaPath = dir;
+
+            asmaPath->setText(GMESETTINGS.asmaPath);
+        }
+    );
 #ifndef HAVE_STILVIEW
      asmaPath->setEnabled(false);
      button->setEnabled(false);
 #endif
-}
-
-void gmeConfig::onCmdSamplerate(int val)
-{
-    switch (val)
-    {
-    case 0:
-        GMESETTINGS.samplerate = 11025;
-        break;
-    case 1:
-        GMESETTINGS.samplerate = 22050;
-        break;
-    case 2:
-        GMESETTINGS.samplerate = 44100;
-        break;
-    case 3:
-        GMESETTINGS.samplerate = 48000;
-        break;
-    }
-}
-
-void gmeConfig::setEqualizer(bool val)
-{
-    GMESETTINGS.equalizer = val;
-}
-
-void gmeConfig::setTrebledB(int val)
-{
-    GMESETTINGS.treble_dB = val;
-}
-
-void gmeConfig::setBassFreq(int val)
-{
-    GMESETTINGS.bass_freq = val;
-}
-
-void gmeConfig::onCmdAsma()
-{
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Select ASMA directory"), GMESETTINGS.asmaPath);
-    if (!dir.isNull())
-        GMESETTINGS.asmaPath = dir;
-
-    asmaPath->setText(GMESETTINGS.asmaPath);
-}
-
-void gmeConfig::onCmdAsmaEdited()
-{
-    QString path = asmaPath->text();
-    if (!path.isEmpty() && !QFileInfo(path).exists())
-    {
-        QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
-    }
-    else
-    {
-        GMESETTINGS.asmaPath = path;
-    }
 }

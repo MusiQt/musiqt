@@ -50,8 +50,6 @@ class QLineEdit;
 
 class gmeConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     gmeConfig() {}
     gmeConfig(const gmeConfig&);
@@ -60,17 +58,6 @@ private:
 public:
     gmeConfig(QWidget* win);
     virtual ~gmeConfig() {}
-
-private:
-    QLineEdit* asmaPath;
-
-private slots:
-    void onCmdSamplerate(int val);
-    void onCmdAsma();
-    void onCmdAsmaEdited();
-    void setEqualizer(bool);
-    void setTrebledB(int);
-    void setBassFreq(int);
 };
 
 /*****************************************************************/
