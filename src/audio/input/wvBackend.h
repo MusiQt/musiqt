@@ -31,8 +31,6 @@ extern "C" {
 
 class wvConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     wvConfig() {}
     wvConfig(const wvConfig&);

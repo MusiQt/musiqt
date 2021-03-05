@@ -37,8 +37,6 @@
 
 class sndConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     sndConfig() {}
     sndConfig(const sndConfig&);

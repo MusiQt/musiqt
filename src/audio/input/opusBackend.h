@@ -38,8 +38,6 @@ typedef struct
 
 class opusConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     opusConfig() {}
     opusConfig(const opusConfig&);

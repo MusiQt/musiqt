@@ -42,8 +42,6 @@ extern "C" {
 
 class ffmpegConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     ffmpegConfig() {}
     ffmpegConfig(const ffmpegConfig&);

@@ -43,8 +43,6 @@
 
 class mpcConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     mpcConfig() {}
     mpcConfig(const mpcConfig&);

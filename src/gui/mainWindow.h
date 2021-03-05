@@ -43,15 +43,13 @@ class QToolBar;
 
 class mainWindow : public QMainWindow
 {
-    Q_OBJECT
-
 public:
     explicit mainWindow(QWidget *parent = 0);
     ~mainWindow();
 
     void init(const char* arg);
 
-public slots:
+public:
     void onMessage(QString msg);
 
 protected:
