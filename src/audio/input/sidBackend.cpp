@@ -805,21 +805,21 @@ sidConfig::sidConfig(QWidget* win) :
         }
     );
 
-    _biasFrame = new QVBoxLayout();
-    vert->addLayout(_biasFrame);
+    QVBoxLayout *biasFrame = new QVBoxLayout();
+    vert->addLayout(biasFrame);
     QLabel *label = new QLabel(tr("DAC Bias for reSID"), this);
-    _biasFrame->addWidget(label);
-    _biasFrame->setAlignment(label, Qt::AlignHCenter);
+    biasFrame->addWidget(label);
+    biasFrame->setAlignment(label, Qt::AlignHCenter);
     QDial* knob = new QDial(this);
     knob->setRange(-500, 500);
     knob->setValue(SIDSETTINGS.bias);
-    _biasFrame->addWidget(knob);
-    _biasFrame->setAlignment(knob, Qt::AlignHCenter);
+    biasFrame->addWidget(knob);
+    biasFrame->setAlignment(knob, Qt::AlignHCenter);
     QLabel *tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
     tf->setNum(SIDSETTINGS.bias);
-    _biasFrame->addWidget(tf);
+    biasFrame->addWidget(tf);
     knob->setMaximumSize(tf->height(), tf->height());
     connect(knob, &QDial::valueChanged,
         [tf](int val) {
@@ -828,11 +828,11 @@ sidConfig::sidConfig(QWidget* win) :
         }
     );
 
-    _filterCurveFrame = new QVBoxLayout();
-    vert->addLayout(_filterCurveFrame);
-    _filterCurveFrame->addWidget(new QLabel(tr("Filter curves for reSIDfp"), this));
+    QVBoxLayout *filterCurveFrame = new QVBoxLayout();
+    vert->addLayout(filterCurveFrame);
+    filterCurveFrame->addWidget(new QLabel(tr("Filter curves for reSIDfp"), this));
     QGridLayout* mat = new QGridLayout();
-    _filterCurveFrame->addLayout(mat);
+    filterCurveFrame->addLayout(mat);
     mat->addWidget(new QLabel("6581", this), 0, 0, 1, 1, Qt::AlignCenter);
     mat->addWidget(new QLabel("8580", this), 0, 1, 1, 1, Qt::AlignCenter);
 

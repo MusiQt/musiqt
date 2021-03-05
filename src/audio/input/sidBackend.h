@@ -74,10 +74,6 @@ class QLineEdit;
 class sidConfig : public configFrame
 {
 private:
-    QVBoxLayout* _biasFrame;
-    QVBoxLayout* _filterCurveFrame;
-
-private:
     sidConfig() {}
     sidConfig(const sidConfig&);
     sidConfig& operator=(const sidConfig&);
