@@ -145,6 +145,7 @@ private:
     void setDir(const QModelIndex& index);
     QString getFilter() const;
     QStringList getPattern() const;
+    void changeState();
 
 private:
     input *_input;

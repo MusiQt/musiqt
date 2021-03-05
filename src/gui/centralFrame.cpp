@@ -214,7 +214,7 @@ centralFrame::centralFrame(QWidget *parent) :
     m_slider->setTickInterval(10);
     m_slider->setTickPosition(QSlider::TicksBelow);
     m_slider->setTracking(false);
-    //m_slider->setDisabled(true); // FIXME enable only when playing seekable streams
+    m_slider->setDisabled(true);
     connect(m_slider, SIGNAL(actionTriggered(int)), this, SLOT(onSeek()));
     connect(this, SIGNAL(updateSlider(int)), m_slider, SLOT(setValue(int)));
     main->addWidget(m_slider);
@@ -266,6 +266,25 @@ void centralFrame::createHomeMenu()
         delete ic;
     }
     connect(homeGroup, SIGNAL(triggered(QAction*)), this, SLOT(onHome(QAction*)));
+}
+
+void centralFrame::changeState()
+{
+    emit stateChanged(_audio->state());
+    switch (_audio->state())
+    {
+    case state_t::STOP:
+        playing = false;
+        m_slider->setDisabled(true);
+        break;
+    case state_t::PLAY:
+        playing = true;
+        m_slider->setDisabled(false); // FIXME
+        break;
+    case state_t::PAUSE:
+        m_slider->setDisabled(true);
+        break;
+    }
 }
 
 void centralFrame::onDirSelected(const QModelIndex& idx)
@@ -468,14 +487,13 @@ void centralFrame::onCmdPlayPauseSong()
 
         if (_audio->play(_input))
         {
-            playing = true;
             QFileInfo fileInfo(songLoaded);
             gotoDir(fileInfo.absolutePath());
             playDir = fsm->fileName(_dirlist->currentIndex());
         }
     }
 
-    emit stateChanged(_audio->state());
+    changeState();
 }
 
 void centralFrame::onCmdStopSong()
@@ -483,10 +501,9 @@ void centralFrame::onCmdStopSong()
     qDebug() << "centralFrame::onCmdStopSong";
     if (_audio->stop())
     {
-        playing = false;
         emit updateTime(0);
         emit updateSlider(0);
-        emit stateChanged(_audio->state());
+        changeState();
         QModelIndex curr = _dirlist->currentIndex();
         if (playDir.compare(fsm->fileName(curr)))
         {
@@ -593,10 +610,9 @@ void centralFrame::onCmdSongLoaded(input* res)
     }
     else
     {
-        playing = false;
         playDir = QString();
         emit setInfo(nullptr);
-        emit stateChanged(_audio->state());
+        changeState();
         qWarning() << "Error loading song";
     }
 
