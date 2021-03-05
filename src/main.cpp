@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 #endif
 
     mainWindow window;
-    QObject::connect(&app, SIGNAL(sendMessage(QString)), &window, SLOT(onMessage(QString)));
+    QObject::connect(&app, &singleApp::sendMessage, &window, &mainWindow::onMessage);
 
     window.show();
     app.processEvents();

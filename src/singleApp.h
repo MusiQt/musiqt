@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ private:
 private:
     singleApp();
 
-private slots:
     void acceptMessage();
 
 signals:
