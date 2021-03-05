@@ -423,7 +423,7 @@ openmptConfig::openmptConfig(QWidget* win) :
     tf->setNum(MPTSETTINGS.masterGain);
     mat->addWidget(tf, 2, 0);
     connect(knob, &QDial::valueChanged,
-        [](int val) {
+        [tf](int val) {
             MPTSETTINGS.masterGain = val;
             tf->setNum(val);
         }
@@ -442,7 +442,7 @@ openmptConfig::openmptConfig(QWidget* win) :
     tf->setNum(MPTSETTINGS.stereoSeparation);
     mat->addWidget(tf, 2, 1);
     connect(knob, &QDial::valueChanged,
-        [](int val) {
+        [tf](int val) {
             MPTSETTINGS.stereoSeparation = val;
             tf->setNum(val);
         }
@@ -461,7 +461,7 @@ openmptConfig::openmptConfig(QWidget* win) :
     tf->setNum(MPTSETTINGS.volumeRamping);
     mat->addWidget(tf, 2, 2);
     connect(knob, &QDial::valueChanged,
-        [](int val) {
+        [tf](int val) {
             MPTSETTINGS.volumeRamping = val;
             tf->setNum(val);
         }
