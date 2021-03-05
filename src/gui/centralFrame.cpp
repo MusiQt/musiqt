@@ -117,14 +117,14 @@ centralFrame::centralFrame(QWidget *parent) :
     selectionModel = _playlist->selectionModel();
     connect(selectionModel, &QItemSelectionModel::currentRowChanged, this, &centralFrame::onCmdSongSelected);
     connect(_playlist, &playlist::doubleClicked, this, &centralFrame::onCmdPlayPauseSong);
-    connect(_playlist, &playlist::changed, this, &updateSongs);
+    connect(_playlist, &playlist::changed, this, &centralFrame::updateSongs);
 
     _playlist->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(_playlist, &playlist::customContextMenuRequested, this, &onRgtClkPlayList);
+    connect(_playlist, &playlist::customContextMenuRequested, this, &centralFrame::onRgtClkPlayList);
 
     _bookmarkList = new bookmark(this);
     _bookmarkList->setAlternatingRowColors(true);
-    connect(_bookmarkList, &bookmark::currentTextChanged, this, &gotoDir);
+    connect(_bookmarkList, &bookmark::currentTextChanged, this, &centralFrame::gotoDir);
 
     // left view
     QStackedWidget *stackedWidget = new QStackedWidget(this);
@@ -162,18 +162,18 @@ centralFrame::centralFrame(QWidget *parent) :
         _editMode->setStatusTip(tr("Edit playlist"));
         _editMode->setCheckable(true);
         buttons->addWidget(_editMode);
-        connect(_editMode, &QPushButton::clicked, this, &onCmdPlEdit);
+        connect(_editMode, &QPushButton::clicked, this, &centralFrame::onCmdPlEdit);
         QPushButton *b1 = new QPushButton(this);
         b1->setIcon(GET_ICON(icon_documentsave));
         b1->setToolTip(tr("Save"));
         b1->setStatusTip(tr("Save playlist"));
-        connect(b1, &QPushButton::clicked, this, &onCmdPlSave);
+        connect(b1, &QPushButton::clicked, this, &centralFrame::onCmdPlSave);
         buttons->addWidget(b1);
         b1 = new QPushButton(this);
         b1->setIcon(GET_ICON(icon_currentplaylist));
         b1->setToolTip(tr("Current playlist"));
         b1->setStatusTip(tr("Return to current playlist"));
-        connect(b1, &QPushButton::clicked, this, &onCmdCurrentDir);
+        connect(b1, &QPushButton::clicked, this, &centralFrame::onCmdCurrentDir);
         buttons->addWidget(b1);
         m_home = new QPushButton(this);
         m_home->setIcon(GET_ICON(icon_gohome));
@@ -212,7 +212,7 @@ centralFrame::centralFrame(QWidget *parent) :
     m_slider->setTracking(false);
     m_slider->setDisabled(true);
     connect(m_slider, &QSlider::actionTriggered, this, &centralFrame::onSeek);
-    connect(this, &updateSlider, m_slider, &QSlider::setValue);
+    connect(this, &centralFrame::updateSlider, m_slider, &QSlider::setValue);
     main->addWidget(m_slider);
     main->addWidget(cFrame);
 }
@@ -261,7 +261,7 @@ void centralFrame::createHomeMenu()
 
         delete ic;
     }
-    connect(homeGroup, &QActionGroup::triggered, this, &onHome);
+    connect(homeGroup, &QActionGroup::triggered, this, &centralFrame::onHome);
 }
 
 void centralFrame::changeState()
@@ -561,7 +561,7 @@ void centralFrame::load(const QString& filename)
         return;
 
     loadThread* loader = new loadThread(ib, filename);
-    connect(loader, &loadThread::loaded, this, &onCmdSongLoaded);
+    connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
     connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
 
     loader->start();
@@ -795,17 +795,17 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     asc->setCheckable(true);
     asc->setStatusTip(tr("Sort ascending"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Ascending) asc->setChecked(true);
-    connect(asc, &QAction::triggered, this, &sortAsc);
+    connect(asc, &QAction::triggered, this, &centralFrame::sortAsc);
     QAction* desc = new QAction(tr("Sort descending"), &pane);
     desc->setCheckable(true);
     desc->setStatusTip(tr("Sort descending"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Descending) desc->setChecked(true);
-    connect(desc, &QAction::triggered, this, &sortDesc);
+    connect(desc, &QAction::triggered, this, &centralFrame::sortDesc);
     QAction* rnd = new QAction(tr("Shuffle"), &pane);
     rnd->setCheckable(true);
     rnd->setStatusTip(tr("Sort randomly"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Random) rnd->setChecked(true);
-    connect(rnd, &QAction::triggered, this, &shuffle);
+    connect(rnd, &QAction::triggered, this, &centralFrame::shuffle);
 
     QActionGroup *radioGroup = new QActionGroup(&pane);
     radioGroup->addAction(asc);
