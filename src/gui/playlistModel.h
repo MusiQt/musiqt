@@ -72,9 +72,9 @@ public:
 
     void append(QString data)
     {
-        beginInsertRows(QModelIndex(), stringList().size(), stringList().size());
-        stringList().append(data);
-        endInsertRows();
+        const int rows = rowCount();
+        insertRow(rows);
+        setData(index(rows, 0), data);
     }
 
     void load(const QString& path)
@@ -109,12 +109,12 @@ public:
         else if (parent.isValid())
             beginRow = parent.row();
         else
-            beginRow = rowCount(QModelIndex());
+            beginRow = rowCount();
 
         QList<QUrl> urlList = data->urls();
         int rows = urlList.size();
 
-        insertRows(beginRow, rows, QModelIndex());
+        insertRows(beginRow, rows);
 
         for (auto&& urlItem : urlList)
         {
@@ -122,8 +122,7 @@ public:
             if (QFileInfo(url).isFile())
             {
                 qDebug() << "adding url " << url;
-                QModelIndex idx = index(beginRow, 0, QModelIndex());
-                setData(idx, url);
+                setData(index(beginRow, 0), url);
                 beginRow++;
             }
         }
