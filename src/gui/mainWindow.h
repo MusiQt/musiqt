@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2017 Leandro Nini
+ *  Copyright (C) 2013-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,7 +54,10 @@ public:
 public slots:
     void onMessage(QString msg);
 
-private slots:
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
+
+private:
     void onCompact();
     void onPlaymode();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
@@ -74,14 +77,8 @@ private slots:
     void onCmdVol(int vol);
     void onPrevSubtune();
     void onNextSubtune();
-
-    //void setSubtune();
     void onStatusbarChanged(const QString &message);
 
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
-
-private:
     void createTrayIcon();
     void createActions();
     void setPlayMode(QAction *action, bool mode);

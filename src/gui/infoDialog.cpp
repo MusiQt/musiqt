@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2019 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ infoDialog::infoDialog(QWidget* w) :
 
     QPushButton* b = new QPushButton(GET_ICON(icon_dialogcancel), tr("&Close"), this);
     main->addWidget(b);
-    connect(b, SIGNAL(clicked()), this, SLOT(close()));
+    connect(b, &QPushButton::clicked, this, &infoDialog::close);
 
     layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
@@ -219,7 +219,17 @@ void infoDialog::setInfo(const metaData* mtd)
             qDebug() << "Trying to load album art: " << file;
             imageLoader* loader = new imageLoader(file);
             loader->setAutoDelete(true);
-            connect(loader, SIGNAL(loaded(const QImage*)), this, SLOT(onImgLoaded(const QImage*)));
+            connect(loader, &imageLoader::loaded,
+                [this](const QImage* img) {
+                    if (img != nullptr)
+                    {
+                        imgFrame->setPixmap(QPixmap::fromImage(*img));
+                        delete img;
+                    }
+
+                    QApplication::restoreOverrideCursor();
+                }
+            );
             QThreadPool::globalInstance()->start(loader);
             QApplication::setOverrideCursor(Qt::WaitCursor); // setCursor(Qt::WaitCursor); ???
         }
@@ -243,15 +253,4 @@ void infoDialog::setInfo(const metaData* mtd)
 
     gLayout->update();
     adjustSize();
-}
-
-void infoDialog::onImgLoaded(const QImage* img)
-{
-    if (img != nullptr)
-    {
-        imgFrame->setPixmap(QPixmap::fromImage(*img));
-        delete img;
-    }
-
-    QApplication::restoreOverrideCursor();
 }

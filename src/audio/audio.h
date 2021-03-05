@@ -103,10 +103,6 @@ private:
 
     void setCards();
 
-private slots:
-    void onCmdCard(const QString &);
-    void onCmdBits(int val);
-
 public:
     audioConfig(QWidget* win);
     virtual ~audioConfig() {}

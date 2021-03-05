@@ -115,7 +115,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
     QPushButton *close = buttonBox->addButton(QDialogButtonBox::Close);
-    connect(close, SIGNAL(clicked()), this, SLOT(close()));
+    connect(close, &QPushButton::clicked, this, &aboutDialog::close);
 
     QLabel *iconLabel = new QLabel(this);
     iconLabel->setPixmap(QPixmap(":/icons/drf.gif"));

@@ -43,7 +43,6 @@ private:
     settingsWindow(const settingsWindow&);
     settingsWindow& operator=(const settingsWindow&);
 
-private slots:
     void onAccept();
     void onReject();
 

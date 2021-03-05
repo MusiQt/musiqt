@@ -70,10 +70,10 @@ centralFrame::centralFrame(QWidget *parent) :
     preloaded(QString()),
     playDir(QString())
 {
-    //connect(_audio, SIGNAL(outputError()), this, SLOT(onCmdStopSong()));
-    connect(_audio, SIGNAL(updateTime()),  this, SLOT(onUpdateTime()));
-    connect(_audio, SIGNAL(songEnded()),   this, SLOT(songEnded()));
-    connect(_audio, SIGNAL(preloadSong()), this, SLOT(preloadSong()));
+    //connect(_audio, &audio::outputError, this, &onCmdStopSong);
+    connect(_audio, &audio::updateTime,  this, &centralFrame::onUpdateTime);
+    connect(_audio, &audio::songEnded,   this, &centralFrame::songEnded);
+    connect(_audio, &audio::preloadSong, this, &centralFrame::preloadSong);
 
     // dir view
     fsm = new QFileSystemModel(this);
@@ -94,10 +94,8 @@ centralFrame::centralFrame(QWidget *parent) :
     _dirlist->header()->setStretchLastSection(false);
     QItemSelectionModel* selectionModel = _dirlist->selectionModel();
 
-    connect(selectionModel, SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)),
-            this, SLOT(onDirSelected(const QModelIndex&)));
-    connect(_dirlist, SIGNAL(customContextMenuRequested(const QPoint&)),
-            this, SLOT(onRgtClkDirList(const QPoint&)));
+    connect(selectionModel, &QItemSelectionModel::currentChanged, this, &centralFrame::onDirSelected);
+    connect(_dirlist, &QTreeView::customContextMenuRequested, this, &centralFrame::onRgtClkDirList);
 
     // _playlist
     _playlist = new playlist(this);
@@ -117,25 +115,23 @@ centralFrame::centralFrame(QWidget *parent) :
     _proxyModel->setFilterRole(Qt::UserRole+1);
 
     selectionModel = _playlist->selectionModel();
-    connect(selectionModel, SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)),
-            this, SLOT(onCmdSongSelected(const QModelIndex&)));
-    connect(_playlist, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onCmdPlayPauseSong()));
-    connect(_playlist, SIGNAL(changed()), this, SLOT(updateSongs()));
+    connect(selectionModel, &QItemSelectionModel::currentRowChanged, this, &centralFrame::onCmdSongSelected);
+    connect(_playlist, &playlist::doubleClicked, this, &centralFrame::onCmdPlayPauseSong);
+    connect(_playlist, &playlist::changed, this, &updateSongs);
 
     _playlist->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(_playlist, SIGNAL(customContextMenuRequested(const QPoint&)),
-            this, SLOT(onRgtClkPlayList(const QPoint&)));
+    connect(_playlist, &playlist::customContextMenuRequested, this, &onRgtClkPlayList);
 
     _bookmarkList = new bookmark(this);
     _bookmarkList->setAlternatingRowColors(true);
-        connect(_bookmarkList, SIGNAL(currentTextChanged(const QString&)), this, SLOT(gotoDir(const QString&)));
+    connect(_bookmarkList, &bookmark::currentTextChanged, this, &gotoDir);
 
     // left view
     QStackedWidget *stackedWidget = new QStackedWidget(this);
     stackedWidget->addWidget(_playlist);
     stackedWidget->addWidget(_bookmarkList);
     QButtonGroup *buttonGroup = new QButtonGroup(this);
-    connect(buttonGroup, SIGNAL(buttonClicked(int)), stackedWidget, SLOT(setCurrentIndex(int)));
+    connect(buttonGroup, &QButtonGroup::idClicked, stackedWidget, &QStackedWidget::setCurrentIndex);
 
     QWidget *w = new QWidget(this);
     {
@@ -166,18 +162,18 @@ centralFrame::centralFrame(QWidget *parent) :
         _editMode->setStatusTip(tr("Edit playlist"));
         _editMode->setCheckable(true);
         buttons->addWidget(_editMode);
-        connect(_editMode, SIGNAL(clicked(bool)), this, SLOT(onCmdPlEdit(bool)));
+        connect(_editMode, &QPushButton::clicked, this, &onCmdPlEdit);
         QPushButton *b1 = new QPushButton(this);
         b1->setIcon(GET_ICON(icon_documentsave));
         b1->setToolTip(tr("Save"));
         b1->setStatusTip(tr("Save playlist"));
-        connect(b1, SIGNAL(clicked()), this, SLOT(onCmdPlSave()));
+        connect(b1, &QPushButton::clicked, this, &onCmdPlSave);
         buttons->addWidget(b1);
         b1 = new QPushButton(this);
         b1->setIcon(GET_ICON(icon_currentplaylist));
         b1->setToolTip(tr("Current playlist"));
         b1->setStatusTip(tr("Return to current playlist"));
-        connect(b1, SIGNAL(clicked()), this, SLOT(onCmdCurrentDir()));
+        connect(b1, &QPushButton::clicked, this, &onCmdCurrentDir);
         buttons->addWidget(b1);
         m_home = new QPushButton(this);
         m_home->setIcon(GET_ICON(icon_gohome));
@@ -215,8 +211,8 @@ centralFrame::centralFrame(QWidget *parent) :
     m_slider->setTickPosition(QSlider::TicksBelow);
     m_slider->setTracking(false);
     m_slider->setDisabled(true);
-    connect(m_slider, SIGNAL(actionTriggered(int)), this, SLOT(onSeek()));
-    connect(this, SIGNAL(updateSlider(int)), m_slider, SLOT(setValue(int)));
+    connect(m_slider, &QSlider::actionTriggered, this, &centralFrame::onSeek);
+    connect(this, &updateSlider, m_slider, &QSlider::setValue);
     main->addWidget(m_slider);
     main->addWidget(cFrame);
 }
@@ -265,7 +261,7 @@ void centralFrame::createHomeMenu()
 
         delete ic;
     }
-    connect(homeGroup, SIGNAL(triggered(QAction*)), this, SLOT(onHome(QAction*)));
+    connect(homeGroup, &QActionGroup::triggered, this, &onHome);
 }
 
 void centralFrame::changeState()
@@ -565,8 +561,8 @@ void centralFrame::load(const QString& filename)
         return;
 
     loadThread* loader = new loadThread(ib, filename);
-    connect(loader, SIGNAL(loaded(input*)), this, SLOT(onCmdSongLoaded(input*)));
-    connect(loader, SIGNAL(finished()), loader, SLOT(deleteLater()));
+    connect(loader, &loadThread::loaded, this, &onCmdSongLoaded);
+    connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
 
     loader->start();
 }
@@ -760,12 +756,12 @@ void centralFrame::onRgtClkDirList(const QPoint& pos)
 
     if ((_editMode->isChecked()) && (!fsm->isDir(item)))
     {
-        QAction *additem = pane.addAction(GET_ICON(icon_listadd), tr("Add to playlist"), this, SLOT(onCmdAdd()));
+        QAction *additem = pane.addAction(GET_ICON(icon_listadd), tr("Add to playlist"), this, &centralFrame::onCmdAdd);
         additem->setStatusTip(tr("Add song to the playlist"));
     }
     else
     {
-        QAction *additem = pane.addAction(GET_ICON(icon_bookmark), tr("Add to bookmarks"), this, SLOT(onCmdBmAdd()));
+        QAction *additem = pane.addAction(GET_ICON(icon_bookmark), tr("Add to bookmarks"), this, &centralFrame::onCmdBmAdd);
         additem->setStatusTip(tr("Add directory to the bookmarks"));
     }
 
@@ -790,7 +786,7 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
         wa->setDefaultWidget(label);
         pane.addAction(wa);
         pane.addSeparator();
-        QAction *delitem = pane.addAction(GET_ICON(icon_listremove), tr("Remove item"), this, SLOT(onCmdDel()));
+        QAction *delitem = pane.addAction(GET_ICON(icon_listremove), tr("Remove item"), this, &centralFrame::onCmdDel);
         delitem->setStatusTip(tr("Remove selected item from playlist"));
         pane.addSeparator();
     }
@@ -799,17 +795,17 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     asc->setCheckable(true);
     asc->setStatusTip(tr("Sort ascending"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Ascending) asc->setChecked(true);
-    connect(asc, SIGNAL(triggered()), this, SLOT(sortAsc()));
+    connect(asc, &QAction::triggered, this, &sortAsc);
     QAction* desc = new QAction(tr("Sort descending"), &pane);
     desc->setCheckable(true);
     desc->setStatusTip(tr("Sort descending"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Descending) desc->setChecked(true);
-    connect(desc, SIGNAL(triggered()), this, SLOT(sortDesc()));
+    connect(desc, &QAction::triggered, this, &sortDesc);
     QAction* rnd = new QAction(tr("Shuffle"), &pane);
     rnd->setCheckable(true);
     rnd->setStatusTip(tr("Sort randomly"));
     if (_proxyModel->getMode() == proxymodel::sortMode::Random) rnd->setChecked(true);
-    connect(rnd, SIGNAL(triggered()), this, SLOT(shuffle()));
+    connect(rnd, &QAction::triggered, this, &shuffle);
 
     QActionGroup *radioGroup = new QActionGroup(&pane);
     radioGroup->addAction(asc);
@@ -956,20 +952,21 @@ void centralFrame::updateSongs()
 void centralFrame::setDir(const QModelIndex& index)
 {
     qDebug("centralFrame::setDir");
-    connect(fsm, SIGNAL(directoryLoaded(const QString &)), this, SLOT(dirLoaded(const QString &)));
+    QMetaObject::Connection connection = connect(
+        fsm, &QFileSystemModel::directoryLoaded,
+        [connection, this](const QString &path) {
+            qDebug() << "dirLoaded: " << path;
+            if (path.compare(fsm->fileInfo(_dirlist->currentIndex()).absolutePath()) == 0)
+            {
+                qDebug() << "scrollTo" << path;
+                QObject::disconnect(connection);
+                QTimer::singleShot(50, [this](){_dirlist->scrollTo(_dirlist->currentIndex());});
+            }
+        }
+    );
+
     _dirlist->setCurrentIndex(index);
     _dirlist->scrollTo(index);
-}
-
-void centralFrame::dirLoaded(const QString &path)
-{
-    qDebug() << "dirLoaded: " << path;
-    if (path.compare(fsm->fileInfo(_dirlist->currentIndex()).absolutePath()) == 0)
-    {
-        qDebug() << "scrollTo" << path;
-        fsm->disconnect(SIGNAL(directoryLoaded(const QString &)));
-        QTimer::singleShot(50, [this](){_dirlist->scrollTo(_dirlist->currentIndex());});
-    }
 }
 
 void centralFrame::init()

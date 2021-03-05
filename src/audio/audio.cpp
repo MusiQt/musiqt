@@ -48,7 +48,7 @@ audio::audio() :
     _volume = settings.value("Audio Settings/volume", 50).toInt();
 
     audioOutput = new qaudioBackend();
-    connect(audioOutput, SIGNAL(songEnded()), this, SIGNAL(songEnded()));
+    connect(audioOutput, &qaudioBackend::songEnded, this, &audio::songEnded);
 }
 
 audio::~audio()
@@ -110,9 +110,9 @@ bool audio::play(input* i)
 
     qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << sampleTypeString(sampleType);
     iw = new InputWrapper(i);
-    connect(iw, SIGNAL(switchSong()), this, SIGNAL(songEnded()));
-    connect(iw, SIGNAL(updateTime()), this, SIGNAL(updateTime()));
-    connect(iw, SIGNAL(preloadSong()), this, SIGNAL(preloadSong()));
+    connect(iw, &InputWrapper::switchSong,  this, &audio::songEnded);
+    connect(iw, &InputWrapper::updateTime,  this, &audio::updateTime);
+    connect(iw, &InputWrapper::preloadSong, this, &audio::preloadSong);
     size_t bufferSize = audioOutput->open(selectedCard, sampleRate, i->channels(), sampleType, iw);
     if (!bufferSize)
         return false;
@@ -208,7 +208,15 @@ audioConfig::audioConfig(QWidget* win) :
             cardList->setCurrentIndex(val);
     }
 
-    connect(cardList, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCmdCard(const QString &)));
+    connect(cardList, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [cardList, this](int val) {
+            QString card = cardList->itemText(val);
+
+            qDebug() << "onCmdCard" << card;
+
+            SETTINGS->_card = card;
+        }
+    );
 
     matrix()->addWidget(new QLabel(tr("Default bitdepth"), this));
     QComboBox *bitBox = new QComboBox(this);
@@ -234,25 +242,17 @@ audioConfig::audioConfig(QWidget* win) :
         bitBox->setCurrentIndex(val);
     }
 
-    connect(bitBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCmdBits(int)));
-}
-
-void audioConfig::onCmdCard(const QString &card)
-{
-    qDebug() << "onCmdCard" << card;
-
-    SETTINGS->_card = card;
-}
-
-void audioConfig::onCmdBits(int val)
-{
-    switch (val)
-    {
-    case 0:
-        SETTINGS->_bits = 8;
-        break;
-    case 1:
-        SETTINGS->_bits = 16;
-        break;
-    }
+    connect(bitBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [this](int val) {
+            switch (val)
+            {
+            case 0:
+                SETTINGS->_bits = 8;
+                break;
+            case 1:
+                SETTINGS->_bits = 16;
+                break;
+            }
+        }
+    );
 }

@@ -149,7 +149,7 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
         return 0;
     }
 
-    connect(audioOutput, SIGNAL(stateChanged(QAudio::State)), this, SLOT(onStateChange(QAudio::State)));
+    connect(audioOutput, &AudioOutputWrapper::stateChanged, this, &qaudioBackend::onStateChange);
 
     device->open(QIODevice::ReadOnly);
     QMetaObject::invokeMethod(audioOutput, "start", Q_ARG(QIODevice*, device));

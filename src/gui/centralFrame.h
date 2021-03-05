@@ -108,16 +108,13 @@ public slots:
     void onCmdStopSong();
     void onCmdPrevSong();
     void onCmdNextSong();
-    void onCmdPlEdit(bool);
-    void onCmdPlSave();
 
     void setFile(const QString& file, const bool play);
 
-    void sortAsc();
-    void sortDesc();
-    void shuffle();
+private:
+    void onCmdPlEdit(bool);
+    void onCmdPlSave();
 
-private slots:
     void onDirSelected(const QModelIndex&);
     void onHome(QAction* action);
     void onCmdCurrentDir();
@@ -136,9 +133,6 @@ private slots:
     void updateSongs();
     void onSeek();
 
-    void dirLoaded(const QString &);
-
-private:
     void createHomeMenu();
     void load(const QString& filename);
     void onCmdChangeSong(dir_t);
@@ -146,6 +140,10 @@ private:
     QString getFilter() const;
     QStringList getPattern() const;
     void changeState();
+
+    void sortAsc();
+    void sortDesc();
+    void shuffle();
 
 private:
     input *_input;

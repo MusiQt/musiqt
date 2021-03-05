@@ -61,7 +61,7 @@ mainWindow::mainWindow(QWidget *parent) :
 
     //setAttribute(Qt::WA_AlwaysShowToolTips);
     statusBar()->showMessage(PACKAGE_STRING);
-    connect(statusBar(), SIGNAL(messageChanged(const QString&)), this, SLOT(onStatusbarChanged(const QString&)));
+    connect(statusBar(), &QStatusBar::messageChanged, this, &mainWindow::onStatusbarChanged);
 
     QToolButton *about = new QToolButton();
     about->setAutoRaise(true);
@@ -76,16 +76,16 @@ mainWindow::mainWindow(QWidget *parent) :
     cFrame = new centralFrame(this);
     setCentralWidget(cFrame);
 
-    connect(playAction, SIGNAL(triggered()), cFrame, SLOT(onCmdPlayPauseSong()));
-    connect(stopAction, SIGNAL(triggered()), cFrame, SLOT(onCmdStopSong()));
-    connect(prevAction, SIGNAL(triggered()), cFrame, SLOT(onCmdPrevSong()));
-    connect(nextAction, SIGNAL(triggered()), cFrame, SLOT(onCmdNextSong()));
+    connect(playAction, &QAction::triggered, cFrame, &centralFrame::onCmdPlayPauseSong);
+    connect(stopAction, &QAction::triggered, cFrame, &centralFrame::onCmdStopSong);
+    connect(prevAction, &QAction::triggered, cFrame, &centralFrame::onCmdPrevSong);
+    connect(nextAction, &QAction::triggered, cFrame, &centralFrame::onCmdNextSong);
 
-    connect(cFrame, SIGNAL(updateTime(int)), this, SLOT(updateTime(int)));
-    connect(cFrame, SIGNAL(stateChanged(state_t)), this, SLOT(setPlayButton(state_t)));
-    connect(cFrame, SIGNAL(setDisplay(input*)), this, SLOT(setDisplay(input*)));
-    connect(cFrame, SIGNAL(clearDisplay(bool)), this, SLOT(clearDisplay(bool)));
-    connect(cFrame, SIGNAL(setInfo(const metaData*)), this, SLOT(setInfo(const metaData*)));
+    connect(cFrame, &centralFrame::updateTime,   this, &mainWindow::updateTime);
+    connect(cFrame, &centralFrame::stateChanged, this, &mainWindow::setPlayButton);
+    connect(cFrame, &centralFrame::setDisplay,   this, &mainWindow::setDisplay);
+    connect(cFrame, &centralFrame::clearDisplay, this, &mainWindow::clearDisplay);
+    connect(cFrame, &centralFrame::setInfo,      this, &mainWindow::setInfo);
 
     addToolBar(createControlBar());
     addToolBarBreak();
@@ -99,8 +99,7 @@ mainWindow::mainWindow(QWidget *parent) :
     {
         createTrayIcon();
 
-        connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-                this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+        connect(trayIcon, &QSystemTrayIcon::activated, this, &mainWindow::iconActivated);
 
         trayIcon->setIcon(GET_ICON(icon_logo32));
         trayIcon->setToolTip(PACKAGE_STRING);
@@ -171,12 +170,12 @@ QToolBar *mainWindow::createControlBar()
     QAction *act = controlBar->addAction(GET_ICON(icon_viewcompact), tr("Compact"));
     act->setToolTip(tr("Compact"));
     act->setStatusTip(tr("Switch to compact view"));
-    connect(act, SIGNAL(triggered()), this, SLOT(onCompact()));
+    connect(act, &QAction::triggered, this, &mainWindow::onCompact);
 
     act = controlBar->addAction(GET_ICON(icon_preferencesdesktop), tr("Settings"));
     act->setToolTip(tr("Settings"));
     act->setStatusTip(tr("Program settings"));
-    connect(act, SIGNAL(triggered()), this, SLOT(onConfig()));
+    connect(act, &QAction::triggered, this, &mainWindow::onConfig);
 
     controlBar->setMovable(false);
 
@@ -188,18 +187,18 @@ QToolBar *mainWindow::createSecondaryBar()
     QAction *prevtune = new QAction(GET_ICON(icon_goprevious), tr("Previous"), this);
     prevtune->setToolTip(tr("Previous"));
     prevtune->setStatusTip(tr("Go to previous subtune"));
-    connect(prevtune, SIGNAL(triggered()), this, SLOT(onPrevSubtune()));
+    connect(prevtune, &QAction::triggered, this, &mainWindow::onPrevSubtune);
 
     QAction *nexttune = new QAction(GET_ICON(icon_gonext), tr("Next"), this);
     nexttune->setToolTip(tr("Next"));
     nexttune->setStatusTip(tr("Go to next subtune"));
-    connect(nexttune, SIGNAL(triggered()), this, SLOT(onNextSubtune()));
+    connect(nexttune, &QAction::triggered, this, &mainWindow::onNextSubtune);
 
     QAction *playlist = new QAction(GET_ICON(icon_playlist), tr("Playlist"), this);
     const bool playMode = settings.value("General Settings/playlist mode", true).toBool();
     cFrame->setPlayMode(playMode);
     setPlayMode(playlist, playMode);
-    connect(playlist, SIGNAL(triggered()), this, SLOT(onPlaymode()));
+    connect(playlist, &QAction::triggered, this, &mainWindow::onPlaymode);
 
     subtunes = new QLabel(this);
     subtunes->setFrameStyle(QFrame::Panel|QFrame::Sunken);
@@ -210,7 +209,7 @@ QToolBar *mainWindow::createSecondaryBar()
     songs->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     songs->setText("00/00");
     songs->setStatusTip(tr("Songs"));
-    connect(cFrame, SIGNAL(songUpdated(const QString&)), songs, SLOT(setText(const QString&)));
+    connect(cFrame, &centralFrame::songUpdated, songs, &QLabel::setText);
 
     led = new QLabel(this);
     led->setPixmap(QPixmap(ledRed));
@@ -224,7 +223,7 @@ QToolBar *mainWindow::createSecondaryBar()
     volume->setRange(0, 100);
     volume->setStatusTip(tr("Volume"));
     volume->setValue(cFrame->volume());
-    connect(volume, SIGNAL(valueChanged(int)), this, SLOT(onCmdVol(int)));
+    connect(volume, &QDial::valueChanged, this, &mainWindow::onCmdVol);
 
     QToolBar *secondaryBar = new QToolBar("secondaryBar", this);
     secondaryBar->addAction(prevtune);
@@ -289,7 +288,7 @@ void mainWindow::createActions()
     aboutAction = new QAction(GET_ICON(icon_logo16), tr("&About"), this);
     aboutAction->setToolTip(tr("About"));
     aboutAction->setStatusTip(tr("About"));
-    connect(aboutAction, SIGNAL(triggered()), this, SLOT(onAbout()));
+    connect(aboutAction, &QAction::triggered, this, &mainWindow::onAbout);
 
     prevAction = new QAction(GET_ICON(icon_mediaskipbackward), tr("P&revious"), this);
     prevAction->setToolTip(tr("Previous"));
@@ -310,12 +309,12 @@ void mainWindow::createActions()
     infoAction = new QAction(GET_ICON(icon_helpabout), tr("&Info"), this);
     infoAction->setToolTip(tr("Info"));
     infoAction->setStatusTip(tr("Song info"));
-    connect(infoAction, SIGNAL(triggered()), this, SLOT(onInfo()));
+    connect(infoAction, &QAction::triggered, this, &mainWindow::onInfo);
 
     quitAction = new QAction(GET_ICON(icon_applicationexit), tr("&Quit"), this);
     quitAction->setToolTip(tr("Exit"));
     quitAction->setStatusTip(tr("Exit"));
-    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(quitAction, &QAction::triggered, qApp, &QApplication::quit);
 }
 
 void mainWindow::createTrayIcon()
@@ -381,7 +380,7 @@ void mainWindow::onConfig()
 {
     settingsWindow *config = new settingsWindow(this);
     config->setAttribute(Qt::WA_DeleteOnClose);
-    connect(config, SIGNAL(finished(int)), this, SLOT(onCloseConfig(int)));
+    connect(config, &settingsWindow::finished, this, &mainWindow::onCloseConfig);
     config->open();
 }
 
@@ -408,7 +407,7 @@ void mainWindow::onInfo()
     _infoDialog = new infoDialog(this);
     _infoDialog->setInfo(cFrame->getMetaData());
     _infoDialog->setAttribute(Qt::WA_QuitOnClose, false);
-    connect(_infoDialog, SIGNAL(finished(int)), this, SLOT(onCloseInfo()));
+    connect(_infoDialog, &infoDialog::finished, this, &mainWindow::onCloseInfo);
     _infoDialog->show();
 }
 

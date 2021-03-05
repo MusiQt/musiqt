@@ -54,7 +54,7 @@ private:
 signals:
     void songEnded();
 
-public slots:
+private:
     void onStateChange(QAudio::State newState);
 
 public:

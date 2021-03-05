@@ -59,7 +59,7 @@ settingsWindow::settingsWindow(QWidget* win) :
     horizontal->addWidget(switcher);
 
     QButtonGroup *buttonGroup = new QButtonGroup(this);
-    connect(buttonGroup, SIGNAL(buttonClicked(int)), switcher, SLOT(setCurrentIndex(int)));
+    connect(buttonGroup, &QButtonGroup::idClicked, switcher, &QStackedWidget::setCurrentIndex);
 
     // General settings
     QWidget* optionpane = new QWidget();
@@ -77,13 +77,13 @@ settingsWindow::settingsWindow(QWidget* win) :
     QCheckBox* cBox = new QCheckBox(tr("&Play subtunes"), this);
     cBox->setToolTip(tr("Play all subtunes"));
     cBox->setCheckState(SETTINGS->_subtunes ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setSubtunes(int)));
+    connect(cBox, &QCheckBox::stateChanged, this, &settingsWindow::setSubtunes);
     optionLayout->addWidget(cBox);
 
     cBox = new QCheckBox(tr("&Bauer stereophonic-to-binaural DSP"), this);
     cBox->setToolTip(tr("Bauer stereophonic-to-binaural DSP"));
     cBox->setCheckState(SETTINGS->_bs2b ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, SIGNAL(stateChanged(int)), this, SLOT(setBs2b(int)));
+    connect(cBox, &QCheckBox::stateChanged, this, &settingsWindow::setBs2b);
     optionLayout->addWidget(cBox);
 #ifndef HAVE_BS2B
     cBox->setDisabled(true);
@@ -96,7 +96,7 @@ settingsWindow::settingsWindow(QWidget* win) :
         group->setToolTip(tr("Enable replaygain loudness normalization"));
         group->setChecked(SETTINGS->_replayGain);
         group->setLayout(replayGainBox);
-        connect(group, SIGNAL(toggled(bool)), this, SLOT(setReplaygain(bool)));
+        connect(group, &QGroupBox::toggled, this, &settingsWindow::setReplaygain);
 
         QButtonGroup *radioGroup = new QButtonGroup(this);
 
@@ -113,7 +113,7 @@ settingsWindow::settingsWindow(QWidget* win) :
         replayGainBox->addStretch(1);
         optionLayout->addWidget(group);
 
-        connect(radioGroup, SIGNAL(buttonClicked(int)), this, SLOT(setReplaygainMode(int)));
+        connect(radioGroup, &QButtonGroup::idClicked, this, &settingsWindow::setReplaygainMode);
     }
     switcher->addWidget(optionpane);
 
@@ -187,7 +187,7 @@ settingsWindow::settingsWindow(QWidget* win) :
             inputConfigs.append(ic);
             beSwitcher->addWidget(ic->config());
         }
-        connect(backends, SIGNAL(currentIndexChanged(int)), beSwitcher, SLOT(setCurrentIndex(int)));
+        connect(backends, QOverload<int>::of(&QComboBox::currentIndexChanged), beSwitcher, &QStackedWidget::setCurrentIndex);
 
         QWidget *w = new QWidget(this);
         QHBoxLayout *backendSelection = new QHBoxLayout(w);
@@ -227,8 +227,8 @@ settingsWindow::settingsWindow(QWidget* win) :
     QPushButton* b = new QPushButton(GET_ICON(icon_dialogcancel), tr("&Cancel"), this);
     bottom->addWidget(b);
     initial->setFocus();
-    connect(b, SIGNAL(clicked()), this, SLOT(onReject()));
-    connect(initial, SIGNAL(clicked()), this, SLOT(onAccept()));
+    connect(b, &QPushButton::clicked, this, &settingsWindow::onReject);
+    connect(initial, &QPushButton::clicked, this, &settingsWindow::onAccept);
 
     buttons->addStretch();
 
