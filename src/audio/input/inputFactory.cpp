@@ -70,6 +70,7 @@ public:
     bool open(const QString& fileName) override { return true; }
     void close() override {}
     bool rewind() override { return true; }
+    bool seekable() const override { return false; }
     bool seek(const int pos) override { return true; }
     size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override { return 0; }
     QString songLoaded() const override { return QString(); }

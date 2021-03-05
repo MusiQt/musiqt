@@ -83,6 +83,9 @@ public:
     /// Rewind to start
     virtual bool rewind() =0;
 
+    /// Seek support
+    virtual bool seekable() const =0;
+
     /// Seek specified position
     virtual bool seek(const int pos) =0;
 

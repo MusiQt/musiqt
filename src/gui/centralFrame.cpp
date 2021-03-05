@@ -279,7 +279,7 @@ void centralFrame::changeState()
         break;
     case state_t::PLAY:
         playing = true;
-        m_slider->setDisabled(false); // FIXME
+        m_slider->setDisabled(!_input->seekable());
         break;
     case state_t::PAUSE:
         m_slider->setDisabled(true);

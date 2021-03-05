@@ -102,7 +102,10 @@ public:
     QIcon icon() const override { return _icon; }
 
     /// Rewind to start
-    virtual bool rewind() override { return seek(0); };
+    virtual bool rewind() override { return seek(0); }
+
+    /// Seek support
+    virtual bool seekable() const override { return false; }
 
     /// Seek specified position
     virtual bool seek(int pos) override { return false; }

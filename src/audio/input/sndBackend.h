@@ -83,6 +83,9 @@ public:
     /// Close file
     void close() override;
 
+    /// Seek support
+    bool seekable() const override { return true; }
+
     /// Seek specified position
     bool seek(int pos) override;
 
