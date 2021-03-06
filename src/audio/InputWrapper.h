@@ -54,21 +54,21 @@ public:
 
     void setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize);
 
-    int getSeconds() const { return seconds; }
+    int getSeconds() const { return m_seconds; }
 
     void setPos(int pos);
 
 private:
-    input *currentSong;
-    input *preloadedSong;
+    input *m_currentSong;
+    input *m_preloadedSong;
 
-    audioProcess *aProcess;
+    audioProcess *m_audioProcess;
 
-    converter *audioConverter;
+    converter *m_audioConverter;
 
-    int bytes;
-    int bytePerSec;
-    unsigned int seconds;
+    int m_bytes;
+    int m_bytePerSec;
+    unsigned int m_seconds;
 };
 
 #endif

@@ -38,25 +38,25 @@
 #endif
 
 InputWrapper::InputWrapper(input* song) :
-    currentSong(song),
-    preloadedSong(nullptr),
-    audioConverter(nullptr),
-    bytes(0),
-    seconds(0)
+    m_currentSong(song),
+    m_preloadedSong(nullptr),
+    m_audioConverter(nullptr),
+    m_bytes(0),
+    m_seconds(0)
 {}
 
 InputWrapper::~InputWrapper()
 {
-    delete aProcess;
+    delete m_audioProcess;
 
-    if (audioConverter != nullptr)
-        delete audioConverter;
+    if (m_audioConverter != nullptr)
+        delete m_audioConverter;
 }
 
 void InputWrapper::enableBs2b()
 {
-    if (aProcess != nullptr)
-        aProcess->init(currentSong->samplerate());
+    if (m_audioProcess != nullptr)
+        m_audioProcess->init(m_currentSong->samplerate());
 }
 
 qint64 InputWrapper::fillBuffer(char *data, qint64 maxSize)
@@ -64,20 +64,20 @@ qint64 InputWrapper::fillBuffer(char *data, qint64 maxSize)
 PROFILE_START
     size_t n;
 
-    if (audioConverter != nullptr)
+    if (m_audioConverter != nullptr)
     {
-        size_t size = currentSong->fillBuffer(
-            audioConverter->buffer(),
-            audioConverter->bufSize(maxSize),
-            seconds);
-        n = audioConverter->convert(data, size);
+        size_t size = m_currentSong->fillBuffer(
+            m_audioConverter->buffer(),
+            m_audioConverter->bufSize(maxSize),
+            m_seconds);
+        n = m_audioConverter->convert(data, size);
     }
     else
     {
-        n = currentSong->fillBuffer(data, maxSize, seconds);
+        n = m_currentSong->fillBuffer(data, maxSize, m_seconds);
     }
 
-    aProcess->process(data, n);
+    m_audioProcess->process(data, n);
 PROFILE_END
 
     return n;
@@ -95,11 +95,11 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
 
     if (n == 0)
     {
-        if (preloadedSong != nullptr)
+        if (m_preloadedSong != nullptr)
         {
-            currentSong = preloadedSong;
-            preloadedSong = nullptr;
-            seconds = 0;
+            m_currentSong = m_preloadedSong;
+            m_preloadedSong = nullptr;
+            m_seconds = 0;
             n = fillBuffer(data, maxSize);
             emit switchSong();
         }
@@ -110,14 +110,14 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
         }
     }
 
-    bytes += n;
-    if (bytes > bytePerSec)
+    m_bytes += n;
+    if (m_bytes > m_bytePerSec)
     {
         do {
-            bytes -= bytePerSec;
-            seconds++;
-        } while (bytes > bytePerSec);
-        if (seconds != currentSong->time()-5)
+            m_bytes -= m_bytePerSec;
+            m_seconds++;
+        } while (m_bytes > m_bytePerSec);
+        if (m_seconds != m_currentSong->time()-5)
             emit updateTime();
         else
             emit preloadSong();
@@ -136,28 +136,28 @@ qint64 InputWrapper::writeData(const char *data, qint64 maxSize)
 
 bool InputWrapper::tryPreload(input* newSong)
 {
-    if ((currentSong->samplerate() == newSong->samplerate())
-        && (currentSong->channels() == newSong->channels())
-        && (currentSong->precision() == newSong->precision()))
+    if ((m_currentSong->samplerate() == newSong->samplerate())
+        && (m_currentSong->channels() == newSong->channels())
+        && (m_currentSong->precision() == newSong->precision()))
     {
-        preloadedSong = newSong;
+        m_preloadedSong = newSong;
         return true;
     }
     else
     {
-        preloadedSong = nullptr;
+        m_preloadedSong = nullptr;
         return false;
     }
 }
 
 void InputWrapper::unload()
 {
-    preloadedSong = nullptr;
+    m_preloadedSong = nullptr;
 }
 
 void InputWrapper::setPos(int pos)
 {
-    seconds = (pos * currentSong->time()) / 100;
+    m_seconds = (pos * m_currentSong->time()) / 100;
 }
 
 void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
@@ -167,23 +167,23 @@ void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, 
     switch (sampleType)
     {
     case sample_t::U8:
-        aProcess = new audioProcess8();
+        m_audioProcess = new audioProcess8();
         precision = 1;
         break;
     case sample_t::S16:
-        aProcess = new audioProcess16();
+        m_audioProcess = new audioProcess16();
         precision = 2;
         break;
     default:
-        aProcess = nullptr;
+        m_audioProcess = nullptr;
         // This should not happen
         qFatal("Unsupported sample type");
         break;
     }
 
-    bytePerSec = sampleRate * channels * precision;
+    m_bytePerSec = sampleRate * channels * precision;
 
     // Check if soundcard supports requested samplerate
-    audioConverter = CFACTORY->get(currentSong->samplerate(), sampleRate, bufferSize,
-        currentSong->channels(), currentSong->precision(), sampleType, currentSong->fract());
+    m_audioConverter = CFACTORY->get(m_currentSong->samplerate(), sampleRate, bufferSize,
+        m_currentSong->channels(), m_currentSong->precision(), sampleType, m_currentSong->fract());
 }

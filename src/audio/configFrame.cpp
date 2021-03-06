@@ -52,14 +52,14 @@ configFrame::configFrame(QWidget* p, const char* title, const char* credits, con
     QHBoxLayout* top = new QHBoxLayout();
     main->addLayout(top);
 
-    _matrix = new QGridLayout();
-    top->addLayout(_matrix);
+    m_matrix = new QGridLayout();
+    top->addLayout(m_matrix);
 
-    _extraLeft = new QHBoxLayout();
-    top->addLayout(_extraLeft);
+    m_extraLeft = new QHBoxLayout();
+    top->addLayout(m_extraLeft);
 
-    _extraBottom = new QVBoxLayout();
-    main->addLayout(_extraBottom);
+    m_extraBottom = new QVBoxLayout();
+    main->addLayout(m_extraBottom);
 
     main->addStretch();
 }

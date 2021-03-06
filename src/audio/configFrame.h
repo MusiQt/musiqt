@@ -27,9 +27,9 @@
 class configFrame : public QWidget
 {
 private:
-    QGridLayout *_matrix;
-    QHBoxLayout *_extraLeft;
-    QVBoxLayout *_extraBottom;
+    QGridLayout *m_matrix;
+    QHBoxLayout *m_extraLeft;
+    QVBoxLayout *m_extraBottom;
 
 private:
     configFrame(const configFrame&);
@@ -38,9 +38,9 @@ private:
 protected:
     configFrame() {}
 
-    QGridLayout* matrix() const { return _matrix; }
-    QHBoxLayout* extraLeft() const { return _extraLeft; }
-    QVBoxLayout* extraBottom() const { return _extraBottom; }
+    QGridLayout* matrix() const { return m_matrix; }
+    QHBoxLayout* extraLeft() const { return m_extraLeft; }
+    QVBoxLayout* extraBottom() const { return m_extraBottom; }
 
 public:
     configFrame(QWidget* p, const char* title, const char* credits=nullptr, const char* link=nullptr);
