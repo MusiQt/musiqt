@@ -94,8 +94,6 @@ public:
 
 class audioConfig : public configFrame
 {
-    Q_OBJECT
-
 private:
     audioConfig() {}
     audioConfig(const audioConfig&);

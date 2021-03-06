@@ -26,8 +26,6 @@
 
 class configFrame : public QWidget
 {
-    Q_OBJECT
-
 private:
     QGridLayout *_matrix;
     QHBoxLayout *_extraLeft;

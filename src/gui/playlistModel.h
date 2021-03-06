@@ -30,8 +30,6 @@
 
 class playlistModel : public QStringListModel
 {
-    Q_OBJECT
-
 public:
     explicit playlistModel(QObject *parent=0) : QStringListModel(parent) {}
 

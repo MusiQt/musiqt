@@ -25,8 +25,6 @@ class metaData;
 
 class infoLabel : public QLabel
 {
-    Q_OBJECT
-
 private:
     infoLabel() {}
     infoLabel(const infoLabel&);

@@ -32,8 +32,6 @@
 
 class deviceLoader : public QObject, public QRunnable
 {
-    Q_OBJECT
-
 public:
     void run() override;
 };

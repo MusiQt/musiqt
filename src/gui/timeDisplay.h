@@ -23,8 +23,6 @@
 
 class timeDisplay : public QLCDNumber
 {
-    Q_OBJECT
-
 private:
     timeDisplay() {}
     timeDisplay(const timeDisplay&);
@@ -54,8 +52,6 @@ public:
 
 class timeLabel : public QLabel
 {
-    Q_OBJECT
-
 private:
     timeLabel() {}
     timeLabel(const timeLabel&);

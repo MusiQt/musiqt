@@ -26,8 +26,6 @@
 
 class proxymodel : public QSortFilterProxyModel
 {
-    Q_OBJECT
-
 public:
     enum class sortMode { Ascending, Descending, Random };
 

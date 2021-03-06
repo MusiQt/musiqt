@@ -51,8 +51,6 @@ signals:
 
 class infoDialog : public QDialog
 {
-    Q_OBJECT
-
 private:
     QLabel *imgFrame;
     QWidget *matrix;
