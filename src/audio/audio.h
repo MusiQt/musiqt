@@ -36,13 +36,13 @@ class audio : public QObject
     Q_OBJECT
 
 private:
-    QSettings   settings;
-    InputWrapper *iw;
-    qaudioBackend *audioOutput;
+    QSettings m_settings;
+    InputWrapper *m_iw;
+    qaudioBackend *m_audioOutput;
 
-    state_t _state;
+    state_t m_state;
 
-    int _volume;
+    int m_volume;
 
 private:
     audio(const audio&);
@@ -68,7 +68,7 @@ public:
     bool stop();
 
     /// Get state
-    state_t state() const { return _state; }
+    state_t state() const { return m_state; }
 
     /// Get current position in seconds
     int seconds() const;
@@ -77,7 +77,7 @@ public:
     void volume(const int vol);
 
     /// Get volume
-    int volume() const { return _volume; }
+    int volume() const { return m_volume; }
 
     /// Check if gapless playback is supported
     bool gapless(input* const i);

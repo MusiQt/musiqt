@@ -52,10 +52,10 @@
 
 mainWindow::mainWindow(QWidget *parent) :
     QMainWindow(parent),
-    _infoDialog(nullptr)
+    m_infoDialog(nullptr)
 {
     // Read settings
-    SETTINGS->load(settings);
+    SETTINGS->load(m_settings);
 
     createActions();
 
@@ -65,27 +65,27 @@ mainWindow::mainWindow(QWidget *parent) :
 
     QToolButton *about = new QToolButton();
     about->setAutoRaise(true);
-    about->setDefaultAction(aboutAction);
+    about->setDefaultAction(m_aboutAction);
     statusBar()->addPermanentWidget(about);
 
     QToolButton *quit = new QToolButton();
     quit->setAutoRaise(true);
-    quit->setDefaultAction(quitAction);
+    quit->setDefaultAction(m_quitAction);
     statusBar()->addPermanentWidget(quit);
 
-    cFrame = new centralFrame(this);
-    setCentralWidget(cFrame);
+    m_cFrame = new centralFrame(this);
+    setCentralWidget(m_cFrame);
 
-    connect(playAction, &QAction::triggered, cFrame, &centralFrame::onCmdPlayPauseSong);
-    connect(stopAction, &QAction::triggered, cFrame, &centralFrame::onCmdStopSong);
-    connect(prevAction, &QAction::triggered, cFrame, &centralFrame::onCmdPrevSong);
-    connect(nextAction, &QAction::triggered, cFrame, &centralFrame::onCmdNextSong);
+    connect(m_playAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdPlayPauseSong);
+    connect(m_stopAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdStopSong);
+    connect(m_prevAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdPrevSong);
+    connect(m_nextAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdNextSong);
 
-    connect(cFrame, &centralFrame::updateTime,   this, &mainWindow::updateTime);
-    connect(cFrame, &centralFrame::stateChanged, this, &mainWindow::setPlayButton);
-    connect(cFrame, &centralFrame::setDisplay,   this, &mainWindow::setDisplay);
-    connect(cFrame, &centralFrame::clearDisplay, this, &mainWindow::clearDisplay);
-    connect(cFrame, &centralFrame::setInfo,      this, &mainWindow::setInfo);
+    connect(m_cFrame, &centralFrame::updateTime,   this, &mainWindow::updateTime);
+    connect(m_cFrame, &centralFrame::stateChanged, this, &mainWindow::setPlayButton);
+    connect(m_cFrame, &centralFrame::setDisplay,   this, &mainWindow::setDisplay);
+    connect(m_cFrame, &centralFrame::clearDisplay, this, &mainWindow::clearDisplay);
+    connect(m_cFrame, &centralFrame::setInfo,      this, &mainWindow::setInfo);
 
     addToolBar(createControlBar());
     addToolBarBreak();
@@ -99,17 +99,17 @@ mainWindow::mainWindow(QWidget *parent) :
     {
         createTrayIcon();
 
-        connect(trayIcon, &QSystemTrayIcon::activated, this, &mainWindow::iconActivated);
+        connect(m_trayIcon, &QSystemTrayIcon::activated, this, &mainWindow::iconActivated);
 
-        trayIcon->setIcon(GET_ICON(icon_logo32));
-        trayIcon->setToolTip(PACKAGE_STRING);
-        trayIcon->show();
+        m_trayIcon->setIcon(GET_ICON(icon_logo32));
+        m_trayIcon->setToolTip(PACKAGE_STRING);
+        m_trayIcon->show();
     }
 
     qApp->setStyleSheet("QMainWindow > QPushButton,QToolButton { margin:0; padding:0; }");
 
-    QPoint pos = settings.value("General Settings/pos").toPoint();
-    QSize size = settings.value("General Settings/size").toSize();
+    QPoint pos = m_settings.value("General Settings/pos").toPoint();
+    QSize size = m_settings.value("General Settings/size").toSize();
 
     resize(size);
     move(pos);
@@ -118,19 +118,19 @@ mainWindow::mainWindow(QWidget *parent) :
 mainWindow::~mainWindow()
 {
     // Save Settings
-    SETTINGS->save(settings);
+    SETTINGS->save(m_settings);
 
     if (!centralWidget()->isHidden())
     {
-        settings.setValue("General Settings/size", size());
+        m_settings.setValue("General Settings/size", size());
     }
-    settings.setValue("General Settings/pos", pos());
-    settings.setValue("General Settings/playlist mode", cFrame->getPlayMode());
+    m_settings.setValue("General Settings/pos", pos());
+    m_settings.setValue("General Settings/playlist mode", m_cFrame->getPlayMode());
 }
 
 void mainWindow::init(const char* arg)
 {
-    cFrame->init();
+    m_cFrame->init();
 
     // Look at command line arguments
     if (arg != nullptr)
@@ -142,30 +142,30 @@ void mainWindow::init(const char* arg)
 #else
         const QString message(arg);
 #endif
-        cFrame->setFile(QDir(message).absolutePath(), true);
+        m_cFrame->setFile(QDir(message).absolutePath(), true);
     }
     else
     {
-        cFrame->setFile(settings.value("General Settings/file").toString(), false);
+        m_cFrame->setFile(m_settings.value("General Settings/file").toString(), false);
     }
 }
 
 void mainWindow::onMessage(QString msg)
 {
-    cFrame->setFile(QDir(msg).absolutePath(), true);
+    m_cFrame->setFile(QDir(msg).absolutePath(), true);
 }
 
 QToolBar *mainWindow::createControlBar()
 {
-    _timeDisplay = new timeDisplay(this);
+    m_timeDisplay = new timeDisplay(this);
 
     QToolBar *controlBar = new QToolBar("controlBar", this);
-    controlBar->addAction(prevAction);
-    controlBar->addAction(stopAction);
-    controlBar->addAction(playAction);
-    controlBar->addAction(nextAction);
+    controlBar->addAction(m_prevAction);
+    controlBar->addAction(m_stopAction);
+    controlBar->addAction(m_playAction);
+    controlBar->addAction(m_nextAction);
 
-    controlBar->addWidget(_timeDisplay);
+    controlBar->addWidget(m_timeDisplay);
 
     QAction *act = controlBar->addAction(GET_ICON(icon_viewcompact), tr("Compact"));
     act->setToolTip(tr("Compact"));
@@ -195,25 +195,25 @@ QToolBar *mainWindow::createSecondaryBar()
     connect(nexttune, &QAction::triggered, this, &mainWindow::onNextSubtune);
 
     QAction *playlist = new QAction(GET_ICON(icon_playlist), tr("Playlist"), this);
-    const bool playMode = settings.value("General Settings/playlist mode", true).toBool();
-    cFrame->setPlayMode(playMode);
+    const bool playMode = m_settings.value("General Settings/playlist mode", true).toBool();
+    m_cFrame->setPlayMode(playMode);
     setPlayMode(playlist, playMode);
     connect(playlist, &QAction::triggered, this, &mainWindow::onPlaymode);
 
-    subtunes = new QLabel(this);
-    subtunes->setFrameStyle(QFrame::Panel|QFrame::Sunken);
-    subtunes->setText("00/00");
-    subtunes->setStatusTip(tr("Subtunes"));
+    m_subtunes = new QLabel(this);
+    m_subtunes->setFrameStyle(QFrame::Panel|QFrame::Sunken);
+    m_subtunes->setText("00/00");
+    m_subtunes->setStatusTip(tr("Subtunes"));
 
     QLabel *songs = new QLabel(this);
     songs->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     songs->setText("00/00");
     songs->setStatusTip(tr("Songs"));
-    connect(cFrame, &centralFrame::songUpdated, songs, &QLabel::setText);
+    connect(m_cFrame, &centralFrame::songUpdated, songs, &QLabel::setText);
 
-    led = new QLabel(this);
-    led->setPixmap(QPixmap(ledRed));
-    led->setStatusTip(tr("Stopped"));
+    m_statusLed = new QLabel(this);
+    m_statusLed->setPixmap(QPixmap(ledRed));
+    m_statusLed->setStatusTip(tr("Stopped"));
 
     QWidget* empty = new QWidget(this);
     empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -222,14 +222,14 @@ QToolBar *mainWindow::createSecondaryBar()
     //volume->setNotchesVisible(true);
     volume->setRange(0, 100);
     volume->setStatusTip(tr("Volume"));
-    volume->setValue(cFrame->volume());
+    volume->setValue(m_cFrame->volume());
     connect(volume, &QDial::valueChanged, this, &mainWindow::onCmdVol);
 
     QToolBar *secondaryBar = new QToolBar("secondaryBar", this);
     secondaryBar->addAction(prevtune);
-    secondaryBar->addWidget(subtunes);
+    secondaryBar->addWidget(m_subtunes);
     secondaryBar->addAction(nexttune);
-    secondaryBar->addWidget(led);
+    secondaryBar->addWidget(m_statusLed);
     secondaryBar->addWidget(songs);
     secondaryBar->addAction(playlist);
     secondaryBar->addWidget(empty);
@@ -245,17 +245,17 @@ QToolBar *mainWindow::createSecondaryBar()
 
 QToolBar *mainWindow::createInfoBar()
 {
-    _songInfo = new infoLabel(this);
-    _songInfo->setFrameStyle(QFrame::Panel|QFrame::Sunken);
-    _songInfo->setText("--");
-    _songInfo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    m_songInfo = new infoLabel(this);
+    m_songInfo->setFrameStyle(QFrame::Panel|QFrame::Sunken);
+    m_songInfo->setText("--");
+    m_songInfo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-    _songTime = new timeLabel(this);
+    m_songTime = new timeLabel(this);
 
     QToolBar *infoBar = new QToolBar("infoBar", this);
-    infoBar->addAction(infoAction);
-    infoBar->addWidget(_songInfo);
-    infoBar->addWidget(_songTime);
+    infoBar->addAction(m_infoAction);
+    infoBar->addWidget(m_songInfo);
+    infoBar->addWidget(m_songTime);
 
     infoBar->setMovable(false);
 
@@ -285,58 +285,57 @@ void mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void mainWindow::createActions()
 {
-    aboutAction = new QAction(GET_ICON(icon_logo16), tr("&About"), this);
-    aboutAction->setToolTip(tr("About"));
-    aboutAction->setStatusTip(tr("About"));
-    connect(aboutAction, &QAction::triggered, this, &mainWindow::onAbout);
+    m_aboutAction = new QAction(GET_ICON(icon_logo16), tr("&About"), this);
+    m_aboutAction->setToolTip(tr("About"));
+    m_aboutAction->setStatusTip(tr("About"));
+    connect(m_aboutAction, &QAction::triggered, this, &mainWindow::onAbout);
 
-    prevAction = new QAction(GET_ICON(icon_mediaskipbackward), tr("P&revious"), this);
-    prevAction->setToolTip(tr("Previous"));
-    prevAction->setStatusTip(tr("Go to previous song"));
+    m_prevAction = new QAction(GET_ICON(icon_mediaskipbackward), tr("P&revious"), this);
+    m_prevAction->setToolTip(tr("Previous"));
+    m_prevAction->setStatusTip(tr("Go to previous song"));
 
-    nextAction = new QAction(GET_ICON(icon_mediaskipforward), tr("&Next"), this);
-    nextAction->setToolTip(tr("Next"));
-    nextAction->setStatusTip(tr("Go to next song"));
+    m_nextAction = new QAction(GET_ICON(icon_mediaskipforward), tr("&Next"), this);
+    m_nextAction->setToolTip(tr("Next"));
+    m_nextAction->setStatusTip(tr("Go to next song"));
 
-    playAction = new QAction(GET_ICON(icon_mediaplaybackstart), tr("&Play"), this);
-    playAction->setToolTip(tr("Play"));
-    playAction->setStatusTip(tr("Play song"));
+    m_playAction = new QAction(GET_ICON(icon_mediaplaybackstart), tr("&Play"), this);
+    m_playAction->setToolTip(tr("Play"));
+    m_playAction->setStatusTip(tr("Play song"));
 
-    stopAction = new QAction(GET_ICON(icon_mediaplaybackstop), tr("&Stop"), this);
-    stopAction->setToolTip(tr("Stop"));
-    stopAction->setStatusTip(tr("Stop"));
+    m_stopAction = new QAction(GET_ICON(icon_mediaplaybackstop), tr("&Stop"), this);
+    m_stopAction->setToolTip(tr("Stop"));
+    m_stopAction->setStatusTip(tr("Stop"));
 
-    infoAction = new QAction(GET_ICON(icon_helpabout), tr("&Info"), this);
-    infoAction->setToolTip(tr("Info"));
-    infoAction->setStatusTip(tr("Song info"));
-    connect(infoAction, &QAction::triggered, this, &mainWindow::onInfo);
+    m_infoAction = new QAction(GET_ICON(icon_helpabout), tr("&Info"), this);
+    m_infoAction->setToolTip(tr("Info"));
+    m_infoAction->setStatusTip(tr("Song info"));
+    connect(m_infoAction, &QAction::triggered, this, &mainWindow::onInfo);
 
-    quitAction = new QAction(GET_ICON(icon_applicationexit), tr("&Quit"), this);
-    quitAction->setToolTip(tr("Exit"));
-    quitAction->setStatusTip(tr("Exit"));
-    connect(quitAction, &QAction::triggered, qApp, &QApplication::quit);
+    m_quitAction = new QAction(GET_ICON(icon_applicationexit), tr("&Quit"), this);
+    m_quitAction->setToolTip(tr("Exit"));
+    m_quitAction->setStatusTip(tr("Exit"));
+    connect(m_quitAction, &QAction::triggered, qApp, &QApplication::quit);
 }
 
 void mainWindow::createTrayIcon()
 {
-    QMenu* trayIconMenu = new QMenu(this);
-    _mStatus = new QAction(trayIconMenu);
-    _mStatus->setText(tr("Stopped"));
-    _mStatus->setIcon(QPixmap(ledRed));
-    //_mStatus->setEnabled(false);
+    QMenu* m_trayIconMenu = new QMenu(this);
+    m_trayStatus = new QAction(m_trayIconMenu);
+    m_trayStatus->setText(tr("Stopped"));
+    m_trayStatus->setIcon(QPixmap(ledRed));
 
-    trayIconMenu->addAction(_mStatus);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(playAction);
-    trayIconMenu->addAction(stopAction);
-    trayIconMenu->addAction(prevAction);
-    trayIconMenu->addAction(nextAction);
-    trayIconMenu->addAction(infoAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(quitAction);
+    m_trayIconMenu->addAction(m_trayStatus);
+    m_trayIconMenu->addSeparator();
+    m_trayIconMenu->addAction(m_playAction);
+    m_trayIconMenu->addAction(m_stopAction);
+    m_trayIconMenu->addAction(m_prevAction);
+    m_trayIconMenu->addAction(m_nextAction);
+    m_trayIconMenu->addAction(m_infoAction);
+    m_trayIconMenu->addSeparator();
+    m_trayIconMenu->addAction(m_quitAction);
 
-    trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setContextMenu(trayIconMenu);
+    m_trayIcon = new QSystemTrayIcon(this);
+    m_trayIcon->setContextMenu(m_trayIconMenu);
 }
 
 void mainWindow::onCompact()
@@ -351,7 +350,7 @@ void mainWindow::onCompact()
         centralWidget()->show();
         statusBar()->setSizeGripEnabled(true);
         setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-        resize(windowSize);
+        resize(m_windowSize);
     }
     else
     {
@@ -361,7 +360,7 @@ void mainWindow::onCompact()
 
         if (isMaximized())
             return;
-        windowSize = size();
+        m_windowSize = size();
         centralWidget()->hide();
         statusBar()->setSizeGripEnabled(false);
         adjustSize();
@@ -391,12 +390,12 @@ void mainWindow::onConfig()
             switch (result)
             {
             case QDialog::Accepted:
-                cFrame->onCmdStopSong();
-                SETTINGS->save(settings);
-                cFrame->onSettingsChanged();
+                m_cFrame->onCmdStopSong();
+                SETTINGS->save(m_settings);
+                m_cFrame->onSettingsChanged();
                 break;
             case QDialog::Rejected:
-                SETTINGS->load(settings);
+                SETTINGS->load(m_settings);
                 break;
             }
             config->deleteLater();
@@ -406,21 +405,21 @@ void mainWindow::onConfig()
 
 void mainWindow::onInfo()
 {
-    if (_infoDialog != nullptr)
+    if (m_infoDialog != nullptr)
         return;
 
-    _infoDialog = new infoDialog(this);
-    _infoDialog->setInfo(cFrame->getMetaData());
-    _infoDialog->setAttribute(Qt::WA_QuitOnClose, false);
-    connect(_infoDialog, &infoDialog::finished,
+    m_infoDialog = new infoDialog(this);
+    m_infoDialog->setInfo(m_cFrame->getMetaData());
+    m_infoDialog->setAttribute(Qt::WA_QuitOnClose, false);
+    connect(m_infoDialog, &infoDialog::finished,
         [this]()
         {
             qDebug("closing info dialog");
-            _infoDialog->deleteLater();
-            _infoDialog = nullptr;
+            m_infoDialog->deleteLater();
+            m_infoDialog = nullptr;
         }
     );
-    _infoDialog->show();
+    m_infoDialog->show();
 }
 
 void mainWindow::setPlayButton(state_t state)
@@ -441,9 +440,9 @@ void mainWindow::setPlayButton(state_t state)
             label = tr("Pause");
         }
 
-        playAction->setIcon(GET_ICON(icon));
-        playAction->setToolTip(label);
-        playAction->setStatusTip(label);
+        m_nextAction->setIcon(GET_ICON(icon));
+        m_nextAction->setToolTip(label);
+        m_nextAction->setStatusTip(label);
     }
 
     {
@@ -464,19 +463,19 @@ void mainWindow::setPlayButton(state_t state)
             break;
         }
 
-        _mStatus->setIcon(QPixmap(icon));
-        _mStatus->setText(label);
-        led->setPixmap(QPixmap(icon));
-        led->setStatusTip(label);
+        m_trayStatus->setIcon(QPixmap(icon));
+        m_trayStatus->setText(label);
+        m_statusLed->setPixmap(QPixmap(icon));
+        m_statusLed->setStatusTip(label);
     }
 }
 
 void mainWindow::setDisplay(input* i)
 {
-    _timeDisplay->setTime(0);
-    _songTime->setTime(i->time());
+    m_timeDisplay->setTime(0);
+    m_songTime->setTime(i->time());
 
-    subtunes->setText(QString("%1/%2").arg(i->subtune()).arg(i->subtunes()));
+    m_subtunes->setText(QString("%1/%2").arg(i->subtune()).arg(i->subtunes()));
 
     const metaData* data = i->getMetaData();
     QString songTitle = data->getInfo(metaData::TITLE);
@@ -489,40 +488,40 @@ void mainWindow::setDisplay(input* i)
     if (!artist.isEmpty())
         artist.append('\n');
 
-    trayIcon->setToolTip(artist+songTitle);
+    m_trayIcon->setToolTip(artist+songTitle);
 
     setInfo(data);
 
-    if (_infoDialog != nullptr)
-        _infoDialog->setInfo(i->getMetaData());
+    if (m_infoDialog != nullptr)
+        m_infoDialog->setInfo(data);
 }
 
 void mainWindow::clearDisplay(bool loading)
 {
-    _songInfo->setText(loading ? tr("Loading...") : QString());
-    _songInfo->setToolTip(QString());
+    m_songInfo->setText(loading ? tr("Loading...") : QString());
+    m_songInfo->setToolTip(QString());
     setWindowTitle(QString(PACKAGE_STRING));
-    trayIcon->setToolTip(PACKAGE_STRING);
+    m_trayIcon->setToolTip(PACKAGE_STRING);
 
-    _songTime->reset();
-    _timeDisplay->reset();
+    m_songTime->reset();
+    m_timeDisplay->reset();
 }
 
 void mainWindow::setInfo(const metaData* mtd)
 {
-    _songInfo->setInfo(mtd);
+    m_songInfo->setInfo(mtd);
 }
 
 void mainWindow::updateTime(int seconds)
 {
-    _timeDisplay->setTime(seconds);
+    m_timeDisplay->setTime(seconds);
 }
 
 void mainWindow::onPlaymode()
 {
-    const bool playMode = !cFrame->getPlayMode();
+    const bool playMode = !m_cFrame->getPlayMode();
     setPlayMode((QAction*)sender(), playMode);
-    cFrame->setPlayMode(playMode);
+    m_cFrame->setPlayMode(playMode);
 }
 
 void mainWindow::setPlayMode(QAction *action, bool mode)
@@ -543,17 +542,17 @@ void mainWindow::setPlayMode(QAction *action, bool mode)
 
 void mainWindow::onCmdVol(int vol)
 {
-    cFrame->setVolume(vol);
+    m_cFrame->setVolume(vol);
 }
 
 void mainWindow::onPrevSubtune()
 {
-    cFrame->changeSubtune(centralFrame::dir_t::ID_PREV);
+    m_cFrame->changeSubtune(centralFrame::dir_t::ID_PREV);
 }
 
 void mainWindow::onNextSubtune()
 {
-    cFrame->changeSubtune(centralFrame::dir_t::ID_NEXT);
+    m_cFrame->changeSubtune(centralFrame::dir_t::ID_NEXT);
 }
 
 void mainWindow::onStatusbarChanged(const QString &message)
@@ -566,11 +565,11 @@ void mainWindow::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key())
     {
-    case Qt::Key_MediaPlay: cFrame->onCmdPlayPauseSong(); event->accept(); break;
-    case Qt::Key_MediaStop: cFrame->onCmdStopSong(); event->accept(); break;
-    case Qt::Key_MediaPause: cFrame->onCmdPlayPauseSong(); event->accept(); break;
-    case Qt::Key_MediaPrevious: cFrame->onCmdPrevSong(); event->accept(); break;
-    case Qt::Key_MediaNext: cFrame->onCmdNextSong(); event->accept(); break;
+    case Qt::Key_MediaPlay: m_cFrame->onCmdPlayPauseSong(); event->accept(); break;
+    case Qt::Key_MediaStop: m_cFrame->onCmdStopSong(); event->accept(); break;
+    case Qt::Key_MediaPause: m_cFrame->onCmdPlayPauseSong(); event->accept(); break;
+    case Qt::Key_MediaPrevious: m_cFrame->onCmdPrevSong(); event->accept(); break;
+    case Qt::Key_MediaNext: m_cFrame->onCmdNextSong(); event->accept(); break;
     default: QMainWindow::keyPressEvent(event); break;
     }
 }

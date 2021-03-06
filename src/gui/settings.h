@@ -61,13 +61,13 @@ class settings
     friend class audioConfig;
 
 private:
-    QString _card;
-    unsigned int _bits;
+    QString m_card;
+    unsigned int m_bits;
 
-    bool   _subtunes;
-    bool   _bs2b;
-    bool   _replayGain;
-    int    _replayGainMode;
+    bool   m_subtunes;
+    bool   m_bs2b;
+    bool   m_replayGain;
+    int    m_replayGainMode;
 
 protected:
     settings() {}
@@ -88,22 +88,22 @@ public:
     // Get program settings
 
     /// Soundcard
-    const QString& card() const { return _card; }
+    const QString& card() const { return m_card; }
 
     /// Play subtunes
-    bool subtunes() const { return _subtunes; }
+    bool subtunes() const { return m_subtunes; }
 
     /// Replay Gain
-    bool replayGain() const { return _replayGain; }
+    bool replayGain() const { return m_replayGain; }
 
     /// Replay Gain Mode
-    int replayGainMode() const { return _replayGainMode; }
+    int replayGainMode() const { return m_replayGainMode; }
 
     /// Bauer stereophonic-to-binaural DSP
-    bool bs2b() const { return _bs2b; }
+    bool bs2b() const { return m_bs2b; }
 
     /// Default bittdepth
-    unsigned int bits() const { return _bits; }
+    unsigned int bits() const { return m_bits; }
 };
 
 #endif

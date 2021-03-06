@@ -84,11 +84,11 @@ public:
 
     void onSettingsChanged();
 
-    void setPlayMode(bool mode) { playMode = mode; }
-    bool getPlayMode() const { return playMode; }
+    void setPlayMode(bool mode) { m_playMode = mode; }
+    bool getPlayMode() const { return m_playMode; }
 
-    int volume() const { return _audio->volume(); }
-    void setVolume(int vol) { _audio->volume(vol); }
+    int volume() const { return m_audio->volume(); }
+    void setVolume(int vol) { m_audio->volume(vol); }
 
     void changeSubtune(dir_t dir);
 
@@ -139,21 +139,21 @@ private:
     void changeState();
 
 private:
-    input *_input;
-    input *_preload;
-    audio *_audio;
-    bool playing;
-    bool playMode;
-    QString preloaded;
-    QString playDir;
+    input *m_input;
+    input *m_preload;
+    audio *m_audio;
+    bool m_playing;
+    bool m_playMode;
+    QString m_preloaded;
+    QString m_playDir;
 
-    QFileSystemModel *fsm;
-    QTreeView *_dirlist;
-    playlistModel *_playlistModel;
-    proxymodel *_proxyModel;
-    playlist *_playlist;
-    bookmark *_bookmarkList;
-    QPushButton *_editMode;
+    QFileSystemModel *m_fsm;
+    QTreeView *m_dirlist;
+    playlistModel *m_playlistModel;
+    proxymodel *m_proxyModel;
+    playlist *m_playlist;
+    bookmark *m_bookmarkList;
+    QPushButton *m_editMode;
     QPushButton *m_home;
     QSlider *m_slider;
 };

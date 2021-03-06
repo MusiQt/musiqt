@@ -84,28 +84,28 @@ private:
     QToolBar *createInfoBar();
 
 private:
-    centralFrame *cFrame;
+    centralFrame *m_cFrame;
 
-    QSystemTrayIcon *trayIcon;
-    QAction *_mStatus;
-    QLabel *led;
-    infoLabel *_songInfo;
-    timeLabel *_songTime;
-    timeDisplay *_timeDisplay;
-    infoDialog *_infoDialog;
-    QLabel *subtunes;
+    QSystemTrayIcon *m_trayIcon;
+    QAction *m_trayStatus;
+    QLabel *m_statusLed;
+    QLabel *m_subtunes;
+    infoLabel *m_songInfo;
+    timeLabel *m_songTime;
+    timeDisplay *m_timeDisplay;
+    infoDialog *m_infoDialog;
 
-    QAction *aboutAction;
-    QAction *prevAction;
-    QAction *nextAction;
-    QAction *playAction;
-    QAction *stopAction;
-    QAction *infoAction;
-    QAction *quitAction;
+    QAction *m_aboutAction;
+    QAction *m_prevAction;
+    QAction *m_nextAction;
+    QAction *m_playAction;
+    QAction *m_stopAction;
+    QAction *m_infoAction;
+    QAction *m_quitAction;
 
-    QSize windowSize;
+    QSize m_windowSize;
 
-    QSettings settings;
+    QSettings m_settings;
 };
 
 #endif

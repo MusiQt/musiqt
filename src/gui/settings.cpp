@@ -76,22 +76,22 @@ settingsWindow::settingsWindow(QWidget* win) :
 
     QCheckBox* cBox = new QCheckBox(tr("&Play subtunes"), this);
     cBox->setToolTip(tr("Play all subtunes"));
-    cBox->setCheckState(SETTINGS->_subtunes ? Qt::Checked : Qt::Unchecked);
+    cBox->setCheckState(SETTINGS->m_subtunes ? Qt::Checked : Qt::Unchecked);
     connect(cBox, &QCheckBox::stateChanged,
         [](int val)
         {
-            SETTINGS->_subtunes = (val == Qt::Checked);
+            SETTINGS->m_subtunes = (val == Qt::Checked);
         }
     );
     optionLayout->addWidget(cBox);
 
     cBox = new QCheckBox(tr("&Bauer stereophonic-to-binaural DSP"), this);
     cBox->setToolTip(tr("Bauer stereophonic-to-binaural DSP"));
-    cBox->setCheckState(SETTINGS->_bs2b ? Qt::Checked : Qt::Unchecked);
+    cBox->setCheckState(SETTINGS->m_bs2b ? Qt::Checked : Qt::Unchecked);
     connect(cBox, &QCheckBox::stateChanged,
         [](int val)
         {
-            SETTINGS->_bs2b = (val == Qt::Checked);
+            SETTINGS->m_bs2b = (val == Qt::Checked);
         }
     );
     optionLayout->addWidget(cBox);
@@ -104,12 +104,12 @@ settingsWindow::settingsWindow(QWidget* win) :
         QGroupBox *group = new QGroupBox(tr("Replaygain"));
         group->setCheckable(true);
         group->setToolTip(tr("Enable replaygain loudness normalization"));
-        group->setChecked(SETTINGS->_replayGain);
+        group->setChecked(SETTINGS->m_replayGain);
         group->setLayout(replayGainBox);
         connect(group, &QGroupBox::toggled,
             [](bool val)
             {
-                SETTINGS->_replayGain = val;
+                SETTINGS->m_replayGain = val;
             }
         );
 
@@ -117,12 +117,12 @@ settingsWindow::settingsWindow(QWidget* win) :
 
         QRadioButton* radio = new QRadioButton(tr("Album gain"), this);
         radio->setToolTip(tr("Preserve album dynamics"));
-        radio->setChecked(SETTINGS->_replayGainMode==0);
+        radio->setChecked(SETTINGS->m_replayGainMode==0);
         replayGainBox->layout()->addWidget(radio);
         radioGroup->addButton(radio, 0);
         radio = new QRadioButton(tr("Track gain"), this);
         radio->setToolTip(tr("All tracks equal loudness"));
-        radio->setChecked(SETTINGS->_replayGainMode==1);
+        radio->setChecked(SETTINGS->m_replayGainMode==1);
         replayGainBox->layout()->addWidget(radio);
         radioGroup->addButton(radio, 1);
         replayGainBox->addStretch(1);
@@ -131,7 +131,7 @@ settingsWindow::settingsWindow(QWidget* win) :
         connect(radioGroup, &QButtonGroup::idClicked,
             [](int val)
             {
-                SETTINGS->_replayGainMode = val;
+                SETTINGS->m_replayGainMode = val;
             }
         );
     }
@@ -298,24 +298,24 @@ settings* SETTINGS
 
 void settings::load(const QSettings& appSettings)
 {
-    _card = appSettings.value("Audio Settings/card").toString();
-    _bits = appSettings.value("Audio Settings/bits", 16).toInt();
+    m_card = appSettings.value("Audio Settings/card").toString();
+    m_bits = appSettings.value("Audio Settings/bits", 16).toInt();
 
-    _subtunes = appSettings.value("General Settings/play subtunes", false).toBool();
-    _replayGain = appSettings.value("General Settings/Replaygain", false).toBool();
+    m_subtunes = appSettings.value("General Settings/play subtunes", false).toBool();
+    m_replayGain = appSettings.value("General Settings/Replaygain", false).toBool();
     QString replayGainMode=appSettings.value("General Settings/Replaygain mode", "Album").toString();
-    _replayGainMode = (!replayGainMode.compare("Track")) ? 1 : 0;
+    m_replayGainMode = (!replayGainMode.compare("Track")) ? 1 : 0;
 
-    _bs2b=appSettings.value("General Settings/Bauer DSP", false).toBool();
+    m_bs2b=appSettings.value("General Settings/Bauer DSP", false).toBool();
 }
 
 void settings::save(QSettings& appSettings)
 {
-    appSettings.setValue("Audio Settings/card", _card);
-    appSettings.setValue("Audio Settings/bits", _bits);
+    appSettings.setValue("Audio Settings/card", m_card);
+    appSettings.setValue("Audio Settings/bits", m_bits);
 
-    appSettings.setValue("General Settings/play subtunes", _subtunes);
-    appSettings.setValue("General Settings/Replaygain", _replayGain);
-    appSettings.setValue("General Settings/Replaygain mode", (_replayGainMode == 0) ? "Album" : "Track");
-    appSettings.setValue("General Settings/Bauer DSP", _bs2b);
+    appSettings.setValue("General Settings/play subtunes", m_subtunes);
+    appSettings.setValue("General Settings/Replaygain", m_replayGain);
+    appSettings.setValue("General Settings/Replaygain mode", (m_replayGainMode == 0) ? "Album" : "Track");
+    appSettings.setValue("General Settings/Bauer DSP", m_bs2b);
 }

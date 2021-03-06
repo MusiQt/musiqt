@@ -63,73 +63,73 @@ void loadThread::run()
 
 centralFrame::centralFrame(QWidget *parent) :
     QWidget(parent),
-    _input(IFACTORY->get()),
-    _preload(nullptr),
-    _audio(new audio),
-    playing(false),
-    preloaded(QString()),
-    playDir(QString())
+    m_input(IFACTORY->get()),
+    m_preload(nullptr),
+    m_audio(new audio),
+    m_playing(false),
+    m_preloaded(QString()),
+    m_playDir(QString())
 {
-    //connect(_audio, &audio::outputError, this, &onCmdStopSong);
-    connect(_audio, &audio::updateTime,  this, &centralFrame::onUpdateTime);
-    connect(_audio, &audio::songEnded,   this, &centralFrame::songEnded);
-    connect(_audio, &audio::preloadSong, this, &centralFrame::preloadSong);
+    //connect(m_audio, &audio::outputError, this, &onCmdStopSong);
+    connect(m_audio, &audio::updateTime,  this, &centralFrame::onUpdateTime);
+    connect(m_audio, &audio::songEnded,   this, &centralFrame::songEnded);
+    connect(m_audio, &audio::preloadSong, this, &centralFrame::preloadSong);
 
     // dir view
-    fsm = new QFileSystemModel(this);
-    fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot|QDir::Files);
-    fsm->setNameFilterDisables(false);
-    fsm->setNameFilters(TFACTORY->plExt());
+    m_fsm = new QFileSystemModel(this);
+    m_fsm->setFilter(QDir::AllDirs|QDir::Drives|QDir::NoDotAndDotDot|QDir::Files);
+    m_fsm->setNameFilterDisables(false);
+    m_fsm->setNameFilters(TFACTORY->plExt());
 
-    _dirlist = new QTreeView(this);
-    _dirlist->setModel(fsm);
-    _dirlist->hideColumn(3);
-    _dirlist->hideColumn(2);
-    _dirlist->hideColumn(1);
-    _dirlist->setHeaderHidden(true);
-    _dirlist->setUniformRowHeights(true);
-    _dirlist->setDragEnabled(true);
-    _dirlist->setContextMenuPolicy(Qt::CustomContextMenu);
-    _dirlist->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-    _dirlist->header()->setStretchLastSection(false);
-    QItemSelectionModel* selectionModel = _dirlist->selectionModel();
+    m_dirlist = new QTreeView(this);
+    m_dirlist->setModel(m_fsm);
+    m_dirlist->hideColumn(3);
+    m_dirlist->hideColumn(2);
+    m_dirlist->hideColumn(1);
+    m_dirlist->setHeaderHidden(true);
+    m_dirlist->setUniformRowHeights(true);
+    m_dirlist->setDragEnabled(true);
+    m_dirlist->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_dirlist->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    m_dirlist->header()->setStretchLastSection(false);
+    QItemSelectionModel* selectionModel = m_dirlist->selectionModel();
 
     connect(selectionModel, &QItemSelectionModel::currentChanged, this, &centralFrame::onDirSelected);
-    connect(_dirlist, &QTreeView::customContextMenuRequested, this, &centralFrame::onRgtClkDirList);
+    connect(m_dirlist, &QTreeView::customContextMenuRequested, this, &centralFrame::onRgtClkDirList);
 
-    // _playlist
-    _playlist = new playlist(this);
-    _playlist->setAlternatingRowColors(true);
-    _playlist->setUniformItemSizes(true);
-    _playlist->setDragDropMode(QAbstractItemView::DropOnly);
+    // m_playlist
+    m_playlist = new playlist(this);
+    m_playlist->setAlternatingRowColors(true);
+    m_playlist->setUniformItemSizes(true);
+    m_playlist->setDragDropMode(QAbstractItemView::DropOnly);
 
-    _playlistModel = new playlistModel(this);
+    m_playlistModel = new playlistModel(this);
 
-    _proxyModel = new proxymodel(this);
-    _proxyModel->setSourceModel(_playlistModel);
-    _proxyModel->setDynamicSortFilter(true);
-    _proxyModel->sort(proxymodel::sortMode::Ascending);
-    _playlist->setModel(_proxyModel);
+    m_proxyModel = new proxymodel(this);
+    m_proxyModel->setSourceModel(m_playlistModel);
+    m_proxyModel->setDynamicSortFilter(true);
+    m_proxyModel->sort(proxymodel::sortMode::Ascending);
+    m_playlist->setModel(m_proxyModel);
 
-    _proxyModel->setFilterRegExp(QRegExp(getFilter(), Qt::CaseInsensitive));
-    _proxyModel->setFilterRole(Qt::UserRole+1);
+    m_proxyModel->setFilterRegExp(QRegExp(getFilter(), Qt::CaseInsensitive));
+    m_proxyModel->setFilterRole(Qt::UserRole+1);
 
-    selectionModel = _playlist->selectionModel();
+    selectionModel = m_playlist->selectionModel();
     connect(selectionModel, &QItemSelectionModel::currentRowChanged, this, &centralFrame::onCmdSongSelected);
-    connect(_playlist, &playlist::doubleClicked, this, &centralFrame::onCmdPlayPauseSong);
-    connect(_playlist, &playlist::changed, this, &centralFrame::updateSongs);
+    connect(m_playlist, &playlist::doubleClicked, this, &centralFrame::onCmdPlayPauseSong);
+    connect(m_playlist, &playlist::changed, this, &centralFrame::updateSongs);
 
-    _playlist->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(_playlist, &playlist::customContextMenuRequested, this, &centralFrame::onRgtClkPlayList);
+    m_playlist->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_playlist, &playlist::customContextMenuRequested, this, &centralFrame::onRgtClkPlayList);
 
-    _bookmarkList = new bookmark(this);
-    _bookmarkList->setAlternatingRowColors(true);
-    connect(_bookmarkList, &bookmark::currentTextChanged, this, &centralFrame::gotoDir);
+    m_bookmarkList = new bookmark(this);
+    m_bookmarkList->setAlternatingRowColors(true);
+    connect(m_bookmarkList, &bookmark::currentTextChanged, this, &centralFrame::gotoDir);
 
     // left view
     QStackedWidget *stackedWidget = new QStackedWidget(this);
-    stackedWidget->addWidget(_playlist);
-    stackedWidget->addWidget(_bookmarkList);
+    stackedWidget->addWidget(m_playlist);
+    stackedWidget->addWidget(m_bookmarkList);
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     connect(buttonGroup, &QButtonGroup::idClicked, stackedWidget, &QStackedWidget::setCurrentIndex);
 
@@ -156,13 +156,13 @@ centralFrame::centralFrame(QWidget *parent) :
     {
         QHBoxLayout *buttons = new QHBoxLayout(wButtons);
         buttons->setContentsMargins(0,0,0,0);
-        _editMode = new QPushButton(this);
-        _editMode->setIcon(GET_ICON(icon_editlist));
-        _editMode->setToolTip(tr("Edit"));;
-        _editMode->setStatusTip(tr("Edit playlist"));
-        _editMode->setCheckable(true);
-        buttons->addWidget(_editMode);
-        connect(_editMode, &QPushButton::clicked, this, &centralFrame::onCmdPlEdit);
+        m_editMode = new QPushButton(this);
+        m_editMode->setIcon(GET_ICON(icon_editlist));
+        m_editMode->setToolTip(tr("Edit"));;
+        m_editMode->setStatusTip(tr("Edit playlist"));
+        m_editMode->setCheckable(true);
+        buttons->addWidget(m_editMode);
+        connect(m_editMode, &QPushButton::clicked, this, &centralFrame::onCmdPlEdit);
         QPushButton *b1 = new QPushButton(this);
         b1->setIcon(GET_ICON(icon_documentsave));
         b1->setToolTip(tr("Save"));
@@ -200,7 +200,7 @@ centralFrame::centralFrame(QWidget *parent) :
     QHBoxLayout *hbox = new QHBoxLayout(cFrame);
     hbox->setContentsMargins(0,0,0,0);
     hbox->addWidget(w2);
-    hbox->addWidget(_dirlist);
+    hbox->addWidget(m_dirlist);
 
     QVBoxLayout *main = new QVBoxLayout(this);
     main->setContentsMargins(0,0,0,0);
@@ -219,14 +219,14 @@ centralFrame::centralFrame(QWidget *parent) :
 
 centralFrame::~centralFrame()
 {
-    _bookmarkList->save();
+    m_bookmarkList->save();
 
     QSettings settings;
-    QString file = _input->songLoaded();
+    QString file = m_input->songLoaded();
     settings.setValue("General Settings/file", file);
 
-    delete _audio;
-    delete _input;
+    delete m_audio;
+    delete m_input;
 }
 
 void centralFrame::createHomeMenu()
@@ -266,16 +266,16 @@ void centralFrame::createHomeMenu()
 
 void centralFrame::changeState()
 {
-    emit stateChanged(_audio->state());
-    switch (_audio->state())
+    emit stateChanged(m_audio->state());
+    switch (m_audio->state())
     {
     case state_t::STOP:
-        playing = false;
+        m_playing = false;
         m_slider->setDisabled(true);
         break;
     case state_t::PLAY:
-        playing = true;
-        m_slider->setDisabled(!_input->seekable());
+        m_playing = true;
+        m_slider->setDisabled(!m_input->seekable());
         break;
     case state_t::PAUSE:
         m_slider->setDisabled(true);
@@ -285,58 +285,58 @@ void centralFrame::changeState()
 
 void centralFrame::onDirSelected(const QModelIndex& idx)
 {
-    _bookmarkList->setCurrentRow(-1);
+    m_bookmarkList->setCurrentRow(-1);
 
-    if (_editMode->isChecked())
+    if (m_editMode->isChecked())
         return;
 
-    const QString curItem = fsm->fileName(_dirlist->currentIndex());
+    const QString curItem = m_fsm->fileName(m_dirlist->currentIndex());
     if (curItem.isEmpty())
         return;
 
     qDebug() << "Set dir " << curItem;
 
-    const QString mPath = fsm->fileInfo(idx).absoluteFilePath();
+    const QString mPath = m_fsm->fileInfo(idx).absoluteFilePath();
     qDebug() << "Full path: " << mPath;
 
-    _playlistModel->load(mPath);
+    m_playlistModel->load(mPath);
 
-    if (_proxyModel->rowCount() == 0)
+    if (m_proxyModel->rowCount() == 0)
     {
         return;
     }
 
-    const QString fileName = _dirlist->property("UserData").toString();
+    const QString fileName = m_dirlist->property("UserData").toString();
     if (!fileName.isEmpty())
     {
         qDebug() << "selecting file " << fileName;
-        QModelIndexList items = _proxyModel->match(_proxyModel->index(0, 0), Qt::DisplayRole,
+        QModelIndexList items = m_proxyModel->match(m_proxyModel->index(0, 0), Qt::DisplayRole,
                 QVariant::fromValue(fileName), 1, Qt::MatchExactly|Qt::MatchCaseSensitive);
         if (!items.empty())
         {
-            _playlist->setCurrentIndex(items.at(0));
-            _dirlist->setProperty("UserData", QVariant(QString()));
+            m_playlist->setCurrentIndex(items.at(0));
+            m_dirlist->setProperty("UserData", QVariant(QString()));
         }
     }
     else
     {
-        QString songLoaded = _input->songLoaded();
+        QString songLoaded = m_input->songLoaded();
         if (songLoaded.isEmpty())
         {
-            _playlist->setCurrentIndex(_proxyModel->index(0, 0));
+            m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
         }
         else
         {
             QFileInfo fileInfo(songLoaded);
-            QModelIndexList items = _proxyModel->match(_proxyModel->index(0, 0), Qt::DisplayRole,
+            QModelIndexList items = m_proxyModel->match(m_proxyModel->index(0, 0), Qt::DisplayRole,
                     QVariant::fromValue(fileInfo.completeBaseName()), 1, Qt::MatchExactly|Qt::MatchCaseSensitive);
             if (!items.empty())
             {
-                _playlist->setCurrentIndex(items.at(0));
-                _playlist->scrollTo(items.at(0));
+                m_playlist->setCurrentIndex(items.at(0));
+                m_playlist->scrollTo(items.at(0));
             }
-            else if (!playing)
-                _playlist->setCurrentIndex(_proxyModel->index(0, 0));
+            else if (!m_playing)
+                m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
         }
     }
 }
@@ -345,7 +345,7 @@ void centralFrame::onHome(QAction* action)
 {
     QString musicDir = action->data().toString();
     qDebug() << "go to music dir: " << musicDir;
-    QModelIndex idx = fsm->index(musicDir);
+    QModelIndex idx = m_fsm->index(musicDir);
     if (idx.isValid())
         setDir(idx);
     else
@@ -354,35 +354,35 @@ void centralFrame::onHome(QAction* action)
 
 void centralFrame::onCmdCurrentDir()
 {
-    if (_editMode->isChecked())
+    if (m_editMode->isChecked())
         return;
 
     qDebug() << "onCmdCurrentDir";
-    QString file = _input->songLoaded();
+    QString file = m_input->songLoaded();
     if (file.isEmpty())
         return;
 
     QFileInfo fileInfo(file);
     gotoDir(fileInfo.absolutePath());
-    QModelIndexList items = _proxyModel->match(_proxyModel->index(0, 0),
+    QModelIndexList items = m_proxyModel->match(m_proxyModel->index(0, 0),
         Qt::DisplayRole, QVariant::fromValue(fileInfo.completeBaseName()),
         -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
 
-    _playlist->setCurrentIndex(items.at(0));
+    m_playlist->setCurrentIndex(items.at(0));
 }
 
 void centralFrame::gotoDir(const QString &dir)
 {
     qDebug() << "gotoDir: " << dir;
     if (!dir.isEmpty())
-        setDir(fsm->index(dir));
+        setDir(m_fsm->index(dir));
 }
  
 void centralFrame::setFile(const QString& file, const bool play)
 {
     qDebug() << "setFile " << file;
 
-    QModelIndex curItem = _playlist->currentIndex();
+    QModelIndex curItem = m_playlist->currentIndex();
 
     QFileInfo fileInfo(file);
     // Check if requested file/directory exists
@@ -394,26 +394,26 @@ void centralFrame::setFile(const QString& file, const bool play)
         return;
     }
 
-    QModelIndexList items = _playlistModel->match(_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(file), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
+    QModelIndexList items = m_playlistModel->match(m_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(file), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
 
-    const bool selected = items.empty() ? false : _playlist->selectionModel()->isSelected(items.at(0));
+    const bool selected = items.empty() ? false : m_playlist->selectionModel()->isSelected(items.at(0));
 
     // Check if requested song is already playing
-    if (playing && selected)
+    if (m_playing && selected)
         return;
 
     QModelIndex val;
     if (!items.empty())
         val = items.at(0);
 
-    QString currentDir = fsm->fileName(_dirlist->currentIndex());
+    QString currentDir = m_fsm->fileName(m_dirlist->currentIndex());
     const bool dirSelected = !currentDir.compare(fileInfo.dir().absolutePath());
 
     if (fileInfo.isDir() || (TFACTORY->plExt().indexOf(fileInfo.suffix().toLower()) >= 0))
     {
         if (dirSelected)
         {
-            if (play && !playing)
+            if (play && !m_playing)
             {
                 onCmdPlayPauseSong();
             }
@@ -421,9 +421,9 @@ void centralFrame::setFile(const QString& file, const bool play)
         }
         else
         {
-            _dirlist->setProperty("UserData", QVariant(QString()));
-            setDir(fsm->index(file));
-            playMode = true; // TODO sync GUI
+            m_dirlist->setProperty("UserData", QVariant(QString()));
+            setDir(m_fsm->index(file));
+            m_playMode = true; // TODO sync GUI
         }
         goto done;
     }
@@ -433,7 +433,7 @@ void centralFrame::setFile(const QString& file, const bool play)
 
         if (!fName.isEmpty())
         {
-            QRegExp regexp = _proxyModel->filterRegExp();
+            QRegExp regexp = m_proxyModel->filterRegExp();
             if (!regexp.exactMatch(fName))
             {
                 // file is not supported, ignore message
@@ -451,41 +451,41 @@ void centralFrame::setFile(const QString& file, const bool play)
                 onCmdPlayPauseSong();
             }
             else
-                _playlist->setCurrentIndex(val);
+                m_playlist->setCurrentIndex(val);
         }
     }
     else
     {
-        _dirlist->setProperty("UserData", QVariant(fileInfo.completeBaseName()));
-        setDir(fsm->index(fileInfo.dir().absolutePath()));
+        m_dirlist->setProperty("UserData", QVariant(fileInfo.completeBaseName()));
+        setDir(m_fsm->index(fileInfo.dir().absolutePath()));
     }
 
 done:
-    playing = play;
+    m_playing = play;
 }
 
 void centralFrame::onCmdPlayPauseSong()
 {
-    if (_audio->state() != state_t::STOP)
+    if (m_audio->state() != state_t::STOP)
     {
-        _audio->pause();
+        m_audio->pause();
     }
     else
     {
         // if loaded song is not the selected one don't play
-        QString songLoaded = _input->songLoaded();
-        const QString song = _proxyModel->data(_playlist->currentIndex(), Qt::UserRole).toString();
+        QString songLoaded = m_input->songLoaded();
+        const QString song = m_proxyModel->data(m_playlist->currentIndex(), Qt::UserRole).toString();
         qDebug() << "Song: " << song;
         if (!song.isEmpty() && song.compare(songLoaded))
         {
             return;
         }
 
-        if (_audio->play(_input))
+        if (m_audio->play(m_input))
         {
             QFileInfo fileInfo(songLoaded);
             gotoDir(fileInfo.absolutePath());
-            playDir = fsm->fileName(_dirlist->currentIndex());
+            m_playDir = m_fsm->fileName(m_dirlist->currentIndex());
         }
     }
 
@@ -495,17 +495,17 @@ void centralFrame::onCmdPlayPauseSong()
 void centralFrame::onCmdStopSong()
 {
     qDebug() << "centralFrame::onCmdStopSong";
-    if (_audio->stop())
+    if (m_audio->stop())
     {
         emit updateTime(0);
         emit updateSlider(0);
         changeState();
-        QModelIndex curr = _dirlist->currentIndex();
-        if (playDir.compare(fsm->fileName(curr)))
+        QModelIndex curr = m_dirlist->currentIndex();
+        if (m_playDir.compare(m_fsm->fileName(curr)))
         {
             onDirSelected(curr);
         }
-        playDir = QString();
+        m_playDir = QString();
     }
 }
 
@@ -521,11 +521,11 @@ void centralFrame::onCmdNextSong()
 
 void centralFrame::onCmdChangeSong(dir_t dir)
 {
-    qDebug() << "playDir " << playDir;
-    if (playing && playDir.compare(fsm->fileName(_dirlist->currentIndex())))
+    qDebug() << "playDir " << m_playDir;
+    if (m_playing && m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
         return;
 
-    int row = _playlist->currentIndex().row();
+    int row = m_playlist->currentIndex().row();
 
     switch (dir)
     {
@@ -539,16 +539,16 @@ void centralFrame::onCmdChangeSong(dir_t dir)
             break;
     }
 
-    QModelIndex index = _proxyModel->index(row, 0);
+    QModelIndex index = m_proxyModel->index(row, 0);
 
     if (index.isValid())
     {
-        if (!preloaded.isEmpty())
+        if (!m_preloaded.isEmpty())
         {
-            _preload->close();
-            preloaded = QString();
+            m_preload->close();
+            m_preloaded = QString();
         }
-        _playlist->setCurrentIndex(index);
+        m_playlist->setCurrentIndex(index);
     }
 }
 
@@ -564,41 +564,45 @@ void centralFrame::load(const QString& filename)
     connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
     connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
 
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
     loader->start();
 }
 
 void centralFrame::onCmdSongLoaded(input* res)
 {
-    if (!preloaded.isEmpty())
+    QApplication::restoreOverrideCursor();
+
+    if (!m_preloaded.isEmpty())
     {
-        if ((res != nullptr) && _audio->gapless(res))
+        if ((res != nullptr) && m_audio->gapless(res))
         {
-            delete _preload;
-            _preload = res;
+            delete m_preload;
+            m_preload = res;
 
             if (SETTINGS->subtunes())
-                _preload->subtune(1);
+                m_preload->subtune(1);
         }
         else
         {
             delete res;
-            preloaded = QString();
+            m_preloaded = QString();
         }
         return;
     }
 
     if (res != nullptr)
     {
-        input* tmp = _input;
-        _input = res;
+        input* tmp = m_input;
+        m_input = res;
         delete tmp;
 
-        emit setDisplay(_input);
+        emit setDisplay(m_input);
 
         if (SETTINGS->subtunes())
-            _input->subtune(1);
+            m_input->subtune(1);
 
-        if (playing)
+        if (m_playing)
         {
             onCmdPlayPauseSong();
         }
@@ -606,57 +610,52 @@ void centralFrame::onCmdSongLoaded(input* res)
     }
     else
     {
-        playDir = QString();
+        m_playDir = QString();
         emit setInfo(nullptr);
         changeState();
         qWarning() << "Error loading song";
     }
-
-    QApplication::restoreOverrideCursor();
 }
 
 void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 {
-    if (_editMode->isChecked())
+    if (m_editMode->isChecked())
         return;
 
     qDebug() << "onCmdSongSelected " << currentRow.row();
     if (!currentRow.isValid())
         return;
 
-    QString songLoaded = _input->songLoaded();
-    const QString song = _proxyModel->data(currentRow, Qt::UserRole).toString();
+    QString songLoaded = m_input->songLoaded();
+    const QString song = m_proxyModel->data(currentRow, Qt::UserRole).toString();
     if (!songLoaded.isEmpty() && !song.compare(songLoaded))
         return;
 
-    _playlist->scrollTo(currentRow);
+    m_playlist->scrollTo(currentRow);
 
-    if (!_playlist->isVisible())
+    if (!m_playlist->isVisible())
         updateSongs();
 
-    if (!preloaded.isEmpty())
+    if (!m_preloaded.isEmpty())
     {
-        if (preloaded.compare(song))
+        if (m_preloaded.compare(song))
         {
-            preloaded = QString();
-            utils::delPtr(_preload);
+            m_preloaded = QString();
+            utils::delPtr(m_preload);
         }
         else
         {
-            delete _input;
-            _input = _preload;
-            _preload = nullptr;
-            preloaded = QString();
-            emit setDisplay(_input);
+            delete m_input;
+            m_input = m_preload;
+            m_preload = nullptr;
+            m_preloaded = QString();
+            emit setDisplay(m_input);
             return;
         }
     }
 
-    {
-        QApplication::setOverrideCursor(Qt::WaitCursor);
-        _audio->stop();
-        emit clearDisplay(true);
-    }
+    m_audio->stop();
+    emit clearDisplay(true);
 
     load(song);
 }
@@ -664,12 +663,12 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 void centralFrame::onUpdateTime()
 {
     // Playing may have stopped while message was in queue
-    if (_audio->state() != state_t::STOP)
+    if (m_audio->state() != state_t::STOP)
     {
-        emit updateTime(_audio->seconds());
+        emit updateTime(m_audio->seconds());
 
         if (!m_slider->isSliderDown())
-            emit updateSlider((100*_audio->seconds())/_input->time());
+            emit updateSlider((100*m_audio->seconds())/m_input->time());
     }
 }
 
@@ -677,23 +676,23 @@ void centralFrame::onSeek()
 {
     int pos = m_slider->sliderPosition();
     qDebug() << "onSeek: " << pos;
-    _audio->pause();
-    _input->seek(pos);
-    _audio->seek(pos); // FIXME this sucks
-    _audio->pause();
+    m_audio->pause();
+    m_input->seek(pos);
+    m_audio->seek(pos); // FIXME this sucks
+    m_audio->pause();
 }
 
 void centralFrame::preloadSong()
 {
     qDebug("centralFrame::preloadSong");
-    if (playMode && _input->gapless() && !playDir.compare(fsm->fileName(_dirlist->currentIndex())))
+    if (m_playMode && m_input->gapless() && !m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
     {
-        const int nextSong = _playlist->currentIndex().row()+1;
-        QModelIndex index = _proxyModel->index(nextSong, 0);
+        const int nextSong = m_playlist->currentIndex().row()+1;
+        QModelIndex index = m_proxyModel->index(nextSong, 0);
         if (index.isValid())
         {
-            preloaded = _proxyModel->data(index, Qt::UserRole).toString();
-            load(preloaded);
+            m_preloaded = m_proxyModel->data(index, Qt::UserRole).toString();
+            load(m_preloaded);
         }
     }
 }
@@ -701,24 +700,24 @@ void centralFrame::preloadSong()
 void centralFrame::songEnded()
 {
     qDebug("centralFrame::songEnded");
-    if (SETTINGS->subtunes() && (_input->subtune()<_input->subtunes()))
+    if (SETTINGS->subtunes() && (m_input->subtune()<m_input->subtunes()))
     {
         changeSubtune(dir_t::ID_NEXT);
         return;
     }
 
-    if (playMode)
+    if (m_playMode)
     {
         QModelIndex index;
-        if (!playDir.compare(fsm->fileName(_dirlist->currentIndex())))
+        if (!m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
         {
-            int nextSong = _playlist->currentIndex().row() + 1;
-            index = _proxyModel->index(nextSong, 0);
+            int nextSong = m_playlist->currentIndex().row() + 1;
+            index = m_proxyModel->index(nextSong, 0);
         }
 
         if (index.isValid())
         {
-            _playlist->setCurrentIndex(index);
+            m_playlist->setCurrentIndex(index);
             return;
         }
     }
@@ -730,37 +729,37 @@ void centralFrame::onSettingsChanged()
 {
     createHomeMenu();
 
-    QString songLoaded = _input->songLoaded();
+    QString songLoaded = m_input->songLoaded();
     if (!songLoaded.isEmpty())
     {
         // we must reload the song
-        _input->close();
-        const QModelIndex curItem = _playlist->currentIndex();
-        _playlist->setCurrentIndex(QModelIndex());
-        _playlist->setCurrentIndex(curItem);
+        m_input->close();
+        const QModelIndex curItem = m_playlist->currentIndex();
+        m_playlist->setCurrentIndex(QModelIndex());
+        m_playlist->setCurrentIndex(curItem);
     }
 }
 
 void centralFrame::onRgtClkDirList(const QPoint& pos)
 {
     qDebug() << "onRgtClkDirList";
-    QModelIndex item = _dirlist->indexAt(pos);
+    QModelIndex item = m_dirlist->indexAt(pos);
     if (!item.isValid())
         return;
 
     QMenu pane(this);
     QWidgetAction *wa = new QWidgetAction(&pane);
-    wa->setDefaultWidget(new QLabel(utils::shrink(fsm->fileName(item))));
+    wa->setDefaultWidget(new QLabel(utils::shrink(m_fsm->fileName(item))));
     pane.addAction(wa);
     pane.addSeparator();
 
-    if ((_editMode->isChecked()) && (!fsm->isDir(item)))
+    if ((m_editMode->isChecked()) && (!m_fsm->isDir(item)))
     {
         QAction *additem = pane.addAction(
             GET_ICON(icon_listadd), tr("Add to playlist"), this,
             [this, item]()
             {
-                _playlistModel->append(fsm->fileInfo(item).absoluteFilePath());
+                m_playlistModel->append(m_fsm->fileInfo(item).absoluteFilePath());
             }
         );
         additem->setStatusTip(tr("Add song to the playlist"));
@@ -771,19 +770,19 @@ void centralFrame::onRgtClkDirList(const QPoint& pos)
             GET_ICON(icon_bookmark), tr("Add to bookmarks"), this, 
             [this, item]()
             {
-                _bookmarkList->add(fsm->fileInfo(item).absoluteFilePath());
+                m_bookmarkList->add(m_fsm->fileInfo(item).absoluteFilePath());
             }
         );
         additem->setStatusTip(tr("Add directory to the bookmarks"));
     }
 
-    pane.exec(_dirlist->mapToGlobal(pos));
+    pane.exec(m_dirlist->mapToGlobal(pos));
 }
 
 void centralFrame::onRgtClkPlayList(const QPoint& pos)
 {
     qDebug() << "onRgtClkPlayList";
-    QModelIndex item = _playlist->indexAt(pos);
+    QModelIndex item = m_playlist->indexAt(pos);
 
     QMenu pane(this);
     if (item.isValid())
@@ -791,7 +790,7 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
         const int itemRow = item.row();
 
         QWidgetAction *wa = new QWidgetAction(&pane);
-        QLabel *label = new QLabel(utils::shrink(_playlistModel->data(item, Qt::UserRole).toString()));
+        QLabel *label = new QLabel(utils::shrink(m_playlistModel->data(item, Qt::UserRole).toString()));
         label->setAlignment(Qt::AlignCenter);
         wa->setDefaultWidget(label);
         pane.addAction(wa);
@@ -801,7 +800,7 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
             [this, itemRow]()
             {
                 qDebug() << "remove item " << itemRow;
-                _playlistModel->removeRow(itemRow);
+                m_playlistModel->removeRow(itemRow);
             }
         );
         delitem->setStatusTip(tr("Remove selected item from playlist"));
@@ -811,31 +810,31 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     QAction* asc = new QAction(tr("Sort ascending"), &pane);
     asc->setCheckable(true);
     asc->setStatusTip(tr("Sort ascending"));
-    if (_proxyModel->getMode() == proxymodel::sortMode::Ascending) asc->setChecked(true);
+    if (m_proxyModel->getMode() == proxymodel::sortMode::Ascending) asc->setChecked(true);
     connect(asc, &QAction::triggered, this,
         [this]()
         {
-            _proxyModel->sort(proxymodel::sortMode::Ascending);
+            m_proxyModel->sort(proxymodel::sortMode::Ascending);
         }
     );
     QAction* desc = new QAction(tr("Sort descending"), &pane);
     desc->setCheckable(true);
     desc->setStatusTip(tr("Sort descending"));
-    if (_proxyModel->getMode() == proxymodel::sortMode::Descending) desc->setChecked(true);
+    if (m_proxyModel->getMode() == proxymodel::sortMode::Descending) desc->setChecked(true);
     connect(desc, &QAction::triggered, this,
         [this]()
         {
-            _proxyModel->sort(proxymodel::sortMode::Descending);
+            m_proxyModel->sort(proxymodel::sortMode::Descending);
         }
     );
     QAction* rnd = new QAction(tr("Shuffle"), &pane);
     rnd->setCheckable(true);
     rnd->setStatusTip(tr("Sort randomly"));
-    if (_proxyModel->getMode() == proxymodel::sortMode::Random) rnd->setChecked(true);
+    if (m_proxyModel->getMode() == proxymodel::sortMode::Random) rnd->setChecked(true);
     connect(rnd, &QAction::triggered, this,
         [this]()
         {
-            _proxyModel->sort(proxymodel::sortMode::Random);
+            m_proxyModel->sort(proxymodel::sortMode::Random);
         }
     );
 
@@ -849,15 +848,15 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     pane.addAction(desc);
     pane.addAction(rnd);
 
-    pane.exec(_playlist->mapToGlobal(pos));
+    pane.exec(m_playlist->mapToGlobal(pos));
 }
 
 void centralFrame::changeSubtune(dir_t dir)
 {
-    if (_input->subtunes() <= 1)
+    if (m_input->subtunes() <= 1)
         return;
 
-    unsigned int i = _input->subtune();
+    unsigned int i = m_input->subtune();
     switch (dir)
     {
     case dir_t::ID_PREV:
@@ -868,15 +867,15 @@ void centralFrame::changeSubtune(dir_t dir)
         break;
     }
 
-    if ((i < 1) || (i > _input->subtunes()))
+    if ((i < 1) || (i > m_input->subtunes()))
         return;
 
-    _audio->stop();
+    m_audio->stop();
 
-    if (_input->subtune(i))
-        emit setDisplay(_input);
+    if (m_input->subtune(i))
+        emit setDisplay(m_input);
 
-    if (playing)
+    if (m_playing)
     {
         onCmdPlayPauseSong();
     }
@@ -884,30 +883,30 @@ void centralFrame::changeSubtune(dir_t dir)
 
 void centralFrame::onCmdPlEdit(bool checked)
 {
-    _playlist->setAcceptDrops(checked);
-    _playlist->setDropIndicatorShown(checked);
+    m_playlist->setAcceptDrops(checked);
+    m_playlist->setDropIndicatorShown(checked);
 
     if (checked)
     {
-        _playlistModel->clear();
+        m_playlistModel->clear();
 
-        fsm->setNameFilters(getPattern());
+        m_fsm->setNameFilters(getPattern());
 
-        setProperty("SelectedDir", QVariant(fsm->filePath(_dirlist->currentIndex())));
+        setProperty("SelectedDir", QVariant(m_fsm->filePath(m_dirlist->currentIndex())));
     }
     else
     {
-        fsm->setNameFilters(TFACTORY->plExt());
-        _dirlist->setCurrentIndex(QModelIndex());
+        m_fsm->setNameFilters(TFACTORY->plExt());
+        m_dirlist->setCurrentIndex(QModelIndex());
         QString dir = property("SelectedDir").toString();
         qDebug() << "dir " << dir;
-        _dirlist->setCurrentIndex(fsm->index(dir));
+        m_dirlist->setCurrentIndex(m_fsm->index(dir));
     }
 }
 
 void centralFrame::onCmdPlSave()
 {
-    const int n = _proxyModel->rowCount();
+    const int n = m_proxyModel->rowCount();
     if (!n)
         return;
 
@@ -922,10 +921,10 @@ void centralFrame::onCmdPlSave()
         return;
 
     tracks_t tracks;
-    for(int r = 0; r < _proxyModel->rowCount(); ++r)
+    for(int r = 0; r < m_proxyModel->rowCount(); ++r)
     {
-        QModelIndex idx = _proxyModel->index(r, 0);
-        tracks.append(_proxyModel->data(idx, Qt::UserRole+1).toString());
+        QModelIndex idx = m_proxyModel->index(r, 0);
+        tracks.append(m_proxyModel->data(idx, Qt::UserRole+1).toString());
     }
     if (!tracklist->save(tracks))
         QMessageBox::critical(this, tr("Error"), tr("Error saving playlist"));
@@ -933,11 +932,11 @@ void centralFrame::onCmdPlSave()
 
 void centralFrame::updateSongs()
 {
-    if (playing && playDir.compare(fsm->fileName(_dirlist->currentIndex())))
+    if (m_playing && m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
         return;
 
-    const int tunes = _proxyModel->rowCount();
-    const int tune = 1 + _playlist->currentIndex().row();
+    const int tunes = m_proxyModel->rowCount();
+    const int tune = 1 + m_playlist->currentIndex().row();
 
     QString text(QString("%1/%2").arg(tune).arg(tunes));
     emit songUpdated(text);
@@ -948,33 +947,33 @@ void centralFrame::setDir(const QModelIndex& index)
     qDebug("centralFrame::setDir");
     QMetaObject::Connection * const connection = new QMetaObject::Connection;
     *connection = connect(
-        fsm, &QFileSystemModel::directoryLoaded,
+        m_fsm, &QFileSystemModel::directoryLoaded,
         [connection, this](const QString &path)
         {
             qDebug() << "dirLoaded: " << path;
-            if (path.compare(fsm->fileInfo(_dirlist->currentIndex()).absolutePath()) == 0)
+            if (path.compare(m_fsm->fileInfo(m_dirlist->currentIndex()).absolutePath()) == 0)
             {
                 qDebug() << "scrollTo" << path;
                 QObject::disconnect(*connection);
                 delete connection;
-                QTimer::singleShot(50, [this](){_dirlist->scrollTo(_dirlist->currentIndex());});
+                QTimer::singleShot(50, [this](){m_dirlist->scrollTo(m_dirlist->currentIndex());});
             }
         }
     );
 
-    _dirlist->setCurrentIndex(index);
-    _dirlist->scrollTo(index);
+    m_dirlist->setCurrentIndex(index);
+    m_dirlist->scrollTo(index);
 }
 
 void centralFrame::init()
 {
     qDebug() << "*** init ***";
-    fsm->setRootPath(QDir::rootPath());
+    m_fsm->setRootPath(QDir::rootPath());
 
-    _bookmarkList->load();
+    m_bookmarkList->load();
 }
 
-const metaData* centralFrame::getMetaData() const { return _input->getMetaData(); }
+const metaData* centralFrame::getMetaData() const { return m_input->getMetaData(); }
 
 QString centralFrame::getFilter() const
 {

@@ -43,26 +43,26 @@ const char* sampleTypeString(sample_t sampleType)
 }
 
 audio::audio() :
-    _state(state_t::STOP)
+    m_state(state_t::STOP)
 {
-    _volume = settings.value("Audio Settings/volume", 50).toInt();
+    m_volume = m_settings.value("Audio Settings/volume", 50).toInt();
 
-    audioOutput = new qaudioBackend();
-    connect(audioOutput, &qaudioBackend::songEnded, this, &audio::songEnded);
+    m_audioOutput = new qaudioBackend();
+    connect(m_audioOutput, &qaudioBackend::songEnded, this, &audio::songEnded);
 }
 
 audio::~audio()
 {
     stop();
 
-    settings.setValue("Audio Settings/volume", _volume);
+    m_settings.setValue("Audio Settings/volume", m_volume);
 
-    delete audioOutput;
+    delete m_audioOutput;
 }
 
 bool audio::play(input* i)
 {
-    if ((i->songLoaded().isEmpty()) || (_state == state_t::PLAY))
+    if ((i->songLoaded().isEmpty()) || (m_state == state_t::PLAY))
         return false;
 
     qDebug() << "audio::play";
@@ -109,45 +109,45 @@ bool audio::play(input* i)
     }
 
     qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << sampleTypeString(sampleType);
-    iw = new InputWrapper(i);
-    connect(iw, &InputWrapper::switchSong,  this, &audio::songEnded);
-    connect(iw, &InputWrapper::updateTime,  this, &audio::updateTime);
-    connect(iw, &InputWrapper::preloadSong, this, &audio::preloadSong);
-    size_t bufferSize = audioOutput->open(selectedCard, sampleRate, i->channels(), sampleType, iw);
+    m_iw = new InputWrapper(i);
+    connect(m_iw, &InputWrapper::switchSong,  this, &audio::songEnded);
+    connect(m_iw, &InputWrapper::updateTime,  this, &audio::updateTime);
+    connect(m_iw, &InputWrapper::preloadSong, this, &audio::preloadSong);
+    size_t bufferSize = m_audioOutput->open(selectedCard, sampleRate, i->channels(), sampleType, m_iw);
     if (!bufferSize)
         return false;
 
     qDebug() << "Output samplerate " << sampleRate;
     qDebug() << "bufferSize: " << bufferSize << " bytes";
 
-    iw->setFormat(sampleRate, i->channels(), sampleType, bufferSize);
+    m_iw->setFormat(sampleRate, i->channels(), sampleType, bufferSize);
 
     if (SETTINGS->bs2b() && (i->channels() == 2))
-        iw->enableBs2b();
+        m_iw->enableBs2b();
 
-    audioOutput->volume(_volume);
+    m_audioOutput->volume(m_volume);
 
     // We're ready, resume playback
-    audioOutput->unpause();
+    m_audioOutput->unpause();
 
-    _state = state_t::PLAY;
+    m_state = state_t::PLAY;
 
     return true;
 }
 
 void audio::pause()
 {
-    switch (_state)
+    switch (m_state)
     {
     case state_t::PLAY:
         qDebug() << "Pause";
-        audioOutput->pause();
-        _state = state_t::PAUSE;
+        m_audioOutput->pause();
+        m_state = state_t::PAUSE;
         break;
     case state_t::PAUSE:
         qDebug() << "Unpause";
-        audioOutput->unpause();
-        _state = state_t::PLAY;
+        m_audioOutput->unpause();
+        m_state = state_t::PLAY;
         break;
     case state_t::STOP:
         break;
@@ -156,37 +156,37 @@ void audio::pause()
 
 bool audio::stop()
 {
-    if (_state == state_t::STOP)
+    if (m_state == state_t::STOP)
         return false;
 
     qDebug() << "audio::stop";
 
-    audioOutput->stop();
+    m_audioOutput->stop();
 
-    iw->close();
+    m_iw->close();
 
-    audioOutput->close();
+    m_audioOutput->close();
 
-    _state = state_t::STOP;
+    m_state = state_t::STOP;
 
-    delete iw;
+    delete m_iw;
 
     return true;
 }
 
 void audio::volume(const int vol)
 {
-    _volume = vol;
-    audioOutput->volume(_volume);
+    m_volume = vol;
+    m_audioOutput->volume(m_volume);
 }
 
-bool audio::gapless(input* const i) { return iw->tryPreload(i); }
+bool audio::gapless(input* const i) { return m_iw->tryPreload(i); }
 
-int audio::seconds() const { return iw->getSeconds(); }
+int audio::seconds() const { return m_iw->getSeconds(); }
 
-void audio::seek(int pos) { return iw->setPos(pos); }
+void audio::seek(int pos) { return m_iw->setPos(pos); }
 
-void audio::unload() { iw->unload(); }
+void audio::unload() { m_iw->unload(); }
 
 /*****************************************************************/
 
@@ -214,7 +214,7 @@ audioConfig::audioConfig(QWidget* win) :
 
             qDebug() << "onCmdCard" << card;
 
-            SETTINGS->_card = card;
+            SETTINGS->m_card = card;
         }
     );
 
@@ -247,10 +247,10 @@ audioConfig::audioConfig(QWidget* win) :
             switch (val)
             {
             case 0:
-                SETTINGS->_bits = 8;
+                SETTINGS->m_bits = 8;
                 break;
             case 1:
-                SETTINGS->_bits = 16;
+                SETTINGS->m_bits = 16;
                 break;
             }
         }
