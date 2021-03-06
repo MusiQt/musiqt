@@ -372,31 +372,36 @@ void mainWindow::onCompact()
 void mainWindow::onAbout()
 {
     aboutDialog *about = new aboutDialog(this);
-    about->setAttribute(Qt::WA_DeleteOnClose);
-    about->exec();
+    about->open();
+    connect(about, &aboutDialog::finished,
+        [about, this]()
+        {
+            about->deleteLater();
+        }
+    );
 }
 
 void mainWindow::onConfig()
 {
     settingsWindow *config = new settingsWindow(this);
-    config->setAttribute(Qt::WA_DeleteOnClose);
-    connect(config, &settingsWindow::finished, this, &mainWindow::onCloseConfig);
     config->open();
-}
-
-void mainWindow::onCloseConfig(int result)
-{
-    switch (result)
-    {
-    case QDialog::Accepted:
-        cFrame->onCmdStopSong();
-        SETTINGS->save(settings);
-        cFrame->onSettingsChanged();
-        break;
-    case QDialog::Rejected:
-        SETTINGS->load(settings);
-        break;
-    }
+    connect(config, &settingsWindow::finished,
+        [config, this](int result)
+        {
+            switch (result)
+            {
+            case QDialog::Accepted:
+                cFrame->onCmdStopSong();
+                SETTINGS->save(settings);
+                cFrame->onSettingsChanged();
+                break;
+            case QDialog::Rejected:
+                SETTINGS->load(settings);
+                break;
+            }
+            config->deleteLater();
+        }
+    );
 }
 
 void mainWindow::onInfo()
@@ -407,14 +412,15 @@ void mainWindow::onInfo()
     _infoDialog = new infoDialog(this);
     _infoDialog->setInfo(cFrame->getMetaData());
     _infoDialog->setAttribute(Qt::WA_QuitOnClose, false);
-    connect(_infoDialog, &infoDialog::finished, this, &mainWindow::onCloseInfo);
+    connect(_infoDialog, &infoDialog::finished,
+        [this]()
+        {
+            qDebug("closing info dialog");
+            _infoDialog->deleteLater();
+            _infoDialog = nullptr;
+        }
+    );
     _infoDialog->show();
-}
-
-void mainWindow::onCloseInfo()
-{
-    qDebug("onCloseInfo");
-    utils::delPtr(_infoDialog);
 }
 
 void mainWindow::setPlayButton(state_t state)
