@@ -99,8 +99,6 @@ void bookmark::contextMenuEvent(QContextMenuEvent * event)
 {
     QListWidgetItem *item = itemAt(event->pos());
 
-    setCurrentItem(item);
-
     QMenu pane(this);
     QString dirName = (item != nullptr) ? item->text() : tr("No item selected");
     if (dirName.count() > 20)
@@ -110,33 +108,35 @@ void bookmark::contextMenuEvent(QContextMenuEvent * event)
     wa->setDefaultWidget(new QLabel(dirName));
     pane.addAction(wa);
     pane.addSeparator();
-    QAction *delitem = pane.addAction(GET_ICON(icon_listremove), tr("Delete"), this, SLOT(onCmdDel()));
-        delitem->setStatusTip(tr("Delete selected bookmark"));
+
+    QAction *delitem = pane.addAction(
+        GET_ICON(icon_listremove), tr("Delete"), this,
+        [this, item]()
+        {
+            const int idx = row(item);
+            delete takeItem(idx);
+        }
+    );
+    delitem->setStatusTip(tr("Delete selected bookmark"));
     if (item == nullptr)
         delitem->setEnabled(false);
-    QAction *clearitem = pane.addAction(GET_ICON(icon_editdelete), tr("Clear"), this, SLOT(onCmdClear()));
+
+    QAction *clearitem = pane.addAction(
+        GET_ICON(icon_editdelete), tr("Clear"), this,
+        [this]()
+        {
+            if (QMessageBox::question(
+                this, tr("Clear bookmarks"),
+                tr("Are you sure you want to delete all bookmarks?"),
+                QMessageBox::Yes|QMessageBox::No) == QMessageBox::Yes)
+            {
+                clear();
+            }
+        }
+    );
     clearitem->setStatusTip(tr("Clear all bookmarks"));
     if (count() == 0)
         clearitem->setEnabled(false);
 
     pane.exec(event->globalPos());
-}
-
-void bookmark::onCmdDel()
-{
-    const int idx = currentRow();
-    if (idx < 0)
-        return;
-    QListWidgetItem *item = takeItem(idx);
-    delete item;
-}
-
-void bookmark::onCmdClear()
-{
-    if (QMessageBox::question(this, tr("Clear bookmarks"),
-        tr("Are you sure you want to delete all bookmarks?"),
-        QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes)
-    {
-        clear();
-    }
 }

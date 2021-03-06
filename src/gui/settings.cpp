@@ -77,13 +77,23 @@ settingsWindow::settingsWindow(QWidget* win) :
     QCheckBox* cBox = new QCheckBox(tr("&Play subtunes"), this);
     cBox->setToolTip(tr("Play all subtunes"));
     cBox->setCheckState(SETTINGS->_subtunes ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, &QCheckBox::stateChanged, this, &settingsWindow::setSubtunes);
+    connect(cBox, &QCheckBox::stateChanged,
+        [](int val)
+        {
+            SETTINGS->_subtunes = (val == Qt::Checked);
+        }
+    );
     optionLayout->addWidget(cBox);
 
     cBox = new QCheckBox(tr("&Bauer stereophonic-to-binaural DSP"), this);
     cBox->setToolTip(tr("Bauer stereophonic-to-binaural DSP"));
     cBox->setCheckState(SETTINGS->_bs2b ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, &QCheckBox::stateChanged, this, &settingsWindow::setBs2b);
+    connect(cBox, &QCheckBox::stateChanged,
+        [](int val)
+        {
+            SETTINGS->_bs2b = (val == Qt::Checked);
+        }
+    );
     optionLayout->addWidget(cBox);
 #ifndef HAVE_BS2B
     cBox->setDisabled(true);
@@ -96,7 +106,12 @@ settingsWindow::settingsWindow(QWidget* win) :
         group->setToolTip(tr("Enable replaygain loudness normalization"));
         group->setChecked(SETTINGS->_replayGain);
         group->setLayout(replayGainBox);
-        connect(group, &QGroupBox::toggled, this, &settingsWindow::setReplaygain);
+        connect(group, &QGroupBox::toggled,
+            [](bool val)
+            {
+                SETTINGS->_replayGain = val;
+            }
+        );
 
         QButtonGroup *radioGroup = new QButtonGroup(this);
 
@@ -113,7 +128,12 @@ settingsWindow::settingsWindow(QWidget* win) :
         replayGainBox->addStretch(1);
         optionLayout->addWidget(group);
 
-        connect(radioGroup, &QButtonGroup::idClicked, this, &settingsWindow::setReplaygainMode);
+        connect(radioGroup, &QButtonGroup::idClicked,
+            [](int val)
+            {
+                SETTINGS->_replayGainMode = val;
+            }
+        );
     }
     switcher->addWidget(optionpane);
 
@@ -227,54 +247,34 @@ settingsWindow::settingsWindow(QWidget* win) :
     QPushButton* b = new QPushButton(GET_ICON(icon_dialogcancel), tr("&Cancel"), this);
     bottom->addWidget(b);
     initial->setFocus();
-    connect(b, &QPushButton::clicked, this, &settingsWindow::onReject);
-    connect(initial, &QPushButton::clicked, this, &settingsWindow::onAccept);
+    connect(b, &QPushButton::clicked,
+        [this]()
+        {
+            //SETTINGS->load();
+            for (inputConfig* ic: inputConfigs)
+            {
+                ic->loadSettings();
+                delete ic;
+            }
+            reject();
+        }
+    );
+    connect(initial, &QPushButton::clicked,
+        [this]()
+        {
+            //SETTINGS->save();
+            for (inputConfig* ic: inputConfigs)
+            {
+                ic->saveSettings();
+                delete ic;
+            }
+            accept();
+        }
+    );
 
     buttons->addStretch();
 
     layout()->setSizeConstraint(QLayout::SetFixedSize);
-}
-
-void settingsWindow::onAccept()
-{
-    //SETTINGS->save();
-    for (inputConfig* ic: inputConfigs)
-    {
-        ic->saveSettings();
-        delete ic;
-    }
-    accept();
-}
-
-void settingsWindow::onReject()
-{
-    //SETTINGS->load();
-    for (inputConfig* ic: inputConfigs)
-    {
-        ic->loadSettings();
-        delete ic;
-    }
-    reject();
-}
-
-void settingsWindow::setSubtunes(int val)
-{
-    SETTINGS->_subtunes = val == Qt::Checked;
-}
-
-void settingsWindow::setBs2b(int val)
-{
-    SETTINGS->_bs2b = val == Qt::Checked;
-}
-
-void settingsWindow::setReplaygain(bool val)
-{
-    SETTINGS->_replayGain = val;
-}
-
-void settingsWindow::setReplaygainMode(int val)
-{
-    SETTINGS->_replayGainMode = val;
 }
 
 bool settingsWindow::event(QEvent *e)

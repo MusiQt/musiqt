@@ -31,8 +31,6 @@ class inputConfig;
 
 class settingsWindow : public QDialog
 {
-    Q_OBJECT
-
 private:
     QLabel *colorLabel;
 
@@ -42,14 +40,6 @@ private:
     settingsWindow() {}
     settingsWindow(const settingsWindow&);
     settingsWindow& operator=(const settingsWindow&);
-
-    void onAccept();
-    void onReject();
-
-    void setSubtunes(int val);
-    void setBs2b(int val);
-    void setReplaygain(bool val);
-    void setReplaygainMode(int val);
 
 protected:
     bool event(QEvent *e) override;

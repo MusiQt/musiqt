@@ -24,8 +24,6 @@
 
 class bookmark : public QListWidget
 {
-    Q_OBJECT
-
 private:
     QSettings   settings;
 
@@ -61,10 +59,6 @@ public:
     void dragLeaveEvent(QDragLeaveEvent *event) override;
 
     void contextMenuEvent(QContextMenuEvent * event) override;
-
-protected slots:
-    void onCmdDel();
-    void onCmdClear();
 };
 
 #endif
