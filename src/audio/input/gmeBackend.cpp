@@ -52,7 +52,7 @@ QStringList gmeBackend::_ext;
 
 /*****************************************************************/
 
-size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     if (gme_track_ended(_emu))
         return 0;
@@ -201,7 +201,7 @@ void gmeBackend::getInfo()
     if (comment.isEmpty())
         _metaData.addInfo(metaData::COMMENT, ti->comment);
 
-    time(ti->length/1000);
+    time(ti->length);
 
     gme_free_info(ti);
 }

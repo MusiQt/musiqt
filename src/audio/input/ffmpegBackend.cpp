@@ -81,7 +81,7 @@ QStringList ffmpegBackend::_ext;
 
 /*****************************************************************/
 
-size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     size_t n = decodeBufOffset;
     unsigned char* buf = decodeBuf;
@@ -340,7 +340,7 @@ bool ffmpegBackend::open(const QString& fileName)
     _metaData.addInfo(metaData::TRACK, getMetadata("track"));
     _metaData.addInfo(metaData::COMMENT, getMetadata("comment"));
 
-    time(fc->duration/1000000);
+    time(fc->duration/1000);
 
     songLoaded(fileName);
     return true;

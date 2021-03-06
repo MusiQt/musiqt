@@ -32,7 +32,7 @@ const char sndBackend::name[] = "Sndfile";
 
 /*****************************************************************/
 
-size_t sndBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t sndBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     return (sf_read_short(_sf, (short*)buffer, (bufferSize>>1))<<1);
 }
@@ -98,8 +98,8 @@ bool sndBackend::open(const QString& fileName)
     _metaData.addInfo(metaData::TRACK, sf_get_string(_sf, SF_STR_TRACKNUMBER));
     _metaData.addInfo(metaData::GENRE, sf_get_string(_sf, SF_STR_GENRE));
 
-    const int seconds = _si.frames / _si.samplerate;
-    time((seconds > 0x7FFFFFFF) ? 0 : seconds);
+    const unsigned int milliseconds = (_si.frames * 1000) / _si.samplerate;
+    time(milliseconds);
 
     songLoaded(fileName);
     return true;

@@ -63,7 +63,7 @@ const char wvBackend::name[] = "Wavpack";
 
 /*****************************************************************/
 
-size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     size_t n = 0;
     const unsigned int sampleSize = (_precision == sample_t::U8) ? 1 : (_precision == sample_t::S16) ? 2 : 4;
@@ -182,7 +182,8 @@ bool wvBackend::open(const QString& fileName)
         }
     }
 
-    time(WavpackGetNumSamples(_wvContext) / WavpackGetSampleRate(_wvContext));
+    const unsigned int milliseconds = (WavpackGetNumSamples(_wvContext) * 1000) / WavpackGetSampleRate(_wvContext);
+    time(milliseconds);
 
     _bufOffset = 0;
     _bufSize = 0;

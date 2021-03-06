@@ -22,7 +22,7 @@
 
 inputBackend::inputBackend(const char name[], const unsigned char* iconType, unsigned int iconLen) :
     _name(name),
-    _time(0)
+    m_time(0)
 {
     // Use default icon if not provided
     if (iconType == nullptr)

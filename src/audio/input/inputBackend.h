@@ -38,7 +38,7 @@ private:
     const char *_name;
     QIcon _icon;
 
-    unsigned int _time;
+    unsigned int m_time;
 
 protected:
     metaDataImpl _metaData;
@@ -54,7 +54,7 @@ protected:
     inputBackend(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0);
 
     /// Set song duration
-    void time(unsigned int newTime) { _time=newTime; }
+    void time(unsigned int newTime) { m_time = newTime; }
 
     /// Load int setting
     int load(const char* key, int defVal)
@@ -92,8 +92,8 @@ public:
     /// Get song info
     virtual const metaData* getMetaData() const override { return &_metaData; }
 
-    /// Get song duration
-    unsigned int time() const override { return _time; }
+    /// Get song duration in seconds
+    unsigned int time() const override { return m_time / 1000; }
 
     /// Get fractional scale for fixed point types
     virtual unsigned int fract() const override { return 0; }

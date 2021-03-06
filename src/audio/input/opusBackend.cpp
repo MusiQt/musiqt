@@ -46,7 +46,7 @@ opusConfig_t opusBackend::_settings;
 
 /*****************************************************************/
 
-size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     size_t n = 0;
     int read;
@@ -100,7 +100,7 @@ bool opusBackend::open(const QString& fileName)
         return false;
     }
 
-    time((int)(op_pcm_total(_of, -1)/48000));
+    time(static_cast<unsigned int>(op_pcm_total(_of, -1)/48));
 
     QString title;
     QString artist;

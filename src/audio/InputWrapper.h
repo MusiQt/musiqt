@@ -54,7 +54,7 @@ public:
 
     void setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize);
 
-    int getSeconds() const { return m_seconds; }
+    int getSeconds() const { return m_milliSeconds/1000; }
 
     void setPos(int pos);
 
@@ -67,8 +67,8 @@ private:
     converter *m_audioConverter;
 
     int m_bytes;
-    int m_bytePerSec;
-    unsigned int m_seconds;
+    int m_bytePerMilliSec;
+    unsigned int m_milliSeconds;
 };
 
 #endif

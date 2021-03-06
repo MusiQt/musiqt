@@ -42,7 +42,7 @@ InputWrapper::InputWrapper(input* song) :
     m_preloadedSong(nullptr),
     m_audioConverter(nullptr),
     m_bytes(0),
-    m_seconds(0)
+    m_milliSeconds(0)
 {}
 
 InputWrapper::~InputWrapper()
@@ -69,12 +69,12 @@ PROFILE_START
         size_t size = m_currentSong->fillBuffer(
             m_audioConverter->buffer(),
             m_audioConverter->bufSize(maxSize),
-            m_seconds);
+            m_milliSeconds);
         n = m_audioConverter->convert(data, size);
     }
     else
     {
-        n = m_currentSong->fillBuffer(data, maxSize, m_seconds);
+        n = m_currentSong->fillBuffer(data, maxSize, m_milliSeconds);
     }
 
     m_audioProcess->process(data, n);
@@ -99,7 +99,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
         {
             m_currentSong = m_preloadedSong;
             m_preloadedSong = nullptr;
-            m_seconds = 0;
+            m_milliSeconds = 0;
             n = fillBuffer(data, maxSize);
             emit switchSong();
         }
@@ -111,13 +111,14 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
     }
 
     m_bytes += n;
-    if (m_bytes > m_bytePerSec)
+    int oldSeconds = m_milliSeconds/1000;
+    do {
+        m_bytes -= m_bytePerMilliSec;
+        m_milliSeconds++;
+    } while (m_bytes > m_bytePerMilliSec);
+    if (oldSeconds != (m_milliSeconds/1000))
     {
-        do {
-            m_bytes -= m_bytePerSec;
-            m_seconds++;
-        } while (m_bytes > m_bytePerSec);
-        if (m_seconds != m_currentSong->time()-5)
+        if (m_milliSeconds != m_currentSong->time()-5)
             emit updateTime();
         else
             emit preloadSong();
@@ -157,7 +158,7 @@ void InputWrapper::unload()
 
 void InputWrapper::setPos(int pos)
 {
-    m_seconds = (pos * m_currentSong->time()) / 100;
+    m_milliSeconds = (pos * m_currentSong->time()) / 100;
 }
 
 void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
@@ -181,7 +182,7 @@ void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, 
         break;
     }
 
-    m_bytePerSec = sampleRate * channels * precision;
+    m_bytePerMilliSec = (sampleRate * channels * precision) / 1000;
 
     // Check if soundcard supports requested samplerate
     m_audioConverter = CFACTORY->get(m_currentSong->samplerate(), sampleRate, bufferSize,

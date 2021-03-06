@@ -96,9 +96,9 @@ sidConfig_t sidBackend::_settings;
 
 /*****************************************************************/
 
-size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
-    if ((_length != 0) && (seconds >= _length))
+    if ((_length != 0) && (milliSeconds >= _length))
         return 0;
 
     return _sidplayfp->play((short*)buffer, bufferSize/sizeof(short))*2;
@@ -454,11 +454,11 @@ void sidBackend::loadTune(const int num)
     _sidplayfp->load(_tune);
 #if LIBSIDPLAYFP_VERSION_MAJ > 1
     if (_db != nullptr)
-        _length = newSonglengthDB ? (_db->lengthMs(*_tune) / 1000) : _db->length(*_tune);
+        _length = newSonglengthDB ? _db->lengthMs(*_tune) : (_db->length(*_tune) * 1000);
     else
         _length = 0;
 #else
-    _length = _db != nullptr ? _db->length(_md5, _tune->getInfo()->currentSong()) : 0;
+    _length = _db != nullptr ? (_db->length(_md5, _tune->getInfo()->currentSong()) * 1000) : 0;
 #endif
     time(_length);
 }

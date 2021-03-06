@@ -122,7 +122,7 @@ QStringList openmptBackend::_ext;
 
 /*****************************************************************/
 
-size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     size_t bufSize = (bufferSize/sizeof(float))/_settings.channels;
     return _settings.channels == 2
@@ -265,7 +265,7 @@ bool openmptBackend::open(const QString& fileName)
             _metaData.addInfo(metaData::COMMENT, _module->get_metadata("message").c_str());
     }
 
-    time(_module->get_duration_seconds());
+    time(_module->get_duration_seconds()*1000);
 
     songLoaded(fileName);
     return true;

@@ -83,7 +83,7 @@ mpg123Config_t mpg123Backend::_settings;
 
 /*****************************************************************/
 
-size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     size_t n;
     const int err = mpg123_read(_handle, (unsigned char*)buffer, bufferSize, &n);
@@ -197,7 +197,7 @@ bool mpg123Backend::open(const QString& fileName)
     }
 
     err = mpg123_length(_handle);
-    time(err/_samplerate);
+    time((err*1000)/_samplerate);
 
     err = mpg123_param(_handle, MPG123_RVA,
         SETTINGS->replayGain()

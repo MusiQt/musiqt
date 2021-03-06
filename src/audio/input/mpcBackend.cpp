@@ -170,7 +170,7 @@ bool mpcBackend::open(const QString& fileName)
         goto error;
 #endif
 
-    time((int)mpc_streaminfo_get_length(&_si));
+    time(static_cast<unsigned int>(mpc_streaminfo_get_length(&_si)*1000));
 
 #ifdef MPC_FIXED_POINT
     qDebug("FIXED");

@@ -46,7 +46,7 @@ oggConfig_t oggBackend::_settings;
 
 /*****************************************************************/
 
-size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     size_t n = 0;
     long read;
@@ -112,7 +112,7 @@ bool oggBackend::open(const QString& fileName)
 
     _vi = ov_info(_vf, -1);
 
-    time((int)ov_time_total(_vf, -1));
+    time(static_cast<unsigned int>(ov_time_total(_vf, -1)*1000.));
 
     QString title = QString();
     QString artist = QString();

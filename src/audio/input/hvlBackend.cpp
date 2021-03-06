@@ -35,7 +35,7 @@ hvlConfig_t hvlBackend::_settings;
 
 /*****************************************************************/
 
-size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
     size_t offset = 0;
 

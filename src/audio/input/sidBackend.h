@@ -155,7 +155,7 @@ public:
     sample_t precision() const override { return sample_t::S16; }
 
     /// Callback function
-    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override;
+    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds) override;
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new sidConfig(win); }
