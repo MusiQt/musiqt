@@ -31,8 +31,8 @@
 
 singleApp::singleApp(int & argc, char ** argv) :
     QApplication(argc, argv),
-    _lockFile(nullptr),
-    _fifoFile(nullptr),
+    m_lockFile(nullptr),
+    m_fifoFile(nullptr),
     message(argc > 1 ? argv[1] : "")
 {}
 
@@ -50,29 +50,29 @@ bool singleApp::isRunning()
     const QString lockFileName(QString("%1/.musiqt.lock").arg(runtimeDir));
     qDebug() << lockFileName;
 
-    _lockFile = new QLockFile(lockFileName);
-    if (_lockFile->tryLock())
+    m_lockFile = new QLockFile(lockFileName);
+    if (m_lockFile->tryLock())
     {
-        _lockFile->setStaleLockTime(0);
+        m_lockFile->setStaleLockTime(0);
 
         // delete stale fifo if any
         QFile::remove(fifoFileName);
 
-        _fifoFile = new QLocalServer(this);
-        if (_fifoFile->listen(fifoFileName))
+        m_fifoFile = new QLocalServer(this);
+        if (m_fifoFile->listen(fifoFileName))
         {
-            connect(_fifoFile, &QLocalServer::newConnection, this, &singleApp::acceptMessage);
+            connect(m_fifoFile, &QLocalServer::newConnection, this, &singleApp::acceptMessage);
         }
         else
         {
-            qWarning() << _fifoFile->errorString();
-            utils::delPtr(_fifoFile);
+            qWarning() << m_fifoFile->errorString();
+            utils::delPtr(m_fifoFile);
         }
         return false;
     }
     else
     {
-        utils::delPtr(_lockFile);
+        utils::delPtr(m_lockFile);
         qWarning("Already running");
         if (!message.isEmpty())
         {
@@ -104,24 +104,24 @@ bool singleApp::isRunning()
 
 singleApp::~singleApp()
 {
-    if (_lockFile != nullptr)
+    if (m_lockFile != nullptr)
     {
-        delete _lockFile;
+        delete m_lockFile;
     }
 
-    if (_fifoFile != nullptr)
+    if (m_fifoFile != nullptr)
     {
-        QFile::remove(_fifoFile->serverName());
-        delete _fifoFile;
+        QFile::remove(m_fifoFile->serverName());
+        delete m_fifoFile;
     }
 }
 
 void singleApp::acceptMessage()
 {
-    QLocalSocket* socket = _fifoFile->nextPendingConnection();
+    QLocalSocket* socket = m_fifoFile->nextPendingConnection();
     if (socket == nullptr)
     {
-        qWarning() << _fifoFile->errorString();
+        qWarning() << m_fifoFile->errorString();
         return;
     }
 

@@ -24,7 +24,7 @@
 class AutoDLL
 {
 private:
-    QLibrary* _handle;
+    QLibrary *m_handle;
 
 private:
     AutoDLL(const AutoDLL&);
@@ -36,7 +36,7 @@ public:
     ~AutoDLL();
 
     /// Check if library is loaded
-    bool loaded() const { return _handle != nullptr; }
+    bool loaded() const { return m_handle != nullptr; }
 
     /// Return the address of the symbol in the library
     QFunctionPointer address(const char* sym) const;

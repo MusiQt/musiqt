@@ -28,22 +28,22 @@ class AudioOutputWrapper : public QObject
     Q_OBJECT
     
 private:
-    QAudioOutput *audioOutput;
+    QAudioOutput *m_audioOutput;
 
 public slots:
     void init(QAudioDeviceInfo audioDevice, QAudioFormat format)
     {
-        audioOutput = new QAudioOutput(audioDevice, format, this);
-        connect(audioOutput, SIGNAL(stateChanged(QAudio::State)), this, SLOT(onStateChange(QAudio::State)));
+        m_audioOutput = new QAudioOutput(audioDevice, format, this);
+        connect(m_audioOutput, SIGNAL(stateChanged(QAudio::State)), this, SLOT(onStateChange(QAudio::State)));
     }
-    QAudio::Error error() const { return audioOutput->error(); }
-    void suspend() { audioOutput->suspend(); }
-    void resume() { audioOutput->resume(); }
-    void start(QIODevice *device) { audioOutput->start(device); }
-    void stop() { audioOutput->stop(); }
-    int bufferSize() const { return audioOutput->bufferSize(); }
-    void setVolume(qreal volume) { audioOutput->setVolume(volume); }
-    qreal volume() const { return audioOutput->volume(); }
+    QAudio::Error error() const { return m_audioOutput->error(); }
+    void suspend() { m_audioOutput->suspend(); }
+    void resume() { m_audioOutput->resume(); }
+    void start(QIODevice *device) { m_audioOutput->start(device); }
+    void stop() { m_audioOutput->stop(); }
+    int bufferSize() const { return m_audioOutput->bufferSize(); }
+    void setVolume(qreal volume) { m_audioOutput->setVolume(volume); }
+    qreal volume() const { return m_audioOutput->volume(); }
 
     void onStateChange(QAudio::State state) { emit stateChanged(state); }
 
@@ -52,9 +52,9 @@ signals:
 
 public:
     AudioOutputWrapper() :
-        audioOutput(nullptr)
+        m_audioOutput(nullptr)
     {}
-    ~AudioOutputWrapper() { delete audioOutput; }
+    ~AudioOutputWrapper() { delete m_audioOutput; }
 };
 
 #endif

@@ -29,29 +29,29 @@
 #include <QUrl>
 #include <QWidgetAction>
 
-#define SECTION QString("Bookmarks")
-#define KEY(i)  QString("Bookmarks/bm%2").arg(i)
+inline QString section() { return QString("Bookmarks"); }
+inline QString key(int i) { return QString("Bookmarks/bm%2").arg(i); }
 
 void bookmark::load()
 {
     QString bm;
     int i = 0;
-    while (!(bm=settings.value(KEY(i++)).toString()).isEmpty())
+    while (!(bm=m_settings.value(key(i++)).toString()).isEmpty())
         addItem(bm);
 }
 
 void bookmark::save()
 {
-    settings.beginGroup(SECTION);
-    settings.remove("");
-    settings.endGroup();
+    m_settings.beginGroup(section());
+    m_settings.remove("");
+    m_settings.endGroup();
 
     const int n = count();
     if (!n)
         return;
 
     for (int i=0; i<n; i++)
-        settings.setValue(KEY(i), item(i)->text());
+        m_settings.setValue(key(i), item(i)->text());
 
     clear();
 }

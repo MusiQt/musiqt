@@ -43,23 +43,30 @@ private:
     QLockFile &operator=(const QLockFile&);
 
 private:
-    QFile file;
+    QFile m_file;
 
-    bool fileLocked;
+    bool m_fileLocked;
 
 public:
-    QLockFile(const QString & name) : file(name), fileLocked(false) {}
-    ~QLockFile() { file.close(); if (fileLocked) QFile::remove(file.fileName()); }
+    QLockFile(const QString & name) :
+        m_file(name),
+        m_fileLocked(false) {}
+    ~QLockFile() { m_file.close(); if (m_fileLocked) QFile::remove(m_file.fileName()); }
 
     bool tryLock()
     {
-        if (file.open(QIODevice::ReadWrite))
+        if (m_file.open(QIODevice::ReadWrite))
         {
             const qint64 start = 0;
             const qint64 end = 0;
 #ifdef _WIN32
-            if (LockFile((HANDLE)_get_osfhandle(file.handle()), (DWORD)start, (DWORD)(start>>32), (DWORD)end, (DWORD)(end>>32)))
-                fileLocked = true;
+            if (LockFile(
+                    (HANDLE)_get_osfhandle(m_file.handle()),
+                    (DWORD)start, (DWORD)(start>>32),
+                    (DWORD)end, (DWORD)(end>>32)))
+            {
+                m_fileLocked = true;
+            }
 #else
             struct flock fl;
 
@@ -68,12 +75,12 @@ public:
             fl.l_start = start;
             fl.l_len = end-start;
 
-            if (fcntl(file.handle(), F_SETLK, &fl) != -1)
-                fileLocked = true;
+            if (fcntl(m_file.handle(), F_SETLK, &fl) != -1)
+                m_fileLocked = true;
 #endif
         }
 
-        return fileLocked;
+        return m_fileLocked;
     }
 
     void setStaleLockTime(int) {}

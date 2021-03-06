@@ -26,8 +26,6 @@
 #include <QRunnable>
 #include <QThread>
 
-#include <memory>
-
 /*****************************************************************/
 
 class deviceLoader : public QObject, public QRunnable
@@ -46,8 +44,8 @@ class qaudioBackend : public QObject
     Q_OBJECT
 
 private:
-    AudioOutputWrapper *audioOutput;
-    QThread* thread;
+    AudioOutputWrapper *m_audioOutput;
+    QThread *m_thread;
 
 signals:
     void songEnded();
@@ -58,7 +56,7 @@ private:
 public:
     qaudioBackend();
 
-    virtual ~qaudioBackend() { delete thread; }
+    virtual ~qaudioBackend() { delete m_thread; }
 
     static QStringList getDevices();
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ public:
     /// Load playlist
     tracks_t load() override
     {
-        QDir dir(_path);
+        QDir dir(m_path);
         QStringList filelist=dir.entryList(QDir::Files);
 
         tracks_t tracks;

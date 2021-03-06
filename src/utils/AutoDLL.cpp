@@ -21,29 +21,29 @@
 #include "utils.h"
 
 AutoDLL::AutoDLL(const char* nm) :
-    _handle(nullptr)
+    m_handle(nullptr)
 {
     if (QLibrary::isLibrary(nm))
     {
-        _handle = new QLibrary(nm);
-        if (!_handle->load())
-            utils::delPtr(_handle);
+        m_handle = new QLibrary(nm);
+        if (!m_handle->load())
+            utils::delPtr(m_handle);
     }
 }
 
 AutoDLL::~AutoDLL()
 {
-    if (_handle != nullptr)
+    if (m_handle != nullptr)
     {
-        _handle->unload();
-        utils::delPtr(_handle);
+        m_handle->unload();
+        utils::delPtr(m_handle);
     }
 }
 
 QFunctionPointer AutoDLL::address(const char* sym) const
 {
-    if (_handle != nullptr)
-        return _handle->resolve(sym);
+    if (m_handle != nullptr)
+        return m_handle->resolve(sym);
 
     return nullptr;
 }

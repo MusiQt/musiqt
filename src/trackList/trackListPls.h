@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2019 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ public:
     /// Load playlist
     tracks_t load() override
     {
-        QSettings pls(_path, QSettings::IniFormat);
+        QSettings pls(m_path, QSettings::IniFormat);
 
         const int items = pls.value("playlist/NumberOfEntries").toInt();
 
@@ -49,7 +49,7 @@ public:
 
     bool save(const tracks_t& tracks) override
     {
-        QFile file(_path);
+        QFile file(m_path);
         if (!file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
             return false;
 

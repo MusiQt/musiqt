@@ -30,7 +30,7 @@ public:
     enum class sortMode { Ascending, Descending, Random };
 
 private:
-    sortMode mode;
+    sortMode m_mode;
 
     QVector<int> m_randomOrder;
 
@@ -42,7 +42,7 @@ private:
 protected:
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override
     {
-        if (mode == sortMode::Random)
+        if (m_mode == sortMode::Random)
         {
             // NOTE cannot return random value as this function must be consistent
             // see https://bugs.kde.org/show_bug.cgi?id=413018
@@ -55,20 +55,20 @@ protected:
 public:
     proxymodel(QWidget * parent) :
         QSortFilterProxyModel(parent),
-        mode(sortMode::Ascending)
+        m_mode(sortMode::Ascending)
     {}
 
     void sort(sortMode newMode)
     {
-        if ((mode == newMode) && (newMode != sortMode::Random))
+        if ((m_mode == newMode) && (newMode != sortMode::Random))
             return;
 
-        mode = newMode;
+        m_mode = newMode;
 
         QSortFilterProxyModel::sort(-1);
 
         Qt::SortOrder order;
-        switch (mode)
+        switch (m_mode)
         {
         case sortMode::Ascending:
             order = Qt::AscendingOrder;
@@ -87,7 +87,7 @@ public:
         QSortFilterProxyModel::sort(0, order);
     }
 
-    sortMode getMode() const { return mode; }
+    sortMode getMode() const { return m_mode; }
 };
 
 #endif

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 class trackListBackend : public trackList
 {
 protected:
-    QString _path;
+    QString m_path;
 
 private:
     trackListBackend();
@@ -35,7 +35,7 @@ private:
     trackListBackend& operator= (const trackListBackend&);
 
 protected:
-    trackListBackend(const QString &path) : _path(path) {}
+    trackListBackend(const QString &path) : m_path(path) {}
 
     void writeLine(QTextStream& outputStream, QString line)
     {

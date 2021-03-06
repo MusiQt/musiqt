@@ -25,7 +25,7 @@
 class bookmark : public QListWidget
 {
 private:
-    QSettings   settings;
+    QSettings m_settings;
 
 private:
     bookmark() {}

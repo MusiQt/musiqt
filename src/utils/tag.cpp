@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2019 Leandro Nini
+ *  Copyright (C) 2007-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@
 #define APE_HEADER_SIZE 32
 
 tag::tag(QFile* file) :
-    _offsBegin(0),
-    _offsEnd(0),
-    _img(nullptr)
+    m_offsBegin(0),
+    m_offsEnd(0),
+    m_img(nullptr)
 {
     char buf[ID3V1_TAG_SIZE];
     int id3v1Size = 0;
@@ -166,32 +166,32 @@ int tag::getID3v1(char* buf)
 
     qDebug() << "ID3v1 tag found.";
 
-    if (_title.isEmpty())
-        _title = getString(buf+3);
+    if (m_title.isEmpty())
+        m_title = getString(buf+3);
 
-    if (_artist.isEmpty())
-        _artist = getString(buf+33);
+    if (m_artist.isEmpty())
+        m_artist = getString(buf+33);
 
-    if (_album.isEmpty())
-        _album = getString(buf+63);
+    if (m_album.isEmpty())
+        m_album = getString(buf+63);
 
-    if (_year.isEmpty())
+    if (m_year.isEmpty())
     {
-        _year = getString(buf+93, 4);
-        if (_year.length() < 4)
-            _year.resize(0);
+        m_year = getString(buf+93, 4);
+        if (m_year.length() < 4)
+            m_year.resize(0);
     }
 
-    if (_comment.isEmpty())
-        _comment = getString(buf+97);
+    if (m_comment.isEmpty())
+        m_comment = getString(buf+97);
 
     unsigned char tmp = (unsigned char)buf[126];
-    if (_track.isNull() && !buf[125] && tmp)
-        _track = QString::number(tmp);
+    if (m_track.isNull() && !buf[125] && tmp)
+        m_track = QString::number(tmp);
 
     tmp = (unsigned char)buf[127];
-    if (_genre.isEmpty() && tmp<GENRES)
-        _genre = QString(::genre[tmp]);
+    if (m_genre.isEmpty() && tmp<GENRES)
+        m_genre = QString(::genre[tmp]);
 
     return ID3V1_TAG_SIZE;
 }
@@ -250,41 +250,41 @@ int tag::getID3v2_2Frame(char* buf)
 
     if (isFrame(buf, "TT2"))
     {
-        _title = getID3v2Text(buf+6, size-1);
-        qDebug() << "ID3v2 title: " << _title;
+        m_title = getID3v2Text(buf+6, size-1);
+        qDebug() << "ID3v2 title: " << m_title;
     }
     else if (isFrame(buf, "TP1"))
     {
-        _artist = getID3v2Text(buf+6, size-1);
-        qDebug() << "ID3v2 artist: " << _artist;
+        m_artist = getID3v2Text(buf+6, size-1);
+        qDebug() << "ID3v2 artist: " << m_artist;
     }
     else if (isFrame(buf, "TAL"))
     {
-        _album = getID3v2Text(buf+6, size-1);
-        qDebug() << "ID3v2 album: " << _album;
+        m_album = getID3v2Text(buf+6, size-1);
+        qDebug() << "ID3v2 album: " << m_album;
     }
     else if (isFrame(buf, "TRK"))
     {
         QString t = getID3v2Text(buf+6, size-1);
-        _track = t.left(t.indexOf('/'));
-        qDebug() << "ID3v2 track: " << _track;
+        m_track = t.left(t.indexOf('/'));
+        qDebug() << "ID3v2 track: " << m_track;
     }
     else if (isFrame(buf, "TYE"))
     {
-        _year = getID3v2Text(buf+6, size-1);
-        qDebug() << "ID3v2 year: " << _year;
+        m_year = getID3v2Text(buf+6, size-1);
+        qDebug() << "ID3v2 year: " << m_year;
     }
     else if (isFrame(buf, "TPB"))
     {
-        _publisher.append(getID3v2Text(buf+6, size-1));
-        qDebug() << "ID3v2 publisher: " << _publisher;
+        m_publisher.append(getID3v2Text(buf+6, size-1));
+        qDebug() << "ID3v2 publisher: " << m_publisher;
     }
     else if (isFrame(buf, "TCO"))
     {
         QString g = getID3v2Text(buf+6, size-1);
         QString n = g.mid(g.indexOf('('), g.indexOf(')'));
-        _genre=(g.indexOf('(')>=0) ? QString(::genre[n.toInt()]) : g;
-        qDebug() << "ID3v2 genre: " << _genre;
+        m_genre=(g.indexOf('(')>=0) ? QString(::genre[n.toInt()]) : g;
+        qDebug() << "ID3v2 genre: " << m_genre;
     }
     else if (isFrame(buf, "PIC"))
     {
@@ -305,7 +305,7 @@ int tag::getID3v2_2Frame(char* buf)
         const int j = description.length();
         const int imgOffset = 14+i+j;
         qDebug() << "imgOffset: " << imgOffset;
-        _img = new QByteArray(buf+imgOffset, size-imgOffset);
+        m_img = new QByteArray(buf+imgOffset, size-imgOffset);
     }
     else
     /*if (isFrame(buf, "COM"))
@@ -313,8 +313,8 @@ int tag::getID3v2_2Frame(char* buf)
         int i = 10;
         while (*(buf+i))
             i++;
-        _comment = getID3v2Text(buf+i+1, size-i+9, buf[6]); // FIXME
-        qDebug() << "ID3v2 comment: %s\n", _comment.text()));
+        m_comment = getID3v2Text(buf+i+1, size-i+9, buf[6]); // FIXME
+        qDebug() << "ID3v2 comment: %s\n", m_comment.text()));
     }
     else*/
         qDebug() << "ID3v2 unhandled frame " << QString(buf).left(3);
@@ -348,40 +348,40 @@ int tag::getID3v2Frame(char* buf, int ver)
 
     if (isFrame(buf, "TIT2"))
     {
-        _title = getID3v2Text(buf+10, size-1);
-        qDebug() << "ID3v2 title: " << _title;
+        m_title = getID3v2Text(buf+10, size-1);
+        qDebug() << "ID3v2 title: " << m_title;
     }
     else if (isFrame(buf, "TPE1"))
     {
-        _artist = getID3v2Text(buf+10, size-1);
-        qDebug() << "ID3v2 artist: " << _artist;
+        m_artist = getID3v2Text(buf+10, size-1);
+        qDebug() << "ID3v2 artist: " << m_artist;
     }
     else if (isFrame(buf, "TALB"))
     {
-        _album = getID3v2Text(buf+10, size-1);
-        qDebug() << "ID3v2 album: " << _album;
+        m_album = getID3v2Text(buf+10, size-1);
+        qDebug() << "ID3v2 album: " << m_album;
     }
     else if (isFrame(buf, "TRCK"))
     {
-        _track = (getID3v2Text(buf+10, size-1));
-        qDebug() << "ID3v2 track: " << _track;
+        m_track = (getID3v2Text(buf+10, size-1));
+        qDebug() << "ID3v2 track: " << m_track;
     }
     else if (isFrame(buf, "TYER"))
     {
-        _year = getID3v2Text(buf+10, size-1);
-        qDebug() << "ID3v2 year: " << _year;
+        m_year = getID3v2Text(buf+10, size-1);
+        qDebug() << "ID3v2 year: " << m_year;
     }
     else if (isFrame(buf, "TPUB"))
     {
-        _publisher = getID3v2Text(buf+10, size-1);
-        qDebug() << "ID3v2 publisher: " << _publisher;
+        m_publisher = getID3v2Text(buf+10, size-1);
+        qDebug() << "ID3v2 publisher: " << m_publisher;
     }
     else if (isFrame(buf, "TCON"))
     {
         QString g = getID3v2Text(buf+10, size-1);
         QString n = g.mid(g.indexOf('('), g.indexOf(')'));
-        _genre = (g.indexOf('(') >= 0) ? QString(::genre[n.toInt()]) : g;
-        qDebug() << "ID3v2 genre: " << _genre;
+        m_genre = (g.indexOf('(') >= 0) ? QString(::genre[n.toInt()]) : g;
+        qDebug() << "ID3v2 genre: " << m_genre;
     }
     else
     /*if (isFrame(buf, "COMM"))
@@ -389,8 +389,8 @@ int tag::getID3v2Frame(char* buf, int ver)
         int i = 14;
         while (*(buf+i))
             i++;
-        _comment = getID3v2Text(buf+i+1, size-i+9, buf[10]); // FIXME
-        qDebug() << "ID3v2 comment: %s\n", _comment.text()));
+        m_comment = getID3v2Text(buf+i+1, size-i+9, buf[10]); // FIXME
+        qDebug() << "ID3v2 comment: %s\n", m_comment.text()));
     }
     else*/
     if (isFrame(buf, "APIC"))
@@ -407,7 +407,7 @@ int tag::getID3v2Frame(char* buf, int ver)
         const int imgOffset = 14+i+j;
         qDebug() << "imgOffset: " << imgOffset;
 
-        _img = new QByteArray(buf+imgOffset, size-imgOffset);
+        m_img = new QByteArray(buf+imgOffset, size-imgOffset);
     }
     else
         qDebug() << "Unhandled frame " << QString(buf).left(4);
@@ -504,16 +504,16 @@ int tag::getAPEItem(const char* buf)
     //int flags = getLE32(buf+4);
 
     const char *ptr = buf+8;
-    if (!getMetadata(ptr, &_title, "title", itemSize))
-    if (!getMetadata(ptr, &_artist, "artist", itemSize))
-    if (!getMetadata(ptr, &_year, "year", itemSize))
-    if (!getMetadata(ptr, &_album, "album", itemSize))
-    if (!getMetadata(ptr, &_genre, "genre", itemSize))
-    if (!getMetadata(ptr, &_comment, "comment", itemSize))
+    if (!getMetadata(ptr, &m_title, "title", itemSize))
+    if (!getMetadata(ptr, &m_artist, "artist", itemSize))
+    if (!getMetadata(ptr, &m_year, "year", itemSize))
+    if (!getMetadata(ptr, &m_album, "album", itemSize))
+    if (!getMetadata(ptr, &m_genre, "genre", itemSize))
+    if (!getMetadata(ptr, &m_comment, "comment", itemSize))
     {
         if (!QString::compare(ptr, "track"))
         {
-            _track = QString(ptr+6);
+            m_track = QString(ptr+6);
             itemSize += 6;
         }
     }

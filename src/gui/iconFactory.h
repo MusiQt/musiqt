@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2017 Leandro Nini
+ *  Copyright (C) 2008-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
 class iconFactory
 {
 private:
-    QHash<const char*, QIcon> _icons;
+    QHash<const char*, QIcon> m_icons;
 
 protected:
     iconFactory() {}

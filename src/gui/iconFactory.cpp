@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2017 Leandro Nini
+ *  Copyright (C) 2008-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ iconFactory* iconFactory::instance()
 
 void iconFactory::destroy()
 {
-    _icons.clear();
+    m_icons.clear();
 }
 
 QIcon iconFactory::get(const char* icon)
@@ -34,10 +34,10 @@ QIcon iconFactory::get(const char* icon)
     if (icon == nullptr)
         return QIcon();
 
-    QHash<const char*, QIcon>::iterator i = _icons.find(icon);
-    if (i == _icons.end())
+    QHash<const char*, QIcon>::iterator i = m_icons.find(icon);
+    if (i == m_icons.end())
     {
-        i = _icons.insert(icon, QIcon(icon));
+        i = m_icons.insert(icon, QIcon(icon));
     }
     return i.value();
 }

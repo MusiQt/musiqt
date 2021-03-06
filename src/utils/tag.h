@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2019 Leandro Nini
+ *  Copyright (C) 2007-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,19 +24,19 @@
 class tag
 {
 private:
-    QString _title;
-    QString _artist;
-    QString _album;
-    QString _publisher;
-    QString _comment;
-    QString _genre;
-    QString _year;
-    QString _track;
+    QString m_title;
+    QString m_artist;
+    QString m_album;
+    QString m_publisher;
+    QString m_comment;
+    QString m_genre;
+    QString m_year;
+    QString m_track;
 
-    int _offsBegin;
-    int _offsEnd;
+    int m_offsBegin;
+    int m_offsEnd;
 
-    QByteArray *_img;
+    QByteArray *m_img;
 
 private:
     ///
@@ -96,37 +96,37 @@ public:
     ~tag() {}
 
     /// Get offset from beginning
-    int offsBegin() const { return _offsBegin; }
+    int offsBegin() const { return m_offsBegin; }
 
     /// Get offset from end
-    int offsEnd() const { return _offsEnd; }
+    int offsEnd() const { return m_offsEnd; }
 
     /// Get title
-    const QString& title() const { return _title; }
+    const QString& title() const { return m_title; }
 
     /// Get author
-    const QString& artist() const { return _artist; }
+    const QString& artist() const { return m_artist; }
 
     /// Get publisher info
-    const QString& publisher() const { return _publisher; }
+    const QString& publisher() const { return m_publisher; }
 
     /// Get year info
-    const QString& year() const { return _year; }
+    const QString& year() const { return m_year; }
 
     /// Get album
-    const QString& album() const { return _album; }
+    const QString& album() const { return m_album; }
 
     /// Get genre
-    const QString& genre() const { return _genre; }
+    const QString& genre() const { return m_genre; }
 
     /// Get comment
-    const QString& comment() const { return _comment; }
+    const QString& comment() const { return m_comment; }
 
     /// Get track number
-    const QString& track() const { return _track; }
+    const QString& track() const { return m_track; }
 
     /// Get image
-    QByteArray* image() const { return _img; }
+    QByteArray* image() const { return m_img; }
 };
 
 #endif

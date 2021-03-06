@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2019 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ public:
         char buffer[bufSize+1];
         buffer[bufSize]='\0';
 
-        QFile file(_path);
+        QFile file(m_path);
         if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
             return QStringList();
 
@@ -58,7 +58,7 @@ public:
 
     bool save(const tracks_t& tracks) override
     {
-        QFile file(_path);
+        QFile file(m_path);
         if (!file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
             return false;
 

@@ -31,8 +31,8 @@ class singleApp : public QApplication
     Q_OBJECT
 
 private:
-    QLockFile *_lockFile;
-    QLocalServer *_fifoFile;
+    QLockFile *m_lockFile;
+    QLocalServer *m_fifoFile;
 
     const QString message;
 

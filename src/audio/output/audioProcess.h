@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020 Leandro Nini
+ *  Copyright (C) 2020-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,18 +33,18 @@ class audioProcess
 {
 protected:
 #ifdef HAVE_BS2B
-    t_bs2bdp _bs2bdp;
+    t_bs2bdp m_bs2bdp;
 #endif
 
     void initBs2b(int sampleRate)
     {
 #ifdef HAVE_BS2B
-        _bs2bdp = bs2b_open();
-        if (_bs2bdp)
+        m_bs2bdp = bs2b_open();
+        if (m_bs2bdp)
         {
             qDebug() << "bs2b enabled";
-            bs2b_set_srate(_bs2bdp, sampleRate);
-            bs2b_set_level(_bs2bdp, BS2B_DEFAULT_CLEVEL);
+            bs2b_set_srate(m_bs2bdp, sampleRate);
+            bs2b_set_level(m_bs2bdp, BS2B_DEFAULT_CLEVEL);
         }
 #endif
     }
@@ -52,7 +52,7 @@ protected:
 public:
     audioProcess()
 #ifdef HAVE_BS2B
-        : _bs2bdp(0)
+        : m_bs2bdp(0)
 #endif
     {}
 
@@ -63,10 +63,10 @@ public:
     void finish()
     {
 #ifdef HAVE_BS2B
-        if (_bs2bdp)
+        if (m_bs2bdp)
         {
-            bs2b_close(_bs2bdp);
-            _bs2bdp = 0;
+            bs2b_close(m_bs2bdp);
+            m_bs2bdp = 0;
         }
 #endif
     }
@@ -78,18 +78,18 @@ class audioProcess8 : public audioProcess
 {
     void init(int sampleRate)
     {
-#if BS2B_VERSION_MAJOR > 2
+#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
         initBs2b(sampleRate);
 #endif
     }
 
     void process(void* buffer, size_t size)
     {
-#if defined HAVE_BS2B && BS2B_VERSION_MAJOR == 3
-        if (_bs2bdp)
+#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
+        if (m_bs2bdp)
         {
             uint8_t *buf = (uint8_t*)buffer;
-            bs2b_cross_feed_u8(_bs2bdp, buf, size/2);
+            bs2b_cross_feed_u8(m_bs2bdp, buf, size/2);
         }
 #endif
     }
@@ -117,16 +117,16 @@ class audioProcess16 : public audioProcess
 #endif
 
 #ifdef HAVE_BS2B
-        if (_bs2bdp)
+        if (m_bs2bdp)
         {
-#if BS2B_VERSION_MAJOR == 3
+#if BS2B_VERSION_MAJOR > 2
             int16_t *buf = (int16_t*)buffer;
-            bs2b_cross_feed_s16le(_bs2bdp, buf, size/4);
+            bs2b_cross_feed_s16le(m_bs2bdp, buf, size/4);
 #else
             short *buf = (short*)buffer;
             const short *end = buf+(size/2);
             do {
-                bs2b_cross_feed_16(_bs2bdp, buf);
+                bs2b_cross_feed_16(m_bs2bdp, buf);
                 buf += 2;
             } while (buf < end);
 #endif

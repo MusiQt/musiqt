@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ public:
     /// Load playlist
     tracks_t* load() override
     {
-        FILE* file = fopen(_path.text(), "r");
+        FILE* file = fopen(m_path.text(), "r");
         Cd* cue = cue_parse_file(file);  //Cd* cue_parse_string(const char*);
         fclose(file);
 
@@ -51,7 +51,7 @@ public:
             //long start=track_get_start(track);
             //long length=track_get_length(track);
             qDebug() << "File: " << fileName;
-            tracks->append(FXPath::absolute(FXPath::directory(_path), fileName));
+            tracks->append(FXPath::absolute(FXPath::directory(m_path), fileName));
         }
 
         return tracks;
