@@ -336,13 +336,13 @@ bool sidBackend::open(const QString& fileName)
     switch (tuneInfo->numberOfInfoStrings())
     {
     case 3:
-        _metaData.addInfo(gettext("released"), QString::fromLatin1(tuneInfo->infoString(2)));
+        m_metaData.addInfo(gettext("released"), QString::fromLatin1(tuneInfo->infoString(2)));
         // fall-through
     case 2:
-        _metaData.addInfo(metaData::ARTIST, QString::fromLatin1(tuneInfo->infoString(1)));
+        m_metaData.addInfo(metaData::ARTIST, QString::fromLatin1(tuneInfo->infoString(1)));
         // fall-through
     case 1:
-        _metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));
+        m_metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));
     }
 
     /*
@@ -361,7 +361,7 @@ bool sidBackend::open(const QString& fileName)
 
         if (!info.isEmpty())
         {
-            _metaData.addInfo(metaData::COMMENT, info);
+            m_metaData.addInfo(metaData::COMMENT, info);
         }
     }
 
@@ -381,32 +381,32 @@ bool sidBackend::open(const QString& fileName)
             comment.append('\n');
             comment.append(bug);
         }
-        _metaData.addInfo(metaData::COMMENT, comment);
+        m_metaData.addInfo(metaData::COMMENT, comment);
     }
 
-    _metaData.addInfo(gettext("speed"), _sidplayfp->info().speedString());
-    _metaData.addInfo(gettext("file format"), tuneInfo->formatString());
-    _metaData.addInfo(gettext("song clock"), getClockString(tuneInfo->clockSpeed()));
+    m_metaData.addInfo(gettext("speed"), _sidplayfp->info().speedString());
+    m_metaData.addInfo(gettext("file format"), tuneInfo->formatString());
+    m_metaData.addInfo(gettext("song clock"), getClockString(tuneInfo->clockSpeed()));
 #ifdef ENABLE_3SID
-    _metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel(0)));
+    m_metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel(0)));
     if (tuneInfo->sidChips() > 1)
     {
-        _metaData.addInfo(gettext("2nd SID model"), getModelString(tuneInfo->sidModel(1)));
-        _metaData.addInfo(gettext("2nd SID address"),
+        m_metaData.addInfo(gettext("2nd SID model"), getModelString(tuneInfo->sidModel(1)));
+        m_metaData.addInfo(gettext("2nd SID address"),
                           QString("$%1").arg(tuneInfo->sidChipBase(1), 4, 16, QChar('0')));
         if (tuneInfo->sidChips() > 2)
         {
-            _metaData.addInfo(gettext("3rd SID model"), getModelString(tuneInfo->sidModel(2)));
-            _metaData.addInfo(gettext("3rd SID address"),
+            m_metaData.addInfo(gettext("3rd SID model"), getModelString(tuneInfo->sidModel(2)));
+            m_metaData.addInfo(gettext("3rd SID address"),
                               QString("$%1").arg(tuneInfo->sidChipBase(2), 4, 16, QChar('0')));
         }
     }
 #else
-    _metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel1()));
+    m_metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel1()));
     if (tuneInfo->isStereo())
     {
-        _metaData.addInfo(gettext("2nd SID model"), getModelString(tuneInfo->sidModel2()));
-        _metaData.addInfo(gettext("2nd SID address"),
+        m_metaData.addInfo(gettext("2nd SID model"), getModelString(tuneInfo->sidModel2()));
+        m_metaData.addInfo(gettext("2nd SID address"),
                           QString("$%1").arg(tuneInfo->sidChipBase2(), 4, 16, QChar('0')));
     }
 #endif

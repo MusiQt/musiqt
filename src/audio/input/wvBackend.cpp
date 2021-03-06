@@ -197,7 +197,7 @@ void wvBackend::getId3Tag(const char* tag, metaData::mpris_t meta)
     char tmp[255];
     int size = WavpackGetTagItem(_wvContext, tag, tmp, 255);
     if (size >= 0)
-        _metaData.addInfo(meta, QString::fromLocal8Bit(tmp, size));
+        m_metaData.addInfo(meta, QString::fromLocal8Bit(tmp, size));
 }
 
 void wvBackend::getApeTag(const char* tag, metaData::mpris_t meta)
@@ -205,7 +205,7 @@ void wvBackend::getApeTag(const char* tag, metaData::mpris_t meta)
     char tmp[1024];
     int size = WavpackGetTagItem(_wvContext, tag, tmp, 1024);
     if (size >= 0)
-        _metaData.addInfo(meta, QString::fromUtf8(tmp, size).replace('\0', ','));
+        m_metaData.addInfo(meta, QString::fromUtf8(tmp, size).replace('\0', ','));
 }
 
 void wvBackend::close()

@@ -103,12 +103,12 @@ bool hvlBackend::open(const QString& fileName)
 
     hvl_InitSubsong(_tune, 0);
 
-    _metaData.addInfo(metaData::TITLE, (char*)_tune->ht_Name);
+    m_metaData.addInfo(metaData::TITLE, (char*)_tune->ht_Name);
     QString comment = QString();
     for (unsigned int i=0; i<_tune->ht_InstrumentNr; i++)
         comment.append(QString("%1\n").arg(_tune->ht_Instruments[i].ins_Name));
 
-    _metaData.addInfo(metaData::COMMENT, comment.trimmed());
+    m_metaData.addInfo(metaData::COMMENT, comment.trimmed());
 
     _left = 0;
     _size = (_settings.samplerate*4) / 50;

@@ -258,11 +258,11 @@ bool openmptBackend::open(const QString& fileName)
     {
         qDebug() << (*it).c_str();
         if ((*it).compare("title") == 0)
-            _metaData.addInfo(metaData::TITLE, _module->get_metadata("title").c_str());
+            m_metaData.addInfo(metaData::TITLE, _module->get_metadata("title").c_str());
         else if ((*it).compare("artist") == 0)
-            _metaData.addInfo(metaData::ARTIST, _module->get_metadata("artist").c_str());
+            m_metaData.addInfo(metaData::ARTIST, _module->get_metadata("artist").c_str());
         else if ((*it).compare("message") == 0)
-            _metaData.addInfo(metaData::COMMENT, _module->get_metadata("message").c_str());
+            m_metaData.addInfo(metaData::COMMENT, _module->get_metadata("message").c_str());
     }
 
     time(_module->get_duration_seconds()*1000);

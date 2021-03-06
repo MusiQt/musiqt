@@ -331,14 +331,14 @@ bool ffmpegBackend::open(const QString& fileName)
 
     _planar = dl_av_sample_fmt_is_planar((AVSampleFormat)audioStream->codecpar->format);
 
-    _metaData.addInfo(metaData::TITLE, getMetadata("title"));
-    _metaData.addInfo(metaData::ARTIST, getMetadata("artist"));
-    _metaData.addInfo(metaData::ALBUM, getMetadata("album"));
-    _metaData.addInfo(metaData::GENRE, getMetadata("genre"));
-    _metaData.addInfo(gettext("copyright"), getMetadata("copyright"));
-    _metaData.addInfo(metaData::YEAR, getMetadata("date"));
-    _metaData.addInfo(metaData::TRACK, getMetadata("track"));
-    _metaData.addInfo(metaData::COMMENT, getMetadata("comment"));
+    m_metaData.addInfo(metaData::TITLE, getMetadata("title"));
+    m_metaData.addInfo(metaData::ARTIST, getMetadata("artist"));
+    m_metaData.addInfo(metaData::ALBUM, getMetadata("album"));
+    m_metaData.addInfo(metaData::GENRE, getMetadata("genre"));
+    m_metaData.addInfo(gettext("copyright"), getMetadata("copyright"));
+    m_metaData.addInfo(metaData::YEAR, getMetadata("date"));
+    m_metaData.addInfo(metaData::TRACK, getMetadata("track"));
+    m_metaData.addInfo(metaData::COMMENT, getMetadata("comment"));
 
     time(fc->duration/1000);
 

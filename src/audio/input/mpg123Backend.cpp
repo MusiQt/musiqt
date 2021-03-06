@@ -227,7 +227,7 @@ bool mpg123Backend::open(const QString& fileName)
             info = QString();
         }
         qDebug() << "TITLE: " << info;
-        _metaData.addInfo(metaData::TITLE, info);
+        m_metaData.addInfo(metaData::TITLE, info);
 
         if (id3v2 && id3v2->artist)
         {
@@ -244,7 +244,7 @@ bool mpg123Backend::open(const QString& fileName)
             info = QString();
         }
         qDebug() << "ARTIST: " << info;
-        _metaData.addInfo(metaData::ARTIST, info);
+        m_metaData.addInfo(metaData::ARTIST, info);
 
         if (id3v2 && id3v2->album)
         {
@@ -261,7 +261,7 @@ bool mpg123Backend::open(const QString& fileName)
             info = QString();
         }
         qDebug() << "ALBUM: " << info;
-        _metaData.addInfo(metaData::ALBUM, info);
+        m_metaData.addInfo(metaData::ALBUM, info);
 
         if (id3v2 && id3v2->genre)
         {
@@ -286,7 +286,7 @@ bool mpg123Backend::open(const QString& fileName)
             info = QString();
         }
         qDebug() << "GENRE: " << info;
-        _metaData.addInfo(metaData::GENRE, info);
+        m_metaData.addInfo(metaData::GENRE, info);
 
         if (id3v2 && id3v2->year)
         {
@@ -306,7 +306,7 @@ bool mpg123Backend::open(const QString& fileName)
             info = QString();
         }
         qDebug() << "YEAR: " << info;
-        _metaData.addInfo(metaData::YEAR, info);
+        m_metaData.addInfo(metaData::YEAR, info);
 
         if (id3v1 && (id3v1->comment[28] == 0))
         {
@@ -317,7 +317,7 @@ bool mpg123Backend::open(const QString& fileName)
             info = QString();
         }
         qDebug() << "TRACK: " << info;
-        _metaData.addInfo(metaData::TRACK, info);
+        m_metaData.addInfo(metaData::TRACK, info);
 
         info = QString();
         if (id3v2)
@@ -334,7 +334,7 @@ bool mpg123Backend::open(const QString& fileName)
         {
             QString mime(id3v2->picture[0].mime_type.p);
             qDebug() << mime;
-            _metaData.addInfo(new QByteArray((char*)id3v2->picture[0].data, id3v2->picture[0].size));
+            m_metaData.addInfo(new QByteArray((char*)id3v2->picture[0].data, id3v2->picture[0].size));
         }
 
         if (info.isEmpty() && id3v1)
@@ -347,7 +347,7 @@ bool mpg123Backend::open(const QString& fileName)
         if (!info.isEmpty())
         {
             qDebug() << "COMMENT: " << info;
-            _metaData.addInfo(metaData::COMMENT, info);
+            m_metaData.addInfo(metaData::COMMENT, info);
         }
     }
 

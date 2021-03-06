@@ -21,19 +21,19 @@
 #include "iconFactory.h"
 
 inputBackend::inputBackend(const char name[], const unsigned char* iconType, unsigned int iconLen) :
-    _name(name),
+    m_name(name),
     m_time(0)
 {
     // Use default icon if not provided
     if (iconType == nullptr)
     {
-        _icon = GET_ICON(icon_backend);
+        m_icon = GET_ICON(icon_backend);
     }
     else
     {
         QPixmap pixmap;
         if (pixmap.loadFromData(iconType, iconLen))
-            _icon = QIcon(pixmap);
+            m_icon = QIcon(pixmap);
     }
 }
 
@@ -42,7 +42,7 @@ inputBackend::~inputBackend() {}
 void inputBackend::songLoaded(const QString& location)
 {
     if (!location.isEmpty())
-        _metaData.addInfo(metaData::LOCATION, location);
+        m_metaData.addInfo(metaData::LOCATION, location);
     else
-        _metaData.clearInfo();
+        m_metaData.clearInfo();
 }

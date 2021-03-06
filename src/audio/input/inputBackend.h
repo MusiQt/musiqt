@@ -35,20 +35,20 @@ class inputBackend : public input, public inputConfig
 {
 private:
     QSettings settings;
-    const char *_name;
-    QIcon _icon;
+    const char *m_name;
+    QIcon m_icon;
 
     unsigned int m_time;
 
 protected:
-    metaDataImpl _metaData;
+    metaDataImpl m_metaData;
 
 private:
     inputBackend();
     inputBackend(const inputBackend&);
     inputBackend& operator=(const inputBackend&);
 
-    inline QString section(const char* key) { return QString("%1 Settings/%2").arg(_name).arg(key); }
+    inline QString section(const char* key) { return QString("%1 Settings/%2").arg(m_name).arg(key); }
 
 protected:
     inputBackend(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0);
@@ -87,10 +87,10 @@ public:
     virtual ~inputBackend();
 
     /// Get backend name
-    const char* name() const { return _name; }
+    const char* name() const { return m_name; }
 
     /// Get song info
-    virtual const metaData* getMetaData() const override { return &_metaData; }
+    virtual const metaData* getMetaData() const override { return &m_metaData; }
 
     /// Get song duration in seconds
     unsigned int time() const override { return m_time / 1000; }
@@ -99,7 +99,7 @@ public:
     virtual unsigned int fract() const override { return 0; }
 
     /// Get filetype icon
-    QIcon icon() const override { return _icon; }
+    QIcon icon() const override { return m_icon; }
 
     /// Rewind to start
     virtual bool rewind() override { return seek(0); }
@@ -111,7 +111,7 @@ public:
     virtual bool seek(int pos) override { return false; }
 
     /// Song is loaded
-    QString songLoaded() const override { return _metaData.getInfo(metaData::LOCATION); }
+    QString songLoaded() const override { return m_metaData.getInfo(metaData::LOCATION); }
 
     /// Get number of subtunes
     virtual unsigned int subtunes() const override { return 0; }

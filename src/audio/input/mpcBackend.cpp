@@ -142,15 +142,15 @@ bool mpcBackend::open(const QString& fileName)
 
     const tag tagPtr(&_file);
 
-    _metaData.addInfo(metaData::TITLE, tagPtr.title());
-    _metaData.addInfo(metaData::ARTIST, tagPtr.artist());
-    _metaData.addInfo(metaData::ALBUM, tagPtr.album());
-    _metaData.addInfo(metaData::GENRE, tagPtr.genre());
-    _metaData.addInfo(metaData::YEAR, tagPtr.year());
-    _metaData.addInfo(gettext("publisher"), tagPtr.publisher());
-    _metaData.addInfo(metaData::TRACK, tagPtr.track());
-    _metaData.addInfo(metaData::COMMENT, tagPtr.comment());
-    _metaData.addInfo(tagPtr.image());
+    m_metaData.addInfo(metaData::TITLE, tagPtr.title());
+    m_metaData.addInfo(metaData::ARTIST, tagPtr.artist());
+    m_metaData.addInfo(metaData::ALBUM, tagPtr.album());
+    m_metaData.addInfo(metaData::GENRE, tagPtr.genre());
+    m_metaData.addInfo(metaData::YEAR, tagPtr.year());
+    m_metaData.addInfo(gettext("publisher"), tagPtr.publisher());
+    m_metaData.addInfo(metaData::TRACK, tagPtr.track());
+    m_metaData.addInfo(metaData::COMMENT, tagPtr.comment());
+    m_metaData.addInfo(tagPtr.image());
 
     _file.seek(0);
 

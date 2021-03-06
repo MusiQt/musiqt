@@ -89,14 +89,14 @@ bool sndBackend::open(const QString& fileName)
 
     sf_command(_sf, SFC_SET_SCALE_FLOAT_INT_READ, 0, SF_TRUE);
 
-    _metaData.addInfo(metaData::TITLE, sf_get_string(_sf, SF_STR_TITLE));
-    _metaData.addInfo(metaData::ARTIST, sf_get_string(_sf, SF_STR_ARTIST));
-    _metaData.addInfo(metaData::ALBUM, sf_get_string(_sf, SF_STR_ALBUM));
-    _metaData.addInfo(metaData::YEAR, sf_get_string(_sf, SF_STR_DATE));
-    _metaData.addInfo(gettext("copyright"), sf_get_string(_sf, SF_STR_COPYRIGHT));
-    _metaData.addInfo(metaData::COMMENT, sf_get_string(_sf, SF_STR_COMMENT));
-    _metaData.addInfo(metaData::TRACK, sf_get_string(_sf, SF_STR_TRACKNUMBER));
-    _metaData.addInfo(metaData::GENRE, sf_get_string(_sf, SF_STR_GENRE));
+    m_metaData.addInfo(metaData::TITLE, sf_get_string(_sf, SF_STR_TITLE));
+    m_metaData.addInfo(metaData::ARTIST, sf_get_string(_sf, SF_STR_ARTIST));
+    m_metaData.addInfo(metaData::ALBUM, sf_get_string(_sf, SF_STR_ALBUM));
+    m_metaData.addInfo(metaData::YEAR, sf_get_string(_sf, SF_STR_DATE));
+    m_metaData.addInfo(gettext("copyright"), sf_get_string(_sf, SF_STR_COPYRIGHT));
+    m_metaData.addInfo(metaData::COMMENT, sf_get_string(_sf, SF_STR_COMMENT));
+    m_metaData.addInfo(metaData::TRACK, sf_get_string(_sf, SF_STR_TRACKNUMBER));
+    m_metaData.addInfo(metaData::GENRE, sf_get_string(_sf, SF_STR_GENRE));
 
     const unsigned int milliseconds = (_si.frames * 1000) / _si.samplerate;
     time(milliseconds);

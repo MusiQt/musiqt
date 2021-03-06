@@ -124,7 +124,7 @@ bool opusBackend::open(const QString& fileName)
         {
             if (!compareTag(*ptr, "tracknumber"))
             {
-                _metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
+                m_metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
             }
             else if (!compareTag(*ptr, "METADATA_BLOCK_PICTURE"))
             {
@@ -169,15 +169,15 @@ bool opusBackend::open(const QString& fileName)
 //COVERARTMIME
 //COVERART (base64 encoded)
 
-    _metaData.addInfo(metaData::TITLE, title);
-    _metaData.addInfo(metaData::ARTIST, artist);
-    _metaData.addInfo(metaData::ALBUM, album);
-    _metaData.addInfo(metaData::GENRE, genre);
-    _metaData.addInfo(metaData::YEAR, year);
-    _metaData.addInfo(metaData::COMMENT, comment);
+    m_metaData.addInfo(metaData::TITLE, title);
+    m_metaData.addInfo(metaData::ARTIST, artist);
+    m_metaData.addInfo(metaData::ALBUM, album);
+    m_metaData.addInfo(metaData::GENRE, genre);
+    m_metaData.addInfo(metaData::YEAR, year);
+    m_metaData.addInfo(metaData::COMMENT, comment);
 
     if (!mime.isNull())
-        _metaData.addInfo(new QByteArray((char*)image.data(), image.size()));
+        m_metaData.addInfo(new QByteArray((char*)image.data(), image.size()));
 
     songLoaded(fileName);
     return true;

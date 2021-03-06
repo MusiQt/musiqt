@@ -169,7 +169,7 @@ bool gmeBackend::open(const QString& fileName)
         }
         if (!comment.isEmpty())
         {
-            _metaData.addInfo(metaData::COMMENT, comment);
+            m_metaData.addInfo(metaData::COMMENT, comment);
         }
     }
 #endif
@@ -190,16 +190,16 @@ void gmeBackend::getInfo()
         return;
     }
 
-    _metaData.addInfo(metaData::TITLE, ti->song);
-    _metaData.addInfo(metaData::ARTIST, ti->author);
-    _metaData.addInfo(gettext("copyright"), ti->copyright);
-    _metaData.addInfo(gettext("system"), ti->system);
-    _metaData.addInfo(gettext("game"), ti->game);
-    _metaData.addInfo(gettext("dumper"), ti->dumper);
+    m_metaData.addInfo(metaData::TITLE, ti->song);
+    m_metaData.addInfo(metaData::ARTIST, ti->author);
+    m_metaData.addInfo(gettext("copyright"), ti->copyright);
+    m_metaData.addInfo(gettext("system"), ti->system);
+    m_metaData.addInfo(gettext("game"), ti->game);
+    m_metaData.addInfo(gettext("dumper"), ti->dumper);
 
-    QString comment = _metaData.getInfo(metaData::COMMENT);
+    QString comment = m_metaData.getInfo(metaData::COMMENT);
     if (comment.isEmpty())
-        _metaData.addInfo(metaData::COMMENT, ti->comment);
+        m_metaData.addInfo(metaData::COMMENT, ti->comment);
 
     time(ti->length);
 
