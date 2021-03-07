@@ -21,6 +21,7 @@
 
 #include "audio.h"
 
+#include <QScopedPointer>
 #include <QThread>
 #include <QWidget>
 
@@ -120,6 +121,7 @@ private:
     void onCmdCurrentDir();
     void gotoDir(const QString &dir);
     void onCmdSongLoaded(input* res);
+    void onCmdSongPreLoaded(input* res);
     void onCmdSongSelected(const QModelIndex& currentRow);
     void preloadSong();
     void songEnded();
@@ -130,7 +132,7 @@ private:
     void updateSongs();
 
     void createHomeMenu();
-    void load(const QString& filename);
+    void load(const QString& filename, bool preload=false);
     void onCmdChangeSong(dir_t);
     void setDir(const QModelIndex& index);
     QString getFilter() const;
@@ -138,12 +140,12 @@ private:
     void changeState();
 
 private:
-    input *m_input;
-    input *m_preload;
-    audio *m_audio;
+    QScopedPointer<input> m_input;
+    QScopedPointer<input> m_preload;
+    QScopedPointer<audio> m_audio;
+
     bool m_playing;
     bool m_playMode;
-    QString m_preloaded;
     QString m_playDir;
 
     QFileSystemModel *m_fsm;

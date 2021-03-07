@@ -64,16 +64,15 @@ void loadThread::run()
 centralFrame::centralFrame(QWidget *parent) :
     QWidget(parent),
     m_input(IFACTORY->get()),
-    m_preload(nullptr),
+    m_preload(IFACTORY->get()),
     m_audio(new audio),
     m_playing(false),
-    m_preloaded(QString()),
     m_playDir(QString())
 {
     //connect(m_audio, &audio::outputError, this, &onCmdStopSong);
-    connect(m_audio, &audio::updateTime,  this, &centralFrame::onUpdateTime);
-    connect(m_audio, &audio::songEnded,   this, &centralFrame::songEnded);
-    connect(m_audio, &audio::preloadSong, this, &centralFrame::preloadSong);
+    connect(m_audio.data(), &audio::updateTime,  this, &centralFrame::onUpdateTime);
+    connect(m_audio.data(), &audio::songEnded,   this, &centralFrame::songEnded);
+    connect(m_audio.data(), &audio::preloadSong, this, &centralFrame::preloadSong);
 
     // dir view
     m_fsm = new QFileSystemModel(this);
@@ -231,9 +230,6 @@ centralFrame::~centralFrame()
     QSettings settings;
     QString file = m_input->songLoaded();
     settings.setValue("General Settings/file", file);
-
-    delete m_audio;
-    delete m_input;
 }
 
 void centralFrame::createHomeMenu()
@@ -488,7 +484,7 @@ void centralFrame::onCmdPlayPauseSong()
             return;
         }
 
-        if (m_audio->play(m_input))
+        if (m_audio->play(m_input.data()))
         {
             QFileInfo fileInfo(songLoaded);
             gotoDir(fileInfo.absolutePath());
@@ -550,16 +546,16 @@ void centralFrame::onCmdChangeSong(dir_t dir)
 
     if (index.isValid())
     {
-        if (!m_preloaded.isEmpty())
+        if (!m_preload->songLoaded().isEmpty())
         {
             m_preload->close();
-            m_preloaded = QString();
+            m_preload.reset(IFACTORY->get());
         }
         m_playlist->setCurrentIndex(index);
     }
 }
 
-void centralFrame::load(const QString& filename)
+void centralFrame::load(const QString& filename, bool preload)
 {
     qDebug() << "Loading " << filename;
 
@@ -568,7 +564,10 @@ void centralFrame::load(const QString& filename)
         return;
 
     loadThread* loader = new loadThread(ib, filename);
-    connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
+    if (preload)
+        connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongPreLoaded);
+    else
+        connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
     connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -580,31 +579,11 @@ void centralFrame::onCmdSongLoaded(input* res)
 {
     QApplication::restoreOverrideCursor();
 
-    if (!m_preloaded.isEmpty())
-    {
-        if ((res != nullptr) && m_audio->gapless(res))
-        {
-            delete m_preload;
-            m_preload = res;
-
-            if (SETTINGS->subtunes())
-                m_preload->subtune(1);
-        }
-        else
-        {
-            delete res;
-            m_preloaded = QString();
-        }
-        return;
-    }
-
     if (res != nullptr)
     {
-        input* tmp = m_input;
-        m_input = res;
-        delete tmp;
+        m_input.reset(res);
 
-        emit setDisplay(m_input);
+        emit setDisplay(m_input.data());
 
         if (SETTINGS->subtunes())
             m_input->subtune(1);
@@ -622,6 +601,27 @@ void centralFrame::onCmdSongLoaded(input* res)
         changeState();
         qWarning() << "Error loading song";
     }
+}
+
+void centralFrame::onCmdSongPreLoaded(input* res)
+{
+    QApplication::restoreOverrideCursor();
+
+    m_preload.reset(res);
+
+    if ((res != nullptr) && m_audio->gapless(res))
+    {
+        if (SETTINGS->subtunes())
+            m_preload->subtune(1);
+
+        qDebug() << "Song preloaded";
+    }
+    else
+    {
+        m_preload.reset(IFACTORY->get());
+    }
+
+    return;
 }
 
 void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
@@ -643,20 +643,18 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     if (!m_playlist->isVisible())
         updateSongs();
 
-    if (!m_preloaded.isEmpty())
+    QString songPreloaded = m_preload->songLoaded();
+    if (!songPreloaded.isEmpty())
     {
-        if (m_preloaded.compare(song))
+        if (songPreloaded.compare(song))
         {
-            m_preloaded = QString();
-            utils::delPtr(m_preload);
+            m_preload.reset(IFACTORY->get());
         }
         else
         {
-            delete m_input;
-            m_input = m_preload;
-            m_preload = nullptr;
-            m_preloaded = QString();
-            emit setDisplay(m_input);
+            m_input.reset(m_preload.take());
+            m_preload.reset(IFACTORY->get());
+            emit setDisplay(m_input.data());
             return;
         }
     }
@@ -688,8 +686,7 @@ void centralFrame::preloadSong()
         QModelIndex index = m_proxyModel->index(nextSong, 0);
         if (index.isValid())
         {
-            m_preloaded = m_proxyModel->data(index, Qt::UserRole).toString();
-            load(m_preloaded);
+            load(m_proxyModel->data(index, Qt::UserRole).toString(), true);
         }
     }
 }
@@ -870,7 +867,7 @@ void centralFrame::changeSubtune(dir_t dir)
     m_audio->stop();
 
     if (m_input->subtune(i))
-        emit setDisplay(m_input);
+        emit setDisplay(m_input.data());
 
     if (m_playing)
     {
