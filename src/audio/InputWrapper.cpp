@@ -111,14 +111,19 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
     }
 
     m_bytes += n;
-    int oldSeconds = m_milliSeconds/1000;
+
+    const int oldSeconds = m_milliSeconds / 1000;
+
     do {
         m_bytes -= m_bytePerMilliSec;
         m_milliSeconds++;
     } while (m_bytes > m_bytePerMilliSec);
-    if (oldSeconds != (m_milliSeconds/1000))
+
+    const int newSeconds = m_milliSeconds / 1000;
+
+    if (oldSeconds != newSeconds)
     {
-        if (m_milliSeconds != m_currentSong->songDuration()-5)
+        if (newSeconds != (m_currentSong->songDuration()/1000)-5)
             emit updateTime();
         else
             emit preloadSong();
