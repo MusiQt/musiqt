@@ -457,7 +457,7 @@ void sidBackend::loadTune(const int num)
 #else
         char md5[SidTune::MD5_LENGTH+1];
         _tune->createMD5(md5);
-        qDebug() << "Tune md5: " << _md5;
+        qDebug() << "Tune md5: " << md5;
         _length = _db->length(md5, _tune->getInfo()->currentSong()) * 1000;
 #endif
     }
