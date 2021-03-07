@@ -66,36 +66,40 @@ private:
     static const char* mprisTags[LAST_ID];
 
 private:
-    StringDict _infos;
+    StringDict m_infos;
 
-    QByteArray *_img;
+    QByteArray *m_img;
 
 public:
-    metaDataImpl() : _img(nullptr) {}
-    ~metaDataImpl() { delete _img; }
+    metaDataImpl() : m_img(nullptr) {}
+    ~metaDataImpl() { delete m_img; }
 
     /// Append song info
     void addInfo(QString type, QString info);
     void addInfo(QString type, unsigned int info);
     void addInfo(const mpris_t type, QString info);
     void addInfo(const mpris_t type, unsigned int info);
-    void addInfo(QByteArray* img) { _img = img; }
+    void addInfo(QByteArray* img) { m_img = img; }
 
     /// Remove all info
-    void clearInfo() { _infos.clear(); utils::delPtr(_img); }
+    void clearInfo() { m_infos.clear(); utils::delPtr(m_img); }
 
     /// Find song info
-    QString findInfo(QString type) const { return _infos.find(type).value(); }
+    QString findInfo(QString type) const { return m_infos.find(type).value(); }
 
     /// Get song info
     int moreInfo(const int i) const;
 
-    QString getKey(const unsigned int num) const { return _infos.keys()[num]; }
+    QString getKey(const unsigned int num) const { return m_infos.keys()[num]; }
     QString getKey(const mpris_t info) const { return mprisTags[info]; }
-    QString getInfo(unsigned int num) const { return _infos.values()[num]; }
-    QString getInfo(const char* info) const { auto it=_infos.find(info); return it!=_infos.end()?it.value():QString(); }
+    QString getInfo(unsigned int num) const { return m_infos.values()[num]; }
+    QString getInfo(const char* info) const
+    {
+        auto it = m_infos.find(info);
+        return it != m_infos.end() ? it.value() : QString();
+    }
     QString getInfo(const mpris_t info) const { return getInfo(mprisTags[info]); }
-    QByteArray* getImage() const { return _img; }
+    QByteArray* getImage() const { return m_img; }
 };
 
 #endif

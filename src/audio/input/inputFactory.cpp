@@ -98,7 +98,7 @@ void iFactory::regBackend()
     temp.name = backend::name;
     temp.supportedExt = backend::ext;
     temp.factory = &backend::factory;
-    _inputs.append(temp);
+    m_inputs.append(temp);
 }
 
 iFactory::iFactory()
@@ -154,19 +154,19 @@ iFactory::iFactory()
 #endif
 }
 
-bool supports(const QStringList& _ext, const QString& fileName)
+bool supports(const QStringList& ext, const QString& fileName)
 {
-    QString ext = _ext.join("|");
-    ext.prepend(".*\\.(").append(")");
+    QString extPattern = ext.join("|");
+    extPattern.prepend(".*\\.(").append(")");
 
-    QRegExp rx(ext, Qt::CaseInsensitive);
+    QRegExp rx(extPattern, Qt::CaseInsensitive);
     return rx.exactMatch(fileName);
 }
 
 QStringList iFactory::getExtensions() const
 {
     QStringList extensions;
-    for (inputs_t i: _inputs)
+    for (inputs_t i: m_inputs)
     {
         extensions.append(i.supportedExt());
     }
@@ -181,10 +181,11 @@ input* iFactory::get()
 
 input* iFactory::get(const QString& filename)
 {
-    for (inputs_t i: _inputs)
+    for (inputs_t i: m_inputs)
     {
         if (supports(i.supportedExt(), filename))
         {
+            qDebug() << "Using input backend " << i.name;
             return i.factory();
         }
     }
@@ -194,5 +195,5 @@ input* iFactory::get(const QString& filename)
 
 inputConfig* iFactory::getConfig(const int i)
 {
-    return _inputs[i].factory();
+    return m_inputs[i].factory();
 }

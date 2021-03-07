@@ -44,7 +44,7 @@ private:
     void regBackend();
 
 private:
-    QList<inputs_t> _inputs;
+    QList<inputs_t> m_inputs;
 
 protected:
     iFactory();
@@ -57,10 +57,10 @@ public:
     static iFactory* instance();
 
     /// Get number of registered backends
-    int num() const { return _inputs.size(); }
+    int num() const { return m_inputs.size(); }
 
     /// Get backend's name
-    const char* name(const int i) const { return _inputs[i].name; }
+    const char* name(const int i) const { return m_inputs[i].name; }
 
     /// Get supported extensions
     QStringList getExtensions() const;

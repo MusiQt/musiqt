@@ -44,8 +44,8 @@ void metaDataImpl::addInfo(QString type, QString info)
 
     if (!info.isEmpty())
     {
-        _infos.remove(type);
-        _infos.insert(type, info);
+        m_infos.remove(type);
+        m_infos.insert(type, info);
     }
 }
 
@@ -69,7 +69,7 @@ void metaDataImpl::addInfo(const mpris_t type, unsigned int info)
 
 int metaDataImpl::moreInfo(int i) const
 {
-    auto values = _infos.values();
+    auto values = m_infos.values();
     i += 1;
     return (i < values.size()) ? i : -1;
 }
