@@ -86,6 +86,9 @@ public:
 
     /// Set current position
     void seek(int pos);
+
+    /// Get position in percent
+    int getPosition() const;
 };
 
 /*****************************************************************/

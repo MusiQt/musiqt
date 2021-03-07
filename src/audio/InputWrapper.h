@@ -58,6 +58,8 @@ public:
 
     void seek(int pos);
 
+    int tell() const;
+
 private:
     input *m_currentSong;
     input *m_preloadedSong;

@@ -162,6 +162,11 @@ void InputWrapper::seek(int pos)
     m_milliSeconds = (pos * m_currentSong->songDuration()) / 100;
 }
 
+int InputWrapper::tell() const
+{
+    return (100*m_milliSeconds)/m_currentSong->songDuration();
+}
+
 void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
 {
     unsigned int precision;

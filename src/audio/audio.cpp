@@ -191,6 +191,8 @@ void audio::seek(int pos)
     m_audioOutput->unpause();
 }
 
+int audio::getPosition() const { return m_iw->tell(); }
+
 void audio::unload() { m_iw->unload(); }
 
 /*****************************************************************/

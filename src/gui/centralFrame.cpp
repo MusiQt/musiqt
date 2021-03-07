@@ -675,7 +675,7 @@ void centralFrame::onUpdateTime()
         emit updateTime(m_audio->seconds());
 
         if (!m_slider->isSliderDown())
-            emit updateSlider((100*m_audio->seconds()*1000L)/m_input->songDuration()); // FIXME this sucks
+            emit updateSlider(m_audio->getPosition());
     }
 }
 
