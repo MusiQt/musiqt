@@ -211,7 +211,14 @@ centralFrame::centralFrame(QWidget *parent) :
     m_slider->setTickPosition(QSlider::TicksBelow);
     m_slider->setTracking(false);
     m_slider->setDisabled(true);
-    connect(m_slider, &QSlider::actionTriggered, this, &centralFrame::onSeek);
+    connect(m_slider, &QSlider::actionTriggered,
+        [this]()
+        {
+            int pos = m_slider->sliderPosition();
+            qDebug() << "seek: " << pos;
+            m_audio->seek(pos);
+        }
+    );
     connect(this, &centralFrame::updateSlider, m_slider, &QSlider::setValue);
     main->addWidget(m_slider);
     main->addWidget(cFrame);
@@ -670,13 +677,6 @@ void centralFrame::onUpdateTime()
         if (!m_slider->isSliderDown())
             emit updateSlider((100*m_audio->seconds()*1000L)/m_input->songDuration()); // FIXME this sucks
     }
-}
-
-void centralFrame::onSeek()
-{
-    int pos = m_slider->sliderPosition();
-    qDebug() << "onSeek: " << pos;
-    m_audio->seek(pos);
 }
 
 void centralFrame::preloadSong()

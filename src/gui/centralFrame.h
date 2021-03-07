@@ -128,7 +128,6 @@ private:
     void onRgtClkPlayList(const QPoint& pos);
 
     void updateSongs();
-    void onSeek();
 
     void createHomeMenu();
     void load(const QString& filename);
