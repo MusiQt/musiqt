@@ -104,7 +104,6 @@ private:
 
     SidDatabase *_db;
     unsigned int _length;
-    char _md5[SidTune::MD5_LENGTH+1];
     bool newSonglengthDB;
 
 private:

@@ -321,8 +321,6 @@ bool sidBackend::open(const QString& fileName)
     _sidplayfp->config(cfg);
 
     _tune = new SidTune(fileName.toUtf8().constData());
-    _tune->createMD5(_md5);
-    qDebug() << "Tune md5: " << _md5;
 
     loadTune(0);
 
@@ -452,14 +450,20 @@ void sidBackend::loadTune(const int num)
 {
     _tune->selectSong(num);
     _sidplayfp->load(_tune);
-#if LIBSIDPLAYFP_VERSION_MAJ > 1
     if (_db != nullptr)
+    {
+#if LIBSIDPLAYFP_VERSION_MAJ > 1
         _length = newSonglengthDB ? _db->lengthMs(*_tune) : (_db->length(*_tune) * 1000);
+#else
+        char md5[SidTune::MD5_LENGTH+1];
+        _tune->createMD5(md5);
+        qDebug() << "Tune md5: " << _md5;
+        _length = _db->length(md5, _tune->getInfo()->currentSong()) * 1000;
+#endif
+    }
     else
         _length = 0;
-#else
-    _length = _db != nullptr ? (_db->length(_md5, _tune->getInfo()->currentSong()) * 1000) : 0;
-#endif
+
     time(_length);
 }
 
