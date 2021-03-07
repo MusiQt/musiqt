@@ -473,7 +473,7 @@ void mainWindow::setPlayButton(state_t state)
 void mainWindow::setDisplay(input* i)
 {
     m_timeDisplay->setTime(0);
-    m_songTime->setTime(i->time());
+    m_songTime->setTime(i->songDuration() / 1000);
 
     m_subtunes->setText(QString("%1/%2").arg(i->subtune()).arg(i->subtunes()));
 

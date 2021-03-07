@@ -92,8 +92,8 @@ public:
     /// Get song info
     virtual const metaData* getMetaData() const override { return &m_metaData; }
 
-    /// Get song duration in seconds
-    unsigned int time() const override { return m_time / 1000; }
+    /// Get song duration in milliseconds
+    unsigned int songDuration() const override { return m_time; }
 
     /// Get fractional scale for fixed point types
     virtual unsigned int fract() const override { return 0; }

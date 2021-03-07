@@ -59,8 +59,8 @@ public:
     /// Get song info
     virtual const metaData* getMetaData() const =0;
 
-    /// Get song duration
-    virtual unsigned int time() const =0;
+    /// Get song duration in milliseconds
+    virtual unsigned int songDuration() const =0;
 
     /// Get samplerate
     virtual unsigned int samplerate() const =0;

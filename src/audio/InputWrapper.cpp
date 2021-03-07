@@ -118,7 +118,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
     } while (m_bytes > m_bytePerMilliSec);
     if (oldSeconds != (m_milliSeconds/1000))
     {
-        if (m_milliSeconds != m_currentSong->time()-5)
+        if (m_milliSeconds != m_currentSong->songDuration()-5)
             emit updateTime();
         else
             emit preloadSong();
@@ -158,7 +158,7 @@ void InputWrapper::unload()
 
 void InputWrapper::setPos(int pos)
 {
-    m_milliSeconds = (pos * m_currentSong->time()) / 100;
+    m_milliSeconds = (pos * m_currentSong->songDuration()) / 100;
 }
 
 void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
