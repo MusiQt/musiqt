@@ -440,9 +440,9 @@ void mainWindow::setPlayButton(state_t state)
             label = tr("Pause");
         }
 
-        m_nextAction->setIcon(GET_ICON(icon));
-        m_nextAction->setToolTip(label);
-        m_nextAction->setStatusTip(label);
+        m_playAction->setIcon(GET_ICON(icon));
+        m_playAction->setToolTip(label);
+        m_playAction->setStatusTip(label);
     }
 
     {
