@@ -98,7 +98,7 @@ bool sndBackend::open(const QString& fileName)
     m_metaData.addInfo(metaData::TRACK, sf_get_string(_sf, SF_STR_TRACKNUMBER));
     m_metaData.addInfo(metaData::GENRE, sf_get_string(_sf, SF_STR_GENRE));
 
-    const unsigned int milliseconds = (_si.frames * 1000) / _si.samplerate;
+    const unsigned int milliseconds = (_si.frames * 1000L) / _si.samplerate;
     time(milliseconds);
 
     songLoaded(fileName);

@@ -197,7 +197,11 @@ bool mpg123Backend::open(const QString& fileName)
     }
 
     err = mpg123_length(_handle);
-    time((err*1000)/_samplerate);
+    qDebug() << err;
+    if (err != MPG123_ERR)
+    {
+        time((err*1000L)/_samplerate);
+    }
 
     err = mpg123_param(_handle, MPG123_RVA,
         SETTINGS->replayGain()
