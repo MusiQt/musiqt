@@ -197,7 +197,6 @@ bool mpg123Backend::open(const QString& fileName)
     }
 
     err = mpg123_length(_handle);
-    qDebug() << err;
     if (err != MPG123_ERR)
     {
         time((err*1000L)/_samplerate);
