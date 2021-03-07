@@ -668,7 +668,7 @@ void centralFrame::onUpdateTime()
         emit updateTime(m_audio->seconds());
 
         if (!m_slider->isSliderDown())
-            emit updateSlider((100*m_audio->seconds()*1000L)/m_input->songDuration());
+            emit updateSlider((100*m_audio->seconds()*1000L)/m_input->songDuration()); // FIXME this sucks
     }
 }
 
@@ -676,10 +676,7 @@ void centralFrame::onSeek()
 {
     int pos = m_slider->sliderPosition();
     qDebug() << "onSeek: " << pos;
-    m_audio->pause();
-    m_input->seek(pos);
-    m_audio->seek(pos); // FIXME this sucks
-    m_audio->pause();
+    m_audio->seek(pos);
 }
 
 void centralFrame::preloadSong()

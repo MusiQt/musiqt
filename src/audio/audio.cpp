@@ -184,7 +184,12 @@ bool audio::gapless(input* const i) { return m_iw->tryPreload(i); }
 
 int audio::seconds() const { return m_iw->getSeconds(); }
 
-void audio::seek(int pos) { return m_iw->setPos(pos); }
+void audio::seek(int pos)
+{
+    m_audioOutput->pause();
+    m_iw->seek(pos);
+    m_audioOutput->unpause();
+}
 
 void audio::unload() { m_iw->unload(); }
 

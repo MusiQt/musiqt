@@ -156,8 +156,9 @@ void InputWrapper::unload()
     m_preloadedSong = nullptr;
 }
 
-void InputWrapper::setPos(int pos)
+void InputWrapper::seek(int pos)
 {
+    m_currentSong->seek(pos);
     m_milliSeconds = (pos * m_currentSong->songDuration()) / 100;
 }
 

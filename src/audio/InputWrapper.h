@@ -56,7 +56,7 @@ public:
 
     int getSeconds() const { return m_milliSeconds/1000; }
 
-    void setPos(int pos);
+    void seek(int pos);
 
 private:
     input *m_currentSong;
