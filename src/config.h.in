@@ -1,5 +1,5 @@
 
-/* Define to 1 if you want the Hively backend. */
+/* Define if you want the Hively backend. */
 #cmakedefine  BUILD_HVL
 
 /* Define to 1 if translation of program messages to the user's native
@@ -9,58 +9,58 @@
 /* Define to 1 if you have libsndfile>=1.0.21 on MinGW. */
 #cmakedefine  ENABLE_SNDFILE_WINDOWS_PROTOTYPES @ENABLE_SNDFILE_WINDOWS_PROTOTYPES@
 
-/* Define to 1 if you have libbs2b (-lbs2b). */
+/* Define if you have libbs2b (-lbs2b). */
 #cmakedefine  HAVE_BS2B
 
-/* Define to 1 if you have libgme (-lgme). */
+/* Define if you have libgme (-lgme). */
 #cmakedefine  HAVE_GME
 
-/* Define to 1 if you have the <libavformat/avformat.h> header file. */
+/* Define if you have the <libavformat/avformat.h> header file. */
 #cmakedefine  HAVE_LIBAVFORMAT_AVFORMAT_H
 
-/* Define to 1 if you have the `mpcdec' library (-lmpcdec). */
+/* Define if you have the `mpcdec' library (-lmpcdec). */
 #cmakedefine  HAVE_LIBMPCDEC
 
-/* Define to 1 if mpcdec supports new SV8 format. */
+/* Define if mpcdec supports new SV8 format. */
 #cmakedefine  MPCDEC_SV8
 
-/* Define to 1 if you have the `z' library (-lz). */
+/* Define if you have the `z' library (-lz). */
 #cmakedefine  HAVE_LIBZ
 
-/* Define to 1 if you have libmpg123 (-lmpg123). */
+/* Define if you have libmpg123 (-lmpg123). */
 #cmakedefine  HAVE_MPG123
 
-/* Define to 1 if you have libopenmpt (-lopenmp). */
+/* Define if you have libopenmpt (-lopenmp). */
 #cmakedefine  HAVE_OPENMPT
 
-/* Define to 1 if you have libopusfile (-lopusfile). */
+/* Define if you have libopusfile (-lopusfile). */
 #cmakedefine  HAVE_OPUS
 
-/* Define to 1 if you have libsidplayfp (-lsidplayfp). */
+/* Define if you have libsidplayfp (-lsidplayfp). */
 #cmakedefine  HAVE_SIDPLAYFP
 
-/* Define to 1 if you have the <sidplayfp/builders/exsid.h> header file. */
+/* Define if you have the <sidplayfp/builders/exsid.h> header file. */
 #cmakedefine  HAVE_SIDPLAYFP_BUILDERS_EXSID_H
 
-/* Define to 1 if you have the <sidplayfp/builders/hardsid.h> header file. */
+/* Define if you have the <sidplayfp/builders/hardsid.h> header file. */
 #cmakedefine  HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
 
-/* Define to 1 if you have the <sidplayfp/builders/residfp.h> header file. */
+/* Define if you have the <sidplayfp/builders/residfp.h> header file. */
 #cmakedefine  HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 
-/* Define to 1 if you have the <sidplayfp/builders/resid.h> header file. */
+/* Define if you have the <sidplayfp/builders/resid.h> header file. */
 #cmakedefine  HAVE_SIDPLAYFP_BUILDERS_RESID_H
 
-/* Define to 1 if you have libsndfile (-lsndfile). */
+/* Define if you have libsndfile (-lsndfile). */
 #cmakedefine  HAVE_SNDFILE
 
-/* Define to 1 if you have libstilview (-lstilview). */
+/* Define if you have libstilview (-lstilview). */
 #cmakedefine  HAVE_STILVIEW
 
-/* Define to 1 if you have libvorbisfile (-lvorbisfile). */
+/* Define if you have libvorbisfile (-lvorbisfile). */
 #cmakedefine  HAVE_VORBIS
 
-/* Define to 1 if you have wavpack (-lwavpack). */
+/* Define if you have wavpack (-lwavpack). */
 #cmakedefine  HAVE_WAVPACK
 
 /* Name of package */
