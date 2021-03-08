@@ -52,8 +52,7 @@ QStringList qaudioBackend::getDevices()
     return devices;
 }
 
-qaudioBackend::qaudioBackend() :
-    m_audioOutput(nullptr)
+qaudioBackend::qaudioBackend()
 {
     // Preload available devices in a separate thread
     deviceLoader* loader = new deviceLoader();
@@ -63,6 +62,8 @@ qaudioBackend::qaudioBackend() :
     // audio thread
     m_thread = new QThread();
 }
+
+qaudioBackend::~qaudioBackend() { delete m_thread; }
 
 void qaudioBackend::onStateChange(QAudio::State newState)
 {
@@ -144,8 +145,7 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     if (error != QAudio::NoError)
     {
         qWarning() << "Error creating QAudioOutput";
-        delete m_audioOutput;
-        m_audioOutput = nullptr;
+        m_audioOutput->deleteLater();
         return 0;
     }
 
@@ -157,8 +157,7 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
     if (m_audioOutput->error() != QAudio::NoError)
     {
         qWarning() << "Error starting QAudioOutput";
-        delete m_audioOutput;
-        m_audioOutput = nullptr;
+        m_audioOutput->deleteLater();
         return 0;
     }
 
@@ -172,11 +171,10 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
 
 void qaudioBackend::close()
 {
+    m_audioOutput->deleteLater();
+
     m_thread->quit();
     m_thread->wait();
-    
-    delete m_audioOutput;
-    m_audioOutput = nullptr;
 }
 
 void qaudioBackend::pause()
@@ -196,7 +194,7 @@ void qaudioBackend::stop()
 
 void qaudioBackend::volume(int vol)
 {
-    if (m_audioOutput == nullptr)
+    if (m_audioOutput.isNull())
         return;
 
 #if QT_VERSION >= 0x050800
@@ -211,7 +209,7 @@ void qaudioBackend::volume(int vol)
 
 int qaudioBackend::volume()
 {
-    if (m_audioOutput == nullptr)
+    if (m_audioOutput.isNull())
         return 0;
 
 #if QT_VERSION >= 0x050800
