@@ -56,23 +56,23 @@ class mpg123Backend final : public inputBackend
     friend class mpg123Config;
 
 private:
-    static mpg123Config_t _settings;
+    static mpg123Config_t m_settings;
 
 private:
-    mpg123_handle *_handle;
+    mpg123_handle *m_handle;
 
-    long _samplerate;
-    int _channels;
+    long m_samplerate;
+    int m_channels;
 
-    QFile _file;
+    QFile m_file;
 
-    static int _status;
+    static int m_status;
 
     static ssize_t read_func(void*, void*, size_t);
     static off_t seek_func(void*, off_t, int);
 
 public:
-    static QStringList _decoders;
+    static QStringList m_decoders;
 
 private:
     mpg123Backend();
@@ -101,10 +101,10 @@ public:
     bool seek(int pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _samplerate; }
+    unsigned int samplerate() const override { return m_samplerate; }
 
     /// Get channels
-    unsigned int channels() const override { return _channels; }
+    unsigned int channels() const override { return m_channels; }
 
     /// Get precision
     sample_t precision() const override { return sample_t::S16; }
