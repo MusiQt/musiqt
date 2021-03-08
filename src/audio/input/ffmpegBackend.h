@@ -60,7 +60,7 @@ private:
     AVStream *m_audioStream;
     AVFormatContext *m_formatContext;
     AVCodecContext *m_codecContext;
-    int audioStreamIndex;
+    int m_audioStreamIndex;
 
     int m_planar;
     int m_sampleSize;
@@ -138,21 +138,21 @@ public:
     /// Get samplerate
     unsigned int samplerate() const override
     {
-        return audioStream ?
-            audioStream->codecpar->sample_rate
+        return m_audioStream ?
+            m_audioStream->codecpar->sample_rate
             : 0;
     }
 
     /// Get channels
     unsigned int channels() const override
     {
-        return audioStream ?
-            audioStream->codecpar->channels
+        return m_audioStream ?
+            m_audioStream->codecpar->channels
             : 0;
     }
 
     /// Get precision
-    sample_t precision() const override { return _precision; }
+    sample_t precision() const override { return m_precision; }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds) override;

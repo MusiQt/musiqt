@@ -61,7 +61,7 @@ int (*ffmpegBackend::dl_avcodec_open2)(AVCodecContext*, const AVCodec*, AVDictio
 int (*ffmpegBackend::dl_avcodec_decode_audio4)(AVCodecContext*, AVFrame*, int*, const AVPacket*)=0;
 AVFrame* (*ffmpegBackend::dl_av_frame_alloc)();
 void (*ffmpegBackend::dl_av_frame_free)(AVFrame**)=0;
-int (*ffmpegBackend::dl_av_sample_fmt_ism_planar)(enum AVSampleFormat)=0;
+int (*ffmpegBackend::dl_av_sample_fmt_is_planar)(enum AVSampleFormat)=0;
 int (*ffmpegBackend::dl_av_samples_get_buffer_size)(int*, int, int, enum AVSampleFormat, int)=0;
 int (*ffmpegBackend::dl_av_read_frame)(AVFormatContext*, AVPacket*)=0;
 int (*ffmpegBackend::dl_av_seek_frame)(AVFormatContext*, int, int64_t, int)=0;
@@ -186,7 +186,7 @@ bool ffmpegBackend::init()
     LOADSYM(avcodecDll, avcodec_decode_audio4, int(*)(AVCodecContext*, AVFrame*, int*, const AVPacket*))
     LOADSYM(avutilDll, av_frame_alloc, AVFrame*(*)())
     LOADSYM(avutilDll, av_frame_free, void(*)(AVFrame**))
-    LOADSYM(avutilDll, av_sample_fmt_ism_planar, int(*)(enum AVSampleFormat))
+    LOADSYM(avutilDll, av_sample_fmt_is_planar, int(*)(enum AVSampleFormat))
     LOADSYM(avutilDll, av_samples_get_buffer_size, int(*)(int*, int, int, enum AVSampleFormat, int))
     LOADSYM(avformatDll, avformat_open_input, int(*)(AVFormatContext **ps, const char *filename, AVInputFormat *fmt, AVDictionary **options))
     LOADSYM(avformatDll, avformat_close_input, void(*)(AVFormatContext**))
@@ -328,7 +328,7 @@ bool ffmpegBackend::open(const QString& fileName)
         goto error;
     }
 
-    m_planar = dl_av_sample_fmt_ism_planar((AVSampleFormat)m_audioStream->codecpar->format);
+    m_planar = dl_av_sample_fmt_is_planar((AVSampleFormat)m_audioStream->codecpar->format);
 
     m_metaData.addInfo(metaData::TITLE, getMetadata("title"));
     m_metaData.addInfo(metaData::ARTIST, getMetadata("artist"));
