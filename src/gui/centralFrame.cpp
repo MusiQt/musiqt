@@ -123,7 +123,7 @@ centralFrame::centralFrame(QWidget *parent) :
 
     m_bookmarkList = new bookmark(this);
     m_bookmarkList->setAlternatingRowColors(true);
-    connect(m_bookmarkList, &bookmark::currentTextChanged, this, &centralFrame::gotoDir);
+    connect(m_bookmarkList, &bookmark::currentTextChanged, this, &centralFrame::setDir);
 
     // left view
     QStackedWidget *stackedWidget = new QStackedWidget(this);
@@ -288,12 +288,13 @@ void centralFrame::changeState()
 
 void centralFrame::onDirSelected(const QModelIndex& idx)
 {
+    qDebug() << "onDirSelected";
     m_bookmarkList->setCurrentRow(-1);
 
     if (m_editMode->isChecked())
         return;
 
-    const QString curItem = m_fsm->fileName(m_dirlist->currentIndex());
+    const QString curItem = m_fsm->fileName(idx);
     if (curItem.isEmpty())
         return;
 
@@ -348,11 +349,7 @@ void centralFrame::onHome(QAction* action)
 {
     QString musicDir = action->data().toString();
     qDebug() << "go to music dir: " << musicDir;
-    QModelIndex idx = m_fsm->index(musicDir);
-    if (idx.isValid())
-        setDir(idx);
-    else
-        QMessageBox::warning(this, tr("Warning"), QString(tr("Path %1 dos not exist")).arg(musicDir));
+    setDir(musicDir);
 }
 
 void centralFrame::onCmdCurrentDir()
@@ -366,7 +363,7 @@ void centralFrame::onCmdCurrentDir()
         return;
 
     QFileInfo fileInfo(file);
-    gotoDir(fileInfo.absolutePath());
+    setDir(fileInfo.absolutePath());
     QModelIndexList items = m_proxyModel->match(m_proxyModel->index(0, 0),
         Qt::DisplayRole, QVariant::fromValue(fileInfo.completeBaseName()),
         -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
@@ -374,13 +371,6 @@ void centralFrame::onCmdCurrentDir()
     m_playlist->setCurrentIndex(items.at(0));
 }
 
-void centralFrame::gotoDir(const QString &dir)
-{
-    qDebug() << "gotoDir: " << dir;
-    if (!dir.isEmpty())
-        setDir(m_fsm->index(dir));
-}
- 
 void centralFrame::setFile(const QString& file, const bool play)
 {
     qDebug() << "setFile " << file;
@@ -425,7 +415,7 @@ void centralFrame::setFile(const QString& file, const bool play)
         else
         {
             m_dirlist->setProperty("UserData", QVariant(QString()));
-            setDir(m_fsm->index(file));
+            setDir(file);
             m_playMode = true; // TODO sync GUI
         }
         goto done;
@@ -460,7 +450,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     else
     {
         m_dirlist->setProperty("UserData", QVariant(fileInfo.completeBaseName()));
-        setDir(m_fsm->index(fileInfo.dir().absolutePath()));
+        setDir(fileInfo.dir().absolutePath());
     }
 
 done:
@@ -487,7 +477,7 @@ void centralFrame::onCmdPlayPauseSong()
         if (m_audio->play(m_input.data()))
         {
             QFileInfo fileInfo(songLoaded);
-            gotoDir(fileInfo.absolutePath());
+            setDir(fileInfo.absolutePath());
             m_playDir = m_fsm->fileName(m_dirlist->currentIndex());
         }
     }
@@ -936,9 +926,19 @@ void centralFrame::updateSongs()
     emit songUpdated(text);
 }
 
-void centralFrame::setDir(const QModelIndex& index)
+void centralFrame::setDir(const QString& dir)
 {
-    qDebug("centralFrame::setDir");
+    qDebug() << "centralFrame::setDir: " << dir;
+    if (dir.isEmpty())
+        return;
+
+    QModelIndex index = m_fsm->index(dir);
+    if (!index.isValid())
+    {
+        QMessageBox::warning(this, tr("Warning"), QString(tr("Path %1 does not exist")).arg(dir));
+        return;
+    }
+
     QMetaObject::Connection * const connection = new QMetaObject::Connection;
     *connection = connect(
         m_fsm, &QFileSystemModel::directoryLoaded,

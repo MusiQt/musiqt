@@ -119,7 +119,6 @@ private:
     void onDirSelected(const QModelIndex&);
     void onHome(QAction* action);
     void onCmdCurrentDir();
-    void gotoDir(const QString &dir);
     void onCmdSongLoaded(input* res);
     void onCmdSongPreLoaded(input* res);
     void onCmdSongSelected(const QModelIndex& currentRow);
@@ -134,7 +133,7 @@ private:
     void createHomeMenu();
     void load(const QString& filename, bool preload=false);
     void onCmdChangeSong(dir_t);
-    void setDir(const QModelIndex& index);
+    void setDir(const QString& index);
     QString getFilter() const;
     QStringList getPattern() const;
     void changeState();
