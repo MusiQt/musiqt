@@ -53,7 +53,7 @@ jobs:
         mkdir ${PACKAGE_NAME}
         cp README ${PACKAGE_NAME}
         cp build/musiqt.exe ${PACKAGE_NAME}
-        upx ${PACKAGE_NAME}/musiqt.exe
+        upx ${PACKAGE_NAME}/musiqt.exe || true
         mkdir -p ${PACKAGE_NAME}/locale/es/LC_MESSAGES
         cp build/es.gmo ${PACKAGE_NAME}/locale/es/LC_MESSAGES/musiqt.mo
         mkdir -p ${PACKAGE_NAME}/locale/it/LC_MESSAGES
