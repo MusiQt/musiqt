@@ -34,6 +34,7 @@ jobs:
           mingw-w64-x86_64-ffmpeg
           mingw-w64-x86_64-libbs2b
           mingw-w64-x86_64-libsidplayfp
+          mingw-w64-x86_64-libopenmpt
     - uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }}
