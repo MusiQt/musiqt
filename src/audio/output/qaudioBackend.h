@@ -23,7 +23,6 @@
 #include "AudioOutputWrapper.h"
 
 #include <QAudio>
-#include <QPointer>
 #include <QRunnable>
 #include <QThread>
 
@@ -45,7 +44,7 @@ class qaudioBackend : public QObject
     Q_OBJECT
 
 private:
-    QPointer<AudioOutputWrapper> m_audioOutput;
+    AudioOutputWrapper *m_audioOutput;
     QThread *m_thread;
 
 signals:
@@ -57,7 +56,7 @@ private:
 public:
     qaudioBackend();
 
-    virtual ~qaudioBackend();
+    virtual ~qaudioBackend() { delete m_thread; }
 
     static QStringList getDevices();
 
