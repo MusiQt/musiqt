@@ -38,10 +38,12 @@
 #define AUTHOR  "Leandro Nini"
 #define YEAR    "2006-2021"
 
-const char* infoString = "<b>%1</b><br><br>Version %2<br><br>Copyright %3 %4<br><br>"
-                          "Website: <a href=\"%5\">%5</a><br><br>Bugs: <a href=\"%6\">%6</a>";
+#define gettext(x) x
 
-const char* qtString = "This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt.io/</a>";
+const char* infoString = gettext("<b>%1</b><br><br>Version %2<br><br>Copyright %3 %4<br><br>"
+                          "Website: <a href=\"%5\">%5</a><br><br>Bugs: <a href=\"%6\">%6</a>");
+
+const char* qtString = gettext("This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt.io/</a>");
 
 aboutDialog::aboutDialog(QWidget *parent) :
     QDialog(parent)
