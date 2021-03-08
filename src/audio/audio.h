@@ -50,7 +50,7 @@ private:
 
 signals:
     void songEnded();
-    void outputError();
+    //void outputError();
     void updateTime();
     void preloadSong();
 
