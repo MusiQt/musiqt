@@ -57,18 +57,20 @@ public:
 class ffmpegBackend : public inputBackend
 {
 private:
-    AVStream *audioStream;
-    AVFormatContext *formatContext;
-    AVCodecContext *codecContext;
+    AVStream *m_audioStream;
+    AVFormatContext *m_formatContext;
+    AVCodecContext *m_codecContext;
     int audioStreamIndex;
-    unsigned int decodeBufOffset;
-    unsigned char decodeBuf[MAX_AUDIO_FRAME_SIZE*2];
+
+    int m_planar;
+    int m_sampleSize;
+    sample_t m_precision;
+
     AVPacket packet;
     int packetOffset;
-    sample_t _precision;
 
-    int _planar;
-    int _sampleSize;
+    unsigned int decodeBufOffset;
+    unsigned char decodeBuf[MAX_AUDIO_FRAME_SIZE*2];
 
     static const AutoDLL avformatDll;
     static const AutoDLL avcodecDll;

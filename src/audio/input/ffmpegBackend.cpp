@@ -61,7 +61,7 @@ int (*ffmpegBackend::dl_avcodec_open2)(AVCodecContext*, const AVCodec*, AVDictio
 int (*ffmpegBackend::dl_avcodec_decode_audio4)(AVCodecContext*, AVFrame*, int*, const AVPacket*)=0;
 AVFrame* (*ffmpegBackend::dl_av_frame_alloc)();
 void (*ffmpegBackend::dl_av_frame_free)(AVFrame**)=0;
-int (*ffmpegBackend::dl_av_sample_fmt_is_planar)(enum AVSampleFormat)=0;
+int (*ffmpegBackend::dl_av_sample_fmt_ism_planar)(enum AVSampleFormat)=0;
 int (*ffmpegBackend::dl_av_samples_get_buffer_size)(int*, int, int, enum AVSampleFormat, int)=0;
 int (*ffmpegBackend::dl_av_read_frame)(AVFormatContext*, AVPacket*)=0;
 int (*ffmpegBackend::dl_av_seek_frame)(AVFormatContext*, int, int64_t, int)=0;
@@ -90,14 +90,14 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
     {
         while (!packet.data)
         {
-            if (dl_av_read_frame(formatContext, &packet) < 0)
+            if (dl_av_read_frame(m_formatContext, &packet) < 0)
             {
                 qDebug() << "Last frame: " << static_cast<int>(n);
                 memcpy(buffer, buf, n);
                 decodeBufOffset = 0;
                 return n;
             }
-            if (packet.stream_index != audioStreamIndex)
+            if (packet.stream_index != m_audioStreamIndex)
             {
                 dl_av_free_packet(&packet);
                 packet.data = 0;
@@ -114,13 +114,13 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
 
         AVFrame *frame = dl_av_frame_alloc();
         int got_frame = 0;
-        const int used = dl_avcodec_decode_audio4(codecContext, frame, &got_frame, &avpkt);
+        const int used = dl_avcodec_decode_audio4(m_codecContext, frame, &got_frame, &avpkt);
         if ((used >= 0) && got_frame)
         {
             int plane_size;
-            int data_size = dl_av_samples_get_buffer_size(&plane_size, audioStream->codecpar->channels,
+            int data_size = dl_av_samples_get_buffer_size(&plane_size, m_audioStream->codecpar->channels,
                     frame->nb_samples,
-                    (AVSampleFormat)audioStream->codecpar->format, 1);
+                    (AVSampleFormat)m_audioStream->codecpar->format, 1);
             if (frame_size < data_size)
             {
                 qDebug() << "output buffer size is too small for the current frame: ("
@@ -128,21 +128,21 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
                 return 0;
             }
 
-            if (_planar && (audioStream->codecpar->channels > 1))
+            if (m_planar && (m_audioStream->codecpar->channels > 1))
             {
                 // Interleave channels
                 uint8_t *out = (uint8_t*)(buf+n);
                 int idx = 0;
-                const int samples = plane_size/_sampleSize;
+                const int samples = plane_size/m_sampleSize;
 
                 for (int j=0; j<samples; j++)
                 {
-                    for (int ch=0; ch<audioStream->codecpar->channels; ch++)
+                    for (int ch=0; ch<m_audioStream->codecpar->channels; ch++)
                     {
-                        memcpy(out, frame->extended_data[ch]+idx, _sampleSize);
-                        out += _sampleSize;
+                        memcpy(out, frame->extended_data[ch]+idx, m_sampleSize);
+                        out += m_sampleSize;
                     }
-                    idx += _sampleSize;
+                    idx += m_sampleSize;
                 }
             } else {
                     memcpy(buf+n, frame->extended_data[0], plane_size);
@@ -186,7 +186,7 @@ bool ffmpegBackend::init()
     LOADSYM(avcodecDll, avcodec_decode_audio4, int(*)(AVCodecContext*, AVFrame*, int*, const AVPacket*))
     LOADSYM(avutilDll, av_frame_alloc, AVFrame*(*)())
     LOADSYM(avutilDll, av_frame_free, void(*)(AVFrame**))
-    LOADSYM(avutilDll, av_sample_fmt_is_planar, int(*)(enum AVSampleFormat))
+    LOADSYM(avutilDll, av_sample_fmt_ism_planar, int(*)(enum AVSampleFormat))
     LOADSYM(avutilDll, av_samples_get_buffer_size, int(*)(int*, int, int, enum AVSampleFormat, int))
     LOADSYM(avformatDll, avformat_open_input, int(*)(AVFormatContext **ps, const char *filename, AVInputFormat *fmt, AVDictionary **options))
     LOADSYM(avformatDll, avformat_close_input, void(*)(AVFormatContext**))
@@ -252,8 +252,9 @@ QStringList ffmpegBackend::ext() { return _ext; }
 
 ffmpegBackend::ffmpegBackend() :
     inputBackend(name, iconFfmpeg, 86),
-    audioStream(nullptr),
-    formatContext(nullptr) {}
+    m_audioStream(nullptr),
+    m_formatContext(nullptr),
+    m_codecContext(nullptr) {}
 
 ffmpegBackend::~ffmpegBackend()
 {
@@ -266,7 +267,7 @@ QString ffmpegBackend::getMetadata(const char* type)
     QString info;
     for (;;)
     {
-        mTag = dl_av_dict_get(formatContext->metadata, type, mTag, 0);
+        mTag = dl_av_dict_get(m_formatContext->metadata, type, mTag, 0);
         if (!mTag)
             break;
         if (!info.isEmpty())
@@ -281,55 +282,53 @@ bool ffmpegBackend::open(const QString& fileName)
 {
     close();
 
-    AVFormatContext *fc = nullptr;
-    if (dl_avformat_open_input(&fc, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
+    if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
     {
         qWarning() << "Cannot open input";
         return false;
     }
 
-    if (dl_avformat_find_stream_info(fc, nullptr) < 0)
+    if (dl_avformat_find_stream_info(m_formatContext, nullptr) < 0)
     {
         qWarning() << "Cannot find stream info";
         goto error;
     }
 
-    if (!openStream(fc))
+    if (!openStream(m_formatContext))
         goto error;
 
-    formatContext = fc;
-    audioStream = fc->streams[audioStreamIndex];
+    m_audioStream = m_formatContext->streams[m_audioStreamIndex];
     decodeBufOffset = 0;
     packet.data = 0;
 
-    switch(audioStream->codecpar->format)
+    switch(m_audioStream->codecpar->format)
     {
     case AV_SAMPLE_FMT_U8:
     case AV_SAMPLE_FMT_U8P:
-        _sampleSize = 1;
-        _precision = sample_t::U8;
+        m_sampleSize = 1;
+        m_precision = sample_t::U8;
         break;
     case AV_SAMPLE_FMT_S16:
     case AV_SAMPLE_FMT_S16P:
-        _sampleSize = 2;
-        _precision = sample_t::S16;
+        m_sampleSize = 2;
+        m_precision = sample_t::S16;
         break;
     case AV_SAMPLE_FMT_S32:
     case AV_SAMPLE_FMT_S32P:
-        _sampleSize = 4;
-        _precision = sample_t::S32;
+        m_sampleSize = 4;
+        m_precision = sample_t::S32;
         break;
     case AV_SAMPLE_FMT_FLT:
     case AV_SAMPLE_FMT_FLTP:
-        _sampleSize = 4;
-        _precision = sample_t::SAMPLE_FLOAT;
+        m_sampleSize = 4;
+        m_precision = sample_t::SAMPLE_FLOAT;
         break;
     default:
-        qWarning() << "Unrecognized fomat " << audioStream->codecpar->format;
+        qWarning() << "Unrecognized fomat " << m_audioStream->codecpar->format;
         goto error;
     }
 
-    _planar = dl_av_sample_fmt_is_planar((AVSampleFormat)audioStream->codecpar->format);
+    m_planar = dl_av_sample_fmt_ism_planar((AVSampleFormat)m_audioStream->codecpar->format);
 
     m_metaData.addInfo(metaData::TITLE, getMetadata("title"));
     m_metaData.addInfo(metaData::ARTIST, getMetadata("artist"));
@@ -340,14 +339,14 @@ bool ffmpegBackend::open(const QString& fileName)
     m_metaData.addInfo(metaData::TRACK, getMetadata("track"));
     m_metaData.addInfo(metaData::COMMENT, getMetadata("comment"));
 
-    time(fc->duration/1000);
+    time(m_formatContext->duration/1000);
 
     songLoaded(fileName);
     return true;
 
 error:
-    dl_avcodec_free_context(&codecContext);
-    dl_avformat_close_input(&fc);
+    dl_avcodec_free_context(&m_codecContext);
+    dl_avformat_close_input(&m_formatContext);
 
     return false;
 }
@@ -360,21 +359,20 @@ void ffmpegBackend::close()
     if (packet.data)
         dl_av_free_packet(&packet);
 
-    dl_avcodec_free_context(&codecContext);
-    dl_avformat_close_input(&formatContext);
+    dl_avcodec_free_context(&m_codecContext);
+    dl_avformat_close_input(&m_formatContext);
 
-    audioStream = nullptr;
-    formatContext = nullptr;
+    m_audioStream = nullptr;
 
     songLoaded(QString());
 }
 
 bool ffmpegBackend::seek(int pos)
 {
-    int64_t timestamp = ((formatContext->duration/1000000) * pos) / 100;
-    if (dl_av_seek_frame(formatContext,
-            audioStreamIndex,
-            dl_av_rescale_q(timestamp, AV_TIME_BASE_Q, audioStream->time_base),
+    int64_t timestamp = ((m_formatContext->duration/1000000) * pos) / 100;
+    if (dl_av_seek_frame(m_formatContext,
+            m_audioStreamIndex,
+            dl_av_rescale_q(timestamp, AV_TIME_BASE_Q, m_audioStream->time_base),
             AVSEEK_FLAG_ANY) < 0)
         return false;
 
@@ -385,7 +383,7 @@ bool ffmpegBackend::seek(int pos)
         packet.data = 0;
     }
 
-    dl_avcodec_flush_buffers(codecContext);
+    dl_avcodec_flush_buffers(m_codecContext);
 
     return true;
 }
@@ -393,32 +391,32 @@ bool ffmpegBackend::seek(int pos)
 bool ffmpegBackend::openStream(AVFormatContext* fc)
 {
     AVCodec* codec;
-    audioStreamIndex = dl_av_find_best_stream(fc, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0);
-    if (audioStreamIndex == AVERROR_STREAM_NOT_FOUND)
+    m_audioStreamIndex = dl_av_find_best_stream(fc, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0);
+    if (m_audioStreamIndex == AVERROR_STREAM_NOT_FOUND)
     {
         qWarning() << "No audio stream found";
         return false;
     }
-    if ((audioStreamIndex == AVERROR_DECODER_NOT_FOUND) || (codec == nullptr))
+    if ((m_audioStreamIndex == AVERROR_DECODER_NOT_FOUND) || (codec == nullptr))
     {
         qWarning() << "No decoder found";
         return false;
     }
 
-    codecContext = dl_avcodec_alloc_context3(codec);
-    if (codecContext == nullptr)
+    m_codecContext = dl_avcodec_alloc_context3(codec);
+    if (m_codecContext == nullptr)
     {
         qWarning() << "Cannot alloc context";
         return false;
     }
 
-    if (dl_avcodec_parameters_to_context(codecContext, fc->streams[audioStreamIndex]->codecpar) < 0)
+    if (dl_avcodec_parameters_to_context(m_codecContext, fc->streams[m_audioStreamIndex]->codecpar) < 0)
     {
         qWarning() << "Error filling the codec context";
         return false;
     }
 
-    if (dl_avcodec_open2(codecContext, codec, nullptr) < 0)
+    if (dl_avcodec_open2(m_codecContext, codec, nullptr) < 0)
     {
         qWarning() << "Cannot open stream";
         return false;
