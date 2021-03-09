@@ -662,7 +662,7 @@ void centralFrame::onUpdateTime()
     {
         emit updateTime(m_audio->seconds());
 
-        if (!m_slider->isSliderDown())
+        if (!m_slider->isSliderDown() && m_input->seekable())
             emit updateSlider(m_audio->getPosition());
     }
 }
