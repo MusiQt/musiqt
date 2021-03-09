@@ -180,7 +180,10 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
 bool ffmpegBackend::init()
 {
     if (!avformatDll.loaded() || !avcodecDll.loaded() || !avutilDll.loaded())
-            return false;
+    {
+        qWarning() << "ffmpeg libraries not loaded";
+        return false;
+    }
 
     LOADSYM(avcodecDll, avcodec_open2, int(*)(AVCodecContext*, const AVCodec*, AVDictionary**))
     LOADSYM(avcodecDll, avcodec_decode_audio4, int(*)(AVCodecContext*, AVFrame*, int*, const AVPacket*))
@@ -193,11 +196,11 @@ bool ffmpegBackend::init()
     LOADSYM(avformatDll, avformat_find_stream_info, int(*)(AVFormatContext*, AVDictionary**))
     LOADSYM(avformatDll, av_read_frame, int(*)(AVFormatContext*, AVPacket*))
     LOADSYM(avformatDll, av_seek_frame, int(*)(AVFormatContext*, int, int64_t, int))
-    LOADSYM(avformatDll, avcodec_alloc_context3, AVCodecContext*(*)(const AVCodec *codec))
-    LOADSYM(avformatDll, avcodec_free_context, void(*)(AVCodecContext **avctx))
+    LOADSYM(avcodecDll, avcodec_alloc_context3, AVCodecContext*(*)(const AVCodec *codec))
+    LOADSYM(avcodecDll, avcodec_free_context, void(*)(AVCodecContext **avctx))
     LOADSYM(avformatDll, av_find_best_stream, int(*)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
                                          int related_stream, AVCodec **decoder_ret, int flags))
-    LOADSYM(avformatDll, avcodec_parameters_to_context, int(*)(AVCodecContext *codec, const AVCodecParameters *par))
+    LOADSYM(avcodecDll, avcodec_parameters_to_context, int(*)(AVCodecContext *codec, const AVCodecParameters *par))
     LOADSYM(avutilDll, av_dict_get, AVDictionaryEntry*(*)(AVDictionary*, const char*, const AVDictionaryEntry*, int))
     LOADSYM(avcodecDll, av_init_packet, void(*)(AVPacket*))
     LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
