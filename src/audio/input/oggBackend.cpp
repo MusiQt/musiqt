@@ -131,6 +131,17 @@ bool compareTag(const char* orig, const char* tag)
     return qstrnicmp(orig, tag, n);
 }
 
+quint32 getNum(const char* orig)
+{
+    // big-endian
+    quint32 res = 0;
+    res |= static_cast<unsigned char>(*orig++) << 24;
+    res |= static_cast<unsigned char>(*orig++) << 16;
+    res |= static_cast<unsigned char>(*orig++) << 8;
+    res |= static_cast<unsigned char>(*orig);
+    return res;
+}
+
 bool oggBackend::open(const QString& fileName)
 {
     close();
@@ -182,7 +193,7 @@ bool oggBackend::open(const QString& fileName)
             }
             else if (!compareTag(*ptr, "METADATA_BLOCK_PICTURE"))
             {
-                // TODO
+                readBlockPicture(QByteArray::fromBase64(*ptr+23));
             }
             else if (!compareTag(*ptr, "COVERARTMIME"))
             {
@@ -194,13 +205,50 @@ bool oggBackend::open(const QString& fileName)
             }
             else if (!compareTag(*ptr, "BINARY_COVERART"))
             {
-                //mime = QString(*ptr+17);
-                //image = QByteArray::fromBase64(*ptr+16);
+                // like METADATA_BLOCK_PICTURE but not encoded
+                quint32 picType = getNum(*ptr+16);
+                qDebug() << "picType: " << picType;
+                quint32 mimeLen = getNum(*ptr+20);
+                mime = QString(QByteArray::fromRawData(*ptr+24, mimeLen));
+                qDebug() << "mime: " << mime;
+                quint32 descLen = getNum(*ptr+24+mimeLen);
+                QString desc = QString(QByteArray::fromRawData(*ptr+28+mimeLen, descLen));
+                qDebug() << "desc: " << desc;
+
+                // FIXME - WTF! the image is UTF8 encoded!
+                const quint32 dataPos = 28+mimeLen+descLen+16;
+                quint32 dataLen = getNum(*ptr+dataPos);
+                QString imgData = QString::fromUtf8(*ptr+4+dataPos, dataLen);
+                for (auto i = imgData.constBegin(); i != imgData.constEnd(); ++i)
+                {
+                    image.append(static_cast<char >((*i).unicode()));
+                }
             }
 
         }
         ++ptr;
     }
+
+//deprecated:
+//COVERARTMIME
+//COVERART (base64 encoded)
+
+    m_metaData.addInfo(metaData::TITLE, title);
+    m_metaData.addInfo(metaData::ARTIST, artist);
+    m_metaData.addInfo(metaData::ALBUM, album);
+    m_metaData.addInfo(metaData::GENRE, genre);
+    m_metaData.addInfo(metaData::YEAR, year);
+    m_metaData.addInfo(metaData::COMMENT, comment);
+
+    if (!mime.isNull())
+        m_metaData.addInfo(new QByteArray(image));
+
+    if (!lyrics.isEmpty())
+         m_metaData.addInfo("lyrics", lyrics);
+
+    songLoaded(fileName);
+    return true;
+}
 
 //METADATA_BLOCK_PICTURE
 /*
@@ -216,28 +264,25 @@ bool oggBackend::open(const QString& fileName)
 <32>   The length of the picture data in bytes.
 <n*8>  The binary picture data.
 */
+void oggBackend::readBlockPicture(const QByteArray &data)
+{
+    const char* ptr = data.constData();
+    quint32 picType = getNum(ptr);
+    qDebug() << "picType: " << picType;
+    quint32 mimeLen = getNum(ptr+4);
+    QString mime = QString(QByteArray::fromRawData(ptr+8, mimeLen));
+    qDebug() << "mime: " << mime;
+    quint32 descLen = getNum(ptr+8+mimeLen);
+    QString desc = QString(QByteArray::fromRawData(ptr+8+mimeLen, descLen));
+    qDebug() << "desc: " << desc;
 
-//deprecated:
-//COVERARTMIME
-//COVERART (base64 encoded)
-
-    m_metaData.addInfo(metaData::TITLE, title);
-    m_metaData.addInfo(metaData::ARTIST, artist);
-    m_metaData.addInfo(metaData::ALBUM, album);
-    m_metaData.addInfo(metaData::GENRE, genre);
-    m_metaData.addInfo(metaData::YEAR, year);
-    m_metaData.addInfo(metaData::COMMENT, comment);
+    const quint32 dataPos = 8+mimeLen+4+descLen+16;
+    quint32 dataLen = getNum(ptr+dataPos);
 
     if (!mime.isNull())
-        m_metaData.addInfo(new QByteArray((char*)image.data(), image.size()));
+        m_metaData.addInfo(new QByteArray(data.right(dataLen)));
 
-    if (!lyrics.isEmpty())
-         m_metaData.addInfo("lyrics", lyrics);
-
-    songLoaded(fileName);
-    return true;
 }
-
 bool oggBackend::getMetadata(const char* orig, QString* dest, const char* type)
 {
     const int n = qstrlen(type);
