@@ -124,10 +124,11 @@ QStringList openmptBackend::_ext;
 
 size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
-    size_t bufSize = (bufferSize/sizeof(float))/_settings.channels;
-    return _settings.channels == 2
+    const size_t frameSize = sizeof(float) * _settings.channels;
+    size_t bufSize = bufferSize/frameSize;
+    return frameSize * (_settings.channels == 2
         ? _module->read_interleaved_stereo(_settings.samplerate, bufSize, (float*)buffer)
-        : _module->read(_settings.samplerate, bufSize, (float*)buffer);
+        : _module->read(_settings.samplerate, bufSize, (float*)buffer));
 }
 
 /*****************************************************************/
