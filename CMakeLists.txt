@@ -9,6 +9,12 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+# stupid cmake doesn't support CPPFLAGS
+# append it to cmake flags so the ffmpeg header can be found
+# even if installed in a non standard dir
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} $ENV{CPPFLAGS}")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{CPPFLAGS}")
+
 set(MUSIQT_SOURCES
     src/resources.qrc
     src/gettext.h
