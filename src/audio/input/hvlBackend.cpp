@@ -106,6 +106,7 @@ size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
 {
     size_t offset = 0;
 
+    // use what's left in the backing buffer
     if (_left)
     {
         memcpy(buffer, _buffer+_size-_left, _left);
@@ -113,18 +114,21 @@ size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsig
         _left = 0;
     }
 
-    do
+    // fill output buffer while there's enough space
+    size_t bufferSpaceLeft = bufferSize - offset;
+    while (bufferSpaceLeft > _size)
     {
         hvl_DecodeFrame(_tune, ((int8*)buffer)+offset, ((int8*)buffer)+offset+2, 4);
         offset += _size;
-    } while (offset<bufferSize-_size);
+        bufferSpaceLeft -= _size;
+    }
 
-    size_t left = bufferSize-offset;
-    if (left)
+    // use backing buffer to fill the remaining space
+    if (bufferSpaceLeft)
     {
         hvl_DecodeFrame(_tune, (int8*)_buffer, ((int8*)_buffer)+2, 4);
-        memcpy((char*)buffer+offset, _buffer, left);
-        _left = _size-left;
+        memcpy((char*)buffer+offset, _buffer, bufferSpaceLeft);
+        _left = _size - bufferSpaceLeft;
     }
 
     return bufferSize;
@@ -163,12 +167,12 @@ bool hvlBackend::open(const QString& fileName)
 {
     close();
 
-    _tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), _settings.samplerate, 4);
+    _tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), _settings.samplerate, 2);
 
     if (_tune == nullptr)
         return false;
 
-    hvl_InitSubsong(_tune, 0);
+    hvl_InitSubsong(_tune, 0); // TODO check return value
 
     m_metaData.addInfo(metaData::TITLE, (char*)_tune->ht_Name);
     QString comment = QString();
