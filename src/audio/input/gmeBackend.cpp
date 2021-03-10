@@ -201,7 +201,9 @@ void gmeBackend::getInfo()
     if (comment.isEmpty())
         m_metaData.addInfo(metaData::COMMENT, ti->comment);
 
-    time(ti->length);
+    // length is -1 if unknown
+    if (ti->length > 0)
+        time(ti->length);
 
     gme_free_info(ti);
 }
