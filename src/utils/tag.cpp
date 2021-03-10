@@ -123,7 +123,7 @@ tag::tag(QFile* file) :
 
     int i = 0;
     while ((i < itemsSize) && dataBuf[i])
-        i += getAPEItem(dataBuf+i);
+        i += parseAPETag(dataBuf+i);
 
     delete[] dataBuf;
 }
@@ -475,50 +475,59 @@ int tag::getLE32(const char* frame)
         | ((unsigned int)(unsigned char)frame[2]<<16) | ((unsigned int)(unsigned char)frame[3]<<24);
 }
 
-bool tag::getMetadata(const char* orig, QString* dest, const char* type, int& len)
+bool tag::getAPEItem(const char* orig, QString* dest, const char* tagName, int tagNameLen, int tagLen)
 {
-    if (QString::compare(orig, type))
+    if (qstricmp(orig, tagName))
         return false;
 
-    int i = strlen(type);
-    i++;
-    *dest = QString::fromUtf8(orig+i, len);
-    len += i;
-    qDebug() << type << ": " << *dest;
+    *dest = QString::fromUtf8(orig+tagNameLen, tagLen);
+    qDebug() << tagName << ": " << *dest;
     return true;
 }
 
-/*
- * Cover art spec
- * <length> 32 bit
- * <flags with binary bit set> 32 bit
- * <field name> "Cover Art (Front)"|"Cover Art (Back)"
- * 0x00
- * <description> UTF-8 string (needs to be a file name to be recognized by AudioShell - meh)
- * 0x00
- * <cover data> binary
- */
-int tag::getAPEItem(const char* buf)
+int tag::parseAPETag(const char* buf)
 {
     int itemSize = getLE32(buf);
     //int flags = getLE32(buf+4);
 
     const char *ptr = buf+8;
-    if (!getMetadata(ptr, &m_title, "title", itemSize))
-    if (!getMetadata(ptr, &m_artist, "artist", itemSize))
-    if (!getMetadata(ptr, &m_year, "year", itemSize))
-    if (!getMetadata(ptr, &m_album, "album", itemSize))
-    if (!getMetadata(ptr, &m_genre, "genre", itemSize))
-    if (!getMetadata(ptr, &m_comment, "comment", itemSize))
+    const int tagNameLength = qstrlen(ptr) + 1;
+    qDebug() << "APE tag: " << ptr;
+    if (!getAPEItem(ptr, &m_title,  "title",    tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_artist, "artist",   tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_year,   "year",     tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_album,  "album",    tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_genre,  "genre",    tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_comment, "comment", tagNameLength, itemSize))
     {
-        if (!QString::compare(ptr, "track"))
+        if (!qstricmp(ptr, "track"))
         {
             m_track = QString(ptr+6);
-            itemSize += 6;
+            qDebug() << "track: " << m_track;
+        }
+        else if (!qstrnicmp(ptr, "Cover Art", 9))
+        {
+            /*
+             * Cover art spec
+             *
+             * <length> 32 bit
+             * <flags with binary bit set> 32 bit
+             * <field name> "Cover Art (Front)"|"Cover Art (Back)"
+             * 0x00
+             * <description> UTF-8 string (needs to be a file name to be recognized by AudioShell - meh)
+             * 0x00
+             * <cover data> binary
+             */
+            const char* img = ptr + tagNameLength;
+            QString desc = QString(img);
+            qDebug() << "Pic description: " << desc;
+            const int imgOffset = desc.length() + 1;
+            qDebug() << "imgOffset: " << imgOffset;
+            m_img = new QByteArray(img+imgOffset, itemSize-imgOffset);
         }
     }
 
-    return itemSize+8;
+    return 8 + tagNameLength + itemSize;
 }
 
 bool tag::checkAPE(char* buf, int& itemsSize, int& tagSize)
@@ -541,6 +550,7 @@ bool tag::checkAPE(char* buf, int& itemsSize, int& tagSize)
     if (version > 1000)
     {
         int flags = getLE32(buf+20);
+        qDebug() << "flags: " << Qt::hex << flags;
 
         if (flags & 0x80000000)
             tagSize += APE_HEADER_SIZE;

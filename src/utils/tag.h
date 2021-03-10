@@ -67,10 +67,10 @@ private:
     int getLE32(const char* frame);
 
     ///
-    bool getMetadata(const char* orig, QString* dest, const char* type, int& len);
+    bool getAPEItem(const char* orig, QString* dest, const char* tagName, int tagNameLen, int tagLen);
 
     ///
-    int getAPEItem(const char* buf);
+    int parseAPETag(const char* buf);
 
     ///
     bool checkAPE(char* buf, int& itemsSize, int& tagSize);
