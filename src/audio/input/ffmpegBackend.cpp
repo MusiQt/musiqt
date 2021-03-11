@@ -393,6 +393,20 @@ bool ffmpegBackend::seek(int pos)
 
 bool ffmpegBackend::openStream(AVFormatContext* fc)
 {
+    // check for album art
+    int imageStreamIndex = dl_av_find_best_stream(m_formatContext, AVMEDIA_TYPE_VIDEO , -1, -1, 0, 0);
+    if (imageStreamIndex != AVERROR_STREAM_NOT_FOUND)
+    {
+        if (m_formatContext->streams[imageStreamIndex]->disposition & AV_DISPOSITION_ATTACHED_PIC)
+        {
+            AVPacket pkt;
+            dl_av_read_frame(m_formatContext, &pkt);
+            char* pkt_data = (char*)pkt.data;
+            m_metaData.addInfo(new QByteArray(pkt_data, pkt.size));
+            dl_av_free_packet(&pkt);
+        }
+    }
+
     AVCodec* codec;
     m_audioStreamIndex = dl_av_find_best_stream(fc, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0);
     if (m_audioStreamIndex == AVERROR_STREAM_NOT_FOUND)
