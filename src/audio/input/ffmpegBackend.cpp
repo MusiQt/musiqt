@@ -393,7 +393,7 @@ bool ffmpegBackend::seek(int pos)
 
 bool ffmpegBackend::openStream(AVFormatContext* fc)
 {
-    // check for album art
+    // check for album art, it is treated as a single frame video stream
     int imageStreamIndex = dl_av_find_best_stream(m_formatContext, AVMEDIA_TYPE_VIDEO , -1, -1, 0, 0);
     if (imageStreamIndex != AVERROR_STREAM_NOT_FOUND)
     {
@@ -401,8 +401,7 @@ bool ffmpegBackend::openStream(AVFormatContext* fc)
         {
             AVPacket pkt;
             dl_av_read_frame(m_formatContext, &pkt);
-            char* pkt_data = (char*)pkt.data;
-            m_metaData.addInfo(new QByteArray(pkt_data, pkt.size));
+            m_metaData.addInfo(new QByteArray((char*)pkt.data, pkt.size));
             dl_av_free_packet(&pkt);
         }
     }
