@@ -184,6 +184,8 @@ bool mpg123Backend::open(const QString& fileName)
 
     if (!m_settings.fastscan)
     {
+        err = mpg123_param(m_handle, MPG123_ADD_FLAGS, MPG123_PICTURE, 0.);
+
         err = mpg123_scan(m_handle);
         if (err != MPG123_OK)
         {
@@ -338,9 +340,12 @@ bool mpg123Backend::open(const QString& fileName)
 
         if (id3v2 && id3v2->pictures)
         {
-            QString mime(id3v2->picture[0].mime_type.p);
-            qDebug() << mime;
-            m_metaData.addInfo(new QByteArray((char*)id3v2->picture[0].data, id3v2->picture[0].size));
+            mpg123_picture picture = id3v2->picture[0];
+            QString mime(picture.mime_type.p);
+            qDebug() << "mime: " << mime;
+            QString desc(picture.description.p);
+            qDebug() << "description: " << desc;
+            m_metaData.addInfo(new QByteArray((char*)picture.data, picture.size));
         }
 
         if (info.isEmpty() && id3v1)
