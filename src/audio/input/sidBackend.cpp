@@ -452,14 +452,16 @@ void sidBackend::loadTune(const int num)
     _sidplayfp->load(_tune);
     if (_db != nullptr)
     {
+        int_least32_t songLength;
 #if LIBSIDPLAYFP_VERSION_MAJ > 1
-        _length = newSonglengthDB ? _db->lengthMs(*_tune) : (_db->length(*_tune) * 1000);
+        songLength = newSonglengthDB ? _db->lengthMs(*_tune) : (_db->length(*_tune) * 1000);
 #else
         char md5[SidTune::MD5_LENGTH+1];
         _tune->createMD5(md5);
         qDebug() << "Tune md5: " << md5;
-        _length = _db->length(md5, _tune->getInfo()->currentSong()) * 1000;
+        songLength = _db->length(md5, _tune->getInfo()->currentSong()) * 1000;
 #endif
+        _length = (songLength < 0) ? 0 : songLength;
     }
     else
         _length = 0;
