@@ -486,13 +486,13 @@ void sidBackend::openHvsc(const QString& hvscPath)
     if (_db == nullptr)
         _db = new SidDatabase();
 
-    QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath).arg(QDir::separator()));
+    QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath, QDir::separator()));
     qDebug() << "SL DB path: " << slDbPath;
-    if (_db->open(slDbPath.append(".md5").toUtf8().constData()))
+    if (_db->open(QString(slDbPath).append(".md5").toUtf8().constData()))
     {
         newSonglengthDB = true;
     }
-    else if (!_db->open(slDbPath.append(".txt").toUtf8().constData()))
+    else if (!_db->open(QString(slDbPath).append(".txt").toUtf8().constData()))
     {
         qWarning() << _db->error();
         utils::delPtr(_db);
