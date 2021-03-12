@@ -86,7 +86,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const un
     size_t n = decodeBufOffset;
     unsigned char* buf = decodeBuf;
 
-    while (n <= bufferSize)
+    while (n < bufferSize)
     {
         while (!packet.data)
         {
