@@ -372,12 +372,15 @@ void ffmpegBackend::close()
 
 bool ffmpegBackend::seek(int pos)
 {
-    int64_t timestamp = ((m_formatContext->duration/1000000) * pos) / 100;
+    int64_t timestamp = (m_formatContext->duration * pos) / 100;
     if (dl_av_seek_frame(m_formatContext,
             m_audioStreamIndex,
             dl_av_rescale_q(timestamp, AV_TIME_BASE_Q, m_audioStream->time_base),
             AVSEEK_FLAG_ANY) < 0)
+    {
+        qWarning() << "Cannot seek";
         return false;
+    }
 
     decodeBufOffset = 0;
     if (packet.data)
