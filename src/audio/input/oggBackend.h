@@ -74,10 +74,6 @@ private:
 private:
     oggBackend();
 
-    bool getMetadata(const char* orig, QString* dest, const char* type);
-
-    void readBlockPicture(const QByteArray &data);
-
 public:
     ~oggBackend();
 

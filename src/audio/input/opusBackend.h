@@ -73,9 +73,6 @@ private:
 private:
     opusBackend();
 
-    static bool compareTag(const char* orig, const char* tag);
-    bool getComment(const char* orig, QString* dest, const char* type);
-
 public:
     ~opusBackend();
 

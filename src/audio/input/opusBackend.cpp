@@ -18,6 +18,8 @@
 
 #include "opusBackend.h"
 
+#include "oggTag.h"
+
 #include "settings.h"
 #include "utils.h"
 
@@ -141,12 +143,6 @@ opusBackend::~opusBackend()
     close();
 }
 
-bool opusBackend::compareTag(const char* orig, const char* tag)
-{
-    int n = qstrlen(tag);
-    return qstrnicmp(orig, tag, n);
-}
-
 bool opusBackend::open(const QString& fileName)
 {
     close();
@@ -179,59 +175,36 @@ bool opusBackend::open(const QString& fileName)
     while (*ptr)
     {
         qDebug() << *ptr;
-        if (!getComment(*ptr, &title, "title"))
-        if (!getComment(*ptr, &artist, "artist"))
-        if (!getComment(*ptr, &year, "date"))
-        if (!getComment(*ptr, &album, "album"))
-        if (!getComment(*ptr, &genre, "genre"))
-        if (!getComment(*ptr, &comment, "comment"))
+        if (!oggTag::getMetadata(*ptr, &title, "title"))
+        if (!oggTag::getMetadata(*ptr, &artist, "artist"))
+        if (!oggTag::getMetadata(*ptr, &year, "date"))
+        if (!oggTag::getMetadata(*ptr, &album, "album"))
+        if (!oggTag::getMetadata(*ptr, &genre, "genre"))
+        if (!oggTag::getMetadata(*ptr, &comment, "comment"))
         {
-            if (!compareTag(*ptr, "tracknumber"))
+            if (oggTag::isTag(*ptr, "tracknumber"))
             {
                 m_metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
             }
-            else if (!compareTag(*ptr, "METADATA_BLOCK_PICTURE"))
+            else if (oggTag::isTag(*ptr, "METADATA_BLOCK_PICTURE"))
             {
-                qDebug() << "METADATA_BLOCK_PICTURE";
-                QByteArray flac_picture = QByteArray::fromBase64(*ptr+23);
+                oggTag::readBlockPicture(QByteArray::fromBase64(*ptr+23), image, mime);
             }
-            else if (!compareTag(*ptr, "COVERARTMIME"))
+            else if (oggTag::isTag(*ptr, "COVERARTMIME"))
             {
-                qDebug() << "COVERARTMIME";
                 mime = QString(*ptr+13);
             }
-            else if (!compareTag(*ptr, "COVERART"))
+            else if (oggTag::isTag(*ptr, "COVERART"))
             {
-                qDebug() << "COVERART";
                 image = QByteArray::fromBase64(*ptr+9);
             }
-            else if (!compareTag(*ptr, "BINARY_COVERART"))
+            else if (oggTag::isTag(*ptr, "BINARY_COVERART"))
             {
-                qDebug() << "BINARY_COVERART";
-                QByteArray flac_picture(*ptr+16); // FIXME
+                // TODO
             }
         }
         ++ptr;
     }
-
-//METADATA_BLOCK_PICTURE
-/*
-<32>   The picture type according to the ID3v2 APIC frame:
-<32>   The length of the MIME type string in bytes.
-<n*8>  The MIME type string
-<32>   The length of the description string in bytes.
-<n*8>  The description of the picture, in UTF-8.
-<32>   The width of the picture in pixels.
-<32>   The height of the picture in pixels.
-<32>   The color depth of the picture in bits-per-pixel.
-<32>   For indexed-color pictures (e.g. GIF), the number of colors used, or 0 for non-indexed pictures.
-<32>   The length of the picture data in bytes.
-<n*8>  The binary picture data.
-*/
-
-//deprecated:
-//COVERARTMIME
-//COVERART (base64 encoded)
 
     m_metaData.addInfo(metaData::TITLE, title);
     m_metaData.addInfo(metaData::ARTIST, artist);
@@ -244,22 +217,6 @@ bool opusBackend::open(const QString& fileName)
         m_metaData.addInfo(new QByteArray((char*)image.data(), image.size()));
 
     songLoaded(fileName);
-    return true;
-}
-
-bool opusBackend::getComment(const char* orig, QString* dest, const char* type)
-{
-    const int n = qstrlen(type);
-    if (qstrnicmp(orig, type, n))
-        return false;
-
-    if (orig[n] != '=')
-        return false;
-
-    if (!dest->isEmpty())
-        dest->append(", ");
-
-    dest->append(QString::fromUtf8(orig+n+1));
     return true;
 }
 

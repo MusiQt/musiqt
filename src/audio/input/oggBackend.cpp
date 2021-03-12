@@ -18,6 +18,8 @@
 
 #include "oggBackend.h"
 
+#include "oggTag.h"
+
 #include "settings.h"
 #include "utils.h"
 
@@ -26,6 +28,7 @@
 #include <QDebug>
 #include <QComboBox>
 #include <QLabel>
+#include <QTextCodec>
 
 extern const unsigned char iconOgg[523] =
 {
@@ -125,23 +128,6 @@ void oggBackend::saveSettings()
     save("Bits", (_settings.precision == sample_t::S16) ? 16 : 8);
 }
 
-bool compareTag(const char* orig, const char* tag)
-{
-    int n = qstrlen(tag);
-    return qstrnicmp(orig, tag, n);
-}
-
-quint32 getNum(const char* orig)
-{
-    // big-endian
-    quint32 res = 0;
-    res |= static_cast<unsigned char>(*orig++) << 24;
-    res |= static_cast<unsigned char>(*orig++) << 16;
-    res |= static_cast<unsigned char>(*orig++) << 8;
-    res |= static_cast<unsigned char>(*orig);
-    return res;
-}
-
 bool oggBackend::open(const QString& fileName)
 {
     close();
@@ -176,62 +162,75 @@ bool oggBackend::open(const QString& fileName)
     while (*ptr)
     {
         qDebug() << *ptr;
-        if (!getMetadata(*ptr, &title, "title"))
-        if (!getMetadata(*ptr, &artist, "artist"))
-        if (!getMetadata(*ptr, &year, "date"))
-        if (!getMetadata(*ptr, &album, "album"))
-        if (!getMetadata(*ptr, &genre, "genre"))
-        if (!getMetadata(*ptr, &comment, "comment"))
+        if (!oggTag::getMetadata(*ptr, &title, "title"))
+        if (!oggTag::getMetadata(*ptr, &artist, "artist"))
+        if (!oggTag::getMetadata(*ptr, &year, "date"))
+        if (!oggTag::getMetadata(*ptr, &album, "album"))
+        if (!oggTag::getMetadata(*ptr, &genre, "genre"))
+        if (!oggTag::getMetadata(*ptr, &comment, "comment"))
         {
-            if (!compareTag(*ptr, "tracknumber"))
+            if (oggTag::isTag(*ptr, "tracknumber"))
             {
                 m_metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
             }
-            else if (!compareTag(*ptr, "UNSYNCEDLYRICS"))
+            else if (oggTag::isTag(*ptr, "UNSYNCEDLYRICS"))
             {
                 lyrics = QString(*ptr+15);
             }
-            else if (!compareTag(*ptr, "METADATA_BLOCK_PICTURE"))
+            else if (oggTag::isTag(*ptr, "METADATA_BLOCK_PICTURE"))
             {
-                readBlockPicture(QByteArray::fromBase64(*ptr+23));
+                oggTag::readBlockPicture(QByteArray::fromBase64(*ptr+23), image, mime);
             }
-            else if (!compareTag(*ptr, "COVERARTMIME"))
+            else if (oggTag::isTag(*ptr, "COVERARTMIME"))
             {
                 mime = QString(*ptr+13);
             }
-            else if (!compareTag(*ptr, "COVERART"))
+            else if (oggTag::isTag(*ptr, "COVERART"))
             {
                 image = QByteArray::fromBase64(*ptr+9);
             }
-            else if (!compareTag(*ptr, "BINARY_COVERART"))
+            else if (oggTag::isTag(*ptr, "BINARY_COVERART"))
             {
                 // like METADATA_BLOCK_PICTURE but not encoded
-                quint32 picType = getNum(*ptr+16);
+                quint32 picType = oggTag::getNum(*ptr+16);
                 qDebug() << "picType: " << picType;
-                quint32 mimeLen = getNum(*ptr+20);
+                quint32 mimeLen = oggTag::getNum(*ptr+20);
                 mime = QString(QByteArray::fromRawData(*ptr+24, mimeLen));
                 qDebug() << "mime: " << mime;
-                quint32 descLen = getNum(*ptr+24+mimeLen);
+                quint32 descLen = oggTag::getNum(*ptr+24+mimeLen);
                 QString desc = QString(QByteArray::fromRawData(*ptr+28+mimeLen, descLen));
                 qDebug() << "desc: " << desc;
 
                 // FIXME - WTF! the image is UTF8 encoded!
                 const quint32 dataPos = 28+mimeLen+descLen+16;
-                quint32 dataLen = getNum(*ptr+dataPos);
+                quint32 dataLen = oggTag::getNum(*ptr+dataPos);
+#if 0
                 QString imgData = QString::fromUtf8(*ptr+4+dataPos, dataLen);
                 for (auto i = imgData.constBegin(); i != imgData.constEnd(); ++i)
                 {
                     image.append(static_cast<char >((*i).unicode()));
                 }
-            }
+#else
+                QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+                QTextDecoder *decoder = new QTextDecoder(codec, QTextCodec::ConvertInvalidToNull);
 
+                for (int i = 0; i < dataLen; i++)
+                {
+                    QString imgData = decoder->toUnicode(*ptr+4+dataPos+i, 1);
+                    if (!imgData.isEmpty())
+                    {
+                        ushort unicode = imgData.front().unicode();
+                        if (unicode>255)
+                            qWarning() << "out of range: " << unicode;
+                        image.append(static_cast<char>(imgData.front().unicode()));
+                    }
+                }
+                delete decoder;
+            }
+#endif
         }
         ++ptr;
     }
-
-//deprecated:
-//COVERARTMIME
-//COVERART (base64 encoded)
 
     m_metaData.addInfo(metaData::TITLE, title);
     m_metaData.addInfo(metaData::ARTIST, artist);
@@ -247,55 +246,6 @@ bool oggBackend::open(const QString& fileName)
          m_metaData.addInfo("lyrics", lyrics);
 
     songLoaded(fileName);
-    return true;
-}
-
-//METADATA_BLOCK_PICTURE
-/*
-<32>   The picture type according to the ID3v2 APIC frame:
-<32>   The length of the MIME type string in bytes.
-<n*8>  The MIME type string
-<32>   The length of the description string in bytes.
-<n*8>  The description of the picture, in UTF-8.
-<32>   The width of the picture in pixels.
-<32>   The height of the picture in pixels.
-<32>   The color depth of the picture in bits-per-pixel.
-<32>   For indexed-color pictures (e.g. GIF), the number of colors used, or 0 for non-indexed pictures.
-<32>   The length of the picture data in bytes.
-<n*8>  The binary picture data.
-*/
-void oggBackend::readBlockPicture(const QByteArray &data)
-{
-    const char* ptr = data.constData();
-    quint32 picType = getNum(ptr);
-    qDebug() << "picType: " << picType;
-    quint32 mimeLen = getNum(ptr+4);
-    QString mime = QString(QByteArray::fromRawData(ptr+8, mimeLen));
-    qDebug() << "mime: " << mime;
-    quint32 descLen = getNum(ptr+8+mimeLen);
-    QString desc = QString(QByteArray::fromRawData(ptr+8+mimeLen, descLen));
-    qDebug() << "desc: " << desc;
-
-    const quint32 dataPos = 8+mimeLen+4+descLen+16;
-    quint32 dataLen = getNum(ptr+dataPos);
-
-    if (!mime.isNull())
-        m_metaData.addInfo(new QByteArray(data.right(dataLen)));
-
-}
-bool oggBackend::getMetadata(const char* orig, QString* dest, const char* type)
-{
-    const int n = qstrlen(type);
-    if (qstrnicmp(orig, type, n))
-        return false;
-
-    if (orig[n] != '=')
-        return false;
-
-    if (!dest->isEmpty())
-        dest->append(", ");
-
-    dest->append(QString::fromUtf8(orig+n+1));
     return true;
 }
 
