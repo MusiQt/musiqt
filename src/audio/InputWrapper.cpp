@@ -163,8 +163,8 @@ void InputWrapper::unload()
 
 void InputWrapper::seek(int pos)
 {
-    m_currentSong->seek(pos);
-    m_milliSeconds = (pos * m_currentSong->songDuration()) / 100;
+    if (m_currentSong->seek(pos))
+        m_milliSeconds = (pos * m_currentSong->songDuration()) / 100;
 }
 
 int InputWrapper::tell() const

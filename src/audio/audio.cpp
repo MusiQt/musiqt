@@ -187,7 +187,7 @@ int audio::seconds() const { return m_iw->getSeconds(); }
 void audio::seek(int pos)
 {
     m_audioOutput->pause();
-    m_iw->seek(pos);
+    m_iw->seek(pos); // TODO check ret
     m_audioOutput->unpause();
 }
 
