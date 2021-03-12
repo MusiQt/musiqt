@@ -204,7 +204,7 @@ bool mpg123Backend::open(const QString& fileName)
     err = mpg123_length(m_handle);
     if (err != MPG123_ERR)
     {
-        time((err*1000L)/m_samplerate);
+        time((err*1000LL)/m_samplerate);
     }
 
     err = mpg123_param(m_handle, MPG123_RVA,

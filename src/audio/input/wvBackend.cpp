@@ -182,7 +182,7 @@ bool wvBackend::open(const QString& fileName)
         }
     }
 
-    const unsigned int milliseconds = (WavpackGetNumSamples(_wvContext) * 1000L) / WavpackGetSampleRate(_wvContext);
+    const unsigned int milliseconds = (WavpackGetNumSamples(_wvContext) * 1000LL) / WavpackGetSampleRate(_wvContext);
     time(milliseconds);
 
     _bufOffset = 0;
