@@ -195,6 +195,9 @@ void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, 
 
     m_bytePerMilliSec = (sampleRate * channels * precision) / 1000;
 
+    // QIODevice has a fixed buffer of 16Kb
+    bufferSize = 16384;
+
     // Check if soundcard supports requested samplerate
     m_audioConverter = CFACTORY->get(m_currentSong->samplerate(), sampleRate, bufferSize,
         m_currentSong->channels(), m_currentSong->precision(), sampleType, m_currentSong->fract());
