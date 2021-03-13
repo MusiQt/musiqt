@@ -61,15 +61,15 @@ int (*ffmpegBackend::dl_avcodec_open2)(AVCodecContext*, const AVCodec*, AVDictio
 int (*ffmpegBackend::dl_avcodec_decode_audio4)(AVCodecContext*, AVFrame*, int*, const AVPacket*)=0;
 AVFrame* (*ffmpegBackend::dl_av_frame_alloc)();
 void (*ffmpegBackend::dl_av_frame_free)(AVFrame**)=0;
+void (*ffmpegBackend::dl_av_frame_unref)(AVFrame*)=0;
 int (*ffmpegBackend::dl_av_sample_fmt_is_planar)(enum AVSampleFormat)=0;
-int (*ffmpegBackend::dl_av_samples_get_buffer_size)(int*, int, int, enum AVSampleFormat, int)=0;
 int (*ffmpegBackend::dl_av_read_frame)(AVFormatContext*, AVPacket*)=0;
 int (*ffmpegBackend::dl_av_seek_frame)(AVFormatContext*, int, int64_t, int)=0;
 AVDictionaryEntry* (*ffmpegBackend::dl_av_dict_get)(AVDictionary*, const char*, const AVDictionaryEntry*, int)=0;
 AVCodec* (*ffmpegBackend::dl_avcodec_find_decoder)(enum AVCodecID)=0;
-void (*ffmpegBackend::dl_av_init_packet)(AVPacket*)=0;
+int (*ffmpegBackend::dl_av_new_packet)(AVPacket*, int)=0;
+void (*ffmpegBackend::dl_av_packet_unref)(AVPacket*)=0;
 void (*ffmpegBackend::dl_avcodec_flush_buffers)(AVCodecContext*)=0;
-void (*ffmpegBackend::dl_av_free_packet)(AVPacket*)=0;
 int64_t (*ffmpegBackend::dl_av_rescale_q)(int64_t, AVRational, AVRational)=0;
 AVCodecContext* (*ffmpegBackend::dl_avcodec_alloc_context3)(const AVCodec *codec)=0;
 void (*ffmpegBackend::dl_avcodec_free_context)(AVCodecContext **avctx)=0;
@@ -83,94 +83,78 @@ QStringList ffmpegBackend::_ext;
 
 size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
 {
-    size_t n = decodeBufOffset;
-    unsigned char* buf = decodeBuf;
+    size_t decodedSize = m_decodeBufOffset;
 
-    while (n < bufferSize)
+    while (decodedSize < bufferSize)
     {
-        while (!packet.data)
+        while (!m_packet.data)
         {
-            if (dl_av_read_frame(m_formatContext, &packet) < 0)
+            if (dl_av_read_frame(m_formatContext, &m_packet) < 0)
             {
-                qDebug() << "Last frame: " << static_cast<int>(n);
-                memcpy(buffer, buf, n);
-                decodeBufOffset = 0;
-                return n;
+                qDebug() << "Last frame: " << static_cast<int>(decodedSize);
+                memcpy(buffer, m_decodeBuf, decodedSize);
+                m_decodeBufOffset = 0;
+                return decodedSize;
             }
-            if (packet.stream_index != m_audioStreamIndex)
+            if (m_packet.stream_index != m_audioStreamIndex)
             {
-                dl_av_free_packet(&packet);
-                packet.data = 0;
+                dl_av_packet_unref(&m_packet);
+                m_packet.data = 0;
             }
             else
-                packetOffset = 0;
+                m_packetOffset = 0;
         }
-        int frame_size = MAX_AUDIO_FRAME_SIZE*2 - n;
 
+        const int remaining = m_packet.size - m_packetOffset;
         AVPacket avpkt;
-        dl_av_init_packet(&avpkt);
-        avpkt.data = packet.data+packetOffset;
-        avpkt.size = packet.size-packetOffset;
+        dl_av_new_packet(&avpkt, remaining);
+        memcpy(avpkt.data, m_packet.data+m_packetOffset, remaining);
 
-        AVFrame *frame = dl_av_frame_alloc();
         int got_frame = 0;
-        const int used = dl_avcodec_decode_audio4(m_codecContext, frame, &got_frame, &avpkt);
+        const int used = dl_avcodec_decode_audio4(m_codecContext, m_frame, &got_frame, &avpkt);
+        dl_av_packet_unref(&avpkt);
+
         if ((used >= 0) && got_frame)
         {
-            int plane_size;
-            int data_size = dl_av_samples_get_buffer_size(&plane_size, m_audioStream->codecpar->channels,
-                    frame->nb_samples,
-                    (AVSampleFormat)m_audioStream->codecpar->format, 1);
-            if (frame_size < data_size)
-            {
-                qDebug() << "output buffer size is too small for the current frame: ("
-                    << frame_size << " < " << data_size << ")";
-                return 0;
-            }
-
+            int data_size = m_frame->linesize[0];
+            uint8_t *out = (uint8_t*)(m_decodeBuf+decodedSize);
             if (m_planar && (m_audioStream->codecpar->channels > 1))
             {
                 // Interleave channels
-                uint8_t *out = (uint8_t*)(buf+n);
                 int idx = 0;
-                const int samples = plane_size/m_sampleSize;
 
-                for (int j=0; j<samples; j++)
+                for (int j=0; j<m_frame->nb_samples; j++)
                 {
                     for (int ch=0; ch<m_audioStream->codecpar->channels; ch++)
                     {
-                        memcpy(out, frame->extended_data[ch]+idx, m_sampleSize);
+                        memcpy(out, m_frame->extended_data[ch]+idx, m_sampleSize);
                         out += m_sampleSize;
                     }
                     idx += m_sampleSize;
                 }
             } else {
-                    memcpy(buf+n, frame->extended_data[0], plane_size);
+                memcpy(out, m_frame->extended_data[0], data_size);
             }
-            frame_size = data_size;
-        }
-        else
-        {
-            frame_size = 0;
-        }
-        dl_av_frame_free(&frame);
 
-        //qDebug() << "frame_size: " << frame_size;
+            dl_av_frame_unref(m_frame);
+
+            decodedSize += data_size;
+        }
+
         if (used >= 0)
         {
-            n += frame_size;
-            packetOffset += used;
+            m_packetOffset += used;
         }
-        if ((used < 0) || (packet.size <= packetOffset))
+        if ((used < 0) || (m_packet.size <= m_packetOffset))
         {
-            dl_av_free_packet(&packet);
-            packet.data = 0;
+            dl_av_packet_unref(&m_packet);
+            m_packet.data = 0;
         }
     }
 
-    memcpy(buffer, buf, bufferSize);
-    decodeBufOffset = n-bufferSize;
-    memcpy(buf, buf+bufferSize, decodeBufOffset);
+    memcpy((char*)buffer, m_decodeBuf, bufferSize);
+    m_decodeBufOffset = decodedSize - bufferSize;
+    memcpy(m_decodeBuf, m_decodeBuf+bufferSize, m_decodeBufOffset);
 
     return bufferSize;
 }
@@ -189,8 +173,8 @@ bool ffmpegBackend::init()
     LOADSYM(avcodecDll, avcodec_decode_audio4, int(*)(AVCodecContext*, AVFrame*, int*, const AVPacket*))
     LOADSYM(avutilDll, av_frame_alloc, AVFrame*(*)())
     LOADSYM(avutilDll, av_frame_free, void(*)(AVFrame**))
+    LOADSYM(avutilDll, av_frame_unref, void(*)(AVFrame*))
     LOADSYM(avutilDll, av_sample_fmt_is_planar, int(*)(enum AVSampleFormat))
-    LOADSYM(avutilDll, av_samples_get_buffer_size, int(*)(int*, int, int, enum AVSampleFormat, int))
     LOADSYM(avformatDll, avformat_open_input, int(*)(AVFormatContext **ps, const char *filename, AVInputFormat *fmt, AVDictionary **options))
     LOADSYM(avformatDll, avformat_close_input, void(*)(AVFormatContext**))
     LOADSYM(avformatDll, avformat_find_stream_info, int(*)(AVFormatContext*, AVDictionary**))
@@ -202,10 +186,10 @@ bool ffmpegBackend::init()
                                          int related_stream, AVCodec **decoder_ret, int flags))
     LOADSYM(avcodecDll, avcodec_parameters_to_context, int(*)(AVCodecContext *codec, const AVCodecParameters *par))
     LOADSYM(avutilDll, av_dict_get, AVDictionaryEntry*(*)(AVDictionary*, const char*, const AVDictionaryEntry*, int))
-    LOADSYM(avcodecDll, av_init_packet, void(*)(AVPacket*))
-    LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
+    LOADSYM(avcodecDll, av_new_packet, int(*)(AVPacket*, int))
     LOADSYM(avcodecDll, avcodec_flush_buffers, void(*)(AVCodecContext*))
-    LOADSYM(avcodecDll, av_free_packet, void(*)(AVPacket*))
+    LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
+    LOADSYM(avcodecDll, av_packet_unref, void(*)(AVPacket*))
     LOADSYM(avutilDll, av_rescale_q, int64_t (*)(int64_t, AVRational, AVRational))
 
     AVInputFormat *(*dl_av_find_input_format)(const char*);
@@ -301,8 +285,9 @@ bool ffmpegBackend::open(const QString& fileName)
         goto error;
 
     m_audioStream = m_formatContext->streams[m_audioStreamIndex];
-    decodeBufOffset = 0;
-    packet.data = 0;
+    m_decodeBufOffset = 0;
+    m_packet.data = 0;
+    m_frame = dl_av_frame_alloc();
 
     switch(m_audioStream->codecpar->format)
     {
@@ -359,8 +344,10 @@ void ffmpegBackend::close()
     if (songLoaded().isEmpty())
         return;
 
-    if (packet.data)
-        dl_av_free_packet(&packet);
+    dl_av_frame_free(&m_frame);
+
+    if (m_packet.data)
+        dl_av_packet_unref(&m_packet);
 
     dl_avcodec_free_context(&m_codecContext);
     dl_avformat_close_input(&m_formatContext);
@@ -382,11 +369,11 @@ bool ffmpegBackend::seek(int pos)
         return false;
     }
 
-    decodeBufOffset = 0;
-    if (packet.data)
+    m_decodeBufOffset = 0;
+    if (m_packet.data)
     {
-        dl_av_free_packet(&packet);
-        packet.data = 0;
+        dl_av_packet_unref(&m_packet);
+        m_packet.data = 0;
     }
 
     dl_avcodec_flush_buffers(m_codecContext);
@@ -405,7 +392,7 @@ bool ffmpegBackend::openStream(AVFormatContext* fc)
             AVPacket pkt;
             dl_av_read_frame(m_formatContext, &pkt);
             m_metaData.addInfo(new QByteArray((char*)pkt.data, pkt.size));
-            dl_av_free_packet(&pkt);
+            dl_av_packet_unref(&pkt);
         }
     }
 

@@ -66,11 +66,13 @@ private:
     int m_sampleSize;
     sample_t m_precision;
 
-    AVPacket packet;
-    int packetOffset;
+    AVFrame *m_frame;
 
-    unsigned int decodeBufOffset;
-    unsigned char decodeBuf[MAX_AUDIO_FRAME_SIZE*2];
+    AVPacket m_packet;
+    int m_packetOffset;
+
+    unsigned int m_decodeBufOffset;
+    unsigned char m_decodeBuf[MAX_AUDIO_FRAME_SIZE*2];
 
     static const AutoDLL avformatDll;
     static const AutoDLL avcodecDll;
@@ -86,15 +88,15 @@ private:
     static int (*dl_avcodec_decode_audio4)(AVCodecContext*, AVFrame*, int*, const AVPacket*);
     static AVFrame* (*dl_av_frame_alloc)();
     static void (*dl_av_frame_free)(AVFrame**);
+    static void (*dl_av_frame_unref)(AVFrame*);
     static int (*dl_av_sample_fmt_is_planar)(enum AVSampleFormat);
-    static int (*dl_av_samples_get_buffer_size)(int*, int, int, enum AVSampleFormat, int);
     static int (*dl_av_read_frame)(AVFormatContext*, AVPacket*);
     static int (*dl_av_seek_frame)(AVFormatContext*, int, int64_t, int);
     static AVDictionaryEntry* (*dl_av_dict_get)(AVDictionary*, const char*, const AVDictionaryEntry*, int);
     static AVCodec* (*dl_avcodec_find_decoder)(enum AVCodecID);
-    static void (*dl_av_init_packet)(AVPacket*);
+    static int (*dl_av_new_packet)(AVPacket*, int);
+    static void (*dl_av_packet_unref)(AVPacket*);
     static void (*dl_avcodec_flush_buffers)(AVCodecContext*);
-    static void (*dl_av_free_packet)(AVPacket*);
     static AVCodecContext* (*dl_avcodec_alloc_context3)(const AVCodec *codec);
     static void (*dl_avcodec_free_context)(AVCodecContext **avctx);
     static int (*dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
