@@ -452,14 +452,16 @@ void sidBackend::loadTune(const int num)
     _sidplayfp->load(_tune);
     if (_db != nullptr)
     {
+        int_least32_t songLength;
 #if LIBSIDPLAYFP_VERSION_MAJ > 1
-        _length = newSonglengthDB ? _db->lengthMs(*_tune) : (_db->length(*_tune) * 1000);
+        songLength = newSonglengthDB ? _db->lengthMs(*_tune) : (_db->length(*_tune) * 1000);
 #else
         char md5[SidTune::MD5_LENGTH+1];
         _tune->createMD5(md5);
         qDebug() << "Tune md5: " << md5;
-        _length = _db->length(md5, _tune->getInfo()->currentSong()) * 1000;
+        songLength = _db->length(md5, _tune->getInfo()->currentSong()) * 1000;
 #endif
+        _length = (songLength < 0) ? 0 : songLength;
     }
     else
         _length = 0;
@@ -484,13 +486,13 @@ void sidBackend::openHvsc(const QString& hvscPath)
     if (_db == nullptr)
         _db = new SidDatabase();
 
-    QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath).arg(QDir::separator()));
+    QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath, QDir::separator()));
     qDebug() << "SL DB path: " << slDbPath;
-    if (_db->open(slDbPath.append(".md5").toUtf8().constData()))
+    if (_db->open(QString(slDbPath).append(".md5").toUtf8().constData()))
     {
         newSonglengthDB = true;
     }
-    else if (!_db->open(slDbPath.append(".txt").toUtf8().constData()))
+    else if (!_db->open(QString(slDbPath).append(".txt").toUtf8().constData()))
     {
         qWarning() << _db->error();
         utils::delPtr(_db);
