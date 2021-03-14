@@ -213,6 +213,7 @@ bool gmeBackend::checkRetCode(const char* error)
     if (error)
     {
         gme_delete(_emu);
+        _emu = nullptr;
         qWarning() << "Error: " << error;
         return false;
     }
@@ -222,6 +223,7 @@ bool gmeBackend::checkRetCode(const char* error)
 void gmeBackend::close()
 {
     gme_delete(_emu);
+    _emu = nullptr;
 
     songLoaded(QString());
 }
