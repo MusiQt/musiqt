@@ -123,10 +123,11 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
 
     if (oldSeconds != newSeconds)
     {
-        if (newSeconds != (m_currentSong->songDuration()/1000)-5)
-            emit updateTime();
-        else
+        if (newSeconds == (m_currentSong->songDuration()/1000)-5)
+        {
             emit preloadSong();
+        }
+        emit updateTime();
     }
 
     return n;
