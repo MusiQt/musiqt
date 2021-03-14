@@ -42,7 +42,8 @@ InputWrapper::InputWrapper(input* song) :
     m_preloadedSong(nullptr),
     m_audioConverter(nullptr),
     m_bytes(0),
-    m_milliSeconds(0)
+    m_milliSeconds(0),
+    m_maxPlayTime(song->maxPlayTime())
 {}
 
 InputWrapper::~InputWrapper()
@@ -88,6 +89,12 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
     if (maxSize == 0)
     {
         qDebug() << "readData maxSize=0";
+        return 0;
+    }
+
+    if (m_maxPlayTime && (m_milliSeconds > m_maxPlayTime))
+    {
+        qDebug() << "reached max playing time";
         return 0;
     }
 

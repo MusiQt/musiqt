@@ -62,6 +62,9 @@ public:
     /// Get song duration in milliseconds
     virtual unsigned int songDuration() const =0;
 
+    /// Get max play time in milliseconds, 0 if none
+    virtual unsigned int maxPlayTime() const =0;
+
     /// Get samplerate
     virtual unsigned int samplerate() const =0;
 

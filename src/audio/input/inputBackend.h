@@ -95,6 +95,9 @@ public:
     /// Get song duration in milliseconds
     unsigned int songDuration() const override { return m_time; }
 
+    /// Get max play time in milliseconds, 0 if none
+    virtual unsigned int maxPlayTime() const override { return 0; }
+
     /// Get fractional scale for fixed point types
     virtual unsigned int fract() const override { return 0; }
 
