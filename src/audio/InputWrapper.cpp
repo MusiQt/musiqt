@@ -114,10 +114,11 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
 
     const int oldSeconds = m_milliSeconds / 1000;
 
-    do {
+    while (m_bytes > m_bytePerMilliSec)
+    {
         m_bytes -= m_bytePerMilliSec;
         m_milliSeconds++;
-    } while (m_bytes > m_bytePerMilliSec);
+    }
 
     const int newSeconds = m_milliSeconds / 1000;
 
