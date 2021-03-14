@@ -191,7 +191,7 @@ bool openmptBackend::open(const QString& fileName)
 #ifdef HAVE_LIBZ
     QString ext(EXTZ);
     ext.prepend(".*\\.(").append(")");
-    QRegExp rx(ext);
+    QRegExp rx(ext, Qt::CaseInsensitive);
     if (rx.exactMatch(fileName))
     {
 #  ifdef _WIN32
