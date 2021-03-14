@@ -203,7 +203,13 @@ void gmeBackend::getInfo()
 
     // length is -1 if unknown
     if (ti->length > 0)
+    {
         time(ti->length);
+    }
+    else if (ti->loop_length > 0)
+    {
+        time(ti->intro_length + ti->loop_length);
+    }
 
     gme_free_info(ti);
 }
