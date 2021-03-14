@@ -134,11 +134,16 @@ bool oggBackend::open(const QString& fileName)
 
     _file.setFileName(fileName);
     if (!_file.open(QIODevice::ReadOnly))
+    {
+        qWarning() << _file.errorString();
         return false;
+    }
 
     _vf = new OggVorbis_File;
-    if (ov_open_callbacks(&_file, _vf, NULL, 0, vorbis_callbacks) < 0)
+    int error = ov_open_callbacks(&_file, _vf, NULL, 0, vorbis_callbacks);
+    if (error < 0)
     {
+        qDebug() << "Error code: " << error;
         utils::delPtr(_vf);
         _file.close();
         return false;

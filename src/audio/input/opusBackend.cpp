@@ -149,7 +149,10 @@ bool opusBackend::open(const QString& fileName)
 
     _file.setFileName(fileName);
     if (!_file.open(QIODevice::ReadOnly))
+    {
+        qWarning() << _file.errorString();
         return false;
+    }
 
     int error;
     _of = op_open_callbacks(&_file, &opus_callbacks, nullptr, 0, &error);
