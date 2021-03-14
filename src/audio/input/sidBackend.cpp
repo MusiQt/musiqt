@@ -321,6 +321,12 @@ bool sidBackend::open(const QString& fileName)
     _sidplayfp->config(cfg);
 
     _tune = new SidTune(fileName.toUtf8().constData());
+    if (!_tune->getStatus())
+    {
+        qWarning() << _tune->statusString();
+        utils::delPtr(_tune);
+        return 0;
+    }
 
     loadTune(0);
 
