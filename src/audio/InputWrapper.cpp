@@ -69,13 +69,12 @@ PROFILE_START
     {
         size_t size = m_currentSong->fillBuffer(
             m_audioConverter->buffer(),
-            m_audioConverter->bufSize(maxSize),
-            m_milliSeconds);
+            m_audioConverter->bufSize(maxSize));
         n = m_audioConverter->convert(data, size);
     }
     else
     {
-        n = m_currentSong->fillBuffer(data, maxSize, m_milliSeconds);
+        n = m_currentSong->fillBuffer(data, maxSize);
     }
 
     m_audioProcess->process(data, n);

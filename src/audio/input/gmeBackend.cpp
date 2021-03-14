@@ -52,7 +52,7 @@ QStringList gmeBackend::_ext;
 
 /*****************************************************************/
 
-size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     if (gme_track_ended(_emu))
         return 0;

@@ -32,7 +32,7 @@ const char sndBackend::name[] = "Sndfile";
 
 /*****************************************************************/
 
-size_t sndBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t sndBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     return (sf_read_short(_sf, (short*)buffer, (bufferSize>>1))<<1);
 }

@@ -93,7 +93,7 @@ public:
     virtual bool seek(const int pos) =0;
 
     /// Callback function
-    virtual size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds) =0;
+    virtual size_t fillBuffer(void* buffer, const size_t bufferSize) =0;
 
     /// Song is loaded
     virtual QString songLoaded() const =0;

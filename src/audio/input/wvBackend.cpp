@@ -63,7 +63,7 @@ const char wvBackend::name[] = "Wavpack";
 
 /*****************************************************************/
 
-size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     size_t n = 0;
     const unsigned int sampleSize = (_precision == sample_t::U8) ? 1 : (_precision == sample_t::S16) ? 2 : 4;

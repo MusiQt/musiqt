@@ -153,8 +153,11 @@ public:
     /// Get precision
     sample_t precision() const override { return sample_t::S16; }
 
+    /// Get max play time in milliseconds, 0 if none
+    virtual unsigned int maxPlayTime() const override { return _length; }
+
     /// Callback function
-    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds) override;
+    size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new sidConfig(win); }

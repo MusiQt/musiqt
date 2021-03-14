@@ -96,11 +96,8 @@ sidConfig_t sidBackend::_settings;
 
 /*****************************************************************/
 
-size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
-    if ((_length != 0) && (milliSeconds >= _length))
-        return 0;
-
     return _sidplayfp->play((short*)buffer, bufferSize/sizeof(short))*2;
 }
 

@@ -108,7 +108,7 @@ public:
     unsigned int fract() const override { return (_bps<<3)-1; }
 
     /// Callback function
-    size_t fillBuffer(void* buffer, size_t bufferSize, unsigned int milliSeconds) override;
+    size_t fillBuffer(void* buffer, size_t bufferSize) override;
 
     /// Gapless support
     bool gapless() const override { return true; };

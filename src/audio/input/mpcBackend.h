@@ -128,7 +128,7 @@ public:
     unsigned int fract() const override { return MPC_FIXED_POINT_SCALE_SHIFT; }
 #endif
     /// Callback function
-    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds) override;
+    size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Gapless support
     bool gapless() const override { return !songLoaded().isNull() ? _si.is_true_gapless : true; }

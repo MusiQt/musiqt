@@ -110,7 +110,7 @@ public:
     sample_t precision() const override { return sample_t::S16; }
 
     /// Callback function
-    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds);
+    size_t fillBuffer(void* buffer, const size_t bufferSize);
 
     /// Gapless support
     bool gapless() const override { return true; };

@@ -112,7 +112,7 @@ opusConfig_t opusBackend::_settings;
 
 /*****************************************************************/
 
-size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     size_t n = 0;
     int read;

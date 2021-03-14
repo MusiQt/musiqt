@@ -122,7 +122,7 @@ QStringList openmptBackend::_ext;
 
 /*****************************************************************/
 
-size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     const size_t frameSize = sizeof(float) * _settings.channels;
     size_t bufSize = bufferSize/frameSize;

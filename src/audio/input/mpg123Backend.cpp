@@ -83,7 +83,7 @@ mpg123Config_t mpg123Backend::m_settings;
 
 /*****************************************************************/
 
-size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     size_t n;
     const int err = mpg123_read(m_handle, (unsigned char*)buffer, bufferSize, &n);

@@ -86,7 +86,7 @@ oggConfig_t oggBackend::_settings;
 
 /*****************************************************************/
 
-size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     size_t n = 0;
     long read;

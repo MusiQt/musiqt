@@ -73,7 +73,7 @@ public:
     bool rewind() override { return true; }
     bool seekable() const override { return false; }
     bool seek(const int pos) override { return true; }
-    size_t fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds) override { return 0; }
+    size_t fillBuffer(void* buffer, const size_t bufferSize) override { return 0; }
     QString songLoaded() const override { return QString(); }
     unsigned int subtunes() const override { return 0; }
     unsigned int subtune() const override { return 0; }

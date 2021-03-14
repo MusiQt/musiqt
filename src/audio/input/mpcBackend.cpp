@@ -70,7 +70,7 @@ const char mpcBackend::name[] = "Musepack";
 
 /*****************************************************************/
 
-size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int seconds)
+size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     size_t n = 0;
 

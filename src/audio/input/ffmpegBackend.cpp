@@ -81,7 +81,7 @@ QStringList ffmpegBackend::_ext;
 
 /*****************************************************************/
 
-size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize, const unsigned int milliSeconds)
+size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     size_t decodedSize = m_decodeBufOffset;
 
