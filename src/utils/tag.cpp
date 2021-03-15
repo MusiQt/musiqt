@@ -244,6 +244,7 @@ QString tag::getID3v2Text(const char* buf, int size)
 
 int tag::getID3v2_2Frame(char* buf)
 {
+    // FIXME add support for text encoding
     const int size = ((unsigned int)((unsigned char)buf[3])<<16) | ((unsigned int)((unsigned char)buf[4])<<8)
         | ((unsigned int)((unsigned char)buf[5]));
     qDebug() << "ID3v2 Frame: " << QString(buf).left(3) << " size: " << size;
@@ -295,17 +296,18 @@ int tag::getID3v2_2Frame(char* buf)
         // Picture type       $xx
         // Description        <textstring> $00 (00)
         // Picture data       <binary data>
-        QString mime = QString(buf+11);
-        qDebug() << "ID3v2 pic mime: " << mime;
-        int i = mime.length();
-        char type = buf[12+i];
+        char textEncoding = buf[6];
+        char type = buf[10];
         qDebug() << "Pic type: " << type;
-        const QString description=QString(buf+13+i);
+        int i = 11;
+        QString description = (textEncoding == 0) ? QString::fromLatin1(buf+i, size-i) :  QString::fromUtf16((const ushort *)(buf+i), size-i);
         qDebug() << "Pic description: " << description;
-        const int j = description.length();
-        const int imgOffset = 14+i+j;
-        qDebug() << "imgOffset: " << imgOffset;
-        m_img = new QByteArray(buf+imgOffset, size-imgOffset);
+        while (*(buf+i))
+            i++;
+        if (textEncoding == 1)
+            i++;
+        qDebug() << "imgOffset: " << i;
+        m_img = new QByteArray(buf+i, size-i);
     }
     else
     if (isFrame(buf, "COM") || isFrame(buf, "ULT"))
@@ -314,10 +316,10 @@ int tag::getID3v2_2Frame(char* buf)
         // Language             $xx xx xx
         // Descriptor           <textstring> $00 (00)
         // Text                 <textstring>
+        char textEncoding = buf[6];
         int i = 10;
         while (*(buf+i))
             i++;
-        char textEncoding = buf[6];
         if (textEncoding == 1)
             i++;
         m_comment = (textEncoding == 0) ? QString::fromLatin1(buf+i, size-i) :  QString::fromUtf16((const ushort *)(buf+i), size-i);
