@@ -21,15 +21,13 @@
 template <typename I, typename O>
 size_t resampler<I, O>::convert(const void* buf, size_t len)
 {
-    len /= frameRatio;
-
     I* const in = (I*)_buffer;
     O* const out = (O*)buf;
 
     size_t idx = 0;
     unsigned int error = 0;
-    const size_t m = len/sizeof(O);
-    for (size_t j=0; j<m; j+=channels)
+    const size_t samples = len/sizeof(I);
+    for (size_t j=0; j<samples; j+=channels)
     {
         for (unsigned int c=0; c<channels; c++)
         {
@@ -54,7 +52,7 @@ size_t resampler<I, O>::convert(const void* buf, size_t len)
             in[c] = in[j+c];
     }
 
-    return len;
+    return samples * sizeof(O);
 }
 
 template size_t resampler<unsigned char, unsigned char>::convert(const void* buf, const size_t len);
@@ -69,13 +67,11 @@ template size_t resampler<float, short>::convert(const void* buf, const size_t l
 template <typename I, typename O>
 size_t converterDecimal<I, O>::convert(const void* buf, size_t len)
 {
-    len /= frameRatio;
-
     I* const in = (I*)_buffer;
     O* const out = (O*)buf;
 
-    const size_t m = len/sizeof(O);
-    for (size_t j=0; j<m; j+=channels)
+    const size_t samples = len/sizeof(I);
+    for (size_t j=0; j<samples; j+=channels)
     {
         for (unsigned int c=0; c<channels; c++)
         {
@@ -83,7 +79,7 @@ size_t converterDecimal<I, O>::convert(const void* buf, size_t len)
         }
     }
 
-    return len;
+    return samples * sizeof(O);
 }
 
 template size_t converterDecimal<int, unsigned char>::convert(const void* buf, const size_t len);
