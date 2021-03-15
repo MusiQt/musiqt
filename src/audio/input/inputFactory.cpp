@@ -143,9 +143,8 @@ iFactory::iFactory()
     regBackend<wvBackend>();
 #endif
 
-#ifdef HAVE_SNDFILE
-    if (sndBackend::init())
-        regBackend<sndBackend>();
+#ifdef HAVE_LIBMPCDEC
+    regBackend<mpcBackend>();
 #endif
 
 #ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
@@ -153,8 +152,9 @@ iFactory::iFactory()
         regBackend<ffmpegBackend>();
 #endif
 
-#ifdef HAVE_LIBMPCDEC
-    regBackend<mpcBackend>();
+#ifdef HAVE_SNDFILE
+    if (sndBackend::init())
+        regBackend<sndBackend>();
 #endif
 }
 
