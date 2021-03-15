@@ -60,8 +60,11 @@
 
 class nullInput : public input
 {
+private:
+    metaDataImpl m_metaData;
+
 public:
-    const metaData* getMetaData() const override { return nullptr; }
+    const metaData* getMetaData() const override { return &m_metaData; }
     unsigned int songDuration() const override { return 0; }
     unsigned int maxPlayTime() const override { return 0; }
     unsigned int samplerate() const override { return 0; }
