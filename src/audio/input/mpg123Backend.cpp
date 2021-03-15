@@ -461,7 +461,7 @@ mpg123Config::mpg123Config(QWidget* win) :
     extraLeft()->addLayout(vert);
     QCheckBox *cBox = new QCheckBox(tr("Fast scan"));
     cBox->setChecked(MPGSETTINGS.fastscan);
-    cBox->setToolTip("Scan only few frame of file, time detection may be inaccurate");
+    cBox->setToolTip("Scan only few frame of file,\ntime detection may be inaccurate\nand pictures are not parsed");
     vert->addWidget(cBox);
     connect(cBox, &QCheckBox::stateChanged,
         [](int val) {
