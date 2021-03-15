@@ -520,19 +520,15 @@ int tag::parseAPETag(const char* buf)
     const char *ptr = buf+8;
     const int tagNameLength = qstrlen(ptr) + 1;
     qDebug() << "APE tag: " << ptr;
-    if (!getAPEItem(ptr, &m_title,  "title",    tagNameLength, itemSize))
-    if (!getAPEItem(ptr, &m_artist, "artist",   tagNameLength, itemSize))
-    if (!getAPEItem(ptr, &m_year,   "year",     tagNameLength, itemSize))
-    if (!getAPEItem(ptr, &m_album,  "album",    tagNameLength, itemSize))
-    if (!getAPEItem(ptr, &m_genre,  "genre",    tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_title,   "title",   tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_artist,  "artist",  tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_year,    "year",    tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_album,   "album",   tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_genre,   "genre",   tagNameLength, itemSize))
+    if (!getAPEItem(ptr, &m_track,   "track",   tagNameLength, itemSize))
     if (!getAPEItem(ptr, &m_comment, "comment", tagNameLength, itemSize))
     {
-        if (!qstricmp(ptr, "track"))
-        {
-            m_track = QString(ptr+6);
-            qDebug() << "track: " << m_track;
-        }
-        else if (!qstrnicmp(ptr, "Cover Art", 9))
+        if (!qstrnicmp(ptr, "Cover Art", 9))
         {
             /*
              * Cover art spec
@@ -576,7 +572,7 @@ bool tag::checkAPE(char* buf, int& itemsSize, int& tagSize)
 
     if (version > 1000)
     {
-        int flags = getLE32(buf+20);
+        unsigned int flags = static_cast<unsigned int>(getLE32(buf+20));
         qDebug() << "flags: " << Qt::hex << flags;
 
         if (flags & 0x80000000)
