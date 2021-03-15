@@ -308,15 +308,22 @@ int tag::getID3v2_2Frame(char* buf)
         m_img = new QByteArray(buf+imgOffset, size-imgOffset);
     }
     else
-    /*if (isFrame(buf, "COM"))
+    if (isFrame(buf, "COM") || isFrame(buf, "ULT"))
     {
+        // Text encoding        $xx
+        // Language             $xx xx xx
+        // Descriptor           <textstring> $00 (00)
+        // Text                 <textstring>
         int i = 10;
         while (*(buf+i))
             i++;
-        m_comment = getID3v2Text(buf+i+1, size-i+9, buf[6]); // FIXME
-        qDebug() << "ID3v2 comment: %s\n", m_comment.text()));
+        char textEncoding = buf[6];
+        if (textEncoding == 1)
+            i++;
+        m_comment = (textEncoding == 0) ? QString::fromLatin1(buf+i, size-i) :  QString::fromUtf16((const ushort *)(buf+i), size-i);
+        qDebug() << "ID3v2 comment: \n" << m_comment;
     }
-    else*/
+    else
         qDebug() << "ID3v2 unhandled frame " << QString(buf).left(3);
 
     return size;
