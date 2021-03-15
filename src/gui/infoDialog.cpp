@@ -151,7 +151,7 @@ void infoDialog::setInfo(const metaData* mtd)
         qDebug() << "Rows: " << rows;
         qDebug() << "Cols: " << cols;
 
-        if (rows>1)
+        if ((rows>1) || (cols>80))
         {
             m_text->setPlainText(temp);
             //m_text->setVisibleRows((rows<20)?rows:20);
