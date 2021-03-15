@@ -982,7 +982,7 @@ const metaData* centralFrame::getMetaData() const { return m_input->getMetaData(
 QString centralFrame::getFilter() const
 {
     QString filter(IFACTORY->getExtensions().join("|"));
-    filter.prepend(".*\\.(").append(")");
+    filter.prepend(".*\\.(").append(")$");
     qDebug() << "filter: " << filter;
     return filter;
 }
