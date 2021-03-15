@@ -114,26 +114,24 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
         const int used = dl_avcodec_decode_audio4(m_codecContext, m_frame, &got_frame, &avpkt);
         dl_av_packet_unref(&avpkt);
 
-        if ((used >= 0) && got_frame)
+        if (got_frame)
         {
-            int data_size = m_frame->linesize[0];
-            uint8_t *out = (uint8_t*)(m_decodeBuf+decodedSize);
-            if (m_planar && (m_audioStream->codecpar->channels > 1))
+            const int data_size = m_frame->nb_samples * m_codecContext->channels * m_sampleSize;
+
+            unsigned char *out = m_decodeBuf + decodedSize;
+            if (m_planar && (m_codecContext->channels > 1))
             {
                 // Interleave channels
-                int idx = 0;
-
-                for (int j=0; j<m_frame->nb_samples; j++)
+                for (int j=0, idx=0; j<m_frame->nb_samples; j++, idx+=m_sampleSize)
                 {
-                    for (int ch=0; ch<m_audioStream->codecpar->channels; ch++)
+                    for (int ch=0; ch<m_codecContext->channels; ch++)
                     {
-                        memcpy(out, m_frame->extended_data[ch]+idx, m_sampleSize);
+                        memcpy(out, m_frame->data[ch]+idx, m_sampleSize);
                         out += m_sampleSize;
                     }
-                    idx += m_sampleSize;
                 }
             } else {
-                memcpy(out, m_frame->extended_data[0], data_size);
+                memcpy(out, m_frame->data[0], data_size);
             }
 
             dl_av_frame_unref(m_frame);
@@ -141,7 +139,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
             decodedSize += data_size;
         }
 
-        if (used >= 0)
+        if (used > 0)
         {
             m_packetOffset += used;
         }
@@ -289,7 +287,7 @@ bool ffmpegBackend::open(const QString& fileName)
     m_packet.data = 0;
     m_frame = dl_av_frame_alloc();
 
-    switch(m_audioStream->codecpar->format)
+    switch(m_codecContext->sample_fmt)
     {
     case AV_SAMPLE_FMT_U8:
     case AV_SAMPLE_FMT_U8P:
@@ -312,11 +310,11 @@ bool ffmpegBackend::open(const QString& fileName)
         m_precision = sample_t::SAMPLE_FLOAT;
         break;
     default:
-        qWarning() << "Unrecognized fomat " << m_audioStream->codecpar->format;
+        qWarning() << "Unrecognized fomat " << m_codecContext->sample_fmt;
         goto error;
     }
 
-    m_planar = dl_av_sample_fmt_is_planar((AVSampleFormat)m_audioStream->codecpar->format);
+    m_planar = dl_av_sample_fmt_is_planar(m_codecContext->sample_fmt);
 
     m_metaData.addInfo(metaData::TITLE, getMetadata("title"));
     m_metaData.addInfo(metaData::ARTIST, getMetadata("artist"));
