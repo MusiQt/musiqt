@@ -551,7 +551,10 @@ void centralFrame::load(const QString& filename, bool preload)
 
     input *ib =  IFACTORY->get(filename);
     if (ib == nullptr)
+    {
+        loadError();
         return;
+    }
 
     loadThread* loader = new loadThread(ib, filename);
     if (preload)
@@ -586,13 +589,18 @@ void centralFrame::onCmdSongLoaded(input* res)
     }
     else
     {
-        m_input.reset(IFACTORY->get());
-
-        m_playDir = QString();
-        emit setInfo(nullptr);
-        changeState();
-        qWarning() << "Error loading song";
+        loadError();
     }
+}
+
+void centralFrame::loadError()
+{
+    m_input.reset(IFACTORY->get());
+
+    m_playDir = QString();
+    emit setInfo(nullptr);
+    changeState();
+    qWarning() << "Error loading song";
 }
 
 void centralFrame::onCmdSongPreLoaded(input* res)

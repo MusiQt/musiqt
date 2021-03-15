@@ -137,6 +137,7 @@ private:
     QString getFilter() const;
     QStringList getPattern() const;
     void changeState();
+    void loadError();
 
 private:
     QScopedPointer<input> m_input;
