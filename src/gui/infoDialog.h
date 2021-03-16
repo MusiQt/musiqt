@@ -63,6 +63,8 @@ private:
     infoDialog(const infoDialog&);
     infoDialog& operator=(const infoDialog&);
 
+    void setDefaultImage() const;
+
 public:
     infoDialog(QWidget*);
     virtual ~infoDialog();

@@ -596,6 +596,7 @@ void centralFrame::onCmdSongLoaded(input* res)
 void centralFrame::loadError()
 {
     m_input.reset(IFACTORY->get());
+    emit setDisplay(m_input.data());
 
     m_playDir = QString();
     emit setInfo(nullptr);

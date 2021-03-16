@@ -155,6 +155,7 @@ void infoDialog::setInfo(const metaData* mtd)
     if (location.isEmpty())
     {
         gLayout->addWidget(new QLabel(tr("No song loaded"), m_matrix));
+        setDefaultImage();
         m_extra->hide();
         return;
     }
@@ -288,7 +289,7 @@ void infoDialog::setInfo(const metaData* mtd)
             QApplication::setOverrideCursor(Qt::WaitCursor); // setCursor(Qt::WaitCursor); ???
         }
 
-        m_imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
+        setDefaultImage();
     }
 
     if (gLayout->count() == 0)
@@ -305,4 +306,9 @@ void infoDialog::setInfo(const metaData* mtd)
 
     gLayout->update();
     adjustSize();
+}
+
+void infoDialog::setDefaultImage() const
+{
+    m_imgFrame->setPixmap(QPixmap(":/resources/cover_placeholder.png"));
 }
