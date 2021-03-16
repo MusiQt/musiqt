@@ -75,7 +75,7 @@ ov_callbacks oggBackend::vorbis_callbacks =
     oggBackend::tell_func
 };
 
-#define EXT "ogg"
+#define EXT "ogg|oga"
 
 #define CREDITS "OggVorbis<br>Copyright \302\251 Xiph.org Foundation"
 #define LINK    "http://www.xiph.org/"
@@ -103,7 +103,7 @@ size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 /*****************************************************************/
 
-QStringList oggBackend::ext() { return QStringList(EXT); }
+QStringList oggBackend::ext() { return QString(EXT).split("|"); }
 
 oggBackend::oggBackend() :
     inputBackend(name, iconOgg, 523),
