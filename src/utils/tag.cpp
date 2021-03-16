@@ -399,17 +399,27 @@ int tag::getID3v2Frame(char* buf, int ver)
         m_genre = (g.indexOf('(') >= 0) ? QString(::genre[n.toInt()]) : g;
         qDebug() << "ID3v2 genre: " << m_genre;
     }
-    else
-    /*if (isFrame(buf, "COMM"))
+    else if (isFrame(buf, "COMM") || isFrame(buf, "USLT"))
     {
-        int i = 14;
-        while (*(buf+i))
+        // Text encoding          $xx
+        // Language               $xx xx xx
+        // Description            <text string according to encoding> $00 (00)
+        // Text                   <full text string according to encoding>
+        char textEncoding = data[0];
+        QString description = (textEncoding == 0) ?
+            QString::fromLatin1(data+4) :
+            QString::fromUtf16((const ushort *)(data+4));
+        int i = 4;
+        while (*(data+i))
             i++;
-        m_comment = getID3v2Text(buf+i+1, size-i+9, buf[10]); // FIXME
-        qDebug() << "ID3v2 comment: %s\n", m_comment.text()));
+        if (textEncoding == 1)
+            i++;
+        m_comment = (textEncoding == 0) ?
+            QString::fromLatin1(data+i) :
+            QString::fromUtf16((const ushort *)(data+i));
+        qDebug() << "ID3v2 comment: \n" << m_comment;
     }
-    else*/
-    if (isFrame(buf, "APIC"))
+    else if (isFrame(buf, "APIC"))
     {
         // Text encoding      $xx
         // MIME type          <text string> $00
@@ -424,8 +434,8 @@ int tag::getID3v2Frame(char* buf, int ver)
         qDebug() << "Pic type: " << type;
         i++;
         QString description = (textEncoding == 0) ?
-            QString::fromLatin1(data+i, size-i-10) :
-            QString::fromUtf16((const ushort *)(data+i), size-i);
+            QString::fromLatin1(data+i) :
+            QString::fromUtf16((const ushort *)(data+i));
         qDebug() << "Pic description: " << description;
 
         while (*(data+i))
