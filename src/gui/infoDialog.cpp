@@ -129,17 +129,14 @@ void infoDialog::setInfo(const metaData* mtd)
         unsigned int rows = 1;
         unsigned int cols = 0;
         unsigned int cnt = 0;
-        int pos = 0;
         const int len = info.length();
-        // FIXME this won't work with unicode strings
-        const char* s = info.toLocal8Bit().constData();
-        while (pos < len)
+        for (int pos=0; pos<len; pos++)
         {
             // Convert Mac and Windows EOLs to Unix
-            if (s[pos] == '\r')
-                info.replace(pos, (s[pos+1]=='\n') ? '\0' : '\n');
+            if (info[pos] == '\r')
+                info.replace(pos, (info[pos+1]=='\n') ? ' ' : '\n');
             // Count rows and columns
-            if (s[pos] == '\n')
+            if (info[pos] == '\n')
             {
                 rows++;
                 if (cnt > cols)
@@ -147,8 +144,6 @@ void infoDialog::setInfo(const metaData* mtd)
                 cnt = 0;
             } else
                 cnt++;
-            //pos += QString::utfBytes[(unsigned char)s[pos]];
-            pos++;
         }
         if (cnt > cols)
             cols = cnt;
