@@ -172,27 +172,32 @@ void infoDialog::setInfo(const metaData* mtd)
         if (info.isEmpty())
             continue;
 
+        // Count rows and columns
         unsigned int rows = 1;
         unsigned int cols = 0;
         unsigned int cnt = 0;
         const int len = info.length();
         for (int pos=0; pos<len; pos++)
         {
-            // Convert Mac and Windows EOLs to Unix
-            if (info[pos] == '\r')
-                info.replace(pos, (info[pos+1]=='\n') ? ' ' : '\n');
-            // Count rows and columns
-            if (info[pos] == '\n')
+            if (info[pos] == QChar::CarriageReturn) // MacOS
+            {
+                if (info[pos+1] == QChar::LineFeed) // Windows
+                    pos++;
+                rows++;
+                cnt = 0;
+            }
+            else if (info[pos] == QChar::LineFeed)  // UNIX
             {
                 rows++;
+                cnt = 0;
+            }
+            else
+            {
+                cnt++;
                 if (cnt > cols)
                     cols = cnt;
-                cnt = 0;
-            } else
-                cnt++;
+            }
         }
-        if (cnt > cols)
-            cols = cnt;
 
         qDebug() << "Rows: " << rows;
         qDebug() << "Cols: " << cols;
