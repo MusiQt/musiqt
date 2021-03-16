@@ -109,7 +109,8 @@ size_t qaudioBackend::open(const unsigned int card, unsigned int &sampleRate,
         sampleType = QAudioFormat::SignedInt;
         break;
     default:
-        qWarning() << "Unsupported sample type";
+        // TODO add support for QAudioFormat::Float?
+        qWarning() << "Unexpectedd sample type";
         return 0;
     }
 

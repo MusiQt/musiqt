@@ -180,7 +180,7 @@ int InputWrapper::tell() const
     return (100*m_milliSeconds)/m_currentSong->songDuration();
 }
 
-void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
+bool InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize)
 {
     unsigned int precision;
 
@@ -196,9 +196,8 @@ void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, 
         break;
     default:
         m_audioProcess = nullptr;
-        // This should not happen
-        qFatal("Unsupported sample type");
-        break;
+        qWarning("Unsupported sample type");
+        return false;
     }
 
     m_bytePerMilliSec = (sampleRate * channels * precision) / 1000;
@@ -210,4 +209,6 @@ void InputWrapper::setFormat(int sampleRate, int channels, sample_t sampleType, 
     // Check if soundcard supports requested samplerate
     m_audioConverter = CFACTORY->get(m_currentSong->samplerate(), sampleRate, bufferSize,
         m_currentSong->channels(), m_currentSong->precision(), sampleType, m_currentSong->fract());
+
+    return true;
 }

@@ -120,7 +120,11 @@ bool audio::play(input* i)
     qDebug() << "Output samplerate " << sampleRate;
     qDebug() << "bufferSize: " << bufferSize << " bytes";
 
-    m_iw->setFormat(sampleRate, i->channels(), sampleType, bufferSize);
+    if (!m_iw->setFormat(sampleRate, i->channels(), sampleType, bufferSize))
+    {
+        m_audioOutput->close();
+        return false;
+    }
 
     if (SETTINGS->bs2b() && (i->channels() == 2))
         m_iw->enableBs2b();
