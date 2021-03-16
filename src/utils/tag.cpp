@@ -51,12 +51,12 @@ tag::tag(QFile* file) :
     }
 
     // Check for ID3v2 tag
-    file->seek(0);
-    file->read(buf, ID3V2_HEADER_SIZE);
-
     int version = 0;
     int tagSize = 0;
     int extHdrSize = 0;
+
+    file->seek(0);
+    file->read(buf, ID3V2_HEADER_SIZE);
     if (checkID3v2(buf, true))
     {
         if (parseID3v2header(buf, version, tagSize))
@@ -74,13 +74,16 @@ tag::tag(QFile* file) :
         file->read(buf, ID3V2_HEADER_SIZE);
         if (checkID3v2(buf, false))
         {
-            if (parseID3v2header(buf, version, tagSize))
+            bool extHeader = parseID3v2header(buf, version, tagSize);
+            file->seek(file->pos() - (tagSize+ID3V2_HEADER_SIZE));
+            if (extHeader)
             {
                 qDebug() << "Extended header found";
                 file->read(buf, ID3V2_EXT_HEADER_SIZE);
                 extHdrSize = getExtHdrSize(buf, version);
+                if (extHdrSize)
+                    file->seek(file->pos() + extHdrSize);
             }
-            file->seek(file->pos() - (tagSize+ID3V2_EXT_HEADER_SIZE));
         }
     }
 
@@ -143,15 +146,19 @@ bool tag::isFrame(const char* buf, const char* frame)
 int tag::getFrameSize(const char* frame, bool synchsafe)
 {
     return synchsafe
-        ? ((unsigned int)((unsigned char)(frame[0]&0x7f))<<21) | ((unsigned int)((unsigned char)(frame[1]&0x7f))<<14)
-            | ((unsigned int)((unsigned char)(frame[2]&0x7f))<<7) | ((unsigned int)((unsigned char)(frame[3]&0x7f)))
-        : ((unsigned int)((unsigned char)frame[0])<<24) | ((unsigned int)((unsigned char)frame[1])<<16)
-            | ((unsigned int)((unsigned char)frame[2])<<8) | ((unsigned int)((unsigned char)frame[3]));
+        ? ((unsigned int)((unsigned char)(frame[0]&0x7f))<<21)
+            | ((unsigned int)((unsigned char)(frame[1]&0x7f))<<14)
+            | ((unsigned int)((unsigned char)(frame[2]&0x7f))<<7)
+            | ((unsigned int)((unsigned char)(frame[3]&0x7f)))
+        : ((unsigned int)((unsigned char)frame[0])<<24)
+            | ((unsigned int)((unsigned char)frame[1])<<16)
+            | ((unsigned int)((unsigned char)frame[2])<<8)
+            | ((unsigned int)((unsigned char)frame[3]));
 }
 
 /******** ID3v1 ********/
 
-QString tag::getString(const char* ptr, const char max)
+QString getID3v1Text(const char* ptr, const char max=30)
  {
     unsigned char len = 0;
     while (ptr[len] && (len < max))
@@ -167,23 +174,23 @@ int tag::getID3v1(char* buf)
     qDebug() << "ID3v1 tag found.";
 
     if (m_title.isEmpty())
-        m_title = getString(buf+3);
+        m_title = getID3v1Text(buf+3);
 
     if (m_artist.isEmpty())
-        m_artist = getString(buf+33);
+        m_artist = getID3v1Text(buf+33);
 
     if (m_album.isEmpty())
-        m_album = getString(buf+63);
+        m_album = getID3v1Text(buf+63);
 
     if (m_year.isEmpty())
     {
-        m_year = getString(buf+93, 4);
+        m_year = getID3v1Text(buf+93, 4);
         if (m_year.length() < 4)
             m_year.resize(0);
     }
 
     if (m_comment.isEmpty())
-        m_comment = getString(buf+97);
+        m_comment = getID3v1Text(buf+97);
 
     unsigned char tmp = (unsigned char)buf[126];
     if (m_track.isNull() && !buf[125] && tmp)
@@ -198,7 +205,7 @@ int tag::getID3v1(char* buf)
 
 /******** ID3v2 ********/
 
-QString tag::getID3v2Text(const char* buf, int size)
+QString getID3v2Text(const char* buf, int size)
 {
     // text encoding
     // 00 - ISO-8859-1
@@ -244,6 +251,9 @@ QString tag::getID3v2Text(const char* buf, int size)
 
 QString getID3v2_2Text(const char* buf, char textEncoding)
 {
+    // text encoding
+    // 00 - ISO-8859-1
+    // 01 - UCS-2
     return (textEncoding == 0) ? QString::fromLatin1(buf) :  QString::fromUtf16(reinterpret_cast<const ushort*>(buf));
 }
 
@@ -352,10 +362,11 @@ int tag::getID3v2Frame(char* buf, int ver)
     // p - Data length indicator
     const char flags = buf[9];
 
-    // Compression/Encryption/Unsynchronisation
-    // not supported yet
     if (flags & 0x0E)
+    {
+        qWarning() << "Compression/Encryption/Unsynchronisation not supported yet";
         return size;
+    }
 
     // Grouping identity
     if (flags & 0x40)
@@ -469,12 +480,12 @@ int tag::getExtHdrSize(const char* buf, int ver)
     }
 }
 
-bool tag::checkID3v2(char* buf, bool prepend)
+bool tag::checkID3v2(char* buf, bool header)
 {
-    if (!isFrame(buf, prepend ? "ID3" : "3DI"))
+    if (!isFrame(buf, header ? "ID3" : "3DI"))
         return false;
 
-    qDebug() << "ID3v2 tag found at the " << (prepend ? "beginning" : "end") << " of file";
+    qDebug() << "ID3v2 tag found at the " << (header ? "beginning" : "end") << " of file";
     return true;
 }
 
@@ -483,28 +494,31 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
     version = (int)buf[3];
     if ((version < 2) || (version > 4))
     {
-        qDebug() << "ID3v2 tag version " << QString(version).left(2) << " not supported";
+        qWarning() << "ID3v2 tag version " << QString(version).left(2) << " not supported";
         return false;
     }
 
+    char flags = buf[5];
+
     // Experimental or broken tag
-    if (buf[5] & 0x3F)
+    if (flags & 0x2F)
     {
-        qDebug() << "Experimental or broken tag";
+        qWarning() << "Experimental or broken tag";
         return false;
     }
 
     tagSize = getFrameSize(buf+6, true);
     qDebug() << "ID3v2 tag size: " << tagSize;
 
-    const bool unsynch = buf[5] & 0x80;
+    const bool unsynch = flags & 0x80;
     qDebug() << "ID3v2 unsynch: " << unsynch;
     if (unsynch)
         return false;
 
     //bool footer = buf[5]&0x10;
 
-    return buf[5] & 0x40;
+    // return true if there's an Extended header
+    return flags & 0x40;
 }
 
 /******** APE ********/
@@ -543,17 +557,15 @@ int tag::parseAPETag(const char* buf)
     {
         if (!qstrnicmp(ptr, "Cover Art", 9))
         {
-            /*
-             * Cover art spec
-             *
-             * <length> 32 bit
-             * <flags with binary bit set> 32 bit
-             * <field name> "Cover Art (Front)"|"Cover Art (Back)"
-             * 0x00
-             * <description> UTF-8 string (needs to be a file name to be recognized by AudioShell - meh)
-             * 0x00
-             * <cover data> binary
-             */
+            // Cover art spec
+            //
+            // <length> 32 bit
+            // <flags with binary bit set> 32 bit
+            // <field name> "Cover Art (Front)"|"Cover Art (Back)"
+            // 0x00
+            // <description> UTF-8 string (needs to be a file name to be recognized by AudioShell - meh)
+            // 0x00
+            // <cover data> binary
             const char* img = ptr + tagNameLength;
             QString desc = QString(img);
             qDebug() << "Pic description: " << desc;

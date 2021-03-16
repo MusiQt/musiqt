@@ -39,14 +39,8 @@ private:
     QByteArray *m_img;
 
 private:
-    ///
-    QString getString(const char* ptr, const char max=30);
-
     /// Read ID3v1 tag if present
     int getID3v1(char* buf);
-
-    ///
-    QString getID3v2Text(const char* buf, int size);
 
     ///
     int getID3v2_2Frame(char* buf);
@@ -58,7 +52,7 @@ private:
     int getExtHdrSize(const char* buf, int ver);
 
     ///
-    bool checkID3v2(char* buf, bool prepend);
+    bool checkID3v2(char* buf, bool header);
 
     ///
     bool parseID3v2header(char* buf, int& version, int& tagSize);
