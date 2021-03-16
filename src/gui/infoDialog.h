@@ -54,7 +54,8 @@ class infoDialog : public QDialog
 private:
     QLabel *m_imgFrame;
     QWidget *m_matrix;
-    QPlainTextEdit *m_text;
+    QPlainTextEdit *m_comment;
+    QWidget *m_extra;
 
 private:
     infoDialog() {}

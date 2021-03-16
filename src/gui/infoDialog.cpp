@@ -24,6 +24,7 @@
 
 #include <QApplication>
 #include <QBuffer>
+#include <QButtonGroup>
 #include <QDir>
 #include <QDebug>
 #include <QFont>
@@ -33,6 +34,8 @@
 #include <QGridLayout>
 #include <QThreadPool>
 #include <QRegExp>
+#include <QStackedWidget>
+#include <QPushButton>
 
 constexpr int IMAGESIZE = 150;
 
@@ -70,14 +73,55 @@ infoDialog::infoDialog(QWidget* w) :
     m_matrix->setLayout(gLayout);
     container->addWidget(m_matrix);
 
+    /******************************************/
+
+    m_extra = new QWidget();
+    main->addWidget(m_extra);
+
+    QVBoxLayout *extra = new QVBoxLayout();
+    extra->setContentsMargins(0,0,0,0);
+    m_extra->setLayout(extra);
+
+    QStackedWidget *switcher = new QStackedWidget(this);
+    extra->addWidget(switcher);
+
+    QHBoxLayout *buttons = new QHBoxLayout();
+    buttons->setContentsMargins(0,0,0,0);
+    buttons->setSpacing(0);
+    extra->addLayout(buttons);
+
+    QButtonGroup *buttonGroup = new QButtonGroup(this);
+    connect(buttonGroup, &QButtonGroup::idClicked, switcher, &QStackedWidget::setCurrentIndex);
+
+    QPushButton* button = new QPushButton(this);
+    button->setText(tr("Comment"));
+    button->setCheckable(true);
+    button->setAutoExclusive(true);
+    button->setChecked(true);
+    buttonGroup->addButton(button, 0);
+    buttons->addWidget(button);
+
+    button = new QPushButton(this);
+    button->setText(tr("Lyrics"));
+    button->setCheckable(true);
+    button->setAutoExclusive(true);
+    button->setEnabled(false);
+    buttonGroup->addButton(button, 1);
+    buttons->addWidget(button);
+
     QFont font("monospace");
     font.setStyleHint(QFont::TypeWriter);
-    m_text = new QPlainTextEdit(this);
-    m_text->setReadOnly(true);
-    m_text->setFont(font);
-    //m_text->setLineWrapMode(QPlainTextEdit::WidgetWidth);
-    //m_text->setLineWrapColumnOrWidth(80);
-    main->addWidget(m_text);
+    m_comment = new QPlainTextEdit();
+    m_comment->setReadOnly(true);
+    m_comment->setFont(font);
+    //m_comment->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+    //m_comment->setLineWrapColumnOrWidth(80);
+    switcher->addWidget(m_comment);
+
+    QPlainTextEdit *m_lyrics = new QPlainTextEdit();
+    m_lyrics->setReadOnly(true);
+    m_lyrics->setFont(font);
+    switcher->addWidget(m_lyrics);
 
     {
         QFrame* line = new QFrame();
@@ -97,9 +141,9 @@ infoDialog::~infoDialog() {}
 
 void infoDialog::setInfo(const metaData* mtd)
 {
-    m_text->clear();
-    //m_text->setVisibleRows(0);
-    //m_text->setVisibleColumns(0);
+    m_comment->clear();
+    //m_comment->setVisibleRows(0);
+    //m_comment->setVisibleColumns(0);
 
     // remove old widgets
     while (QWidget* w = m_matrix->findChild<QWidget*>())
@@ -111,7 +155,7 @@ void infoDialog::setInfo(const metaData* mtd)
     if (location.isEmpty())
     {
         gLayout->addWidget(new QLabel(tr("No song loaded"), m_matrix));
-        m_text->hide();
+        m_extra->hide();
         return;
     }
 
@@ -151,11 +195,11 @@ void infoDialog::setInfo(const metaData* mtd)
         qDebug() << "Rows: " << rows;
         qDebug() << "Cols: " << cols;
 
-        if ((rows>1) || (cols>80))
+        const bool isComment = !key.compare(mtd->getKey(metaData::COMMENT));
+
+        if (isComment && ((rows>1) || (cols>80)))
         {
-            m_text->setPlainText(info);
-            //m_text->setVisibleRows((rows<20)?rows:20);
-            //m_text->setLineWrapColumnOrWidth((cols<80)?cols+2:80);
+            m_comment->setPlainText(info);
         }
         else
         {
@@ -168,7 +212,14 @@ void infoDialog::setInfo(const metaData* mtd)
             lbl->setPalette(palette);
 
             QLabel *textLabel = new QLabel(m_matrix);
-            if (!key.compare(mtd->getKey(metaData::COMMENT)))
+
+            if (cols > 80)
+            {
+                textLabel->setToolTip(info);
+                info = info.left(75).append("[...]");
+            }
+
+            if (isComment)
             {
                 QRegExp url("(\\b(?:https?://|www\\.)\\S+\\b)");
                 info.replace(url, "<a href=\"\\1\">\\1</a>");
@@ -236,15 +287,15 @@ void infoDialog::setInfo(const metaData* mtd)
     if (gLayout->count() == 0)
         gLayout->addWidget(new QLabel(tr("No info"), m_matrix));
 
-    qDebug() << "Comment characters " << m_text->document()->characterCount();
-    if (m_text->document()->characterCount() > 1)
+    qDebug() << "Comment characters " << m_comment->document()->characterCount();
+    if (m_comment->document()->characterCount() > 1)
     {
-        m_text->show();
-        //m_text->resize(m_text->getDefaultWidth(), m_text->getDefaultHeight());
+        m_extra->show();
+        //m_comment->resize(m_comment->getDefaultWidth(), m_comment->getDefaultHeight());
     }
     else
     {
-        m_text->hide();
+        m_extra->hide();
     }
 
     gLayout->update();
