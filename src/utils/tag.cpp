@@ -23,12 +23,12 @@
 
 #include <QDebug>
 
-#define ID3V1_TAG_SIZE 128
+constexpr int ID3V1_TAG_SIZE = 128;
 
-#define ID3V2_HEADER_SIZE 10
-#define ID3V2_EXT_HEADER_SIZE 6
+constexpr int ID3V2_HEADER_SIZE = 10;
+constexpr int ID3V2_EXT_HEADER_SIZE = 6;
 
-#define APE_HEADER_SIZE 32
+constexpr int APE_HEADER_SIZE = 32;
 
 tag::tag(QFile* file) :
     m_offsBegin(0),
