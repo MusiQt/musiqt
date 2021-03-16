@@ -29,6 +29,7 @@ private:
     QString m_album;
     QString m_publisher;
     QString m_comment;
+    QString m_lyrics;
     QString m_genre;
     QString m_year;
     QString m_track;
@@ -115,6 +116,9 @@ public:
 
     /// Get comment
     const QString& comment() const { return m_comment; }
+
+    /// Get lyrics
+    const QString& lyrics() const { return m_lyrics; }
 
     /// Get track number
     const QString& track() const { return m_track; }

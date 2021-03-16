@@ -205,7 +205,7 @@ int tag::getID3v1(char* buf)
 
 /******** ID3v2 ********/
 
-QString getID3v2Text(const char* buf, int size)
+QString getID3v2Text(const char* buf, char encoding)
 {
     // text encoding
     // 00 - ISO-8859-1
@@ -213,33 +213,33 @@ QString getID3v2Text(const char* buf, int size)
     // 02 - UTF-16BE
     // 03 - UTF-8
 
-    const char encoding = *buf++;
-    qDebug() << "ID3v2 Frame encoding: " << encoding;
-
     QString tmp;
     switch (encoding)
     {
     case 0:
-        tmp = QString::fromLatin1(buf, size);
+        tmp = QString::fromLatin1(buf);
         break;
     case 1:
-        tmp = QString::fromUtf16((const ushort *)buf, size);
+        tmp = QString::fromUtf16((const ushort *)buf);
         break;
     case 2:
         {
-            // Add BOM (0xfe 0xff)
-            ushort* tempBuffer = new ushort[size*2 + 2];
-            tempBuffer[0] = 0xfe;
-            tempBuffer[1] = 0xff;
-            memcpy(tempBuffer+2, buf, size*2);
-            tmp = QString::fromUtf16(tempBuffer, size);
+            // Add big-endian BOM (0xfe 0xff)
+            uint size = qstrlen(buf);
+            ushort* tempBuffer = new ushort[size + 1];
+            char* bom = (char*)tempBuffer;
+            bom[0] = 0xfe;
+            bom[1] = 0xff;
+            memcpy((char*)(tempBuffer)+2, buf, size*2);
+            tmp = QString::fromUtf16(tempBuffer);
             delete [] tempBuffer;
         }
         break;
     case 3:
-        tmp = QString::fromUtf8(buf, size);
+        tmp = QString::fromUtf8(buf);
         break;
     default:
+        qWarning() << "Invalid string encoding " << encoding;
         return QString();
     }
 
@@ -249,12 +249,53 @@ QString getID3v2Text(const char* buf, int size)
     return tmp.trimmed();
 }
 
-QString getID3v2_2Text(const char* buf, char textEncoding)
+QString getID3v2TextWithDesc(const char* data)
+{
+    // Text encoding          $xx
+    // Language               $xx xx xx
+    // Description            <text string according to encoding> $00 (00)
+    // Text                   <full text string according to encoding>
+    char textEncoding = data[0];
+    QString description = getID3v2Text(data+4, textEncoding);
+    int i = 4;
+    i += description.length() * (textEncoding == 1) ? 2 : 1;
+    return getID3v2Text(data+i, textEncoding);
+}
+
+QString getID3v2_2Text(const char* buf, char encoding)
 {
     // text encoding
     // 00 - ISO-8859-1
     // 01 - UCS-2
-    return (textEncoding == 0) ? QString::fromLatin1(buf) :  QString::fromUtf16(reinterpret_cast<const ushort*>(buf));
+    QString tmp;
+    switch (encoding)
+    {
+    case 0:
+        tmp = QString::fromLatin1(buf);
+        break;
+    case 1:
+        tmp = QString::fromUtf16(reinterpret_cast<const ushort*>(buf));
+        break;
+    default:
+        qWarning() << "Invalid string encoding " << encoding;
+        return QString();
+    }
+
+    return tmp;
+}
+
+QString getID3v2_2TextWithDesc(const char* data)
+{
+    // Text encoding        $xx
+    // Language             $xx xx xx
+    // Descriptor           <textstring> $00 (00)
+    // Text                 <textstring>
+    char textEncoding = data[0];
+    int i = 4;
+    QString description = getID3v2_2Text(data+i, textEncoding);
+    qDebug() << "Short description: " << description;
+    i += description.length() * (textEncoding == 1) ? 2 : 1;
+    return getID3v2_2Text(data+i, textEncoding);
 }
 
 int tag::getID3v2_2Frame(char* buf)
@@ -306,6 +347,16 @@ int tag::getID3v2_2Frame(char* buf)
         m_genre = (g.indexOf('(')>=0) ? QString(::genre[n.toInt()]) : g;
         qDebug() << "ID3v2 genre: " << m_genre;
     }
+    else if (isFrame(buf, "COM"))
+    {
+        m_comment = getID3v2_2TextWithDesc(data);
+        qDebug() << "ID3v2 comment: " << m_comment;
+    }
+    else if (isFrame(buf, "ULT"))
+    {
+        m_lyrics = getID3v2_2TextWithDesc(data);
+        qDebug() << "ID3v2 lyrics: " << m_lyrics;
+    }
     else if (isFrame(buf, "PIC"))
     {
         // Text encoding      $xx
@@ -322,21 +373,6 @@ int tag::getID3v2_2Frame(char* buf)
         i += description.length() * (textEncoding == 1) ? 2 : 1;
         qDebug() << "imgOffset: " << i;
         m_img = new QByteArray(data+i, size-i);
-    }
-    else
-    if (isFrame(buf, "COM") || isFrame(buf, "ULT"))
-    {
-        // Text encoding        $xx
-        // Language             $xx xx xx
-        // Descriptor           <textstring> $00 (00)
-        // Text                 <textstring>
-        char textEncoding = data[0];
-        int i = 4;
-        QString description = getID3v2_2Text(data+i, textEncoding);
-        qDebug() << "Short description: " << description;
-        i += description.length() * (textEncoding == 1) ? 2 : 1;
-        m_comment = getID3v2_2Text(data+i, textEncoding);
-        qDebug() << "ID3v2 comment: \n" << m_comment;
     }
     else
         qDebug() << "ID3v2 unhandled frame";
@@ -378,60 +414,50 @@ int tag::getID3v2Frame(char* buf, int ver)
 
     if (isFrame(buf, "TIT2"))
     {
-        m_title = getID3v2Text(data, size-1);
+        m_title = getID3v2Text(data+1, data[0]);
         qDebug() << "ID3v2 title: " << m_title;
     }
     else if (isFrame(buf, "TPE1"))
     {
-        m_artist = getID3v2Text(data, size-1);
+        m_artist = getID3v2Text(data+1, data[0]);
         qDebug() << "ID3v2 artist: " << m_artist;
     }
     else if (isFrame(buf, "TALB"))
     {
-        m_album = getID3v2Text(data, size-1);
+        m_album = getID3v2Text(data+1, data[0]);
         qDebug() << "ID3v2 album: " << m_album;
     }
     else if (isFrame(buf, "TRCK"))
     {
-        m_track = (getID3v2Text(data, size-1));
+        m_track = (getID3v2Text(data+1, data[0]));
         qDebug() << "ID3v2 track: " << m_track;
     }
     else if (isFrame(buf, "TYER"))
     {
-        m_year = getID3v2Text(data, size-1);
+        m_year = getID3v2Text(data+1, data[0]);
         qDebug() << "ID3v2 year: " << m_year;
     }
     else if (isFrame(buf, "TPUB"))
     {
-        m_publisher = getID3v2Text(data, size-1);
+        m_publisher = getID3v2Text(data+1, data[0]);
         qDebug() << "ID3v2 publisher: " << m_publisher;
     }
     else if (isFrame(buf, "TCON"))
     {
-        QString g = getID3v2Text(data, size-1);
+        QString g = getID3v2Text(data+1, data[0]);
         QString n = g.mid(g.indexOf('('), g.indexOf(')'));
         m_genre = (g.indexOf('(') >= 0) ? QString(::genre[n.toInt()]) : g;
         qDebug() << "ID3v2 genre: " << m_genre;
     }
-    else if (isFrame(buf, "COMM") || isFrame(buf, "USLT"))
+    else if (isFrame(buf, "COMM"))
     {
-        // Text encoding          $xx
-        // Language               $xx xx xx
-        // Description            <text string according to encoding> $00 (00)
-        // Text                   <full text string according to encoding>
-        char textEncoding = data[0];
-        QString description = (textEncoding == 0) ?
-            QString::fromLatin1(data+4) :
-            QString::fromUtf16((const ushort *)(data+4));
-        int i = 4;
-        while (*(data+i))
-            i++;
-        if (textEncoding == 1)
-            i++;
-        m_comment = (textEncoding == 0) ?
-            QString::fromLatin1(data+i) :
-            QString::fromUtf16((const ushort *)(data+i));
-        qDebug() << "ID3v2 comment: \n" << m_comment;
+        m_comment = getID3v2TextWithDesc(data);
+        qDebug() << "ID3v2 comment: " << m_comment;
+    }
+    else if (isFrame(buf, "USLT"))
+    {
+        m_lyrics = getID3v2TextWithDesc(data);
+        qDebug() << "ID3v2 lyrics: " << m_lyrics;
     }
     else if (isFrame(buf, "APIC"))
     {

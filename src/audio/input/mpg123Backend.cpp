@@ -334,18 +334,8 @@ bool mpg123Backend::open(const QString& fileName)
             {
                 mpg123_text *entry = &id3v2->comment_list[i];
                 if ((entry->description.fill == 0) || (entry->description.p[0] == 0))
-                    info = QString::fromUtf8(entry->text.p).trimmed();
+                    info = QString::fromUtf8(entry->text.p).trimmed(); // FIXME append
             }
-        }
-
-        if (id3v2 && id3v2->pictures)
-        {
-            mpg123_picture picture = id3v2->picture[0];
-            QString mime(picture.mime_type.p);
-            qDebug() << "mime: " << mime;
-            QString desc(picture.description.p);
-            qDebug() << "description: " << desc;
-            m_metaData.addInfo(new QByteArray((char*)picture.data, picture.size));
         }
 
         if (info.isEmpty() && id3v1)
@@ -359,6 +349,32 @@ bool mpg123Backend::open(const QString& fileName)
         {
             qDebug() << "COMMENT: " << info;
             m_metaData.addInfo(metaData::COMMENT, info);
+        }
+
+        if (id3v2)
+        {
+            info = QString();
+            for (unsigned int i=0; i<id3v2->texts; i++)
+            {
+                mpg123_text *entry = &id3v2->text[i];
+                if (!qstrcmp(entry->id, "USLT"))
+                    info = QString::fromUtf8(entry->text.p).trimmed();
+            }
+            if (!info.isEmpty())
+            {
+                qDebug() << "LYRICS: " << info;
+                m_metaData.addInfo(metaData::LYRICS, info);
+            }
+        }
+
+        if (id3v2 && id3v2->pictures)
+        {
+            mpg123_picture picture = id3v2->picture[0];
+            QString mime(picture.mime_type.p);
+            qDebug() << "mime: " << mime;
+            QString desc(picture.description.p);
+            qDebug() << "description: " << desc;
+            m_metaData.addInfo(new QByteArray((char*)picture.data, picture.size));
         }
     }
 

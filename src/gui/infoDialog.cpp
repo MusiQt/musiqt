@@ -105,12 +105,13 @@ infoDialog::infoDialog(QWidget* w) :
     button->setText(tr("Lyrics"));
     button->setCheckable(true);
     button->setAutoExclusive(true);
-    button->setEnabled(false);
+    //button->setEnabled(false);
     buttonGroup->addButton(button, 1);
     buttons->addWidget(button);
 
     QFont font("monospace");
     font.setStyleHint(QFont::TypeWriter);
+
     m_comment = new QPlainTextEdit();
     m_comment->setReadOnly(true);
     m_comment->setFont(font);
@@ -118,7 +119,7 @@ infoDialog::infoDialog(QWidget* w) :
     //m_comment->setLineWrapColumnOrWidth(80);
     switcher->addWidget(m_comment);
 
-    QPlainTextEdit *m_lyrics = new QPlainTextEdit();
+    m_lyrics = new QPlainTextEdit();
     m_lyrics->setReadOnly(true);
     m_lyrics->setFont(font);
     switcher->addWidget(m_lyrics);
@@ -142,8 +143,7 @@ infoDialog::~infoDialog() {}
 void infoDialog::setInfo(const metaData* mtd)
 {
     m_comment->clear();
-    //m_comment->setVisibleRows(0);
-    //m_comment->setVisibleColumns(0);
+    m_lyrics->clear();
 
     // remove old widgets
     while (QWidget* w = m_matrix->findChild<QWidget*>())
@@ -159,6 +159,7 @@ void infoDialog::setInfo(const metaData* mtd)
         return;
     }
 
+    bool showExtraBox = false;
     int j = -1;
     while ((j = mtd->moreInfo(j)) >= 0)
     {
@@ -200,6 +201,12 @@ void infoDialog::setInfo(const metaData* mtd)
         if (isComment && ((rows>1) || (cols>80)))
         {
             m_comment->setPlainText(info);
+            showExtraBox = true;
+        }
+        else if (!key.compare(mtd->getKey(metaData::LYRICS)))
+        {
+            m_lyrics->setPlainText(info);
+            showExtraBox = true;
         }
         else
         {
@@ -287,11 +294,9 @@ void infoDialog::setInfo(const metaData* mtd)
     if (gLayout->count() == 0)
         gLayout->addWidget(new QLabel(tr("No info"), m_matrix));
 
-    qDebug() << "Comment characters " << m_comment->document()->characterCount();
-    if (m_comment->document()->characterCount() > 1)
+    if (showExtraBox)
     {
         m_extra->show();
-        //m_comment->resize(m_comment->getDefaultWidth(), m_comment->getDefaultHeight());
     }
     else
     {

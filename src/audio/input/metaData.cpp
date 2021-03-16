@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Leandro Nini
+ *  Copyright (C) 2010-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,18 +24,19 @@
 
 const char* metaDataImpl::mprisTags[LAST_ID] =
 {
-    gettext("location"),
+    gettext("location"), // file location
     gettext("title"),
     gettext("artist"),
     gettext("album"),
-    gettext("track"), //tracknumber
+    gettext("track"),    //tracknumber
     gettext("time"),
     gettext("mtime"),
     gettext("genre"),
     gettext("comment"),
     gettext("rating"),
     gettext("year"),
-    gettext("arturl")
+    gettext("arturl"),
+    gettext("lyrics")
 };
 
 void metaDataImpl::addInfo(QString type, QString info)

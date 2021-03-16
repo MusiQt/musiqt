@@ -171,6 +171,7 @@ bool opusBackend::open(const QString& fileName)
     QString album;
     QString genre;
     QString comment;
+    QString lyrics;
     QString mime;
     QByteArray image;
 
@@ -189,6 +190,10 @@ bool opusBackend::open(const QString& fileName)
             {
                 m_metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
             }
+            else if (oggTag::isTag(*ptr, "UNSYNCEDLYRICS"))
+            {
+                lyrics = QString(*ptr+15);
+            }
             else if (oggTag::isTag(*ptr, "METADATA_BLOCK_PICTURE"))
             {
                 oggTag::readBlockPicture(QByteArray::fromBase64(*ptr+23), image, mime);
@@ -204,6 +209,7 @@ bool opusBackend::open(const QString& fileName)
             else if (oggTag::isTag(*ptr, "BINARY_COVERART"))
             {
                 // TODO
+                qWarning() << "unsupported";
             }
         }
         ++ptr;
@@ -215,6 +221,7 @@ bool opusBackend::open(const QString& fileName)
     m_metaData.addInfo(metaData::GENRE, genre);
     m_metaData.addInfo(metaData::YEAR, year);
     m_metaData.addInfo(metaData::COMMENT, comment);
+    m_metaData.addInfo(metaData::LYRICS, lyrics);
 
     if (!mime.isNull())
         m_metaData.addInfo(new QByteArray((char*)image.data(), image.size()));

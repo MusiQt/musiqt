@@ -55,6 +55,7 @@ private:
     QLabel *m_imgFrame;
     QWidget *m_matrix;
     QPlainTextEdit *m_comment;
+    QPlainTextEdit *m_lyrics;
     QWidget *m_extra;
 
 private:

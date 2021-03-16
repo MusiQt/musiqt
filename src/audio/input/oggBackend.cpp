@@ -153,14 +153,14 @@ bool oggBackend::open(const QString& fileName)
 
     time(static_cast<unsigned int>(ov_time_total(_vf, -1)*1000.));
 
-    QString title = QString();
-    QString artist = QString();
-    QString year = QString();
-    QString album = QString();
-    QString genre = QString();
-    QString comment = QString();
-    QString mime = QString();
-    QString lyrics = QString();
+    QString title;
+    QString artist;
+    QString year;
+    QString album;
+    QString genre;
+    QString comment;
+    QString lyrics;
+    QString mime;
     QByteArray image;
 
     char **ptr = ov_comment(_vf, -1)->user_comments;
@@ -243,12 +243,10 @@ bool oggBackend::open(const QString& fileName)
     m_metaData.addInfo(metaData::GENRE, genre);
     m_metaData.addInfo(metaData::YEAR, year);
     m_metaData.addInfo(metaData::COMMENT, comment);
+    m_metaData.addInfo(metaData::LYRICS, lyrics);
 
     if (!mime.isNull())
         m_metaData.addInfo(new QByteArray(image));
-
-    if (!lyrics.isEmpty())
-         m_metaData.addInfo("lyrics", lyrics);
 
     songLoaded(fileName);
     return true;
