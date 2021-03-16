@@ -118,21 +118,26 @@ void infoDialog::setInfo(const metaData* mtd)
     int j = -1;
     while ((j = mtd->moreInfo(j)) >= 0)
     {
-        QString temp = mtd->getInfo(j);
-        if (temp.isEmpty())
+        QString key = mtd->getKey(j);
+        if (!key.compare(mtd->getKey(metaData::LOCATION)))
+            continue;
+
+        QString info = mtd->getInfo(j);
+        if (info.isEmpty())
             continue;
 
         unsigned int rows = 1;
         unsigned int cols = 0;
         unsigned int cnt = 0;
         int pos = 0;
-        const int len = temp.length();
-        const char* s = temp.toLocal8Bit().constData();
+        const int len = info.length();
+        // FIXME this won't work with unicode strings
+        const char* s = info.toLocal8Bit().constData();
         while (pos < len)
         {
             // Convert Mac and Windows EOLs to Unix
             if (s[pos] == '\r')
-                temp.replace(pos, (s[pos+1]=='\n') ? '\0' : '\n');
+                info.replace(pos, (s[pos+1]=='\n') ? '\0' : '\n');
             // Count rows and columns
             if (s[pos] == '\n')
             {
@@ -153,33 +158,29 @@ void infoDialog::setInfo(const metaData* mtd)
 
         if ((rows>1) || (cols>80))
         {
-            m_text->setPlainText(temp);
+            m_text->setPlainText(info);
             //m_text->setVisibleRows((rows<20)?rows:20);
             //m_text->setLineWrapColumnOrWidth((cols<80)?cols+2:80);
         }
         else
         {
-            const QString info = mtd->getKey(j);
-            if (QString::compare(info, "location")) // FIXME
-            {
-                QLabel *lbl = new QLabel(QString("<i>%1</i>:").arg(info), m_matrix);
-                gLayout->addWidget(lbl, j, 0);
-                QPalette palette = lbl->palette();
-                QColor color = palette.color(lbl->foregroundRole());
-                color.setAlpha(128);
-                palette.setColor(lbl->foregroundRole(), color);
-                lbl->setPalette(palette);
+            QLabel *lbl = new QLabel(QString("<i>%1</i>:").arg(key), m_matrix);
+            gLayout->addWidget(lbl, j, 0);
+            QPalette palette = lbl->palette();
+            QColor color = palette.color(lbl->foregroundRole());
+            color.setAlpha(128);
+            palette.setColor(lbl->foregroundRole(), color);
+            lbl->setPalette(palette);
 
-                QLabel *textLabel = new QLabel(m_matrix);
-                if (!QString::compare(info, "comment"))
-                {
-                    QRegExp url("(\\b(?:https?://|www\\.)\\S+\\b)");
-                    temp.replace(url, "<a href=\"\\1\">\\1</a>");
-                    textLabel->setOpenExternalLinks(true);
-                }
-                textLabel->setText(temp);
-                gLayout->addWidget(textLabel, j, 1);
+            QLabel *textLabel = new QLabel(m_matrix);
+            if (!key.compare(mtd->getKey(metaData::COMMENT)))
+            {
+                QRegExp url("(\\b(?:https?://|www\\.)\\S+\\b)");
+                info.replace(url, "<a href=\"\\1\">\\1</a>");
+                textLabel->setOpenExternalLinks(true);
             }
+            textLabel->setText(info);
+            gLayout->addWidget(textLabel, j, 1);
         }
     }
 
