@@ -68,7 +68,6 @@ private:
     void clearDisplay(bool loading);
 
     void updateTime(int seconds);
-    void setInfo(const metaData* mtd);
 
     void onCmdVol(int vol);
     void onPrevSubtune();

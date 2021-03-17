@@ -101,7 +101,6 @@ signals:
     void clearDisplay(bool);
     void updateTime(int);
     void updateSlider(int);
-    void setInfo(const metaData*);
     void songUpdated(const QString&);
 
 public slots:

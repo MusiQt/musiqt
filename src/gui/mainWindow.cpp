@@ -85,7 +85,6 @@ mainWindow::mainWindow(QWidget *parent) :
     connect(m_cFrame, &centralFrame::stateChanged, this, &mainWindow::setPlayButton);
     connect(m_cFrame, &centralFrame::setDisplay,   this, &mainWindow::setDisplay);
     connect(m_cFrame, &centralFrame::clearDisplay, this, &mainWindow::clearDisplay);
-    connect(m_cFrame, &centralFrame::setInfo,      this, &mainWindow::setInfo);
 
     addToolBar(createControlBar());
     addToolBarBreak();
@@ -490,7 +489,7 @@ void mainWindow::setDisplay(input* i)
 
     m_trayIcon->setToolTip(artist+songTitle);
 
-    setInfo(data);
+    m_songInfo->setInfo(data);
 
     if (m_infoDialog != nullptr)
         m_infoDialog->setInfo(data);
@@ -498,18 +497,17 @@ void mainWindow::setDisplay(input* i)
 
 void mainWindow::clearDisplay(bool loading)
 {
-    m_songInfo->setText(loading ? tr("Loading...") : QString());
-    m_songInfo->setToolTip(QString());
+    m_timeDisplay->reset();
+    m_songTime->reset();
+
     setWindowTitle(QString(PACKAGE_STRING));
     m_trayIcon->setToolTip(PACKAGE_STRING);
 
-    m_songTime->reset();
-    m_timeDisplay->reset();
-}
+    m_songInfo->setText(loading ? tr("Loading...") : QString());
+    m_songInfo->setToolTip(QString());
 
-void mainWindow::setInfo(const metaData* mtd)
-{
-    m_songInfo->setInfo(mtd);
+    if (m_infoDialog != nullptr)
+        m_infoDialog->setInfo(m_cFrame->getMetaData());
 }
 
 void mainWindow::updateTime(int seconds)

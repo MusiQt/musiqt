@@ -595,13 +595,13 @@ void centralFrame::onCmdSongLoaded(input* res)
 
 void centralFrame::loadError()
 {
+    qWarning() << "Error loading song";
+
     m_input.reset(IFACTORY->get());
-    emit setDisplay(m_input.data());
+    emit clearDisplay(false);
 
     m_playDir = QString();
-    emit setInfo(nullptr);
     changeState();
-    qWarning() << "Error loading song";
 }
 
 void centralFrame::onCmdSongPreLoaded(input* res)
