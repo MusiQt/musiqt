@@ -104,13 +104,14 @@ size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 /*****************************************************************/
 
-static inline char petscii2ascii(char ch)
+static inline unsigned char petscii2ascii(unsigned char ch)
 {
-   if (ch >(64 + 128) && ch < (91 + 128)) ch -= 128;
-   else if (ch >(96 - 32) && ch < (123 - 32)) ch += 32;
-   else if (ch >(192 - 128) && ch < (219 - 128)) ch += 128;
-   else if (ch == 164) ch = 95; // to handle underscore
-   return ch;
+   if ((ch > 0xc0) && (ch < 0xdb)) return ch - 96;                         // lowercase chars
+   else if ((ch >= 0x40) && (ch < 0x5e)) return (ch != 0x5c) ? ch : 0xa3;  // uppercase chars
+   else if (ch == 0xa4) return 0x5f;                                       // underscore
+   else if ((ch >= 0x00) && (ch < 0x20)) return (ch == 0x0d) ? ch : 0;     // control codes
+   else if ((ch >= 0x80) && (ch < 0xa0)) return (ch == 0x8d) ? 0x0a : 0;
+   return 0x20;
 }
 
 /*****************************************************************/
@@ -348,13 +349,16 @@ bool sidBackend::open(const QString& fileName)
             QFile wdsFile(wdsFileName);
             if (wdsFile.open(QIODevice::ReadOnly))
             {
-                QByteArray data = wdsFile.readAll();
-                for (int i=0; i< data.length(); i++)
+                QByteArray petscii = wdsFile.readAll();
+                QByteArray ascii;
+                for (auto ch : petscii)
                 {
-                    data[i] = petscii2ascii(data[i]);
+                    unsigned char val = petscii2ascii(ch);
+                    if (val)
+                        ascii.push_back(val);
                 }
 
-                m_metaData.addInfo(metaData::LYRICS, QString::fromLatin1(data));
+                m_metaData.addInfo(metaData::LYRICS, QString::fromLatin1(ascii));
             }
         }
     }
