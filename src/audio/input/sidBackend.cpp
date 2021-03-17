@@ -41,6 +41,7 @@
 #include <QDebug>
 #include <QDial>
 #include <QFileDialog>
+#include <QFile>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -99,6 +100,17 @@ sidConfig_t sidBackend::_settings;
 size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     return _sidplayfp->play((short*)buffer, bufferSize/sizeof(short))*2;
+}
+
+/*****************************************************************/
+
+static inline char petscii2ascii(char ch)
+{
+   if (ch >(64 + 128) && ch < (91 + 128)) ch -= 128;
+   else if (ch >(96 - 32) && ch < (123 - 32)) ch += 32;
+   else if (ch >(192 - 128) && ch < (219 - 128)) ch += 128;
+   else if (ch == 164) ch = 95; // to handle underscore
+   return ch;
 }
 
 /*****************************************************************/
@@ -323,6 +335,28 @@ bool sidBackend::open(const QString& fileName)
         qWarning() << _tune->statusString();
         utils::delPtr(_tune);
         return 0;
+    }
+
+    // FIXME this is case sensitive
+    if (fileName.endsWith(".mus"))
+    {
+        QString wdsFileName(fileName);
+        wdsFileName.chop(4);
+        wdsFileName.append(".wds");
+        if (QFile::exists(wdsFileName))
+        {
+            QFile wdsFile(wdsFileName);
+            if (wdsFile.open(QIODevice::ReadOnly))
+            {
+                QByteArray data = wdsFile.readAll();
+                for (int i=0; i< data.length(); i++)
+                {
+                    data[i] = petscii2ascii(data[i]);
+                }
+
+                m_metaData.addInfo(metaData::LYRICS, QString::fromLatin1(data));
+            }
+        }
     }
 
     loadTune(0);
