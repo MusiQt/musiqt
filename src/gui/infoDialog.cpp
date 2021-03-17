@@ -226,6 +226,7 @@ void infoDialog::setInfo(const metaData* mtd)
 
             QLabel *textLabel = new QLabel(m_matrix);
 
+            // trim long items
             if (cols > 80)
             {
                 textLabel->setToolTip(info);
@@ -238,7 +239,9 @@ void infoDialog::setInfo(const metaData* mtd)
                 info.replace(url, "<a href=\"\\1\">\\1</a>");
                 textLabel->setOpenExternalLinks(true);
             }
+
             textLabel->setText(info);
+
             gLayout->addWidget(textLabel, j, 1);
         }
     }
@@ -286,6 +289,11 @@ void infoDialog::setInfo(const metaData* mtd)
                         m_imgFrame->setPixmap(QPixmap::fromImage(*img));
                         delete img;
                     }
+                    else
+                    {
+                        qDebug() << "Error loading album art";
+                        setDefaultImage();
+                    }
 
                     QApplication::restoreOverrideCursor();
                 }
@@ -293,8 +301,11 @@ void infoDialog::setInfo(const metaData* mtd)
             QThreadPool::globalInstance()->start(loader);
             QApplication::setOverrideCursor(Qt::WaitCursor); // setCursor(Qt::WaitCursor); ???
         }
-
-        setDefaultImage();
+        else
+        {
+            qDebug() << "No album art found";
+            setDefaultImage();
+        }
     }
 
     if (gLayout->count() == 0)
