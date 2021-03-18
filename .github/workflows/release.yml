@@ -45,7 +45,13 @@ jobs:
       run: |
         mkdir build
         cd build
-        LDFLAGS="-static" cmake -G 'MSYS Makefiles' -DCMAKE_BUILD_TYPE=Release ..
+        cmake -G 'MSYS Makefiles' \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DCMAKE_EXE_LINKER_FLAGS="-static" \
+            -DZLIB_LIBRARY="C:/msys64/mingw64/lib/libz.a" \
+            -DIntl_LIBRARY="C:/msys64/mingw64/lib/libintl.a;C:/msys64/mingw64/lib/libiconv.a" \
+            ..
         make VERBOSE=1
     - name: package
       run: |
