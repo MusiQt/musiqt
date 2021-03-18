@@ -20,13 +20,14 @@
 #define INFODIALOG_H
 
 #include <QDialog>
-#include <QWidget>
-#include <QImage>
-#include <QLabel>
 #include <QRunnable>
-#include <QPlainTextEdit>
 
 class metaData;
+class QImage;
+class QLabel;
+class QPlainTextEdit;
+class QPushButton;
+class QWidget;
 
 class imageLoader : public QObject, public QRunnable
 {
@@ -56,6 +57,8 @@ private:
     QWidget *m_matrix;
     QPlainTextEdit *m_comment;
     QPlainTextEdit *m_lyrics;
+    QPushButton *m_commentButton;
+    QPushButton *m_lyricsButton;
     QWidget *m_extra;
 
 private:

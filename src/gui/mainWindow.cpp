@@ -41,6 +41,7 @@
 #include <QDial>
 #include <QMenu>
 #include <QToolBar>
+#include <QKeyEvent>
 
 #ifdef _WIN32
 #  include <windows.h>

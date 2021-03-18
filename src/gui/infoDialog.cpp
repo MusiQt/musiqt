@@ -28,14 +28,17 @@
 #include <QDir>
 #include <QDebug>
 #include <QFont>
+#include <QImage>
 #include <QImageReader>
+#include <QLabel>
 #include <QSize>
+#include <QPlainTextEdit>
 #include <QPushButton>
 #include <QGridLayout>
 #include <QThreadPool>
 #include <QRegExp>
 #include <QStackedWidget>
-#include <QPushButton>
+#include <QWidget>
 
 constexpr int IMAGESIZE = 150;
 
@@ -93,21 +96,19 @@ infoDialog::infoDialog(QWidget* w) :
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     connect(buttonGroup, &QButtonGroup::idClicked, switcher, &QStackedWidget::setCurrentIndex);
 
-    QPushButton* button = new QPushButton(this);
-    button->setText(tr("Comment"));
-    button->setCheckable(true);
-    button->setAutoExclusive(true);
-    button->setChecked(true);
-    buttonGroup->addButton(button, 0);
-    buttons->addWidget(button);
+    m_commentButton = new QPushButton(this);
+    m_commentButton->setText(tr("Comment"));
+    m_commentButton->setCheckable(true);
+    m_commentButton->setAutoExclusive(true);
+    buttonGroup->addButton(m_commentButton, 0);
+    buttons->addWidget(m_commentButton);
 
-    button = new QPushButton(this);
-    button->setText(tr("Lyrics"));
-    button->setCheckable(true);
-    button->setAutoExclusive(true);
-    //button->setEnabled(false);
-    buttonGroup->addButton(button, 1);
-    buttons->addWidget(button);
+    m_lyricsButton = new QPushButton(this);
+    m_lyricsButton->setText(tr("Lyrics"));
+    m_lyricsButton->setCheckable(true);
+    m_lyricsButton->setAutoExclusive(true);
+    buttonGroup->addButton(m_lyricsButton, 1);
+    buttons->addWidget(m_lyricsButton);
 
     QFont font("monospace");
     font.setStyleHint(QFont::TypeWriter);
@@ -160,7 +161,11 @@ void infoDialog::setInfo(const metaData* mtd)
         return;
     }
 
+    m_commentButton->setEnabled(false);
+    m_lyricsButton->setEnabled(false);
+
     bool showExtraBox = false;
+
     int j = -1;
     while ((j = mtd->moreInfo(j)) >= 0)
     {
@@ -207,11 +212,14 @@ void infoDialog::setInfo(const metaData* mtd)
         if (isComment && ((rows>1) || (cols>80)))
         {
             m_comment->setPlainText(info);
+            m_commentButton->setEnabled(true);
+            m_commentButton->click();
             showExtraBox = true;
         }
         else if (!key.compare(mtd->getKey(metaData::LYRICS)))
         {
             m_lyrics->setPlainText(info);
+            m_lyricsButton->setEnabled(true);
             showExtraBox = true;
         }
         else
