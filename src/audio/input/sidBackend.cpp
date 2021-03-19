@@ -338,29 +338,13 @@ bool sidBackend::open(const QString& fileName)
         return 0;
     }
 
-    // FIXME this is case sensitive
     if (fileName.endsWith(".mus"))
     {
-        QString wdsFileName(fileName);
-        wdsFileName.chop(4);
-        wdsFileName.append(".wds");
-        if (QFile::exists(wdsFileName))
-        {
-            QFile wdsFile(wdsFileName);
-            if (wdsFile.open(QIODevice::ReadOnly))
-            {
-                QByteArray petscii = wdsFile.readAll();
-                QByteArray ascii;
-                for (auto ch : petscii)
-                {
-                    unsigned char val = petscii2ascii(ch);
-                    if (val)
-                        ascii.push_back(val);
-                }
-
-                m_metaData.addInfo(metaData::LYRICS, QString::fromLatin1(ascii));
-            }
-        }
+        loadWDS(fileName, "wds");
+    }
+    else if (fileName.endsWith(".MUS"))
+    {
+        loadWDS(fileName, "WDS");
     }
 
     loadTune(0);
@@ -537,6 +521,30 @@ void sidBackend::openHvsc(const QString& hvscPath)
     {
         qWarning() << _db->error();
         utils::delPtr(_db);
+    }
+}
+
+void sidBackend::loadWDS(const QString& musFileName, const char* ext)
+{
+    QString wdsFileName(musFileName);
+    wdsFileName.chop(3);
+    wdsFileName.append(ext);
+    if (QFile::exists(wdsFileName))
+    {
+        QFile wdsFile(wdsFileName);
+        if (wdsFile.open(QIODevice::ReadOnly))
+        {
+            QByteArray petscii = wdsFile.readAll();
+            QByteArray ascii;
+            for (auto ch : petscii)
+            {
+                unsigned char val = petscii2ascii(ch);
+                if (val)
+                    ascii.push_back(val);
+            }
+
+            m_metaData.addInfo(metaData::LYRICS, QString::fromLatin1(ascii));
+        }
     }
 }
 

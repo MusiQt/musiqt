@@ -115,6 +115,8 @@ private:
 
     const unsigned char* loadRom(const QString& romPath);
 
+    void loadWDS(const QString& musFileName, const char* ext);
+
 public:
     ~sidBackend();
 
