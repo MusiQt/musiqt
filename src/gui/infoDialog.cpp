@@ -220,6 +220,8 @@ void infoDialog::setInfo(const metaData* mtd)
         {
             m_lyrics->setPlainText(info);
             m_lyricsButton->setEnabled(true);
+            if (!showExtraBox)
+                m_lyricsButton->click();
             showExtraBox = true;
         }
         else
