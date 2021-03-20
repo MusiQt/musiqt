@@ -63,6 +63,9 @@ class nullInput : public input
 private:
     metaDataImpl m_metaData;
 
+protected:
+    void close() {}
+
 public:
     const metaData* getMetaData() const override { return &m_metaData; }
     unsigned int songDuration() const override { return 0; }
@@ -72,7 +75,6 @@ public:
     sample_t precision() const override { return sample_t::S16; }
     unsigned int fract() const override { return 0; }
     bool open(const QString& fileName) override { return true; }
-    void close() override {}
     bool rewind() override { return true; }
     bool seekable() const override { return false; }
     bool seek(const int pos) override { return true; }

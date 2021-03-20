@@ -538,7 +538,6 @@ void centralFrame::onCmdChangeSong(dir_t dir)
     {
         if (!m_preload->songLoaded().isEmpty())
         {
-            m_preload->close();
             m_preload.reset(IFACTORY->get());
         }
         m_playlist->setCurrentIndex(index);
@@ -728,7 +727,7 @@ void centralFrame::onSettingsChanged()
     if (!songLoaded.isEmpty())
     {
         // we must reload the song
-        m_input->close();
+        m_input.reset(IFACTORY->get());
         const QModelIndex curItem = m_playlist->currentIndex();
         m_playlist->setCurrentIndex(QModelIndex());
         m_playlist->setCurrentIndex(curItem);

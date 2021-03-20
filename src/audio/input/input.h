@@ -53,6 +53,10 @@ public:
  */
 class input
 {
+protected:
+    /// Close file
+    virtual void close() =0;
+
 public:
     virtual ~input() {}
 
@@ -79,9 +83,6 @@ public:
 
     /// Open file
     virtual bool open(const QString& fileName) =0;
-
-    /// Close file
-    virtual void close() =0;
 
     /// Rewind to start
     virtual bool rewind() =0;
