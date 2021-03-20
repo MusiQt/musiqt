@@ -25,7 +25,6 @@
 
 #include <QIcon>
 #include <QString>
-#include <QSettings>
 
 #define gettext(x) x
 
@@ -34,7 +33,6 @@
 class inputBackend : public input, public inputConfig
 {
 private:
-    QSettings settings;
     const char *m_name;
     QIcon m_icon;
 
@@ -48,46 +46,19 @@ private:
     inputBackend(const inputBackend&);
     inputBackend& operator=(const inputBackend&);
 
-    inline QString section(const char* key) { return QString("%1 Settings/%2").arg(m_name).arg(key); }
-
 protected:
     inputBackend(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0);
 
     /// Set song duration
     void time(unsigned int newTime) { m_time = newTime; }
 
-    /// Load int setting
-    int load(const char* key, int defVal)
-    {
-        return settings.value(section(key), defVal).toInt();
-    }
-
-    /// Load string setting
-    QString load(const char* key, QString defVal)
-    {
-        return settings.value(section(key), defVal).toString();
-    }
-
-    /// Save int setting
-    void save(const char* key, int value)
-    {
-        settings.setValue(section(key), value);
-    }
-
-    /// Save string setting
-    void save(const char* key, QString value)
-    {
-        settings.setValue(section(key), value);
-    }
-
     /// Song is loaded
     void songLoaded(const QString& location);
 
+    const char* name() const override { return m_name; }
+
 public:
     virtual ~inputBackend();
-
-    /// Get backend name
-    const char* name() const { return m_name; }
 
     /// Get song info
     virtual const metaData* getMetaData() const override { return &m_metaData; }
@@ -127,13 +98,6 @@ public:
 
     /// Gapless support
     virtual bool gapless() const override { return false; }
-
-    /// Get Music directory
-    virtual const QString getMusicDir() const override { return QString(); }
-
-    virtual void loadSettings() override {}
-
-    virtual void saveSettings() override {}
 };
 
 #endif

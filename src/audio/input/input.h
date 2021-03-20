@@ -23,14 +23,49 @@
 #include "metaData.h"
 
 #include <QIcon>
+#include <QSettings>
 #include <QString>
 #include <QWidget>
 
 /**
- * interface class for input config
+ * base class for input config
  */
 class inputConfig
 {
+private:
+    QSettings settings;
+
+private:
+    inline QString section(const char* key) { return QString("%1 Settings/%2").arg(name()).arg(key); }
+
+protected:
+    virtual const char* name() const =0;
+
+protected:
+    /// Load int setting
+    int load(const char* key, int defVal)
+    {
+        return settings.value(section(key), defVal).toInt();
+    }
+
+    /// Load string setting
+    QString load(const char* key, QString defVal)
+    {
+        return settings.value(section(key), defVal).toString();
+    }
+
+    /// Save int setting
+    void save(const char* key, int value)
+    {
+        settings.setValue(section(key), value);
+    }
+
+    /// Save string setting
+    void save(const char* key, QString value)
+    {
+        settings.setValue(section(key), value);
+    }
+
 public:
     virtual ~inputConfig() {}
 
@@ -41,11 +76,11 @@ public:
     virtual QIcon icon() const =0;
 
     /// Get Music directory
-    virtual const QString getMusicDir() const =0;
+    virtual const QString getMusicDir() const { return QString(); }
 
-    virtual void loadSettings() =0;
+    virtual void loadSettings() {}
 
-    virtual void saveSettings() =0;
+    virtual void saveSettings() {}
 };
 
 /**
