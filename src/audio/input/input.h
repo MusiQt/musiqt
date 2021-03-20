@@ -91,10 +91,10 @@ public:
     virtual bool seekable() const =0;
 
     /// Seek specified position
-    virtual bool seek(const int pos) =0;
+    virtual bool seek(int pos) =0;
 
     /// Callback function
-    virtual size_t fillBuffer(void* buffer, const size_t bufferSize) =0;
+    virtual size_t fillBuffer(void* buffer, size_t bufferSize) =0;
 
     /// Song is loaded
     virtual QString songLoaded() const =0;
@@ -106,7 +106,7 @@ public:
     virtual unsigned int subtune() const =0;
 
     /// Change subtune
-    virtual bool subtune(const unsigned int i) =0;
+    virtual bool subtune(unsigned int i) =0;
 
     /// Gapless support
     virtual bool gapless() const =0;

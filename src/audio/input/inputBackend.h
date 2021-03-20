@@ -123,7 +123,7 @@ public:
     virtual unsigned int subtune() const override { return 0; }
 
     /// Change subtune
-    virtual bool subtune(const unsigned int i) override { return false; }
+    virtual bool subtune(unsigned int i) override { return false; }
 
     /// Gapless support
     virtual bool gapless() const override { return false; }
