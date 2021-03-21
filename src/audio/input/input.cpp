@@ -18,7 +18,6 @@
 
 #include "input.h"
 
-
 inputConfig::inputConfig(const char name[], const unsigned char iconType[], unsigned int iconLen) :
     m_name(name)
 {

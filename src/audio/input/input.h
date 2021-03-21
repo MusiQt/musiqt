@@ -27,8 +27,8 @@
 #include <QIcon>
 #include <QSettings>
 #include <QString>
-#include <QWidget>
-#include <QDebug>
+
+class QWidget;
 
 #define gettext(x) x
 
@@ -40,17 +40,15 @@ class inputConfig
 private:
     const char *m_name;
 
-    QSettings m_settings;
-
     QIcon m_icon;
+
+    QSettings m_settings;
 
 private:
     inline QString section(const char* key) { return QString("%1 Settings/%2").arg(name()).arg(key); }
 
 protected:
     const char* name() const { return m_name; }
-
-#define gettext(x) x
 
 protected:
     inputConfig(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0);
@@ -85,7 +83,7 @@ public:
 };
 
 /**
- * interface class for input backends
+ * base class for input backends
  */
 class input
 {
