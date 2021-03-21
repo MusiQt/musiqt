@@ -43,6 +43,7 @@ jobs:
       run: echo ::set-output name=tagname::${GITHUB_REF#refs/tags/v}
     - name: build
       run: |
+        rm /mingw64/lib/*.dll.a
         mkdir build
         cd build
         cmake -G 'MSYS Makefiles' \
