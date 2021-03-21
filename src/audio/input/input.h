@@ -22,6 +22,8 @@
 #include "inputTypes.h"
 #include "metaData.h"
 
+#include "iconFactory.h"
+
 #include <QIcon>
 #include <QSettings>
 #include <QString>
@@ -33,47 +35,68 @@
 class inputConfig
 {
 private:
-    QSettings settings;
+    const char *m_name;
+
+    QSettings m_settings;
+
+    QIcon m_icon;
 
 private:
     inline QString section(const char* key) { return QString("%1 Settings/%2").arg(name()).arg(key); }
 
 protected:
-    virtual const char* name() const =0;
+    const char* name() const { return m_name; }
 
 protected:
+    inputConfig(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0) :
+        m_name(name)
+    {
+        // Use default icon if not provided
+        if (iconType == nullptr)
+        {
+            m_icon = GET_ICON(icon_backend);
+        }
+        else
+        {
+            QPixmap pixmap;
+            if (pixmap.loadFromData(iconType, iconLen))
+                m_icon = QIcon(pixmap);
+        }
+    }
+
     /// Load int setting
     int load(const char* key, int defVal)
     {
-        return settings.value(section(key), defVal).toInt();
+        return m_settings.value(section(key), defVal).toInt();
     }
 
     /// Load string setting
     QString load(const char* key, QString defVal)
     {
-        return settings.value(section(key), defVal).toString();
+        return m_settings.value(section(key), defVal).toString();
     }
 
     /// Save int setting
     void save(const char* key, int value)
     {
-        settings.setValue(section(key), value);
+        m_settings.setValue(section(key), value);
     }
 
     /// Save string setting
     void save(const char* key, QString value)
     {
-        settings.setValue(section(key), value);
+        m_settings.setValue(section(key), value);
     }
 
 public:
+    
     virtual ~inputConfig() {}
 
     /// Open config dialog
     virtual QWidget* config(QWidget* parent=nullptr) =0;
 
     /// Get filetype icon
-    virtual QIcon icon() const =0;
+    QIcon icon() const { return m_icon; }
 
     /// Get Music directory
     virtual const QString getMusicDir() const { return QString(); }

@@ -239,7 +239,8 @@ ffmpegBackend::ffmpegBackend() :
     inputBackend(name, iconFfmpeg, 86),
     m_audioStream(nullptr),
     m_formatContext(nullptr),
-    m_codecContext(nullptr) {}
+    m_codecContext(nullptr),
+    m_config(name, iconFfmpeg, 86) {}
 
 ffmpegBackend::~ffmpegBackend()
 {
@@ -431,7 +432,7 @@ bool ffmpegBackend::openStream(AVFormatContext* fc)
 
 /*****************************************************************/
 
-ffmpegConfig::ffmpegConfig(QWidget* win) :
+ffmpegConfigFrame::ffmpegConfigFrame(QWidget* win) :
     configFrame(win, ffmpegBackend::name, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available"), this));

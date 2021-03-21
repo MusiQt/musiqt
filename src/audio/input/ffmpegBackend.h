@@ -40,16 +40,29 @@ extern "C" {
 
 #include "configFrame.h"
 
-class ffmpegConfig : public configFrame
+class ffmpegConfigFrame : public configFrame
 {
 private:
-    ffmpegConfig() {}
-    ffmpegConfig(const ffmpegConfig&);
-    ffmpegConfig& operator=(const ffmpegConfig&);
+    ffmpegConfigFrame() {}
+    ffmpegConfigFrame(const ffmpegConfigFrame&);
+    ffmpegConfigFrame& operator=(const ffmpegConfigFrame&);
 
 public:
-    ffmpegConfig(QWidget* win);
-    virtual ~ffmpegConfig() {}
+    ffmpegConfigFrame(QWidget* win);
+    virtual ~ffmpegConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class ffmpegConfig : public inputConfig
+{
+public:
+    ffmpegConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {}
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new ffmpegConfigFrame(win); }
 };
 
 /*****************************************************************/
@@ -79,6 +92,8 @@ private:
     static const AutoDLL avutilDll;
 
     static QStringList _ext;
+
+    ffmpegConfig m_config;
 
 private:
     static int (*dl_avformat_open_input)(AVFormatContext**, const char*, AVInputFormat*, AVDictionary**);
@@ -160,7 +175,7 @@ public:
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new ffmpegConfig(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

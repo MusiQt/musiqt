@@ -21,21 +21,9 @@
 #include "iconFactory.h"
 
 inputBackend::inputBackend(const char name[], const unsigned char* iconType, unsigned int iconLen) :
-    m_name(name),
+    inputConfig(name, iconType, iconLen),
     m_time(0)
-{
-    // Use default icon if not provided
-    if (iconType == nullptr)
-    {
-        m_icon = GET_ICON(icon_backend);
-    }
-    else
-    {
-        QPixmap pixmap;
-        if (pixmap.loadFromData(iconType, iconLen))
-            m_icon = QIcon(pixmap);
-    }
-}
+{}
 
 inputBackend::~inputBackend() {}
 

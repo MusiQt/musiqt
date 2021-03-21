@@ -23,7 +23,6 @@
 
 #include "utils.h"
 
-#include <QIcon>
 #include <QString>
 
 #define gettext(x) x
@@ -33,9 +32,6 @@
 class inputBackend : public input, public inputConfig
 {
 private:
-    const char *m_name;
-    QIcon m_icon;
-
     unsigned int m_time;
 
 protected:
@@ -55,8 +51,6 @@ protected:
     /// Song is loaded
     void songLoaded(const QString& location);
 
-    const char* name() const override { return m_name; }
-
 public:
     virtual ~inputBackend();
 
@@ -71,9 +65,6 @@ public:
 
     /// Get fractional scale for fixed point types
     virtual unsigned int fract() const override { return 0; }
-
-    /// Get filetype icon
-    QIcon icon() const override { return m_icon; }
 
     /// Rewind to start
     virtual bool rewind() override { return seek(0); }
