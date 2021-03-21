@@ -69,8 +69,6 @@ private:
 private:
     openmpt::module *_module;
 
-    bool _unmo3;
-
     static QStringList _ext;
 
 private:
