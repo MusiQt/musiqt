@@ -116,7 +116,8 @@ QStringList wvBackend::ext() { return QStringList(EXT); }
 wvBackend::wvBackend() :
     m_wvContext(nullptr),
     m_decodeBuf(nullptr),
-    m_config(name, iconWv, 375){}
+    m_config(name, iconWv, 375)
+{}
 
 wvBackend::~wvBackend()
 {

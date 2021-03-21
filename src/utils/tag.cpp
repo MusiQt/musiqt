@@ -551,8 +551,10 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
 
 int tag::getLE32(const char* frame)
 {
-    return ((unsigned int)(unsigned char)frame[0]) | ((unsigned int)(unsigned char)frame[1]<<8)
-        | ((unsigned int)(unsigned char)frame[2]<<16) | ((unsigned int)(unsigned char)frame[3]<<24);
+    return ((unsigned int)(unsigned char)frame[0])
+        | ((unsigned int)(unsigned char)frame[1]<<8)
+        | ((unsigned int)(unsigned char)frame[2]<<16)
+        | ((unsigned int)(unsigned char)frame[3]<<24);
 }
 
 bool tag::getAPEItem(const char* orig, QString* dest, const char* tagName, int tagNameLen, int tagLen)
