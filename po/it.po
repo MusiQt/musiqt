@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-19 13:09+0100\n"
-"PO-Revision-Date: 2021-02-27 18:26+0100\n"
-"Last-Translator: Leandro Nini\n"
-"Language-Team: Italian \n"
+"PO-Revision-Date: 2021-03-21 21:52+0100\n"
+"Last-Translator: Dr. Fiemost\n"
+"Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -373,9 +373,8 @@ msgstr "Cancella i segnalibri"
 
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:97
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:100
-#, fuzzy
 msgid "Comment"
-msgstr "commento"
+msgstr "Commento"
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:171
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:172
@@ -656,7 +655,7 @@ msgstr "Caricamento..."
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:105
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:107
 msgid "Lyrics"
-msgstr ""
+msgstr "Testo"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:389
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:383
@@ -727,7 +726,6 @@ msgstr "P&recedente"
 
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:948
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:949
-#, fuzzy
 msgid "Path %1 does not exist"
 msgstr "Il percorso %1 non esiste"
 
@@ -1136,11 +1134,8 @@ msgstr "Attenzione"
 
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:60
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:60
-#, fuzzy
 msgid "Website: <a href=\"%1\">%1</a><br><br>Bugs: <a href=\"%2\">%2</a>"
-msgstr ""
-"<b>%1</b><br><br>Versione %2<br><br>Copyright %3 %4<br><br>Sito web: <a href="
-"\"%5\">%5</a><br><br>Bugs: <a href=\"%6\">%6</a>"
+msgstr "Sito web: <a href=\"%1\">%1</a><br><br>Bug: <a href=\"%2\">%2</a>"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:30
 #: C:/msys64/home/minini/musiqt/src/audio/input/metaData.cpp:30
@@ -1202,7 +1197,7 @@ msgstr ""
 
 #: C:/msys64/home/minini/musiqt/src/audio/input/metaData.cpp:39
 msgid "lyrics"
-msgstr ""
+msgstr "testo"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:33
 #: C:/msys64/home/minini/musiqt/src/audio/input/metaData.cpp:33
