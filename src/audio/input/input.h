@@ -53,45 +53,19 @@ protected:
 #define gettext(x) x
 
 protected:
-    inputConfig(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0) :
-        m_name(name)
-    {
-        // Use default icon if not provided
-        if (iconType == nullptr)
-        {
-            m_icon = GET_ICON(icon_backend);
-        }
-        else
-        {
-            QPixmap pixmap;
-            if (pixmap.loadFromData(iconType, iconLen))
-                m_icon = QIcon(pixmap);
-        }
-    }
+    inputConfig(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0);
 
     /// Load int setting
-    int load(const char* key, int defVal)
-    {
-        return m_settings.value(section(key), defVal).toInt();
-    }
+    int load(const char* key, int defVal);
 
     /// Load string setting
-    QString load(const char* key, QString defVal)
-    {
-        return m_settings.value(section(key), defVal).toString();
-    }
+    QString load(const char* key, QString defVal);
 
     /// Save int setting
-    void save(const char* key, int value)
-    {
-        m_settings.setValue(section(key), value);
-    }
+    void save(const char* key, int value);
 
     /// Save string setting
-    void save(const char* key, QString value)
-    {
-        m_settings.setValue(section(key), value);
-    }
+    void save(const char* key, QString value);
 
 public:
     virtual ~inputConfig() {}
@@ -124,17 +98,8 @@ protected:
 protected:
     input() : m_time(0) {}
 
-    /// Close file
-    virtual void close() =0;
-
     /// Song is loaded
-    void songLoaded(const QString& location)
-    {
-        if (!location.isEmpty())
-            m_metaData.addInfo(metaData::LOCATION, location);
-        else
-            m_metaData.clearInfo();
-    }
+    void songLoaded(const QString& location);
 
     /// Set song duration
     void setDuration(unsigned int newTime) { m_time = newTime; }
@@ -143,10 +108,10 @@ public:
     virtual ~input() {}
 
     /// Get song info
-    virtual const metaData* getMetaData() const { return &m_metaData; }
+    const metaData* getMetaData() const { return &m_metaData; }
 
     /// Get song duration in milliseconds
-    virtual unsigned int songDuration() const { return 0; }
+    unsigned int songDuration() const { return m_time; }
 
     /// Get max play time in milliseconds, 0 if none
     virtual unsigned int maxPlayTime() const { return 0; }
@@ -179,7 +144,7 @@ public:
     virtual size_t fillBuffer(void* buffer, size_t bufferSize) =0;
 
     /// Song is loaded
-    virtual QString songLoaded() const { return m_metaData.getInfo(metaData::LOCATION); }
+    QString songLoaded() const { return m_metaData.getInfo(metaData::LOCATION); }
 
     /// Get number of subtunes
     virtual unsigned int subtunes() const { return 0; }

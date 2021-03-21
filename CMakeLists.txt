@@ -39,6 +39,7 @@ set(MUSIQT_SOURCES
     src/audio/converter/quantizer.cpp
     src/audio/converter/quantizer.h
     src/audio/inputTypes.h
+    src/audio/input/input.cpp
     src/audio/input/input.h
     src/audio/input/inputFactory.cpp
     src/audio/input/inputFactory.h

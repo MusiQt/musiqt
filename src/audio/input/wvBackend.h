@@ -93,7 +93,7 @@ public:
     bool open(const QString& fileName) override;
 
     /// Close file
-    void close() override;
+    void close();
 
     /// Seek support
     bool seekable() const override { return true; }

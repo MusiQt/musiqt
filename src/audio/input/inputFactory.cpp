@@ -71,7 +71,6 @@ public:
     unsigned int channels() const override { return 0; }
     sample_t precision() const override { return sample_t::S16; }
     bool open(const QString& fileName) override { return true; }
-    bool seek(const int pos) override { return true; }
     size_t fillBuffer(void* buffer, const size_t bufferSize) override { return 0; }
 };
 
