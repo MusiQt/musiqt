@@ -45,33 +45,66 @@ typedef struct
 #include <QFile>
 #include <QFileInfo>
 
-class openmptConfig : public configFrame
+class openmptConfigFrame : public configFrame
 {
 private:
-    openmptConfig() {}
-    openmptConfig(const openmptConfig&);
-    openmptConfig& operator=(const openmptConfig&);
+    openmptConfigFrame() {}
+    openmptConfigFrame(const openmptConfigFrame&);
+    openmptConfigFrame& operator=(const openmptConfigFrame&);
 
 public:
-    openmptConfig(QWidget* win);
-    virtual ~openmptConfig() {}
+    openmptConfigFrame(QWidget* win);
+    virtual ~openmptConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class openmptConfig : public inputConfig
+{
+    friend class openmptConfigFrame;
+
+private:
+    static openmptConfig_t m_settings;
+
+public:
+    openmptConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {
+        loadSettings();
+    }
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new openmptConfigFrame(win); }
+
+    int channels() const { return m_settings.channels; }
+
+    int samplerate() const { return m_settings.samplerate; }
+
+    int resamplingMode() const { return m_settings.resamplingMode; }
+
+    int masterGain() const { return m_settings.masterGain; }
+
+    int stereoSeparation() const { return m_settings.stereoSeparation; }
+
+    int volumeRamping() const { return m_settings.volumeRamping; }
+
+    void loadSettings() override;
+
+    void saveSettings() override;
 };
 
 /*****************************************************************/
 
 class openmptBackend : public inputBackend
 {
-    friend class openmptConfig;
-
-private:
-    static openmptConfig_t _settings;
-
 private:
     openmpt::module *_module;
 
     bool _unmo3;
 
     static QStringList _ext;
+
+    openmptConfig m_config;
 
 private:
     openmptBackend();
@@ -125,10 +158,10 @@ public:
     bool subtune(const unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _settings.samplerate; }
+    unsigned int samplerate() const override { return m_config.samplerate(); }
 
     /// Get channels
-    unsigned int channels() const override { return _settings.channels; }
+    unsigned int channels() const override { return m_config.channels(); }
 
     /// Get precision
     sample_t precision() const override { return sample_t::SAMPLE_FLOAT; }
@@ -136,12 +169,14 @@ public:
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
+    // TODO remove
+
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new openmptConfig(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 
-    void loadSettings() override;
+    void loadSettings() override { m_config.loadSettings(); }
 
-    void saveSettings() override;
+    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

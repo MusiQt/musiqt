@@ -71,30 +71,87 @@ typedef struct
 
 class QLineEdit;
 
-class sidConfig : public configFrame
+class sidConfigFrame : public configFrame
 {
 private:
-    sidConfig() {}
-    sidConfig(const sidConfig&);
-    sidConfig& operator=(const sidConfig&);
+    sidConfigFrame() {}
+    sidConfigFrame(const sidConfigFrame&);
+    sidConfigFrame& operator=(const sidConfigFrame&);
 
 private:
     bool checkPath(const QString& path);
 
 public:
-    sidConfig(QWidget* win);
-    virtual ~sidConfig() {}
+    sidConfigFrame(QWidget* win);
+    virtual ~sidConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class sidConfig : public inputConfig
+{
+    friend class sidConfigFrame;
+
+private:
+    static sidConfig_t m_settings;
+
+public:
+    sidConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {
+        loadSettings();
+    }
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new sidConfigFrame(win); }
+
+    QString engine() const { return m_settings.engine; }
+
+    int samplerate() const { return m_settings.samplerate; }
+
+    int channels() const { return m_settings.channels; }
+
+    SidConfig::sampling_method_t samplingMethod() const { return m_settings.samplingMethod; }
+
+    bool fastSampling() const { return m_settings.fastSampling; }
+
+    int bias() const { return m_settings.bias; }
+
+    int filter6581Curve() const { return m_settings.filter6581Curve; }
+
+    int filter8580Curve() const { return m_settings.filter8580Curve; }
+
+    SidConfig::c64_model_t c64Model() const { return m_settings.c64Model; }
+
+    bool forceC64Model() const { return m_settings.forceC64Model; }
+
+    SidConfig::sid_model_t sidModel() const { return m_settings.sidModel; }
+
+    bool forceSidModel() const { return m_settings.forceSidModel; }
+
+    bool filter() const { return m_settings.filter; }
+
+    QString hvscPath() const { return m_settings.hvscPath; }
+
+    int secondSidAddress() const { return m_settings.secondSidAddress; }
+
+    int thirdSidAddress() const { return m_settings.thirdSidAddress; }
+
+    QString kernalPath() const { return m_settings.kernalPath; }
+
+    QString basicPath() const { return m_settings.basicPath; }
+
+    QString chargenPath() const { return m_settings.chargenPath; }
+
+    void loadSettings() override;
+
+    void saveSettings() override;
 };
 
 /*****************************************************************/
 
 class sidBackend : public inputBackend
 {
-    friend class sidConfig;
-
-private:
-    static sidConfig_t _settings;
-
 private:
     sidplayfp *_sidplayfp;
 
@@ -105,6 +162,8 @@ private:
     SidDatabase *_db;
     unsigned int _length;
     bool newSonglengthDB;
+
+    sidConfig m_config;
 
 private:
     sidBackend();
@@ -147,10 +206,10 @@ public:
     bool subtune(const unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _tune?_settings.samplerate:0; }
+    unsigned int samplerate() const override { return _tune?m_config.samplerate():0; }
 
     /// Get channels
-    unsigned int channels() const override { return _tune?_settings.channels:0; }
+    unsigned int channels() const override { return _tune?m_config.channels():0; }
 
     /// Get precision
     sample_t precision() const override { return sample_t::S16; }
@@ -161,15 +220,14 @@ public:
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
+    // TODO remove
+
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new sidConfig(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 
-    /// Get Music directory
-    const QString getMusicDir(void) const override { return _settings.hvscPath; }
+    void loadSettings() override { m_config.loadSettings(); }
 
-    void loadSettings() override;
-
-    void saveSettings() override;
+    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

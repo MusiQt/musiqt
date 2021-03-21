@@ -82,7 +82,7 @@ ov_callbacks oggBackend::vorbis_callbacks =
 
 const char oggBackend::name[] = "Ogg-Vorbis";
 
-oggConfig_t oggBackend::_settings;
+oggConfig_t oggConfig::m_settings;
 
 /*****************************************************************/
 
@@ -93,12 +93,24 @@ size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize)
     do {
         int current_section;
         read = ov_read(_vf, (char*)buffer+n, bufferSize-n, 0,
-                (_settings.precision == sample_t::S16) ? 2 : 1,
-                (_settings.precision != sample_t::U8), &current_section);
+                (m_config.precision() == sample_t::S16) ? 2 : 1,
+                (m_config.precision() != sample_t::U8), &current_section);
         n += read;
     } while (read && (n < bufferSize));
 
     return n;
+}
+
+/*****************************************************************/
+
+void oggConfig::loadSettings()
+{
+    m_settings.precision = (load("Bits", 16) == 16) ? sample_t::S16 : sample_t::U8;
+}
+
+void oggConfig::saveSettings()
+{
+    save("Bits", (m_settings.precision == sample_t::S16) ? 16 : 8);
 }
 
 /*****************************************************************/
@@ -108,24 +120,13 @@ QStringList oggBackend::ext() { return QString(EXT).split("|"); }
 oggBackend::oggBackend() :
     inputBackend(name, iconOgg, 523),
     _vf(nullptr),
-    _vi(nullptr)
-{
-    loadSettings();
-}
+    _vi(nullptr),
+    m_config(name, iconOgg, 523)
+{}
 
 oggBackend::~oggBackend()
 {
     close();
-}
-
-void oggBackend::loadSettings()
-{
-    _settings.precision = (load("Bits", 16) == 16) ? sample_t::S16 : sample_t::U8;
-}
-
-void oggBackend::saveSettings()
-{
-    save("Bits", (_settings.precision == sample_t::S16) ? 16 : 8);
 }
 
 bool oggBackend::open(const QString& fileName)
@@ -322,9 +323,9 @@ long oggBackend::tell_func(void *datasource)
 
 /*****************************************************************/
 
-#define OGGSETTINGS	oggBackend::_settings
+#define OGGSETTINGS	oggConfig::m_settings
 
-oggConfig::oggConfig(QWidget* win) :
+oggConfigFrame::oggConfigFrame(QWidget* win) :
     configFrame(win, oggBackend::name, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("Bits"), this), 0, 0);

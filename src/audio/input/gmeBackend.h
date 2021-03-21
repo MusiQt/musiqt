@@ -163,8 +163,14 @@ public:
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
+    // TODO remove
+
     /// Open config dialog
     QWidget* config(QWidget* win) override { return m_config.config(win); }
+
+    void loadSettings() override { m_config.loadSettings(); }
+
+    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

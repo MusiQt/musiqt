@@ -93,13 +93,61 @@ const char engines[][8] =
 
 const int sidAddresses[5] = { 0, 0xd420, 0xd500, 0xde00, 0xdf00 };
 
-sidConfig_t sidBackend::_settings;
+sidConfig_t sidConfig::m_settings;
 
 /*****************************************************************/
 
 size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     return _sidplayfp->play((short*)buffer, bufferSize/sizeof(short))*2;
+}
+
+/*****************************************************************/
+
+void sidConfig::loadSettings()
+{
+    m_settings.samplerate = load("Frequency", 44100);
+    m_settings.channels = load("Channels", 1);
+    m_settings.samplingMethod = (SidConfig::sampling_method_t)load("Sampling method", SidConfig::INTERPOLATE);
+    m_settings.fastSampling = load("Fast sampling", false);
+    m_settings.bias = load("DAC Bias", 0);
+    m_settings.filter6581Curve = load("Filter 6581 Curve", 500);
+    m_settings.filter8580Curve = load("Filter 8580 Curve", 12500);
+    m_settings.c64Model = (SidConfig::c64_model_t)load("C64 Model", SidConfig::PAL);
+    m_settings.sidModel = (SidConfig::sid_model_t)load("SID model", SidConfig::MOS6581);
+    m_settings.forceC64Model = load("Force C64 Model", false);
+    m_settings.forceSidModel = load("Force SID Model", false);
+    m_settings.engine = load("Engine", engines[0]);
+    m_settings.filter = load("Filter", true);
+    m_settings.hvscPath = load("HVSC", QString());
+    m_settings.secondSidAddress = load("Second SID address", 0);
+    m_settings.thirdSidAddress = load("Third SID address", 0);
+    m_settings.kernalPath = load("Kernal Rom", QString());
+    m_settings.basicPath = load("BASIC Rom", QString());
+    m_settings.chargenPath = load("Chargen Rom", QString());
+}
+
+void sidConfig::saveSettings()
+{
+    save("Frequency", m_settings.samplerate);
+    save("Channels", m_settings.channels);
+    save("Sampling method", m_settings.samplingMethod);
+    save("Fast sampling", m_settings.fastSampling);
+    save("DAC Bias", m_settings.bias);
+    save("Filter 6581 Curve", m_settings.filter6581Curve);
+    save("Filter 8580 Curve", m_settings.filter8580Curve);
+    save("C64 Model", m_settings.c64Model);
+    save("SID model", m_settings.sidModel);
+    save("Force C64 Model", m_settings.forceC64Model);
+    save("Force SID Model", m_settings.forceSidModel);
+    save("Engine", m_settings.engine);
+    save("Filter", m_settings.filter);
+    save("HVSC", m_settings.hvscPath);
+    save("Second SID address", m_settings.secondSidAddress);
+    save("Third SID address", m_settings.thirdSidAddress);
+    save("Kernal Rom", m_settings.kernalPath);
+    save("BASIC Rom", m_settings.basicPath);
+    save("Chargen Rom", m_settings.chargenPath);
 }
 
 /*****************************************************************/
@@ -159,11 +207,10 @@ sidBackend::sidBackend() :
     _stil(nullptr),
     _db(nullptr),
     _length(0),
-    newSonglengthDB(false)
+    newSonglengthDB(false),
+    m_config(name, iconSid, 126)
 {
-    loadSettings();
-
-    openHvsc(_settings.hvscPath);
+    openHvsc(m_config.hvscPath());
 }
 
 sidBackend::~sidBackend()
@@ -172,59 +219,6 @@ sidBackend::~sidBackend()
 
     delete _db;
     delete _stil;
-}
-
-void sidBackend::loadSettings()
-{
-    _settings.samplerate = load("Frequency", 44100);
-    _settings.channels = load("Channels", 1);
-    _settings.samplingMethod = (SidConfig::sampling_method_t)load("Sampling method", SidConfig::INTERPOLATE);
-    _settings.fastSampling = load("Fast sampling", false);
-    _settings.bias = load("DAC Bias", 0);
-    _settings.filter6581Curve = load("Filter 6581 Curve", 500);
-    _settings.filter8580Curve = load("Filter 8580 Curve", 12500);
-    _settings.c64Model = (SidConfig::c64_model_t)load("C64 Model", SidConfig::PAL);
-    _settings.sidModel = (SidConfig::sid_model_t)load("SID model", SidConfig::MOS6581);
-    _settings.forceC64Model = load("Force C64 Model", false);
-    _settings.forceSidModel = load("Force SID Model", false);
-    _settings.engine = load("Engine", engines[0]);
-    _settings.filter = load("Filter", true);
-    _settings.hvscPath = load("HVSC", QString());
-    _settings.secondSidAddress = load("Second SID address", 0);
-    _settings.thirdSidAddress = load("Third SID address", 0);
-    _settings.kernalPath = load("Kernal Rom", QString());
-    _settings.basicPath = load("BASIC Rom", QString());
-    _settings.chargenPath = load("Chargen Rom", QString());
-}
-
-void sidBackend::saveSettings()
-{
-    QString hvsc = load("HVSC", QString());
-    if (hvsc.compare(_settings.hvscPath))
-    {
-        qDebug() << "Reloading HVSC from " << _settings.hvscPath;
-        openHvsc(_settings.hvscPath);
-    }
-
-    save("Frequency", _settings.samplerate);
-    save("Channels", _settings.channels);
-    save("Sampling method", _settings.samplingMethod);
-    save("Fast sampling", _settings.fastSampling);
-    save("DAC Bias", _settings.bias);
-    save("Filter 6581 Curve", _settings.filter6581Curve);
-    save("Filter 8580 Curve", _settings.filter8580Curve);
-    save("C64 Model", _settings.c64Model);
-    save("SID model", _settings.sidModel);
-    save("Force C64 Model", _settings.forceC64Model);
-    save("Force SID Model", _settings.forceSidModel);
-    save("Engine", _settings.engine);
-    save("Filter", _settings.filter);
-    save("HVSC", _settings.hvscPath);
-    save("Second SID address", _settings.secondSidAddress);
-    save("Third SID address", _settings.thirdSidAddress);
-    save("Kernal Rom", _settings.kernalPath);
-    save("BASIC Rom", _settings.basicPath);
-    save("Chargen Rom", _settings.chargenPath);
 }
 
 const unsigned char* sidBackend::loadRom(const QString& romPath)
@@ -251,9 +245,9 @@ bool sidBackend::open(const QString& fileName)
     _sidplayfp = new sidplayfp;
 
     {
-        const unsigned char* kernal = loadRom(_settings.kernalPath);
-        const unsigned char* basic = loadRom(_settings.basicPath);
-        const unsigned char* chargen = loadRom(_settings.chargenPath);
+        const unsigned char* kernal = loadRom(m_config.kernalPath());
+        const unsigned char* basic = loadRom(m_config.basicPath());
+        const unsigned char* chargen = loadRom(m_config.chargenPath());
         _sidplayfp->setRoms(kernal, basic, chargen);
         delete [] kernal;
         delete [] basic;
@@ -264,46 +258,46 @@ bool sidBackend::open(const QString& fileName)
 
     int eng = 0;
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
-    if (!_settings.engine.compare(engines[eng++]))
+    if (!m_config.engine().compare(engines[eng++]))
     {
         ReSIDfpBuilder *tmpResid = new ReSIDfpBuilder("Musiqt reSIDfp");
         tmpResid->create(_sidplayfp->info().maxsids());
 
-        tmpResid->filter(_settings.filter);
-        tmpResid->filter6581Curve((double)_settings.filter6581Curve/1000.);
-        tmpResid->filter8580Curve((double)_settings.filter8580Curve);
+        tmpResid->filter(m_config.filter());
+        tmpResid->filter6581Curve((double)m_config.filter6581Curve()/1000.);
+        tmpResid->filter8580Curve((double)m_config.filter8580Curve());
 
         emuSid = (sidbuilder*)tmpResid;
     }
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-    if (!_settings.engine.compare(engines[eng++]))
+    if (!m_config.engine().compare(engines[eng++]))
     {
         ReSIDBuilder *tmpResid = new ReSIDBuilder("Musiqt reSID");
         tmpResid->create(_sidplayfp->info().maxsids());
 
-        tmpResid->filter(_settings.filter);
-        tmpResid->bias((double)_settings.bias/1000.0);
+        tmpResid->filter(m_config.filter());
+        tmpResid->bias((double)m_config.bias()/1000.0);
         emuSid = (sidbuilder*)tmpResid;
     }
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-    if (!_settings.engine.compare(engines[eng++]))
+    if (!m_config.engine().compare(engines[eng++]))
     {
         HardSIDBuilder *tmpHardsid = new HardSIDBuilder("Musiqt hardSID");
         tmpHardsid->create(_sidplayfp->info().maxsids());
 
-        tmpHardsid->filter(_settings.filter);
+        tmpHardsid->filter(m_config.filter());
         emuSid = (sidbuilder*)tmpHardsid;
     }
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-    if (!_settings.engine.compare(engines[eng++]))
+    if (!m_config.engine().compare(engines[eng++]))
     {
         exSIDBuilder *tmpExsid = new exSIDBuilder("Musiqt exSID");
         tmpExsid->create(_sidplayfp->info().maxsids());
 
-        tmpExsid->filter(_settings.filter);
+        tmpExsid->filter(m_config.filter());
         emuSid = (sidbuilder*)tmpExsid;
     }
 #endif
@@ -315,19 +309,19 @@ bool sidBackend::open(const QString& fileName)
     }
 
     SidConfig cfg;
-    cfg.defaultC64Model = _settings.c64Model;
-    cfg.forceC64Model = _settings.forceC64Model;
-    cfg.defaultSidModel = _settings.sidModel;
-    cfg.forceSidModel = _settings.forceSidModel;
-    cfg.playback = (_settings.channels == 2) ? SidConfig::STEREO : SidConfig::MONO;
-    cfg.frequency = _settings.samplerate;
-    cfg.secondSidAddress = _settings.secondSidAddress;
+    cfg.defaultC64Model = m_config.c64Model();
+    cfg.forceC64Model = m_config.forceC64Model();
+    cfg.defaultSidModel = m_config.sidModel();
+    cfg.forceSidModel = m_config.forceSidModel();
+    cfg.playback = (m_config.channels() == 2) ? SidConfig::STEREO : SidConfig::MONO;
+    cfg.frequency = m_config.samplerate();
+    cfg.secondSidAddress = m_config.secondSidAddress();
 #ifdef ENABLE_3SID
-    cfg.thirdSidAddress = _settings.thirdSidAddress;
+    cfg.thirdSidAddress = m_config.thirdSidAddress();
 #endif
     cfg.sidEmulation = emuSid;
-    cfg.samplingMethod = _settings.samplingMethod;
-    cfg.fastSampling = _settings.fastSampling;
+    cfg.samplingMethod = m_config.samplingMethod();
+    cfg.fastSampling = m_config.fastSampling();
     _sidplayfp->config(cfg);
 
     _tune = new SidTune(fileName.toUtf8().constData());
@@ -552,7 +546,7 @@ void sidBackend::loadWDS(const QString& musFileName, const char* ext)
 
 #include "iconFactory.h"
 
-#define SIDSETTINGS sidBackend::_settings
+#define SIDSETTINGS sidConfig::m_settings
 
 enum
 {
@@ -561,7 +555,7 @@ enum
     ID_CHARGEN
 };
 
-sidConfig::sidConfig(QWidget* win) :
+sidConfigFrame::sidConfigFrame(QWidget* win) :
     configFrame(win, sidBackend::name, CREDITS, LINK)
 {
     int val;
@@ -1046,7 +1040,7 @@ sidConfig::sidConfig(QWidget* win) :
     );
 }
 
-bool sidConfig::checkPath(const QString& path)
+bool sidConfigFrame::checkPath(const QString& path)
 {
     if (!path.isEmpty() && !QFileInfo(path).exists())
     {

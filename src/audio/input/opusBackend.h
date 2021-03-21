@@ -27,40 +27,45 @@
 
 /*****************************************************************/
 
-typedef struct
+#include "configFrame.h"
+
+class opusConfigFrame : public configFrame
 {
-    sample_t precision;
-} opusConfig_t;
+private:
+    opusConfigFrame() {}
+    opusConfigFrame(const opusConfigFrame&);
+    opusConfigFrame& operator=(const opusConfigFrame&);
+
+public:
+    opusConfigFrame(QWidget* win);
+    virtual ~opusConfigFrame() {}
+};
 
 /*****************************************************************/
 
-#include "configFrame.h"
-
-class opusConfig : public configFrame
+class opusConfig : public inputConfig
 {
-private:
-    opusConfig() {}
-    opusConfig(const opusConfig&);
-    opusConfig& operator=(const opusConfig&);
+    friend class opusConfigFrame;
 
 public:
-    opusConfig(QWidget* win);
-    virtual ~opusConfig() {}
+    opusConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {}
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new opusConfigFrame(win); }
 };
 
 /*****************************************************************/
 
 class opusBackend : public inputBackend
 {
-    friend class opusConfig;
-
-private:
-    static opusConfig_t _settings;
-
 private:
     OggOpusFile *_of;
 
     QFile _file;
+
+    opusConfig m_config;
 
 private:
     static OpusFileCallbacks opus_callbacks;
@@ -111,8 +116,10 @@ public:
     /// Gapless support
     bool gapless() const override { return true; };
 
+    // TODO remove
+
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new opusConfig(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

@@ -37,27 +37,50 @@ typedef struct
 
 #include "configFrame.h"
 
-class mpg123Config : public configFrame
+class mpg123ConfigFrame : public configFrame
 {
 private:
-    mpg123Config() {}
-    mpg123Config(const mpg123Config&);
-    mpg123Config& operator=(const mpg123Config&);
+    mpg123ConfigFrame() {}
+    mpg123ConfigFrame(const mpg123ConfigFrame&);
+    mpg123ConfigFrame& operator=(const mpg123ConfigFrame&);
 
 public:
-    mpg123Config(QWidget* win);
-    virtual ~mpg123Config() {}
+    mpg123ConfigFrame(QWidget* win);
+    virtual ~mpg123ConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class mpg123Config : public inputConfig
+{
+    friend class mpg123ConfigFrame;
+
+private:
+    static mpg123Config_t m_settings;
+
+public:
+    mpg123Config(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {
+        loadSettings();
+    }
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new mpg123ConfigFrame(win); }
+
+    bool fastscan() const { return m_settings.fastscan; }
+
+    QString decoder() const { return m_settings.decoder; }
+
+    void loadSettings() override;
+
+    void saveSettings() override;
 };
 
 /*****************************************************************/
 
 class mpg123Backend final : public inputBackend
 {
-    friend class mpg123Config;
-
-private:
-    static mpg123Config_t m_settings;
-
 private:
     mpg123_handle *m_handle;
 
@@ -70,6 +93,8 @@ private:
 
     static ssize_t read_func(void*, void*, size_t);
     static off_t seek_func(void*, off_t, int);
+
+    mpg123Config m_config;
 
 public:
     static QStringList m_decoders;
@@ -115,12 +140,14 @@ public:
     /// Gapless support
     bool gapless() const override { return true; };
 
+    // TODO remove
+
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new mpg123Config(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 
-    void loadSettings() override;
+    void loadSettings() override { m_config.loadSettings(); }
 
-    void saveSettings() override;
+    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

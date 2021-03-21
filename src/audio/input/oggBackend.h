@@ -36,32 +36,55 @@ typedef struct
 
 #include "configFrame.h"
 
-class oggConfig : public configFrame
+class oggConfigFrame : public configFrame
 {
 private:
-    oggConfig() {}
-    oggConfig(const oggConfig&);
-    oggConfig& operator=(const oggConfig&);
+    oggConfigFrame() {}
+    oggConfigFrame(const oggConfigFrame&);
+    oggConfigFrame& operator=(const oggConfigFrame&);
 
 public:
-    oggConfig(QWidget* win);
-    virtual ~oggConfig() {}
+    oggConfigFrame(QWidget* win);
+    virtual ~oggConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class oggConfig : public inputConfig
+{
+    friend class oggConfigFrame;
+
+private:
+    static oggConfig_t m_settings;
+
+public:
+    oggConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {
+        loadSettings();
+    }
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new oggConfigFrame(win); }
+
+    sample_t precision() const { return m_settings.precision; }
+
+    void loadSettings() override;
+
+    void saveSettings() override;
 };
 
 /*****************************************************************/
 
 class oggBackend : public inputBackend
 {
-    friend class oggConfig;
-
-private:
-    static oggConfig_t _settings;
-
 private:
     OggVorbis_File *_vf;
     vorbis_info *_vi;
 
     QFile _file;
+
+    oggConfig m_config;
 
 private:
     static ov_callbacks vorbis_callbacks;
@@ -104,7 +127,7 @@ public:
     unsigned int channels() const override { return _vi != nullptr ? _vi->channels : 0; }
 
     /// Get precision
-    sample_t precision() const override { return _settings.precision; }
+    sample_t precision() const override { return m_config.precision(); }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize);
@@ -112,12 +135,14 @@ public:
     /// Gapless support
     bool gapless() const override { return true; };
 
+    // TODO remove
+
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new oggConfig(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 
-    void loadSettings() override;
+    void loadSettings() override { m_config.loadSettings(); }
 
-    void saveSettings() override;
+    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

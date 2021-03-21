@@ -116,7 +116,7 @@ extern const unsigned char iconOpenmpt[990] =
 
 const char openmptBackend::name[] = "Openmpt";
 
-openmptConfig_t openmptBackend::_settings;
+openmptConfig_t openmptConfig::m_settings;
 
 QStringList openmptBackend::_ext;
 
@@ -124,11 +124,33 @@ QStringList openmptBackend::_ext;
 
 size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
-    const size_t frameSize = sizeof(float) * _settings.channels;
+    const size_t frameSize = sizeof(float) * m_config.channels();
     size_t bufSize = bufferSize/frameSize;
-    return frameSize * (_settings.channels == 2
-        ? _module->read_interleaved_stereo(_settings.samplerate, bufSize, (float*)buffer)
-        : _module->read(_settings.samplerate, bufSize, (float*)buffer));
+    return frameSize * (m_config.channels() == 2
+        ? _module->read_interleaved_stereo(m_config.samplerate(), bufSize, (float*)buffer)
+        : _module->read(m_config.samplerate(), bufSize, (float*)buffer));
+}
+
+/*****************************************************************/
+
+void openmptConfig::loadSettings()
+{
+    m_settings.samplerate = load("Frequency", 44100);
+    m_settings.channels = load("Channels", 2);
+    m_settings.resamplingMode = load("Resampling", 0);
+    m_settings.masterGain = load("Master gain", 0);
+    m_settings.stereoSeparation = load("Stereo separation", 100);
+    m_settings.volumeRamping = load("Volume ramping", -1);
+}
+
+void openmptConfig::saveSettings()
+{
+    save("Frequency", m_settings.samplerate);
+    save("Channels", m_settings.channels);
+    save("Resampling", m_settings.resamplingMode);
+    save("Master gain", m_settings.masterGain);
+    save("Stereo separation", m_settings.stereoSeparation);
+    save("Volume ramping", m_settings.volumeRamping);
 }
 
 /*****************************************************************/
@@ -151,34 +173,13 @@ bool openmptBackend::init()
 
 openmptBackend::openmptBackend() :
     inputBackend(name, iconOpenmpt, 990),
-    _module(nullptr)
-{
-    loadSettings();
-}
+    _module(nullptr),
+    m_config(name, iconOpenmpt, 990)
+{}
 
 openmptBackend::~openmptBackend()
 {
     close();
-}
-
-void openmptBackend::loadSettings()
-{
-    _settings.samplerate = load("Frequency", 44100);
-    _settings.channels = load("Channels", 2);
-    _settings.resamplingMode = load("Resampling", 0);
-    _settings.masterGain = load("Master gain", 0);
-    _settings.stereoSeparation = load("Stereo separation", 100);
-    _settings.volumeRamping = load("Volume ramping", -1);
-}
-
-void openmptBackend::saveSettings()
-{
-    save("Frequency", _settings.samplerate);
-    save("Channels", _settings.channels);
-    save("Resampling", _settings.resamplingMode);
-    save("Master gain", _settings.masterGain);
-    save("Stereo separation", _settings.stereoSeparation);
-    save("Volume ramping", _settings.volumeRamping);
 }
 
 bool openmptBackend::open(const QString& fileName)
@@ -249,10 +250,10 @@ bool openmptBackend::open(const QString& fileName)
 
     delTempFile(tmpFile, fName);
 
-    _module->set_render_param(openmpt::module::RENDER_INTERPOLATIONFILTER_LENGTH, _settings.resamplingMode);
-    _module->set_render_param(openmpt::module::RENDER_MASTERGAIN_MILLIBEL, _settings.masterGain);
-    _module->set_render_param(openmpt::module::RENDER_STEREOSEPARATION_PERCENT, _settings.stereoSeparation);
-    _module->set_render_param(openmpt::module::RENDER_VOLUMERAMPING_STRENGTH, _settings.volumeRamping);
+    _module->set_render_param(openmpt::module::RENDER_INTERPOLATIONFILTER_LENGTH, m_config.resamplingMode());
+    _module->set_render_param(openmpt::module::RENDER_MASTERGAIN_MILLIBEL, m_config.masterGain());
+    _module->set_render_param(openmpt::module::RENDER_STEREOSEPARATION_PERCENT, m_config.stereoSeparation());
+    _module->set_render_param(openmpt::module::RENDER_VOLUMERAMPING_STRENGTH, m_config.volumeRamping());
 
     std::vector<std::string> metadata = _module->get_metadata_keys();
     for(std::vector<std::string>::iterator it=metadata.begin(); it!=metadata.end(); ++it)
@@ -314,9 +315,9 @@ bool openmptBackend::subtune(const unsigned int i)
 
 /*****************************************************************/
 
-#define MPTSETTINGS openmptBackend::_settings
+#define MPTSETTINGS openmptConfig::m_settings
 
-openmptConfig::openmptConfig(QWidget* win) :
+openmptConfigFrame::openmptConfigFrame(QWidget* win) :
     configFrame(win, openmptBackend::name, CREDITS, LINK)
 {
     int val;

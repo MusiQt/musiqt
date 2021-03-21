@@ -108,8 +108,6 @@ OpusFileCallbacks opusBackend::opus_callbacks =
 
 const char opusBackend::name[] = "Opus";
 
-opusConfig_t opusBackend::_settings;
-
 /*****************************************************************/
 
 size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -135,7 +133,8 @@ QStringList opusBackend::ext() { return QStringList(EXT); }
 
 opusBackend::opusBackend() :
     inputBackend(name, iconOpus, 952),
-    _of(nullptr)
+    _of(nullptr),
+    m_config(name, iconOpus, 952)
 {}
 
 opusBackend::~opusBackend()
@@ -298,7 +297,7 @@ int opusBackend::close_func(void *_stream)
 
 /*****************************************************************/
 
-opusConfig::opusConfig(QWidget* win) :
+opusConfigFrame::opusConfigFrame(QWidget* win) :
     configFrame(win, opusBackend::name, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available"), this));

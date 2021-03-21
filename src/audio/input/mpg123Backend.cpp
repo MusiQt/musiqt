@@ -79,7 +79,7 @@ int mpg123Backend::m_status = 0;
 
 QStringList mpg123Backend::m_decoders;
 
-mpg123Config_t mpg123Backend::m_settings;
+mpg123Config_t mpg123Config::m_settings;
 
 /*****************************************************************/
 
@@ -98,14 +98,27 @@ size_t mpg123Backend::fillBuffer(void* buffer, const size_t bufferSize)
 
 /*****************************************************************/
 
+void mpg123Config::loadSettings()
+{
+    m_settings.fastscan = load("Fastscan", true);
+    m_settings.decoder = load("Decoder", "auto");
+}
+
+void mpg123Config::saveSettings()
+{
+    save("Fastscan", m_settings.fastscan);
+    save("Decoder", m_settings.decoder);
+}
+
+/*****************************************************************/
+
 QStringList mpg123Backend::ext() { return QStringList(EXT); }
 
 mpg123Backend::mpg123Backend() :
     inputBackend(name, iconMpg123, 560),
-    m_handle(nullptr)
+    m_handle(nullptr),
+    m_config(name, iconMpg123, 560)
 {
-    loadSettings();
-
     if (++m_status > 1)
         return;
 
@@ -136,18 +149,6 @@ mpg123Backend::~mpg123Backend()
         mpg123_exit();
 }
 
-void mpg123Backend::loadSettings()
-{
-    m_settings.fastscan = load("Fastscan", true);
-    m_settings.decoder = load("Decoder", "auto");
-}
-
-void mpg123Backend::saveSettings()
-{
-    save("Fastscan", m_settings.fastscan);
-    save("Decoder", m_settings.decoder);
-}
-
 bool mpg123Backend::open(const QString& fileName)
 {
     if (!m_status)
@@ -163,9 +164,9 @@ bool mpg123Backend::open(const QString& fileName)
     }
 
     int err;
-    qDebug() << "Setting decoder: " << m_settings.decoder;
-    const char *decoder = QString::compare(m_settings.decoder, "auto")
-        ? m_settings.decoder.toLocal8Bit().constData()
+    qDebug() << "Setting decoder: " << m_config.decoder();
+    const char *decoder = QString::compare(m_config.decoder(), "auto")
+        ? m_config.decoder().toLocal8Bit().constData()
         : nullptr;
     m_handle = mpg123_new(decoder, &err);
     if (m_handle == nullptr)
@@ -182,7 +183,7 @@ bool mpg123Backend::open(const QString& fileName)
         goto error;
     }
 
-    if (!m_settings.fastscan)
+    if (!m_config.fastscan())
     {
         err = mpg123_param(m_handle, MPG123_ADD_FLAGS, MPG123_PICTURE, 0.);
 
@@ -446,9 +447,9 @@ off_t mpg123Backend::seek_func(void* handle, off_t offset, int whence)
 
 /*****************************************************************/
 
-#define MPGSETTINGS	mpg123Backend::m_settings
+#define MPGSETTINGS	mpg123Config::m_settings
 
-mpg123Config::mpg123Config(QWidget* win) :
+mpg123ConfigFrame::mpg123ConfigFrame(QWidget* win) :
     configFrame(win, mpg123Backend::name, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("Decoder"), this), 0, 0);
