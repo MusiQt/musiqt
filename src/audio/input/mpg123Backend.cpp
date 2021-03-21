@@ -75,11 +75,11 @@ extern const unsigned char iconMpg123[560] =
 
 const char mpg123Backend::name[] = "Mpg123";
 
-int mpg123Backend::m_status = 0;
-
 QStringList mpg123Backend::m_decoders;
 
 mpg123Config_t mpg123Config::m_settings;
+
+inputConfig* mpg123Backend::cFactory() { return new mpg123Config(name, iconMpg123, 560); }
 
 /*****************************************************************/
 
@@ -112,16 +112,8 @@ void mpg123Config::saveSettings()
 
 /*****************************************************************/
 
-QStringList mpg123Backend::ext() { return QStringList(EXT); }
-
-mpg123Backend::mpg123Backend() :
-    inputBackend(name, iconMpg123, 560),
-    m_handle(nullptr),
-    m_config(name, iconMpg123, 560)
+bool mpg123Backend::init()
 {
-    if (++m_status > 1)
-        return;
-
     const int err = mpg123_init();
     if (err == MPG123_OK)
     {
@@ -133,27 +125,30 @@ mpg123Backend::mpg123Backend() :
             m_decoders << *decoders;
             ++decoders;
         }
+
+        return true;
     }
     else
     {
         qWarning() << mpg123_plain_strerror(err);
-        m_status = 0;
+        return false;
     }
 }
+
+QStringList mpg123Backend::ext() { return QStringList(EXT); }
+
+mpg123Backend::mpg123Backend() :
+    m_handle(nullptr),
+    m_config(name, iconMpg123, 560)
+{}
 
 mpg123Backend::~mpg123Backend()
 {
     close();
-
-    if (--m_status == 0)
-        mpg123_exit();
 }
 
 bool mpg123Backend::open(const QString& fileName)
 {
-    if (!m_status)
-        return false;
-
     close();
 
     m_file.setFileName(fileName);
@@ -205,7 +200,7 @@ bool mpg123Backend::open(const QString& fileName)
     err = mpg123_length(m_handle);
     if (err != MPG123_ERR)
     {
-        time((err*1000LL)/m_samplerate);
+        setDuration((err*1000LL)/m_samplerate);
     }
 
     err = mpg123_param(m_handle, MPG123_RVA,

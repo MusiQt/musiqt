@@ -79,6 +79,8 @@ int (*ffmpegBackend::dl_avcodec_parameters_to_context)(AVCodecContext *codec, co
 
 QStringList ffmpegBackend::_ext;
 
+inputConfig* ffmpegBackend::cFactory() { return new ffmpegConfig(name, iconFfmpeg, 86); }
+
 /*****************************************************************/
 
 size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -236,7 +238,6 @@ bool ffmpegBackend::init()
 QStringList ffmpegBackend::ext() { return _ext; }
 
 ffmpegBackend::ffmpegBackend() :
-    inputBackend(name, iconFfmpeg, 86),
     m_audioStream(nullptr),
     m_formatContext(nullptr),
     m_codecContext(nullptr),
@@ -326,7 +327,7 @@ bool ffmpegBackend::open(const QString& fileName)
     m_metaData.addInfo(metaData::TRACK, getMetadata("track"));
     m_metaData.addInfo(metaData::COMMENT, getMetadata("comment"));
 
-    time(m_formatContext->duration/1000);
+    setDuration(m_formatContext->duration/1000);
 
     songLoaded(fileName);
     return true;

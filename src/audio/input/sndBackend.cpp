@@ -30,6 +30,8 @@ QStringList sndBackend::_ext;
 
 const char sndBackend::name[] = "Sndfile";
 
+inputConfig* sndBackend::cFactory() { return new sndConfig(name); }
+
 /*****************************************************************/
 
 size_t sndBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -99,7 +101,7 @@ bool sndBackend::open(const QString& fileName)
     m_metaData.addInfo(metaData::GENRE, sf_get_string(_sf, SF_STR_GENRE));
 
     const unsigned int milliseconds = (_si.frames * 1000LL) / _si.samplerate;
-    time(milliseconds);
+    setDuration(milliseconds);
 
     songLoaded(fileName);
     return true;

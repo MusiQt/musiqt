@@ -29,7 +29,8 @@ class inputBackend;
 
 class iFactory
 {
-    typedef inputBackend* (*inputFactory)();
+    typedef input* (*inputFactory)();
+    typedef inputConfig* (*configFactory)();
     typedef QStringList (*extFunc)();
 
     typedef struct
@@ -37,6 +38,7 @@ class iFactory
         const char* name;
         extFunc supportedExt;
         inputFactory factory;
+        configFactory cFactory;
     } inputs_t;
 
 private:

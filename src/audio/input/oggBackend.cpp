@@ -84,6 +84,8 @@ const char oggBackend::name[] = "Ogg-Vorbis";
 
 oggConfig_t oggConfig::m_settings;
 
+inputConfig* oggBackend::cFactory() { return new oggConfig(name, iconOgg, 523); }
+
 /*****************************************************************/
 
 size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -118,7 +120,6 @@ void oggConfig::saveSettings()
 QStringList oggBackend::ext() { return QString(EXT).split("|"); }
 
 oggBackend::oggBackend() :
-    inputBackend(name, iconOgg, 523),
     _vf(nullptr),
     _vi(nullptr),
     m_config(name, iconOgg, 523)
@@ -152,7 +153,7 @@ bool oggBackend::open(const QString& fileName)
 
     _vi = ov_info(_vf, -1);
 
-    time(static_cast<unsigned int>(ov_time_total(_vf, -1)*1000.));
+    setDuration(static_cast<unsigned int>(ov_time_total(_vf, -1)*1000.));
 
     QString title;
     QString artist;

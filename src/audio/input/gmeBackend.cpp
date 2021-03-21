@@ -50,6 +50,8 @@ gmeConfig_t gmeConfig::m_settings;
 
 QStringList gmeBackend::_ext;
 
+inputConfig* gmeBackend::cFactory() { return new gmeConfig(name); }
+
 /*****************************************************************/
 
 size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -65,7 +67,6 @@ size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 void gmeConfig::loadSettings()
 {
-    qDebug() << "gmeConfig::loadSettings";
     m_settings.samplerate = load("Samplerate", 44100);
     m_settings.equalizer = load("Equalizer", false);
     m_settings.treble_dB = load("Treble dB", 0.0);
@@ -108,7 +109,6 @@ bool gmeBackend::init()
 QStringList gmeBackend::ext() { return QString(EXT).split("|"); }
 
 gmeBackend::gmeBackend() :
-    inputBackend(name),
     _emu(nullptr),
     _currentTrack(0)
 #ifdef HAVE_STILVIEW
@@ -207,11 +207,11 @@ void gmeBackend::getInfo()
     // length is -1 if unknown
     if (ti->length > 0)
     {
-        time(ti->length);
+        setDuration(ti->length);
     }
     else if (ti->loop_length > 0)
     {
-        time(ti->intro_length + ti->loop_length);
+        setDuration(ti->intro_length + ti->loop_length);
     }
 
     gme_free_info(ti);

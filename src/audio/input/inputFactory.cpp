@@ -67,23 +67,12 @@ protected:
     void close() {}
 
 public:
-    const metaData* getMetaData() const override { return &m_metaData; }
-    unsigned int songDuration() const override { return 0; }
-    unsigned int maxPlayTime() const override { return 0; }
     unsigned int samplerate() const override { return 0; }
     unsigned int channels() const override { return 0; }
     sample_t precision() const override { return sample_t::S16; }
-    unsigned int fract() const override { return 0; }
     bool open(const QString& fileName) override { return true; }
-    bool rewind() override { return true; }
-    bool seekable() const override { return false; }
     bool seek(const int pos) override { return true; }
     size_t fillBuffer(void* buffer, const size_t bufferSize) override { return 0; }
-    QString songLoaded() const override { return QString(); }
-    unsigned int subtunes() const override { return 0; }
-    unsigned int subtune() const override { return 0; }
-    bool subtune(const unsigned int i) override { return true; }
-    bool gapless() const override { return true; }
 };
 
 /*****************************************************************/
@@ -104,6 +93,7 @@ void iFactory::regBackend()
     temp.name = backend::name;
     temp.supportedExt = backend::ext;
     temp.factory = &backend::factory;
+    temp.cFactory = &backend::cFactory;
     m_inputs.append(temp);
 }
 
@@ -112,7 +102,8 @@ iFactory::iFactory()
     // Register backends
 
 #ifdef HAVE_MPG123
-    regBackend<mpg123Backend>();
+    if (mpg123Backend::init())
+        regBackend<mpg123Backend>();
 #endif
 
 #ifdef HAVE_VORBIS
@@ -201,5 +192,5 @@ input* iFactory::get(const QString& filename)
 
 inputConfig* iFactory::getConfig(const int i)
 {
-    return m_inputs[i].factory();
+    return m_inputs[i].cFactory();
 }

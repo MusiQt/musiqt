@@ -33,7 +33,7 @@
 #  define DATAFILE data
 #endif
 
-#include "inputBackend.h"
+#include "input.h"
 
 #include <QFile>
 
@@ -68,7 +68,7 @@ public:
 
 /*****************************************************************/
 
-class mpcBackend : public inputBackend
+class mpcBackend : public input
 {
     friend class mpcConfigFrame;
 
@@ -105,7 +105,8 @@ public:
     static const char name[];
 
     /// Factory method
-    static inputBackend* factory() { return new mpcBackend(); }
+    static input* factory() { return new mpcBackend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -147,9 +148,6 @@ public:
 
     /// Gapless support
     bool gapless() const override { return !songLoaded().isNull() ? _si.is_true_gapless : true; }
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

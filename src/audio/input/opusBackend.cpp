@@ -108,6 +108,8 @@ OpusFileCallbacks opusBackend::opus_callbacks =
 
 const char opusBackend::name[] = "Opus";
 
+inputConfig* opusBackend::cFactory() { return new opusConfig(name, iconOpus, 952); }
+
 /*****************************************************************/
 
 size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -132,7 +134,6 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
 QStringList opusBackend::ext() { return QStringList(EXT); }
 
 opusBackend::opusBackend() :
-    inputBackend(name, iconOpus, 952),
     _of(nullptr),
     m_config(name, iconOpus, 952)
 {}
@@ -162,7 +163,7 @@ bool opusBackend::open(const QString& fileName)
         return false;
     }
 
-    time(static_cast<unsigned int>(op_pcm_total(_of, -1)/48));
+    setDuration(static_cast<unsigned int>(op_pcm_total(_of, -1)/48));
 
     QString title;
     QString artist;

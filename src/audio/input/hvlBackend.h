@@ -23,7 +23,7 @@ extern "C"{
 #include "libs/hvl_replay/hvl_replay.h"
 }
 
-#include "inputBackend.h"
+#include "input.h"
 
 /*****************************************************************/
 
@@ -78,7 +78,7 @@ public:
 
 /*****************************************************************/
 
-class hvlBackend : public inputBackend
+class hvlBackend : public input
 {
     friend class hvlConfigFrame;
 
@@ -101,8 +101,9 @@ public:
 
     static const char name[];
 
-    /// Factory method
-    static inputBackend* factory() { return new hvlBackend(); }
+    /// Factory methods
+    static input* factory() { return new hvlBackend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -136,15 +137,6 @@ public:
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
-
-    // TODO remove
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
-
-    void loadSettings() override { m_config.loadSettings(); }
-
-    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

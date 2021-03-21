@@ -31,7 +31,7 @@ extern "C" {
 #  endif
 #endif
 }
-#include "inputBackend.h"
+#include "input.h"
 #include "AutoDLL.h"
 
 #define MAX_AUDIO_FRAME_SIZE 192000 // 1 second of 48khz 32bit audio
@@ -67,7 +67,7 @@ public:
 
 /*****************************************************************/
 
-class ffmpegBackend : public inputBackend
+class ffmpegBackend : public input
 {
 private:
     AVStream *m_audioStream;
@@ -135,7 +135,8 @@ public:
     static bool init();
 
     /// Factory method
-    static inputBackend* factory() { return new ffmpegBackend(); }
+    static input* factory() { return new ffmpegBackend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -173,9 +174,6 @@ public:
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

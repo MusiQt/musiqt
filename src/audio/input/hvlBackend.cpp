@@ -100,6 +100,8 @@ const char hvlBackend::name[] = "Hively";
 
 hvlConfig_t hvlConfig::m_settings;
 
+inputConfig* hvlBackend::cFactory() { return new hvlConfig(name, iconHvl, 1006); }
+
 /*****************************************************************/
 
 size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -154,7 +156,6 @@ void hvlConfig::saveSettings()
 QStringList hvlBackend::ext() { return QString(EXT).split("|"); }
 
 hvlBackend::hvlBackend() :
-    inputBackend(name, iconHvl, 1006),
     _tune(nullptr),
     _buffer(nullptr),
     m_config(name, iconHvl, 1006)

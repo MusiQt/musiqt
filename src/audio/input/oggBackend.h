@@ -19,7 +19,7 @@
 #ifndef OGG_H
 #define OGG_H
 
-#include "inputBackend.h"
+#include "input.h"
 
 #include <vorbis/vorbisfile.h>
 
@@ -76,7 +76,7 @@ public:
 
 /*****************************************************************/
 
-class oggBackend : public inputBackend
+class oggBackend : public input
 {
 private:
     OggVorbis_File *_vf;
@@ -103,7 +103,8 @@ public:
     static const char name[];
 
     /// Factory method
-    static inputBackend* factory() { return new oggBackend(); }
+    static input* factory() { return new oggBackend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -134,15 +135,6 @@ public:
 
     /// Gapless support
     bool gapless() const override { return true; };
-
-    // TODO remove
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
-
-    void loadSettings() override { m_config.loadSettings(); }
-
-    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

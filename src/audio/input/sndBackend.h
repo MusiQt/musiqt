@@ -29,7 +29,7 @@
 
 #include <sndfile.h>
 
-#include "inputBackend.h"
+#include "input.h"
 
 /*****************************************************************/
 
@@ -62,7 +62,7 @@ public:
 
 /*****************************************************************/
 
-class sndBackend : public inputBackend
+class sndBackend : public input
 {
 private:
     SNDFILE *_sf;
@@ -74,7 +74,6 @@ private:
 
 private:
     sndBackend() :
-        inputBackend(name),
         _sf(nullptr),
         m_config(name) {}
 
@@ -86,7 +85,8 @@ public:
     static bool init();
 
     /// Factory method
-    static inputBackend* factory() { return new sndBackend(); }
+    static input* factory() { return new sndBackend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext() { return _ext; }
@@ -116,10 +116,7 @@ public:
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Gapless support
-    bool gapless() const override { return true; };
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
+    bool gapless() const override { return true; }
 };
 
 #endif

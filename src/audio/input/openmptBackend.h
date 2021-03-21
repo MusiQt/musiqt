@@ -22,7 +22,7 @@
 #define LIBOPENMPT_ANCIENT_COMPILER
 #include <libopenmpt/libopenmpt.hpp>
 
-#include "inputBackend.h"
+#include "input.h"
 
 /*****************************************************************/
 
@@ -95,7 +95,7 @@ public:
 
 /*****************************************************************/
 
-class openmptBackend : public inputBackend
+class openmptBackend : public input
 {
 private:
     openmpt::module *_module;
@@ -134,7 +134,8 @@ public:
     static bool init();
 
     /// Factory method
-    static inputBackend* factory() { return new openmptBackend(); }
+    static input* factory() { return new openmptBackend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext() { return _ext; }
@@ -168,15 +169,6 @@ public:
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
-
-    // TODO remove
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
-
-    void loadSettings() override { m_config.loadSettings(); }
-
-    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

@@ -120,6 +120,8 @@ openmptConfig_t openmptConfig::m_settings;
 
 QStringList openmptBackend::_ext;
 
+inputConfig* openmptBackend::cFactory() { return new openmptConfig(name, iconOpenmpt, 990); }
+
 /*****************************************************************/
 
 size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -172,7 +174,6 @@ bool openmptBackend::init()
 }
 
 openmptBackend::openmptBackend() :
-    inputBackend(name, iconOpenmpt, 990),
     _module(nullptr),
     m_config(name, iconOpenmpt, 990)
 {}
@@ -267,7 +268,7 @@ bool openmptBackend::open(const QString& fileName)
             m_metaData.addInfo(metaData::COMMENT, _module->get_metadata("message").c_str());
     }
 
-    time(_module->get_duration_seconds()*1000);
+    setDuration(_module->get_duration_seconds()*1000);
 
     songLoaded(fileName);
     return true;

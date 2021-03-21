@@ -19,7 +19,7 @@
 #ifndef OPUS_BACKEND_H
 #define OPUS_BACKEND_H
 
-#include "inputBackend.h"
+#include "input.h"
 
 #include <opusfile.h>
 
@@ -58,7 +58,7 @@ public:
 
 /*****************************************************************/
 
-class opusBackend : public inputBackend
+class opusBackend : public input
 {
 private:
     OggOpusFile *_of;
@@ -84,7 +84,8 @@ public:
     static const char name[];
 
     /// Factory method
-    static inputBackend* factory() { return new opusBackend(); }
+    static input* factory() { return new opusBackend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -115,11 +116,6 @@ public:
 
     /// Gapless support
     bool gapless() const override { return true; };
-
-    // TODO remove
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

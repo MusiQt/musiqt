@@ -30,6 +30,8 @@
 #include <QWidget>
 #include <QDebug>
 
+#define gettext(x) x
+
 /**
  * base class for input config
  */
@@ -47,6 +49,8 @@ private:
 
 protected:
     const char* name() const { return m_name; }
+
+#define gettext(x) x
 
 protected:
     inputConfig(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0) :
@@ -111,21 +115,41 @@ public:
  */
 class input
 {
+private:
+    unsigned int m_time;
+
 protected:
+    metaDataImpl m_metaData;
+
+protected:
+    input() : m_time(0) {}
+
     /// Close file
     virtual void close() =0;
+
+    /// Song is loaded
+    void songLoaded(const QString& location)
+    {
+        if (!location.isEmpty())
+            m_metaData.addInfo(metaData::LOCATION, location);
+        else
+            m_metaData.clearInfo();
+    }
+
+    /// Set song duration
+    void setDuration(unsigned int newTime) { m_time = newTime; }
 
 public:
     virtual ~input() {}
 
     /// Get song info
-    virtual const metaData* getMetaData() const =0;
+    virtual const metaData* getMetaData() const { return &m_metaData; }
 
     /// Get song duration in milliseconds
-    virtual unsigned int songDuration() const =0;
+    virtual unsigned int songDuration() const { return 0; }
 
     /// Get max play time in milliseconds, 0 if none
-    virtual unsigned int maxPlayTime() const =0;
+    virtual unsigned int maxPlayTime() const { return 0; }
 
     /// Get samplerate
     virtual unsigned int samplerate() const =0;
@@ -137,37 +161,37 @@ public:
     virtual sample_t precision() const =0;
 
     /// Get fractional scale for fixed point types
-    virtual unsigned int fract() const =0;
+    virtual unsigned int fract() const { return 0; }
 
     /// Open file
     virtual bool open(const QString& fileName) =0;
 
     /// Rewind to start
-    virtual bool rewind() =0;
+    virtual bool rewind() { return seek(0); }
 
     /// Seek support
-    virtual bool seekable() const =0;
+    virtual bool seekable() const { return false; }
 
     /// Seek specified position
-    virtual bool seek(int pos) =0;
+    virtual bool seek(int pos) { return false; }
 
     /// Callback function
     virtual size_t fillBuffer(void* buffer, size_t bufferSize) =0;
 
     /// Song is loaded
-    virtual QString songLoaded() const =0;
+    virtual QString songLoaded() const { return m_metaData.getInfo(metaData::LOCATION); }
 
     /// Get number of subtunes
-    virtual unsigned int subtunes() const =0;
+    virtual unsigned int subtunes() const { return 0; }
 
     /// Get current subtune
-    virtual unsigned int subtune() const =0;
+    virtual unsigned int subtune() const { return 0; }
 
     /// Change subtune
-    virtual bool subtune(unsigned int i) =0;
+    virtual bool subtune(unsigned int i) { return false; }
 
     /// Gapless support
-    virtual bool gapless() const =0;
+    virtual bool gapless() const { return false; }
 };
 
 #endif

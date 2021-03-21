@@ -25,7 +25,7 @@
 
 #include <gme/gme.h>
 
-#include "inputBackend.h"
+#include "input.h"
 
 #ifdef HAVE_STILVIEW
 #  include <stilview/stil.h>
@@ -99,7 +99,7 @@ public:
 
 /*****************************************************************/
 
-class gmeBackend : public inputBackend
+class gmeBackend : public input
 {
 private:
     Music_Emu *_emu;
@@ -128,7 +128,8 @@ public:
     static bool init();
 
     /// Factory method
-    static inputBackend* factory() { return new gmeBackend(); }
+    static input* factory() { return new gmeBackend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -162,15 +163,6 @@ public:
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
-
-    // TODO remove
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
-
-    void loadSettings() override { m_config.loadSettings(); }
-
-    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

@@ -61,6 +61,8 @@ extern const unsigned char iconWv[375] =
 
 const char wvBackend::name[] = "Wavpack";
 
+inputConfig* wvBackend::cFactory() { return new wvConfig(name, iconWv, 375); }
+
 /*****************************************************************/
 
 size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -112,7 +114,6 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
 QStringList wvBackend::ext() { return QStringList(EXT); }
 
 wvBackend::wvBackend() :
-    inputBackend(name, iconWv, 375),
     _wvContext(nullptr),
     m_config(name, iconWv, 375){}
 
@@ -184,7 +185,7 @@ bool wvBackend::open(const QString& fileName)
     }
 
     const unsigned int milliseconds = (WavpackGetNumSamples(_wvContext) * 1000LL) / WavpackGetSampleRate(_wvContext);
-    time(milliseconds);
+    setDuration(milliseconds);
 
     _bufOffset = 0;
     _bufSize = 0;

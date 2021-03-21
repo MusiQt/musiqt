@@ -21,7 +21,7 @@
 
 #include <mpg123.h>
 
-#include "inputBackend.h"
+#include "input.h"
 
 #include <QFile>
 
@@ -79,7 +79,7 @@ public:
 
 /*****************************************************************/
 
-class mpg123Backend final : public inputBackend
+class mpg123Backend final : public input
 {
 private:
     mpg123_handle *m_handle;
@@ -88,8 +88,6 @@ private:
     int m_channels;
 
     QFile m_file;
-
-    static int m_status;
 
     static ssize_t read_func(void*, void*, size_t);
     static off_t seek_func(void*, off_t, int);
@@ -107,8 +105,11 @@ public:
 
     static const char name[];
 
+    static bool init();
+
     /// Factory method
-    static inputBackend* factory() { return new mpg123Backend(); }
+    static input* factory() { return new mpg123Backend(); }
+    static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -139,15 +140,6 @@ public:
 
     /// Gapless support
     bool gapless() const override { return true; };
-
-    // TODO remove
-
-    /// Open config dialog
-    QWidget* config(QWidget* win) override { return m_config.config(win); }
-
-    void loadSettings() override { m_config.loadSettings(); }
-
-    void saveSettings() override { m_config.saveSettings(); }
 };
 
 #endif

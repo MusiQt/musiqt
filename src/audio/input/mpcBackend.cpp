@@ -68,6 +68,8 @@ extern const unsigned char iconMpc[417] =
 
 const char mpcBackend::name[] = "Musepack";
 
+inputConfig* mpcBackend::cFactory() { return new mpcConfig(name, iconMpc, 417); }
+
 /*****************************************************************/
 
 size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -117,7 +119,6 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
 QStringList mpcBackend::ext() { return QStringList(EXT); }
 
 mpcBackend::mpcBackend() :
-    inputBackend(name, iconMpc, 417),
     m_config(name, iconMpc, 417)
 {
     _mpcReader.read = mpcBackend::read_func;
@@ -171,7 +172,7 @@ bool mpcBackend::open(const QString& fileName)
         goto error;
 #endif
 
-    time(static_cast<unsigned int>(mpc_streaminfo_get_length(&_si)*1000.));
+    setDuration(static_cast<unsigned int>(mpc_streaminfo_get_length(&_si)*1000.));
 
 #ifdef MPC_FIXED_POINT
     qDebug("FIXED");

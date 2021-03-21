@@ -95,6 +95,8 @@ const int sidAddresses[5] = { 0, 0xd420, 0xd500, 0xde00, 0xdf00 };
 
 sidConfig_t sidConfig::m_settings;
 
+inputConfig* sidBackend::cFactory() { return new sidConfig(name, iconSid, 126); }
+
 /*****************************************************************/
 
 size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
@@ -201,7 +203,6 @@ const char* getClockString(SidTuneInfo::clock_t clock)
 QStringList sidBackend::ext() { return QString(EXT).split("|"); }
 
 sidBackend::sidBackend() :
-    inputBackend(name, iconSid, 126),
     _sidplayfp(nullptr),
     _tune(nullptr),
     _stil(nullptr),
@@ -485,7 +486,7 @@ void sidBackend::loadTune(const int num)
     else
         _length = 0;
 
-    time(_length);
+    setDuration(_length);
 }
 
 void sidBackend::openHvsc(const QString& hvscPath)
