@@ -52,11 +52,7 @@
 
 void loadThread::run()
 {
-    if (!iBackend->open(fileName))
-    {
-        utils::delPtr(iBackend);
-    }
-    emit loaded(iBackend);
+    emit loaded(IFACTORY->get(fileName));
 }
 
 /*****************************************************************/
@@ -548,14 +544,7 @@ void centralFrame::load(const QString& filename, bool preload)
 {
     qDebug() << "Loading " << filename;
 
-    input *ib =  IFACTORY->get(filename);
-    if (ib == nullptr)
-    {
-        loadError();
-        return;
-    }
-
-    loadThread* loader = new loadThread(ib, filename);
+    loadThread* loader = new loadThread(filename);
     if (preload)
         connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongPreLoaded);
     else

@@ -47,7 +47,6 @@ class loadThread : public QThread
     Q_OBJECT
 
 private:
-    input *iBackend;
     QString fileName;
 
 protected:
@@ -57,9 +56,8 @@ signals:
     void loaded(input* res);
 
 public:
-    loadThread(input* i, QString name) :
+    loadThread(QString name) :
         QThread(),
-        iBackend(i),
         fileName(name)
    {}
 };

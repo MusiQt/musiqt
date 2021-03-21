@@ -169,14 +169,18 @@ input* iFactory::get()
     return new nullInput();
 }
 
-input* iFactory::get(const QString& filename)
+input* iFactory::get(const QString& fileName)
 {
     for (inputs_t i: m_inputs)
     {
-        if (supports(i.supportedExt(), filename))
+        if (supports(i.supportedExt(), fileName))
         {
-            qDebug() << "Using input backend " << i.name;
-            return i.factory();
+            qDebug() << "Trying input backend " << i.name;
+            input* ib = i.factory();
+            if (ib->open(fileName))
+                return ib;
+
+            delete ib;
         }
     }
 
