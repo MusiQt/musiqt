@@ -169,6 +169,15 @@ bool wvBackend::open(const QString& fileName)
             getApeTag("Track", metaData::TRACK);
             getApeTag("Comment", metaData::COMMENT);
             getApeTag("Genre", metaData::GENRE);
+
+            int size = WavpackGetBinaryTagItem(m_wvContext, "Cover Art", nullptr, 0);
+            if (size)
+            {
+                char *buffer = new char[size];
+                WavpackGetBinaryTagItem(m_wvContext, "Cover Art", buffer, size);
+                m_metaData.addInfo(new QByteArray(buffer, size));
+                delete [] buffer;
+            }
         }
         else
         {
