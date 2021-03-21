@@ -28,6 +28,7 @@
 #include <QSettings>
 #include <QString>
 #include <QWidget>
+#include <QDebug>
 
 /**
  * base class for input config
@@ -89,7 +90,6 @@ protected:
     }
 
 public:
-    
     virtual ~inputConfig() {}
 
     /// Open config dialog

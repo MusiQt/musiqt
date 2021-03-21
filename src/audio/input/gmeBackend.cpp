@@ -46,7 +46,7 @@
 
 const char gmeBackend::name[] = "Gme";
 
-gmeConfig_t gmeBackend::_settings;
+gmeConfig_t gmeConfig::m_settings;
 
 QStringList gmeBackend::_ext;
 
@@ -59,6 +59,33 @@ size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
     gme_play(_emu, (bufferSize>>1), (short*)buffer);
     return bufferSize;
+}
+
+/*****************************************************************/
+
+void gmeConfig::loadSettings()
+{
+    qDebug() << "gmeConfig::loadSettings";
+    m_settings.samplerate = load("Samplerate", 44100);
+    m_settings.equalizer = load("Equalizer", false);
+    m_settings.treble_dB = load("Treble dB", 0.0);
+    m_settings.bass_freq = load("Bass freq", 15);
+    m_settings.asmaPath = load("ASMA", QString());
+}
+
+void gmeConfig::saveSettings()
+{
+    /*if (m_settings.asmaPath.compare(load("ASMA", QString())))
+    {
+        qDebug() << "Reloading ASMA from " << m_settings.asmaPath;
+        openAsma(m_settings.asmaPath);
+    }*/
+
+    save("Samplerate", m_settings.samplerate);
+    save("Equalizer", m_settings.equalizer);
+    save("Treble dB", m_settings.treble_dB);
+    save("Bass freq", m_settings.bass_freq);
+    save("ASMA", m_settings.asmaPath);
 }
 
 /*****************************************************************/
@@ -87,9 +114,9 @@ gmeBackend::gmeBackend() :
 #ifdef HAVE_STILVIEW
     , _stil(nullptr)
 #endif
+    , m_config(name)
 {
-    loadSettings();
-    openAsma(_settings.asmaPath);
+    openAsma(m_config.asmaPath());
 }
 
 gmeBackend::~gmeBackend()
@@ -98,30 +125,6 @@ gmeBackend::~gmeBackend()
 #ifdef HAVE_STILVIEW
     delete _stil;
 #endif
-}
-
-void gmeBackend::loadSettings()
-{
-    _settings.samplerate = load("Samplerate", 44100);
-    _settings.equalizer = load("Equalizer", false);
-    _settings.treble_dB = load("Treble dB", 0.0);
-    _settings.bass_freq = load("Bass freq", 15);
-    _settings.asmaPath = load("ASMA", QString());
-}
-
-void gmeBackend::saveSettings()
-{
-    if (_settings.asmaPath.compare(load("ASMA", QString())))
-    {
-        qDebug() << "Reloading ASMA from " << _settings.asmaPath;
-        openAsma(_settings.asmaPath);
-    }
-
-    save("Samplerate", _settings.samplerate);
-    save("Equalizer", _settings.equalizer);
-    save("Treble dB", _settings.treble_dB);
-    save("Bass freq", _settings.bass_freq);
-    save("ASMA", _settings.asmaPath);
 }
 
 bool gmeBackend::open(const QString& fileName)
@@ -134,12 +137,12 @@ bool gmeBackend::open(const QString& fileName)
 
     qDebug() << "System " << gme_type_system(fileType);
 
-    _emu = gme_new_emu(fileType, _settings.samplerate);
+    _emu = gme_new_emu(fileType, m_config.samplerate());
     if (_emu == nullptr)
         return false;
-    if (_settings.equalizer)
+    if (m_config.equalizer())
     {
-        gme_equalizer_t eq = { _settings.treble_dB, _settings.bass_freq };
+        gme_equalizer_t eq = { m_config.treble_dB(), m_config.bass_freq() };
         gme_set_equalizer(_emu, &eq);
     }
     if (!checkRetCode(gme_load_file(_emu, fileName.toUtf8().constData())))
@@ -278,9 +281,9 @@ void gmeBackend::openAsma(const QString& asmaPath)
 
 #include "iconFactory.h"
 
-#define GMESETTINGS gmeBackend::_settings
+#define GMESETTINGS gmeConfig::m_settings
 
-gmeConfig::gmeConfig(QWidget* win) :
+gmeConfigFrame::gmeConfigFrame(QWidget* win) :
     configFrame(win, gmeBackend::name, CREDITS, LINK)
 {
     int val;

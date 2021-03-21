@@ -35,16 +35,29 @@
 
 #include "configFrame.h"
 
-class sndConfig : public configFrame
+class sndConfigFrame : public configFrame
 {
 private:
-    sndConfig() {}
-    sndConfig(const sndConfig&);
-    sndConfig& operator=(const sndConfig&);
+    sndConfigFrame() {}
+    sndConfigFrame(const sndConfigFrame&);
+    sndConfigFrame& operator=(const sndConfigFrame&);
 
 public:
-    sndConfig(QWidget* win);
-    virtual ~sndConfig() {}
+    sndConfigFrame(QWidget* win);
+    virtual ~sndConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class sndConfig : public inputConfig
+{
+public:
+    sndConfig(const char name[]) :
+        inputConfig(name)
+    {}
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new sndConfigFrame(win); }
 };
 
 /*****************************************************************/
@@ -57,10 +70,13 @@ private:
 
     static QStringList _ext;
 
+    sndConfig m_config;
+
 private:
     sndBackend() :
         inputBackend(name),
-        _sf(nullptr) {}
+        _sf(nullptr),
+        m_config(name) {}
 
 public:
     ~sndBackend();
@@ -103,7 +119,7 @@ public:
     bool gapless() const override { return true; };
 
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new sndConfig(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

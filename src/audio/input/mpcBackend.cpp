@@ -117,7 +117,8 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
 QStringList mpcBackend::ext() { return QStringList(EXT); }
 
 mpcBackend::mpcBackend() :
-    inputBackend(name, iconMpc, 417)
+    inputBackend(name, iconMpc, 417),
+    m_config(name, iconMpc, 417)
 {
     _mpcReader.read = mpcBackend::read_func;
     _mpcReader.seek = mpcBackend::seek_func;
@@ -272,7 +273,7 @@ mpc_bool_t mpcBackend::canseek_func(DATAPARM)
 
 /*****************************************************************/
 
-mpcConfig::mpcConfig(QWidget* win) :
+mpcConfigFrame::mpcConfigFrame(QWidget* win) :
     configFrame(win, mpcBackend::name, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available"), this));

@@ -29,16 +29,29 @@ extern "C" {
 
 #include "configFrame.h"
 
-class wvConfig : public configFrame
+class wvConfigFrame : public configFrame
 {
 private:
-    wvConfig() {}
-    wvConfig(const wvConfig&);
-    wvConfig& operator=(const wvConfig&);
+    wvConfigFrame() {}
+    wvConfigFrame(const wvConfigFrame&);
+    wvConfigFrame& operator=(const wvConfigFrame&);
 
 public:
-    wvConfig(QWidget* win);
-    virtual ~wvConfig() {}
+    wvConfigFrame(QWidget* win);
+    virtual ~wvConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class wvConfig : public inputConfig
+{
+public:
+    wvConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {}
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new wvConfigFrame(win); }
 };
 
 /*****************************************************************/
@@ -53,6 +66,8 @@ private:
     int _bps;
     int _channels;
     sample_t _precision;
+
+    wvConfig m_config;
 
 private:
     void copyBuffer(char* dest, const int* src, size_t length);
@@ -114,7 +129,7 @@ public:
     bool gapless() const override { return true; };
 
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new wvConfig(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

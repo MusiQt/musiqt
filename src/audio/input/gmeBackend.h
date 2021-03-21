@@ -48,27 +48,59 @@ typedef struct
 
 class QLineEdit;
 
-class gmeConfig : public configFrame
+class gmeConfigFrame : public configFrame
 {
 private:
-    gmeConfig() {}
-    gmeConfig(const gmeConfig&);
-    gmeConfig& operator=(const gmeConfig&);
+    gmeConfigFrame() {}
+    gmeConfigFrame(const gmeConfigFrame&);
+    gmeConfigFrame& operator=(const gmeConfigFrame&);
 
 public:
-    gmeConfig(QWidget* win);
-    virtual ~gmeConfig() {}
+    gmeConfigFrame(QWidget* win);
+    virtual ~gmeConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class gmeConfig : public inputConfig
+{
+    friend class gmeConfigFrame;
+
+private:
+    static gmeConfig_t m_settings;
+
+public:
+    gmeConfig(const char name[]) :
+        inputConfig(name)
+    {
+        loadSettings();
+    }
+
+    void loadSettings() override;
+
+    void saveSettings() override;
+
+    /// Get Music directory
+    const QString getMusicDir() const override { return asmaPath(); }
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new gmeConfigFrame(win); }
+
+    unsigned int samplerate() const { return m_settings.samplerate; }
+
+    bool equalizer() const { return m_settings.equalizer; }
+
+    double treble_dB() const { return m_settings.treble_dB; }
+
+    double bass_freq() const { return m_settings.bass_freq; }
+
+    QString asmaPath() const { return m_settings.asmaPath; }
 };
 
 /*****************************************************************/
 
 class gmeBackend : public inputBackend
 {
-    friend class gmeConfig;
-
-private:
-    static gmeConfig_t _settings;
-
 private:
     Music_Emu *_emu;
     int _currentTrack;
@@ -76,6 +108,8 @@ private:
     STIL *_stil;
 #endif
     static QStringList _ext;
+
+    gmeConfig m_config;
 
 private:
     gmeBackend();
@@ -118,7 +152,7 @@ public:
     bool subtune(const unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _settings.samplerate; }
+    unsigned int samplerate() const override { return m_config.samplerate(); }
 
     /// Get channels
     unsigned int channels() const override { return 2; }
@@ -130,14 +164,7 @@ public:
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new gmeConfig(win); }
-
-    /// Get Music directory
-    const QString getMusicDir() const override { return _settings.asmaPath; }
-
-    void loadSettings() override;
-
-    void saveSettings() override;
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

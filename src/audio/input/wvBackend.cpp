@@ -113,7 +113,8 @@ QStringList wvBackend::ext() { return QStringList(EXT); }
 
 wvBackend::wvBackend() :
     inputBackend(name, iconWv, 375),
-    _wvContext(nullptr) {}
+    _wvContext(nullptr),
+    m_config(name, iconWv, 375){}
 
 wvBackend::~wvBackend()
 {
@@ -244,7 +245,7 @@ bool wvBackend::seek(int pos)
 
 /*****************************************************************/
 
-wvConfig::wvConfig(QWidget* win) :
+wvConfigFrame::wvConfigFrame(QWidget* win) :
     configFrame(win, wvBackend::name, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available"), this));

@@ -41,23 +41,36 @@
 
 #include "configFrame.h"
 
-class mpcConfig : public configFrame
+class mpcConfigFrame : public configFrame
 {
 private:
-    mpcConfig() {}
-    mpcConfig(const mpcConfig&);
-    mpcConfig& operator=(const mpcConfig&);
+    mpcConfigFrame() {}
+    mpcConfigFrame(const mpcConfigFrame&);
+    mpcConfigFrame& operator=(const mpcConfigFrame&);
 
 public:
-    mpcConfig(QWidget* win);
-    virtual ~mpcConfig() {}
+    mpcConfigFrame(QWidget* win);
+    virtual ~mpcConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class mpcConfig : public inputConfig
+{
+public:
+    mpcConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {}
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new mpcConfigFrame(win); }
 };
 
 /*****************************************************************/
 
 class mpcBackend : public inputBackend
 {
-    friend class mpcConfig;
+    friend class mpcConfigFrame;
 
 private:
 #ifdef MPCDEC_SV8
@@ -73,6 +86,8 @@ private:
     unsigned int _bufLen;
 
     QFile _file;
+
+    mpcConfig m_config;
 
 private:
     static mpc_int32_t read_func(DATAPARM, void *ptr, mpc_int32_t size);
@@ -134,7 +149,7 @@ public:
     bool gapless() const override { return !songLoaded().isNull() ? _si.is_true_gapless : true; }
 
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new mpcConfig(win); }
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

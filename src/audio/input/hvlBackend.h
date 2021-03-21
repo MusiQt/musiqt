@@ -29,35 +29,58 @@ extern "C"{
 
 typedef struct
 {
-    int samplerate;
+    unsigned int samplerate;
 } hvlConfig_t;
 
 /*****************************************************************/
 
 #include "configFrame.h"
 
-class hvlConfig : public configFrame
+class hvlConfigFrame : public configFrame
 {
     Q_OBJECT
 
 private:
-    hvlConfig() {}
-    hvlConfig(const hvlConfig&);
-    hvlConfig& operator=(const hvlConfig&);
+    hvlConfigFrame() {}
+    hvlConfigFrame(const hvlConfigFrame&);
+    hvlConfigFrame& operator=(const hvlConfigFrame&);
 
 public:
-    hvlConfig(QWidget* win);
-    virtual ~hvlConfig() {}
+    hvlConfigFrame(QWidget* win);
+    virtual ~hvlConfigFrame() {}
+};
+
+/*****************************************************************/
+
+class hvlConfig : public inputConfig
+{
+    friend class hvlConfigFrame;
+
+private:
+    static hvlConfig_t m_settings;
+
+public:
+    hvlConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
+        inputConfig(name, iconType, iconLen)
+    {
+        loadSettings();
+    }
+
+    void loadSettings() override;
+
+    void saveSettings() override;
+
+    /// Open config dialog
+    QWidget* config(QWidget* win) override { return new hvlConfigFrame(win); }
+
+    unsigned int samplerate() const { return m_settings.samplerate; }
 };
 
 /*****************************************************************/
 
 class hvlBackend : public inputBackend
 {
-    friend class hvlConfig;
-
-private:
-    static hvlConfig_t _settings;
+    friend class hvlConfigFrame;
 
 private:
     struct hvl_tune *_tune;
@@ -67,6 +90,8 @@ private:
     int _left;
     unsigned int _size;
     char *_buffer;
+
+    hvlConfig m_config;
 
 private:
     hvlBackend();
@@ -101,7 +126,7 @@ public:
     bool subtune(const unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _settings.samplerate; }
+    unsigned int samplerate() const override { return m_config.samplerate(); }
 
     /// Get channels
     unsigned int channels() const override { return 2; }
@@ -113,11 +138,7 @@ public:
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Open config dialog
-    QWidget* config(QWidget* win) override { return new hvlConfig(win); }
-
-    void loadSettings() override;
-
-    void saveSettings() override;
+    QWidget* config(QWidget* win) override { return m_config.config(win); }
 };
 
 #endif

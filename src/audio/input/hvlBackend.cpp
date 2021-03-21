@@ -98,7 +98,7 @@ extern const unsigned char iconHvl[1006] =
 
 const char hvlBackend::name[] = "Hively";
 
-hvlConfig_t hvlBackend::_settings;
+hvlConfig_t hvlConfig::m_settings;
 
 /*****************************************************************/
 
@@ -139,15 +139,26 @@ size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 /*****************************************************************/
 
+void hvlConfig::loadSettings()
+{
+    m_settings.samplerate = load("Samplerate", 44100);
+}
+
+void hvlConfig::saveSettings()
+{
+    save("Samplerate", m_settings.samplerate);
+}
+
+/*****************************************************************/
+
 QStringList hvlBackend::ext() { return QString(EXT).split("|"); }
 
 hvlBackend::hvlBackend() :
     inputBackend(name, iconHvl, 1006),
     _tune(nullptr),
-    _buffer(nullptr)
+    _buffer(nullptr),
+    m_config(name, iconHvl, 1006)
 {
-    loadSettings();
-
     hvl_InitReplayer();
 }
 
@@ -156,21 +167,11 @@ hvlBackend::~hvlBackend()
     close();
 }
 
-void hvlBackend::loadSettings()
-{
-    _settings.samplerate = load("Samplerate", 44100);
-}
-
-void hvlBackend::saveSettings()
-{
-    save("Samplerate", _settings.samplerate);
-}
-
 bool hvlBackend::open(const QString& fileName)
 {
     close();
 
-    _tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), _settings.samplerate, 2);
+    _tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), m_config.samplerate(), 2);
 
     if (_tune == nullptr)
         return false;
@@ -185,7 +186,7 @@ bool hvlBackend::open(const QString& fileName)
     m_metaData.addInfo(metaData::COMMENT, comment.trimmed());
 
     _left = 0;
-    _size = (_settings.samplerate*4) / 50;
+    _size = (m_config.samplerate()*4) / 50;
     _buffer = new char[_size];
 
     songLoaded(fileName);
@@ -227,9 +228,9 @@ bool hvlBackend::subtune(const unsigned int i)
 
 /*****************************************************************/
 
-#define HVLSETTINGS hvlBackend::_settings
+#define HVLSETTINGS hvlConfig::m_settings
 
-hvlConfig::hvlConfig(QWidget* win) :
+hvlConfigFrame::hvlConfigFrame(QWidget* win) :
     configFrame(win, hvlBackend::name, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("Samplerate"), this), 0, 0);
