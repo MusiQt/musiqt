@@ -62,13 +62,14 @@ bool sndBackend::init()
 
 sndBackend::~sndBackend()
 {
-    close();
+    if (_sf != nullptr)
+    {
+        sf_close(_sf);
+    }
 }
 
 bool sndBackend::open(const QString& fileName)
 {
-    close();
-
     _si.format = 0;
 #if defined (_WIN32) && defined (UNICODE)
     const wchar_t *buffer = utils::convertUtf(fileName);
@@ -105,17 +106,6 @@ bool sndBackend::open(const QString& fileName)
 
     songLoaded(fileName);
     return true;
-}
-
-void sndBackend::close()
-{
-    if (_sf != nullptr)
-    {
-        sf_close(_sf);
-        _sf = nullptr;
-    }
-
-    songLoaded(QString());
 }
 
 bool sndBackend::seek(int pos)

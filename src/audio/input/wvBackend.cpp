@@ -115,17 +115,20 @@ QStringList wvBackend::ext() { return QStringList(EXT); }
 
 wvBackend::wvBackend() :
     _wvContext(nullptr),
+    _decodeBuf(nullptr),
     m_config(name, iconWv, 375){}
 
 wvBackend::~wvBackend()
 {
-    close();
+    if (_wvContext != nullptr)
+    {
+        _wvContext = WavpackCloseFile(_wvContext);
+        delete [] _decodeBuf;
+    }
 }
 
 bool wvBackend::open(const QString& fileName)
 {
-    close();
-
     char tmp[255];
     _wvContext = WavpackOpenFileInput(fileName.toUtf8().constData(), tmp, OPEN_WVC|OPEN_TAGS|OPEN_2CH_MAX|OPEN_NORMALIZE, 0);
     if (_wvContext == nullptr)
@@ -210,17 +213,6 @@ void wvBackend::getApeTag(const char* tag, metaData::mpris_t meta)
         m_metaData.addInfo(meta, QString::fromUtf8(tmp, size).replace('\0', ','));
 }
 
-void wvBackend::close()
-{
-    if (_wvContext != nullptr)
-    {
-        _wvContext = WavpackCloseFile(_wvContext);
-        delete [] _decodeBuf;
-    }
-
-    songLoaded(QString());
-}
-
 bool wvBackend::seek(int pos)
 {
     if (_wvContext == nullptr)
@@ -234,7 +226,6 @@ bool wvBackend::seek(int pos)
     uint32_t sample = (samples * pos) / 100;
     if (!WavpackSeekSample(_wvContext, sample))
     {
-        close();
         return false;
     }
 

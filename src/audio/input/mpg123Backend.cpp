@@ -144,13 +144,14 @@ mpg123Backend::mpg123Backend() :
 
 mpg123Backend::~mpg123Backend()
 {
-    close();
+    mpg123_close(m_handle);
+    mpg123_delete(m_handle);
+
+    m_file.close();
 }
 
 bool mpg123Backend::open(const QString& fileName)
 {
-    close();
-
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
     {
@@ -381,19 +382,6 @@ error:
     qWarning() << mpg123_strerror(m_handle);
     m_file.close();
     return false;
-}
-
-void mpg123Backend::close()
-{
-    if (songLoaded().isEmpty())
-        return;
-
-    mpg123_close(m_handle);
-    mpg123_delete(m_handle);
-
-    m_file.close();
-
-    songLoaded(QString());
 }
 
 bool mpg123Backend::seek(int pos)

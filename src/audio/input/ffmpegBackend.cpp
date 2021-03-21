@@ -241,11 +241,22 @@ ffmpegBackend::ffmpegBackend() :
     m_audioStream(nullptr),
     m_formatContext(nullptr),
     m_codecContext(nullptr),
-    m_config(name, iconFfmpeg, 86) {}
+    m_frame(nullptr),
+    m_decodeBufOffset(0),
+    m_config(name, iconFfmpeg, 86)
+{
+    m_packet.data = 0;
+}
 
 ffmpegBackend::~ffmpegBackend()
 {
-    close();
+    dl_av_frame_free(&m_frame);
+
+    if (m_packet.data)
+        dl_av_packet_unref(&m_packet);
+
+    dl_avcodec_free_context(&m_codecContext);
+    dl_avformat_close_input(&m_formatContext);
 }
 
 QString ffmpegBackend::getMetadata(const char* type)
@@ -267,8 +278,6 @@ QString ffmpegBackend::getMetadata(const char* type)
 
 bool ffmpegBackend::open(const QString& fileName)
 {
-    close();
-
     if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
     {
         qWarning() << "Cannot open input";
@@ -285,8 +294,6 @@ bool ffmpegBackend::open(const QString& fileName)
         goto error;
 
     m_audioStream = m_formatContext->streams[m_audioStreamIndex];
-    m_decodeBufOffset = 0;
-    m_packet.data = 0;
     m_frame = dl_av_frame_alloc();
 
     switch(m_codecContext->sample_fmt)
@@ -337,24 +344,6 @@ error:
     dl_avformat_close_input(&m_formatContext);
 
     return false;
-}
-
-void ffmpegBackend::close()
-{
-    if (songLoaded().isEmpty())
-        return;
-
-    dl_av_frame_free(&m_frame);
-
-    if (m_packet.data)
-        dl_av_packet_unref(&m_packet);
-
-    dl_avcodec_free_context(&m_codecContext);
-    dl_avformat_close_input(&m_formatContext);
-
-    m_audioStream = nullptr;
-
-    songLoaded(QString());
 }
 
 bool ffmpegBackend::seek(int pos)

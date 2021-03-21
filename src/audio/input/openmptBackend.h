@@ -143,9 +143,6 @@ public:
     /// Open file
     bool open(const QString& fileName) override;
 
-    /// Close file
-    void close();
-
     /// Rewind to start
     bool rewind() override;
 

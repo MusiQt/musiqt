@@ -165,13 +165,15 @@ hvlBackend::hvlBackend() :
 
 hvlBackend::~hvlBackend()
 {
-    close();
+    if (_tune)
+    {
+        hvl_FreeTune(_tune);
+        delete[] _buffer;
+    }
 }
 
 bool hvlBackend::open(const QString& fileName)
 {
-    close();
-
     _tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), m_config.samplerate(), 2);
 
     if (_tune == nullptr)
@@ -192,19 +194,6 @@ bool hvlBackend::open(const QString& fileName)
 
     songLoaded(fileName);
     return true;
-}
-
-void hvlBackend::close()
-{
-    if (_tune)
-    {
-        hvl_FreeTune(_tune);
-        _tune = nullptr;
-        delete[] _buffer;
-        _buffer = nullptr;
-    }
-
-    songLoaded(QString());
 }
 
 bool hvlBackend::rewind()

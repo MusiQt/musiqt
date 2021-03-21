@@ -180,13 +180,11 @@ openmptBackend::openmptBackend() :
 
 openmptBackend::~openmptBackend()
 {
-    close();
+    delete _module;
 }
 
 bool openmptBackend::open(const QString& fileName)
 {
-    close();
-
     bool tmpFile = false;
     QString fName;
 
@@ -272,16 +270,6 @@ bool openmptBackend::open(const QString& fileName)
 
     songLoaded(fileName);
     return true;
-}
-
-void openmptBackend::close()
-{
-    if (_module != nullptr)
-    {
-        utils::delPtr(_module);
-    }
-
-    songLoaded(QString());
 }
 
 bool openmptBackend::rewind()

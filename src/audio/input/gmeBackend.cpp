@@ -33,7 +33,7 @@
 
 #include <string>
 
-#define EXT "ay|gbs|gym|hes|kss|nsfe|nsf|sap|spc|vgm|vgz"
+#define EXT "ay|gbs|gym|hes|f|nsfe|nsf|sap|spc|vgm|vgz"
 
 // ASMA path to STIL.
 #define ASMA_STIL "/Docs/STIL.txt"
@@ -121,7 +121,8 @@ gmeBackend::gmeBackend() :
 
 gmeBackend::~gmeBackend()
 {
-    close();
+    gme_delete(_emu);
+// 
 #ifdef HAVE_STILVIEW
     delete _stil;
 #endif
@@ -129,8 +130,6 @@ gmeBackend::~gmeBackend()
 
 bool gmeBackend::open(const QString& fileName)
 {
-    close();
-
     gme_type_t fileType;
     if (!checkRetCode(gme_identify_file(fileName.toUtf8().constData(), &fileType)))
         return false;
@@ -227,14 +226,6 @@ bool gmeBackend::checkRetCode(const char* error)
         return false;
     }
     return true;
-}
-
-void gmeBackend::close()
-{
-    gme_delete(_emu);
-    _emu = nullptr;
-
-    songLoaded(QString());
 }
 
 bool gmeBackend::rewind()

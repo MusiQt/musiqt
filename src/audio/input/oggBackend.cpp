@@ -127,13 +127,15 @@ oggBackend::oggBackend() :
 
 oggBackend::~oggBackend()
 {
-    close();
+    if (_vf != nullptr)
+    {
+        ov_clear(_vf);
+        _file.close();
+    }
 }
 
 bool oggBackend::open(const QString& fileName)
 {
-    close();
-
     _file.setFileName(fileName);
     if (!_file.open(QIODevice::ReadOnly))
     {
@@ -252,20 +254,6 @@ bool oggBackend::open(const QString& fileName)
 
     songLoaded(fileName);
     return true;
-}
-
-void oggBackend::close()
-{
-    if (_vf != nullptr)
-    {
-        ov_clear(_vf);
-        utils::delPtr(_vf);
-        _file.close();
-    }
-
-    _vi = nullptr;
-
-    songLoaded(QString());
 }
 
 bool oggBackend::seek(int pos)

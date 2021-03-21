@@ -216,7 +216,14 @@ sidBackend::sidBackend() :
 
 sidBackend::~sidBackend()
 {
-    close();
+    if (_sidplayfp != nullptr)
+    {
+        const sidbuilder *emuSid = _sidplayfp->config().sidEmulation;
+        delete emuSid;
+        delete _sidplayfp;
+    }
+
+    delete _tune;
 
     delete _db;
     delete _stil;
@@ -241,8 +248,6 @@ const unsigned char* sidBackend::loadRom(const QString& romPath)
 
 bool sidBackend::open(const QString& fileName)
 {
-    close();
-
     _sidplayfp = new sidplayfp;
 
     {
@@ -430,20 +435,6 @@ bool sidBackend::open(const QString& fileName)
 #endif
     songLoaded(fileName);
     return true;
-}
-
-void sidBackend::close()
-{
-    if (_sidplayfp != nullptr)
-    {
-        const sidbuilder *emuSid = _sidplayfp->config().sidEmulation;
-        delete emuSid;
-        utils::delPtr(_sidplayfp);
-    }
-
-    utils::delPtr(_tune);
-
-    songLoaded(QString());
 }
 
 bool sidBackend::rewind()

@@ -131,13 +131,16 @@ mpcBackend::mpcBackend() :
 
 mpcBackend::~mpcBackend()
 {
-    close();
+    _file.close();
+
+#ifdef MPCDEC_SV8
+    if (!songLoaded().isNull())
+        mpc_demux_exit(_demux);
+#endif
 }
 
 bool mpcBackend::open(const QString& fileName)
 {
-    close();
-
     _file.setFileName(fileName);
     if (!_file.open(QIODevice::ReadOnly))
         return false;
@@ -211,20 +214,7 @@ bool mpcBackend::open(const QString& fileName)
     return true;
 
 error:
-    close();
     return false;
-}
-
-void mpcBackend::close()
-{
-    _file.close();
-
-#ifdef MPCDEC_SV8
-    if (!songLoaded().isNull())
-        mpc_demux_exit(_demux);
-#endif
-
-    songLoaded(QString());
 }
 
 bool mpcBackend::seek(int pos)

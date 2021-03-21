@@ -140,13 +140,15 @@ opusBackend::opusBackend() :
 
 opusBackend::~opusBackend()
 {
-    close();
+    if (_of != nullptr)
+    {
+        op_free(_of);
+        _file.close();
+    }
 }
 
 bool opusBackend::open(const QString& fileName)
 {
-    close();
-
     _file.setFileName(fileName);
     if (!_file.open(QIODevice::ReadOnly))
     {
@@ -228,18 +230,6 @@ bool opusBackend::open(const QString& fileName)
 
     songLoaded(fileName);
     return true;
-}
-
-void opusBackend::close()
-{
-    if (_of != nullptr)
-    {
-        op_free(_of);
-        //utils::delPtr(_of);
-        _file.close();
-    }
-
-    songLoaded(QString());
 }
 
 bool opusBackend::seek(int pos)
