@@ -79,10 +79,10 @@ public:
 class oggBackend : public input
 {
 private:
-    OggVorbis_File *_vf;
-    vorbis_info *_vi;
+    OggVorbis_File *m_vf;
+    vorbis_info *m_vi;
 
-    QFile _file;
+    QFile m_file;
 
     oggConfig m_config;
 
@@ -119,10 +119,10 @@ public:
     bool seek(int pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _vi != nullptr ? _vi->rate : 0; }
+    unsigned int samplerate() const override { return m_vi != nullptr ? m_vi->rate : 0; }
 
     /// Get channels
-    unsigned int channels() const override { return _vi != nullptr ? _vi->channels : 0; }
+    unsigned int channels() const override { return m_vi != nullptr ? m_vi->channels : 0; }
 
     /// Get precision
     sample_t precision() const override { return m_config.precision(); }

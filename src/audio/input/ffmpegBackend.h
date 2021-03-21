@@ -91,7 +91,7 @@ private:
     static const AutoDLL avcodecDll;
     static const AutoDLL avutilDll;
 
-    static QStringList _ext;
+    static QStringList m_ext;
 
     ffmpegConfig m_config;
 

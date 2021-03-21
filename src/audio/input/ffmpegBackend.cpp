@@ -77,7 +77,7 @@ int (*ffmpegBackend::dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaTy
                                              int related_stream, AVCodec **decoder_ret, int flags)=0;
 int (*ffmpegBackend::dl_avcodec_parameters_to_context)(AVCodecContext *codec, const AVCodecParameters *par)=0;
 
-QStringList ffmpegBackend::_ext;
+QStringList ffmpegBackend::m_ext;
 
 inputConfig* ffmpegBackend::cFactory() { return new ffmpegConfig(name, iconFfmpeg, 86); }
 
@@ -203,39 +203,39 @@ bool ffmpegBackend::init()
 
     // register supported extensions
     if (dl_av_find_input_format("aac"))
-        _ext << "aac";
+        m_ext << "aac";
     if (dl_av_find_input_format("ape"))
-        _ext << "ape" << "apl" << "mac";
+        m_ext << "ape" << "apl" << "mac";
     if (dl_av_find_input_format("asf"))
-        _ext << "wma";
+        m_ext << "wma";
     if (dl_av_find_input_format("au"))
-        _ext << "au";
+        m_ext << "au";
     if (dl_av_find_input_format("flac"))
-        _ext << "flac";
+        m_ext << "flac";
     if (dl_av_find_input_format("mp3"))
-        _ext << "mp2" << "mp3" << "m2a";
+        m_ext << "mp2" << "mp3" << "m2a";
     if (dl_av_find_input_format("mp4"))
-        _ext << "mp4" << "m4a";
+        m_ext << "mp4" << "m4a";
     if (dl_av_find_input_format("mpc"))
-        _ext << "mpc";
+        m_ext << "mpc";
     if (dl_av_find_input_format("ogg"))
-        _ext << "ogg" << "oga";
+        m_ext << "ogg" << "oga";
     if (dl_av_find_input_format("rm"))
-        _ext << "rm" << "ra" << "ram";
+        m_ext << "rm" << "ra" << "ram";
     if (dl_av_find_input_format("tta"))
-        _ext << "tta";
+        m_ext << "tta";
     if (dl_av_find_input_format("voc"))
-        _ext << "voc";
+        m_ext << "voc";
     if (dl_av_find_input_format("wav"))
-        _ext << "wav";
+        m_ext << "wav";
     if (dl_av_find_input_format("wv"))
-        _ext << "wv";
+        m_ext << "wv";
 
-    qDebug() << "Ffmpeg extensions supported: " << _ext;
+    qDebug() << "Ffmpeg extensions supported: " << m_ext;
     return true;
 }
 
-QStringList ffmpegBackend::ext() { return _ext; }
+QStringList ffmpegBackend::ext() { return m_ext; }
 
 ffmpegBackend::ffmpegBackend() :
     m_audioStream(nullptr),

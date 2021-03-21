@@ -77,12 +77,12 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
     size_t n = 0;
 
     do {
-        if (_bufIndex >= _bufLen)
+        if (m_bufIndex >= m_bufLen)
         {
 #ifdef MPCDEC_SV8
             mpc_frame_info frame;
-            frame.buffer = _buffer;
-            const mpc_status err = mpc_demux_decode(_demux, &frame);
+            frame.buffer = m_buffer;
+            const mpc_status err = mpc_demux_decode(m_demux, &frame);
             if (frame.bits == -1)
                     break;
             if (err != MPC_STATUS_OK)
@@ -91,24 +91,24 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
                 return 0;
             }
 
-            _bufLen = frame.samples*_si.channels*sizeof(MPC_SAMPLE_FORMAT);
+            m_bufLen = frame.samples*m_si.channels*sizeof(MPC_SAMPLE_FORMAT);
 #else
-            _bufLen = mpc_decoder_decode(&_decoder, _buffer, 0, 0)*_si.channels*sizeof(MPC_SAMPLE_FORMAT);
-            if (!_bufLen)
+            m_bufLen = mpc_decoder_decode(&m_decoder, m_buffer, 0, 0)*m_si.channels*sizeof(MPC_SAMPLE_FORMAT);
+            if (!m_bufLen)
                 break;
-            if (_bufLen < 0)
+            if (m_bufLen < 0)
             {
                 qWarning("Decoding error");
                 return 0;
             }
 #endif
-            _bufIndex = 0;
+            m_bufIndex = 0;
         }
 
-        const size_t num = qMin((size_t)(_bufLen-_bufIndex), bufferSize-n);
-        memcpy((char*)buffer+n, (char*)_buffer+_bufIndex, num);
+        const size_t num = qMin((size_t)(m_bufLen-m_bufIndex), bufferSize-n);
+        memcpy((char*)buffer+n, (char*)m_buffer+m_bufIndex, num);
         n += num;
-        _bufIndex += num;
+        m_bufIndex += num;
     } while (n < bufferSize);
 
     return n;
@@ -121,31 +121,31 @@ QStringList mpcBackend::ext() { return QStringList(EXT); }
 mpcBackend::mpcBackend() :
     m_config(name, iconMpc, 417)
 {
-    _mpcReader.read = mpcBackend::read_func;
-    _mpcReader.seek = mpcBackend::seek_func;
-    _mpcReader.tell = mpcBackend::tell_func;
-    _mpcReader.get_size = mpcBackend::get_size_func;
-    _mpcReader.canseek = mpcBackend::canseek_func;
-    _mpcReader.data = &_file;
+    m_mpcReader.read = mpcBackend::read_func;
+    m_mpcReader.seek = mpcBackend::seek_func;
+    m_mpcReader.tell = mpcBackend::tell_func;
+    m_mpcReader.get_size = mpcBackend::get_size_func;
+    m_mpcReader.canseek = mpcBackend::canseek_func;
+    m_mpcReader.data = &m_file;
 }
 
 mpcBackend::~mpcBackend()
 {
-    _file.close();
+    m_file.close();
 
 #ifdef MPCDEC_SV8
     if (!songLoaded().isNull())
-        mpc_demux_exit(_demux);
+        mpc_demux_exit(m_demux);
 #endif
 }
 
 bool mpcBackend::open(const QString& fileName)
 {
-    _file.setFileName(fileName);
-    if (!_file.open(QIODevice::ReadOnly))
+    m_file.setFileName(fileName);
+    if (!m_file.open(QIODevice::ReadOnly))
         return false;
 
-    const tag tagPtr(&_file);
+    const tag tagPtr(&m_file);
 
     m_metaData.addInfo(metaData::TITLE, tagPtr.title());
     m_metaData.addInfo(metaData::ARTIST, tagPtr.artist());
@@ -157,25 +157,25 @@ bool mpcBackend::open(const QString& fileName)
     m_metaData.addInfo(metaData::COMMENT, tagPtr.comment());
     m_metaData.addInfo(tagPtr.image());
 
-    _file.seek(0);
+    m_file.seek(0);
 
 #ifdef MPCDEC_SV8
-    _demux = mpc_demux_init(&_mpcReader);
-    if (!_demux)
+    m_demux = mpc_demux_init(&m_mpcReader);
+    if (!m_demux)
         goto error;
 
-    mpc_demux_get_info(_demux, &_si);
+    mpc_demux_get_info(m_demux, &m_si);
 #else
-    mpc_streaminfo_init(&_si);
-    if (mpc_streaminfo_read(&_si, &_mpcReader) != ERROR_CODE_OK)
+    mpc_streaminfo_init(&m_si);
+    if (mpc_streaminfo_read(&m_si, &m_mpcReader) != ERROR_CODE_OK)
         goto error;
 
-    mpc_decoder_setup(&_decoder, &_mpcReader);
-    if (!mpc_decoder_initialize(&_decoder, &_si))
+    mpc_decoder_setup(&m_decoder, &m_mpcReader);
+    if (!mpc_decoder_initialize(&m_decoder, &m_si))
         goto error;
 #endif
 
-    setDuration(static_cast<unsigned int>(mpc_streaminfo_get_length(&_si)*1000.));
+    setDuration(static_cast<unsigned int>(mpc_streaminfo_get_length(&m_si)*1000.));
 
 #ifdef MPC_FIXED_POINT
     qDebug("FIXED");
@@ -188,12 +188,12 @@ bool mpcBackend::open(const QString& fileName)
         // Replaygain reference level (is this correct?)
         const double referenceLevel = 89.0;
 #ifdef MPCDEC_SV8
-        mpc_set_replay_level(_demux, referenceLevel, MPC_TRUE,
+        mpc_set_replay_level(m_demux, referenceLevel, MPC_TRUE,
                 (SETTINGS->replayGainMode() == 0) ? MPC_FALSE : MPC_TRUE,
                 MPC_TRUE);
 #else
-        float peak = SETTINGS->replayGainMode() ? _si.peak_album : _si.peak_title;
-        float gain = SETTINGS->replayGainMode() ? _si.gain_album : _si.gain_title;
+        float peak = SETTINGS->replayGainMode() ? m_si.peak_album : m_si.peak_title;
+        float gain = SETTINGS->replayGainMode() ? m_si.gain_album : m_si.gain_title;
 
         peak = peak == 0. ? 1. : (1<<15) / pow(10, peak/(20*256));
         gain = gain == 0. ? 1. : pow(10, (referenceLevel-gain/256)/20);
@@ -203,12 +203,12 @@ bool mpcBackend::open(const QString& fileName)
         if (peak < gain)
             gain = peak;
 
-        mpc_decoder_scale_output(&_decoder, gain);
+        mpc_decoder_scale_output(&m_decoder, gain);
 #endif
     }
 
-    _bufIndex = 0;
-    _bufLen = 0;
+    m_bufIndex = 0;
+    m_bufLen = 0;
 
     songLoaded(fileName);
     return true;
@@ -219,19 +219,19 @@ error:
 
 bool mpcBackend::seek(int pos)
 {
-    mpc_int64_t length = mpc_streaminfo_get_length_samples(&_si);
+    mpc_int64_t length = mpc_streaminfo_get_length_samples(&m_si);
 
 #ifdef MPCDEC_SV8
     mpc_uint64_t sample = (length * pos) / 100;
-    if (mpc_demux_seek_sample(_demux, sample) != MPC_STATUS_OK)
+    if (mpc_demux_seek_sample(m_demux, sample) != MPC_STATUS_OK)
 #else
     mpc_int64_t sample = (length * pos) / 100;
-    if (!mpc_decoder_seek_sample(&_decoder, sample))
+    if (!mpc_decoder_seek_sample(&m_decoder, sample))
 #endif
         return false;
 
-    _bufIndex = 0;
-    _bufLen = 0;
+    m_bufIndex = 0;
+    m_bufLen = 0;
 
     return true;
 }

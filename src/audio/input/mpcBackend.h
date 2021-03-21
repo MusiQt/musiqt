@@ -74,18 +74,18 @@ class mpcBackend : public input
 
 private:
 #ifdef MPCDEC_SV8
-    mpc_demux* _demux;
+    mpc_demux* m_demux;
 #else
-    mpc_decoder _decoder;
+    mpc_decoder m_decoder;
 #endif
-    mpc_streaminfo _si;
-    mpc_reader _mpcReader;
+    mpc_streaminfo m_si;
+    mpc_reader m_mpcReader;
 
-    MPC_SAMPLE_FORMAT _buffer[MPC_DECODER_BUFFER_LENGTH];
-    unsigned int _bufIndex;
-    unsigned int _bufLen;
+    MPC_SAMPLE_FORMAT m_buffer[MPC_DECODER_BUFFER_LENGTH];
+    unsigned int m_bufIndex;
+    unsigned int m_bufLen;
 
-    QFile _file;
+    QFile m_file;
 
     mpcConfig m_config;
 
@@ -121,10 +121,10 @@ public:
     bool seek(int pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _si.sample_freq; }
+    unsigned int samplerate() const override { return m_si.sample_freq; }
 
     /// Get channels
-    unsigned int channels() const override { return _si.channels; }
+    unsigned int channels() const override { return m_si.channels; }
 
     /// Get precision
     sample_t precision() const override
@@ -144,7 +144,7 @@ public:
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Gapless support
-    bool gapless() const override { return !songLoaded().isNull() ? _si.is_true_gapless : true; }
+    bool gapless() const override { return !songLoaded().isNull() ? m_si.is_true_gapless : true; }
 };
 
 #endif

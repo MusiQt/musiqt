@@ -94,7 +94,7 @@ size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize)
     long read;
     do {
         int current_section;
-        read = ov_read(_vf, (char*)buffer+n, bufferSize-n, 0,
+        read = ov_read(m_vf, (char*)buffer+n, bufferSize-n, 0,
                 (m_config.precision() == sample_t::S16) ? 2 : 1,
                 (m_config.precision() != sample_t::U8), &current_section);
         n += read;
@@ -120,42 +120,42 @@ void oggConfig::saveSettings()
 QStringList oggBackend::ext() { return QString(EXT).split("|"); }
 
 oggBackend::oggBackend() :
-    _vf(nullptr),
-    _vi(nullptr),
+    m_vf(nullptr),
+    m_vi(nullptr),
     m_config(name, iconOgg, 523)
 {}
 
 oggBackend::~oggBackend()
 {
-    if (_vf != nullptr)
+    if (m_vf != nullptr)
     {
-        ov_clear(_vf);
-        _file.close();
+        ov_clear(m_vf);
+        m_file.close();
     }
 }
 
 bool oggBackend::open(const QString& fileName)
 {
-    _file.setFileName(fileName);
-    if (!_file.open(QIODevice::ReadOnly))
+    m_file.setFileName(fileName);
+    if (!m_file.open(QIODevice::ReadOnly))
     {
-        qWarning() << _file.errorString();
+        qWarning() << m_file.errorString();
         return false;
     }
 
-    _vf = new OggVorbis_File;
-    int error = ov_open_callbacks(&_file, _vf, NULL, 0, vorbis_callbacks);
+    m_vf = new OggVorbis_File;
+    int error = ov_open_callbacks(&m_file, m_vf, NULL, 0, vorbis_callbacks);
     if (error < 0)
     {
         qDebug() << "Error code: " << error;
-        utils::delPtr(_vf);
-        _file.close();
+        utils::delPtr(m_vf);
+        m_file.close();
         return false;
     }
 
-    _vi = ov_info(_vf, -1);
+    m_vi = ov_info(m_vf, -1);
 
-    setDuration(static_cast<unsigned int>(ov_time_total(_vf, -1)*1000.));
+    setDuration(static_cast<unsigned int>(ov_time_total(m_vf, -1)*1000.));
 
     QString title;
     QString artist;
@@ -167,7 +167,7 @@ bool oggBackend::open(const QString& fileName)
     QString mime;
     QByteArray image;
 
-    char **ptr = ov_comment(_vf, -1)->user_comments;
+    char **ptr = ov_comment(m_vf, -1)->user_comments;
     while (*ptr)
     {
         qDebug() << *ptr;
@@ -258,16 +258,16 @@ bool oggBackend::open(const QString& fileName)
 
 bool oggBackend::seek(int pos)
 {
-    if (_vf == nullptr)
+    if (m_vf == nullptr)
         return false;
 
-    ogg_int64_t length = ov_pcm_total(_vf, -1);
+    ogg_int64_t length = ov_pcm_total(m_vf, -1);
 
     if (length < 0)
         return false;
 
     ogg_int64_t offset = (length * pos) / 100;
-    if (ov_pcm_seek(_vf, offset) != 0)
+    if (ov_pcm_seek(m_vf, offset) != 0)
         return false;
 
     return true;

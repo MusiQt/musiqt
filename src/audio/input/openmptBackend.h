@@ -98,11 +98,9 @@ public:
 class openmptBackend : public input
 {
 private:
-    openmpt::module *_module;
+    openmpt::module *m_module;
 
-    bool _unmo3;
-
-    static QStringList _ext;
+    static QStringList m_ext;
 
     openmptConfig m_config;
 
@@ -138,7 +136,7 @@ public:
     static inputConfig* cFactory();
 
     /// Get supported extension
-    static QStringList ext() { return _ext; }
+    static QStringList ext() { return m_ext; }
 
     /// Open file
     bool open(const QString& fileName) override;

@@ -153,15 +153,15 @@ public:
 class sidBackend : public input
 {
 private:
-    sidplayfp *_sidplayfp;
+    sidplayfp *m_sidplayfp;
 
-    SidTune *_tune;
+    SidTune *m_tune;
 
-    STIL *_stil;
+    STIL *m_stil;
 
-    SidDatabase *_db;
-    unsigned int _length;
-    bool newSonglengthDB;
+    SidDatabase *m_db;
+    unsigned int m_length;
+    bool m_newSonglengthDB;
 
     sidConfig m_config;
 
@@ -195,25 +195,25 @@ public:
     bool rewind() override;
 
     /// Number of subtunes
-    unsigned int subtunes() const override { return _tune ? _tune->getInfo()->songs() : 0; }
+    unsigned int subtunes() const override { return m_tune ? m_tune->getInfo()->songs() : 0; }
 
     /// Current subtune
-    unsigned int subtune() const override { return _tune ? _tune->getInfo()->currentSong() : 0; }
+    unsigned int subtune() const override { return m_tune ? m_tune->getInfo()->currentSong() : 0; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _tune?m_config.samplerate():0; }
+    unsigned int samplerate() const override { return m_tune ? m_config.samplerate() : 0; }
 
     /// Get channels
-    unsigned int channels() const override { return _tune?m_config.channels():0; }
+    unsigned int channels() const override { return m_tune ? m_config.channels() : 0; }
 
     /// Get precision
     sample_t precision() const override { return sample_t::S16; }
 
     /// Get max play time in milliseconds, 0 if none
-    virtual unsigned int maxPlayTime() const override { return _length; }
+    virtual unsigned int maxPlayTime() const override { return m_length; }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;

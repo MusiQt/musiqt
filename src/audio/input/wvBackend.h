@@ -59,13 +59,13 @@ public:
 class wvBackend : public input
 {
 private:
-    WavpackContext *_wvContext;
-    int *_decodeBuf;
-    int _bufOffset;
-    int _bufSize;
-    int _bps;
-    int _channels;
-    sample_t _precision;
+    WavpackContext *m_wvContext;
+    int *m_decodeBuf;
+    int m_bufOffset;
+    int m_bufSize;
+    int m_bps;
+    int m_channels;
+    sample_t m_precision;
 
     wvConfig m_config;
 
@@ -101,24 +101,24 @@ public:
     /// Get samplerate
     unsigned int samplerate() const override
     {
-        return _wvContext != nullptr
-            ? WavpackGetSampleRate(_wvContext)
+        return m_wvContext != nullptr
+            ? WavpackGetSampleRate(m_wvContext)
             : 0;
     }
 
     /// Get channels
     unsigned int channels() const override
     {
-        return _wvContext != nullptr
-            ? WavpackGetReducedChannels(_wvContext)
+        return m_wvContext != nullptr
+            ? WavpackGetReducedChannels(m_wvContext)
             : 0;
     }
 
     /// Get precision
-    sample_t precision() const override { return _precision; }
+    sample_t precision() const override { return m_precision; }
 
     /// Get fractional scale for fixed point types
-    unsigned int fract() const override { return (_bps<<3)-1; }
+    unsigned int fract() const override { return (m_bps<<3)-1; }
 
     /// Callback function
     size_t fillBuffer(void* buffer, size_t bufferSize) override;

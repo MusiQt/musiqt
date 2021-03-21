@@ -117,7 +117,7 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
     size_t n = 0;
     int read;
     do {
-        read = op_read_stereo(_of, (opus_int16*)buffer+n/2, (bufferSize-n)/2);
+        read = op_read_stereo(m_of, (opus_int16*)buffer+n/2, (bufferSize-n)/2);
         if (read < 0)
         {
             qWarning() << "Decoding error: " << read;
@@ -134,38 +134,38 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
 QStringList opusBackend::ext() { return QStringList(EXT); }
 
 opusBackend::opusBackend() :
-    _of(nullptr),
+    m_of(nullptr),
     m_config(name, iconOpus, 952)
 {}
 
 opusBackend::~opusBackend()
 {
-    if (_of != nullptr)
+    if (m_of != nullptr)
     {
-        op_free(_of);
-        _file.close();
+        op_free(m_of);
+        m_file.close();
     }
 }
 
 bool opusBackend::open(const QString& fileName)
 {
-    _file.setFileName(fileName);
-    if (!_file.open(QIODevice::ReadOnly))
+    m_file.setFileName(fileName);
+    if (!m_file.open(QIODevice::ReadOnly))
     {
-        qWarning() << _file.errorString();
+        qWarning() << m_file.errorString();
         return false;
     }
 
     int error;
-    _of = op_open_callbacks(&_file, &opus_callbacks, nullptr, 0, &error);
-    if (_of == nullptr)
+    m_of = op_open_callbacks(&m_file, &opus_callbacks, nullptr, 0, &error);
+    if (m_of == nullptr)
     {
         qDebug() << "Error code: " << error;
-        _file.close();
+        m_file.close();
         return false;
     }
 
-    setDuration(static_cast<unsigned int>(op_pcm_total(_of, -1)/48));
+    setDuration(static_cast<unsigned int>(op_pcm_total(m_of, -1)/48));
 
     QString title;
     QString artist;
@@ -177,7 +177,7 @@ bool opusBackend::open(const QString& fileName)
     QString mime;
     QByteArray image;
 
-    char **ptr = op_tags(_of, -1)->user_comments;
+    char **ptr = op_tags(m_of, -1)->user_comments;
     while (*ptr)
     {
         qDebug() << *ptr;
@@ -234,16 +234,16 @@ bool opusBackend::open(const QString& fileName)
 
 bool opusBackend::seek(int pos)
 {
-    if (_of == nullptr)
+    if (m_of == nullptr)
         return false;
 
-    ogg_int64_t length = op_pcm_total(_of, -1);
+    ogg_int64_t length = op_pcm_total(m_of, -1);
 
     if (length < 0)
         return false;
 
     ogg_int64_t offset = (length * pos) / 100;
-    if (op_pcm_seek(_of, offset) < 0)
+    if (op_pcm_seek(m_of, offset) < 0)
         return false;
 
     return true;

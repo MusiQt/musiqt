@@ -83,13 +83,13 @@ class hvlBackend : public input
     friend class hvlConfigFrame;
 
 private:
-    struct hvl_tune *_tune;
+    struct hvl_tune *m_tune;
 
-    int _subtune;
+    int m_subtune;
 
-    int _left;
-    unsigned int _size;
-    char *_buffer;
+    int m_left;
+    unsigned int m_size;
+    char *m_buffer;
 
     hvlConfig m_config;
 
@@ -115,10 +115,10 @@ public:
     bool rewind() override;
 
     /// Get number of subtunes
-    unsigned int subtunes() const override { return _tune ? _tune->ht_SubsongNr : 0; }
+    unsigned int subtunes() const override { return m_tune ? m_tune->ht_SubsongNr : 0; }
 
     /// Get current subtune
-    unsigned int subtune() const override { return _tune ? _tune->ht_SongNum : 0; }
+    unsigned int subtune() const override { return m_tune ? m_tune->ht_SongNum : 0; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;

@@ -48,7 +48,7 @@ const char gmeBackend::name[] = "Gme";
 
 gmeConfig_t gmeConfig::m_settings;
 
-QStringList gmeBackend::_ext;
+QStringList gmeBackend::m_ext;
 
 inputConfig* gmeBackend::cFactory() { return new gmeConfig(name); }
 
@@ -56,10 +56,10 @@ inputConfig* gmeBackend::cFactory() { return new gmeConfig(name); }
 
 size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
-    if (gme_track_ended(_emu))
+    if (gme_track_ended(m_emu))
         return 0;
 
-    gme_play(_emu, (bufferSize>>1), (short*)buffer);
+    gme_play(m_emu, (bufferSize>>1), (short*)buffer);
     return bufferSize;
 }
 
@@ -76,12 +76,6 @@ void gmeConfig::loadSettings()
 
 void gmeConfig::saveSettings()
 {
-    /*if (m_settings.asmaPath.compare(load("ASMA", QString())))
-    {
-        qDebug() << "Reloading ASMA from " << m_settings.asmaPath;
-        openAsma(m_settings.asmaPath);
-    }*/
-
     save("Samplerate", m_settings.samplerate);
     save("Equalizer", m_settings.equalizer);
     save("Treble dB", m_settings.treble_dB);
@@ -98,10 +92,10 @@ bool gmeBackend::init()
 
     while (gme_type_t type = *types++)
     {
-        _ext << gme_type_extension(type);
+        m_ext << gme_type_extension(type);
     }
 #else
-    _ext = QString(EXT).split("|");
+    m_ext = QString(EXT).split("|");
 #endif
     return true;
 }
@@ -109,10 +103,10 @@ bool gmeBackend::init()
 QStringList gmeBackend::ext() { return QString(EXT).split("|"); }
 
 gmeBackend::gmeBackend() :
-    _emu(nullptr),
-    _currentTrack(0)
+    m_emu(nullptr),
+    m_currentTrack(0)
 #ifdef HAVE_STILVIEW
-    , _stil(nullptr)
+    , m_stil(nullptr)
 #endif
     , m_config(name)
 {
@@ -121,10 +115,10 @@ gmeBackend::gmeBackend() :
 
 gmeBackend::~gmeBackend()
 {
-    gme_delete(_emu);
+    gme_delete(m_emu);
 // 
 #ifdef HAVE_STILVIEW
-    delete _stil;
+    delete m_stil;
 #endif
 }
 
@@ -136,34 +130,32 @@ bool gmeBackend::open(const QString& fileName)
 
     qDebug() << "System " << gme_type_system(fileType);
 
-    _emu = gme_new_emu(fileType, m_config.samplerate());
-    if (_emu == nullptr)
+    m_emu = gme_new_emu(fileType, m_config.samplerate());
+    if (m_emu == nullptr)
         return false;
     if (m_config.equalizer())
     {
         gme_equalizer_t eq = { m_config.treble_dB(), m_config.bass_freq() };
-        gme_set_equalizer(_emu, &eq);
+        gme_set_equalizer(m_emu, &eq);
     }
-    if (!checkRetCode(gme_load_file(_emu, fileName.toUtf8().constData())))
+    if (!checkRetCode(gme_load_file(m_emu, fileName.toUtf8().constData())))
         return false;
-    if (!checkRetCode(gme_start_track(_emu, 0)))
+    if (!checkRetCode(gme_start_track(m_emu, 0)))
         return false;
-
-    _currentTrack = 0;
 
     QFileInfo fInfo(fileName);
-    gme_load_m3u(_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
+    gme_load_m3u(m_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
 
 #ifdef HAVE_STILVIEW
-    bool hasStilInfo = _stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
+    bool hasStilInfo = m_stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
     if (hasStilInfo)
     {
         qDebug("Retrieving STIL info");
-        QString comment = QString::fromLatin1(_stil->getAbsGlobalComment(fileName.toLocal8Bit().constData()));
+        QString comment = QString::fromLatin1(m_stil->getAbsGlobalComment(fileName.toLocal8Bit().constData()));
         if (!comment.isEmpty())
             comment.append('\n');
-        comment.append(QString::fromLatin1(_stil->getAbsEntry(fileName.toLocal8Bit().constData())));
-        QString bug = QString::fromLatin1(_stil->getAbsBug(fileName.toLocal8Bit().constData()));
+        comment.append(QString::fromLatin1(m_stil->getAbsEntry(fileName.toLocal8Bit().constData())));
+        QString bug = QString::fromLatin1(m_stil->getAbsBug(fileName.toLocal8Bit().constData()));
         if (!bug.isEmpty())
         {
             comment.append('\n');
@@ -185,7 +177,7 @@ bool gmeBackend::open(const QString& fileName)
 void gmeBackend::getInfo()
 {
     gme_info_t *ti;
-    const char* err = gme_track_info(_emu, &ti, _currentTrack);
+    const char* err = gme_track_info(m_emu, &ti, m_currentTrack);
     if (err)
     {
         qWarning() << "Warning: " << err;
@@ -220,8 +212,8 @@ bool gmeBackend::checkRetCode(const char* error)
 {
     if (error)
     {
-        gme_delete(_emu);
-        _emu = nullptr;
+        gme_delete(m_emu);
+        m_emu = nullptr;
         qWarning() << "Error: " << error;
         return false;
     }
@@ -230,9 +222,9 @@ bool gmeBackend::checkRetCode(const char* error)
 
 bool gmeBackend::rewind()
 {
-    if (_emu != nullptr)
+    if (m_emu != nullptr)
     {
-        gme_seek_samples(_emu, 0);
+        gme_seek_samples(m_emu, 0);
         return true;
     }
     return false;
@@ -240,10 +232,10 @@ bool gmeBackend::rewind()
 
 bool gmeBackend::subtune(const unsigned int i)
 {
-    if ((_emu != nullptr) && (i > 0) && (i <= (unsigned int)gme_track_count(_emu)))
+    if ((m_emu != nullptr) && (i > 0) && (i <= (unsigned int)gme_track_count(m_emu)))
     {
-        _currentTrack = i - 1;
-        if (!checkRetCode(gme_start_track(_emu, _currentTrack)))
+        m_currentTrack = i - 1;
+        if (!checkRetCode(gme_start_track(m_emu, m_currentTrack)))
             return false;
         getInfo();
         return true;
@@ -257,13 +249,13 @@ void gmeBackend::openAsma(const QString& asmaPath)
     if (asmaPath.isEmpty())
         return;
 
-    if (_stil == nullptr)
-        _stil = new STIL(ASMA_STIL, ASMA_BUGLIST);
+    if (m_stil == nullptr)
+        m_stil = new STIL(ASMA_STIL, ASMA_BUGLIST);
 
-    if (!_stil->setBaseDir(asmaPath.toLocal8Bit().constData()))
+    if (!m_stil->setBaseDir(asmaPath.toLocal8Bit().constData()))
     {
-        qWarning() << _stil->getErrorStr();
-        utils::delPtr(_stil);
+        qWarning() << m_stil->getErrorStr();
+        utils::delPtr(m_stil);
     }
 #endif
 }

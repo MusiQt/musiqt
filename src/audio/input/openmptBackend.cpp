@@ -118,7 +118,7 @@ const char openmptBackend::name[] = "Openmpt";
 
 openmptConfig_t openmptConfig::m_settings;
 
-QStringList openmptBackend::_ext;
+QStringList openmptBackend::m_ext;
 
 inputConfig* openmptBackend::cFactory() { return new openmptConfig(name, iconOpenmpt, 990); }
 
@@ -129,8 +129,8 @@ size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize)
     const size_t frameSize = sizeof(float) * m_config.channels();
     size_t bufSize = bufferSize/frameSize;
     return frameSize * (m_config.channels() == 2
-        ? _module->read_interleaved_stereo(m_config.samplerate(), bufSize, (float*)buffer)
-        : _module->read(m_config.samplerate(), bufSize, (float*)buffer));
+        ? m_module->read_interleaved_stereo(m_config.samplerate(), bufSize, (float*)buffer)
+        : m_module->read(m_config.samplerate(), bufSize, (float*)buffer));
 }
 
 /*****************************************************************/
@@ -162,25 +162,25 @@ bool openmptBackend::init()
     std::vector<std::string> ext = openmpt::get_supported_extensions();
     for(std::vector<std::string>::iterator it=ext.begin(); it!=ext.end(); ++it)
     {
-        _ext << (*it).c_str();
+        m_ext << (*it).c_str();
     }
 
     //_ext.append(",(mod).*");
 
 #ifdef HAVE_LIBZ
-    _ext << QString(EXTZ).split("|");
+    m_ext << QString(EXTZ).split("|");
 #endif
     return true;
 }
 
 openmptBackend::openmptBackend() :
-    _module(nullptr),
+    m_module(nullptr),
     m_config(name, iconOpenmpt, 990)
 {}
 
 openmptBackend::~openmptBackend()
 {
-    delete _module;
+    delete m_module;
 }
 
 bool openmptBackend::open(const QString& fileName)
@@ -239,34 +239,34 @@ bool openmptBackend::open(const QString& fileName)
 
     try
     {
-        _module = new openmpt::module(data.constData(), data.length());
+        m_module = new openmpt::module(data.constData(), data.length());
     }
     catch (const openmpt::exception &e)
     {
-        utils::delPtr(_module);
+        utils::delPtr(m_module);
         return false;
     }
 
     delTempFile(tmpFile, fName);
 
-    _module->set_render_param(openmpt::module::RENDER_INTERPOLATIONFILTER_LENGTH, m_config.resamplingMode());
-    _module->set_render_param(openmpt::module::RENDER_MASTERGAIN_MILLIBEL, m_config.masterGain());
-    _module->set_render_param(openmpt::module::RENDER_STEREOSEPARATION_PERCENT, m_config.stereoSeparation());
-    _module->set_render_param(openmpt::module::RENDER_VOLUMERAMPING_STRENGTH, m_config.volumeRamping());
+    m_module->set_render_param(openmpt::module::RENDER_INTERPOLATIONFILTER_LENGTH, m_config.resamplingMode());
+    m_module->set_render_param(openmpt::module::RENDER_MASTERGAIN_MILLIBEL, m_config.masterGain());
+    m_module->set_render_param(openmpt::module::RENDER_STEREOSEPARATION_PERCENT, m_config.stereoSeparation());
+    m_module->set_render_param(openmpt::module::RENDER_VOLUMERAMPING_STRENGTH, m_config.volumeRamping());
 
-    std::vector<std::string> metadata = _module->get_metadata_keys();
+    std::vector<std::string> metadata = m_module->get_metadata_keys();
     for(std::vector<std::string>::iterator it=metadata.begin(); it!=metadata.end(); ++it)
     {
         qDebug() << (*it).c_str();
         if ((*it).compare("title") == 0)
-            m_metaData.addInfo(metaData::TITLE, _module->get_metadata("title").c_str());
+            m_metaData.addInfo(metaData::TITLE, m_module->get_metadata("title").c_str());
         else if ((*it).compare("artist") == 0)
-            m_metaData.addInfo(metaData::ARTIST, _module->get_metadata("artist").c_str());
+            m_metaData.addInfo(metaData::ARTIST, m_module->get_metadata("artist").c_str());
         else if ((*it).compare("message") == 0)
-            m_metaData.addInfo(metaData::COMMENT, _module->get_metadata("message").c_str());
+            m_metaData.addInfo(metaData::COMMENT, m_module->get_metadata("message").c_str());
     }
 
-    setDuration(_module->get_duration_seconds()*1000);
+    setDuration(m_module->get_duration_seconds()*1000);
 
     songLoaded(fileName);
     return true;
@@ -274,9 +274,9 @@ bool openmptBackend::open(const QString& fileName)
 
 bool openmptBackend::rewind()
 {
-    if (_module != nullptr)
+    if (m_module != nullptr)
     {
-        _module->set_position_order_row(0, 0);
+        m_module->set_position_order_row(0, 0);
         return true;
     }
     return false;
@@ -284,19 +284,19 @@ bool openmptBackend::rewind()
 
 unsigned int openmptBackend::subtunes() const
 {
-    return (_module != nullptr) ? _module->get_num_subsongs() : 0;
+    return (m_module != nullptr) ? m_module->get_num_subsongs() : 0;
 }
 
 unsigned int openmptBackend::subtune() const
 {
-    return (_module != nullptr) ? _module->get_selected_subsong() : 0;
+    return (m_module != nullptr) ? m_module->get_selected_subsong() : 0;
 }
 
 bool openmptBackend::subtune(const unsigned int i)
 {
-    if (_module != nullptr)
+    if (m_module != nullptr)
     {
-        _module->select_subsong(i);
+        m_module->select_subsong(i);
         return true;
     }
     return false;

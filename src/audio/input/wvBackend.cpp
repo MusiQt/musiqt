@@ -68,21 +68,21 @@ inputConfig* wvBackend::cFactory() { return new wvConfig(name, iconWv, 375); }
 size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
     size_t n = 0;
-    const unsigned int sampleSize = (_precision == sample_t::U8) ? 1 : (_precision == sample_t::S16) ? 2 : 4;
+    const unsigned int sampleSize = (m_precision == sample_t::U8) ? 1 : (m_precision == sample_t::S16) ? 2 : 4;
 
     do {
-        if (_bufOffset >= _bufSize)
+        if (m_bufOffset >= m_bufSize)
         {
-            _bufSize = WavpackUnpackSamples(_wvContext, _decodeBuf, BUFFER_LENGTH) * _channels;
-            if (_bufSize == 0)
+            m_bufSize = WavpackUnpackSamples(m_wvContext, m_decodeBuf, BUFFER_LENGTH) * m_channels;
+            if (m_bufSize == 0)
             {
                 return n;
             }
-            _bufOffset = 0;
+            m_bufOffset = 0;
         }
-        const size_t size = qMin((size_t)(_bufSize-_bufOffset), (bufferSize-n) / sampleSize);
-        copyBuffer((char*)buffer+n, _decodeBuf+_bufOffset, size);
-        _bufOffset += size;
+        const size_t size = qMin((size_t)(m_bufSize-m_bufOffset), (bufferSize-n) / sampleSize);
+        copyBuffer((char*)buffer+n, m_decodeBuf+m_bufOffset, size);
+        m_bufOffset += size;
         n += size*sampleSize;
     } while (n < bufferSize);
 
@@ -91,7 +91,7 @@ size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
 {
-    switch (_precision)
+    switch (m_precision)
     {
     case sample_t::U8:
         for (size_t i=0; i<length; i++)
@@ -114,51 +114,51 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
 QStringList wvBackend::ext() { return QStringList(EXT); }
 
 wvBackend::wvBackend() :
-    _wvContext(nullptr),
-    _decodeBuf(nullptr),
+    m_wvContext(nullptr),
+    m_decodeBuf(nullptr),
     m_config(name, iconWv, 375){}
 
 wvBackend::~wvBackend()
 {
-    if (_wvContext != nullptr)
+    if (m_wvContext != nullptr)
     {
-        _wvContext = WavpackCloseFile(_wvContext);
-        delete [] _decodeBuf;
+        m_wvContext = WavpackCloseFile(m_wvContext);
+        delete [] m_decodeBuf;
     }
 }
 
 bool wvBackend::open(const QString& fileName)
 {
     char tmp[255];
-    _wvContext = WavpackOpenFileInput(fileName.toUtf8().constData(), tmp, OPEN_WVC|OPEN_TAGS|OPEN_2CH_MAX|OPEN_NORMALIZE, 0);
-    if (_wvContext == nullptr)
+    m_wvContext = WavpackOpenFileInput(fileName.toUtf8().constData(), tmp, OPEN_WVC|OPEN_TAGS|OPEN_2CH_MAX|OPEN_NORMALIZE, 0);
+    if (m_wvContext == nullptr)
     {
         qWarning() << "Error - " << tmp;
         return false;
     }
 
-    const int mode = WavpackGetMode(_wvContext);
-    _bps = WavpackGetBytesPerSample(_wvContext);
-    _channels = WavpackGetReducedChannels(_wvContext);
+    const int mode = WavpackGetMode(m_wvContext);
+    m_bps = WavpackGetBytesPerSample(m_wvContext);
+    m_channels = WavpackGetReducedChannels(m_wvContext);
 
-    _decodeBuf = new int[BUFFER_LENGTH*_channels];
+    m_decodeBuf = new int[BUFFER_LENGTH*m_channels];
 
     if (mode & MODE_FLOAT)
     {
-        _precision = sample_t::SAMPLE_FLOAT;
+        m_precision = sample_t::SAMPLE_FLOAT;
     }
     else
     {
-        switch (_bps)
+        switch (m_bps)
         {
         case 1:
-            _precision = sample_t::U8;
+            m_precision = sample_t::U8;
             break;
         case 2:
-            _precision = sample_t::S16;
+            m_precision = sample_t::S16;
             break;
         default:
-            _precision = sample_t::SAMPLE_FIXED;
+            m_precision = sample_t::SAMPLE_FIXED;
         }
     }
 
@@ -187,11 +187,11 @@ bool wvBackend::open(const QString& fileName)
         }
     }
 
-    const unsigned int milliseconds = (WavpackGetNumSamples(_wvContext) * 1000LL) / WavpackGetSampleRate(_wvContext);
+    const unsigned int milliseconds = (WavpackGetNumSamples(m_wvContext) * 1000LL) / WavpackGetSampleRate(m_wvContext);
     setDuration(milliseconds);
 
-    _bufOffset = 0;
-    _bufSize = 0;
+    m_bufOffset = 0;
+    m_bufSize = 0;
 
     songLoaded(fileName);
     return true;
@@ -200,7 +200,7 @@ bool wvBackend::open(const QString& fileName)
 void wvBackend::getId3Tag(const char* tag, metaData::mpris_t meta)
 {
     char tmp[255];
-    int size = WavpackGetTagItem(_wvContext, tag, tmp, 255);
+    int size = WavpackGetTagItem(m_wvContext, tag, tmp, 255);
     if (size >= 0)
         m_metaData.addInfo(meta, QString::fromLocal8Bit(tmp, size));
 }
@@ -208,29 +208,29 @@ void wvBackend::getId3Tag(const char* tag, metaData::mpris_t meta)
 void wvBackend::getApeTag(const char* tag, metaData::mpris_t meta)
 {
     char tmp[1024];
-    int size = WavpackGetTagItem(_wvContext, tag, tmp, 1024);
+    int size = WavpackGetTagItem(m_wvContext, tag, tmp, 1024);
     if (size >= 0)
         m_metaData.addInfo(meta, QString::fromUtf8(tmp, size).replace('\0', ','));
 }
 
 bool wvBackend::seek(int pos)
 {
-    if (_wvContext == nullptr)
+    if (m_wvContext == nullptr)
         return false;
 
-    uint32_t samples = WavpackGetNumSamples(_wvContext);
+    uint32_t samples = WavpackGetNumSamples(m_wvContext);
 
     if (samples == -1)
         return false;
 
     uint32_t sample = (samples * pos) / 100;
-    if (!WavpackSeekSample(_wvContext, sample))
+    if (!WavpackSeekSample(m_wvContext, sample))
     {
         return false;
     }
 
-    _bufOffset = 0;
-    _bufSize = 0;
+    m_bufOffset = 0;
+    m_bufSize = 0;
 
     return true;
 }

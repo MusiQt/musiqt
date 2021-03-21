@@ -61,9 +61,9 @@ public:
 class opusBackend : public input
 {
 private:
-    OggOpusFile *_of;
+    OggOpusFile *m_of;
 
-    QFile _file;
+    QFile m_file;
 
     opusConfig m_config;
 

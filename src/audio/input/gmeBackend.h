@@ -102,12 +102,12 @@ public:
 class gmeBackend : public input
 {
 private:
-    Music_Emu *_emu;
-    int _currentTrack;
+    Music_Emu *m_emu;
+    int m_currentTrack;
 #ifdef HAVE_STILVIEW
-    STIL *_stil;
+    STIL *m_stil;
 #endif
-    static QStringList _ext;
+    static QStringList m_ext;
 
     gmeConfig m_config;
 
@@ -141,10 +141,10 @@ public:
     bool rewind() override;
 
     /// Get number of subtunes
-    unsigned int subtunes() const override { return _emu ? gme_track_count(_emu) : 0; }
+    unsigned int subtunes() const override { return m_emu ? gme_track_count(m_emu) : 0; }
 
     /// Get current subtune
-    unsigned int subtune() const override { return _currentTrack+1; }
+    unsigned int subtune() const override { return m_currentTrack+1; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;

@@ -65,16 +65,16 @@ public:
 class sndBackend : public input
 {
 private:
-    SNDFILE *_sf;
-    SF_INFO _si;
+    SNDFILE *m_sf;
+    SF_INFO m_si;
 
-    static QStringList _ext;
+    static QStringList m_ext;
 
     sndConfig m_config;
 
 private:
     sndBackend() :
-        _sf(nullptr),
+        m_sf(nullptr),
         m_config(name) {}
 
 public:
@@ -89,7 +89,7 @@ public:
     static inputConfig* cFactory();
 
     /// Get supported extension
-    static QStringList ext() { return _ext; }
+    static QStringList ext() { return m_ext; }
 
     /// Open file
     bool open(const QString& fileName) override;
@@ -101,10 +101,10 @@ public:
     bool seek(int pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return _sf ? _si.samplerate : 0; }
+    unsigned int samplerate() const override { return m_sf ? m_si.samplerate : 0; }
 
     /// Get channels
-    unsigned int channels() const override { return _sf ? _si.channels : 0; }
+    unsigned int channels() const override { return m_sf ? m_si.channels : 0; }
 
     /// Get precision
     sample_t precision() const override { return sample_t::S16; }
