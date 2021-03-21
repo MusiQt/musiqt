@@ -60,12 +60,6 @@
 
 class nullInput : public input
 {
-private:
-    metaDataImpl m_metaData;
-
-protected:
-    void close() {}
-
 public:
     unsigned int samplerate() const override { return 0; }
     unsigned int channels() const override { return 0; }
