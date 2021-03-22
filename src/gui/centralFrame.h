@@ -142,7 +142,9 @@ private:
     QScopedPointer<audio> m_audio;
 
     bool m_playing;
+    // Play mode: true=playlist / false=single song
     bool m_playMode;
+    // Directory of the song currently loaded
     QString m_playDir;
 
     QFileSystemModel *m_fsm;
