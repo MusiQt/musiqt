@@ -50,8 +50,6 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_EXE_LINKER_FLAGS="-static" \
-            -DZLIB_LIBRARY="/mingw64/lib/libz.a" \
-            -DIntl_LIBRARY="/mingw64/lib/libintl.a;/mingw64/lib/libiconv.a" \
             ..
         make VERBOSE=1
     - name: package
