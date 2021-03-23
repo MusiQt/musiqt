@@ -21,8 +21,6 @@ set(MUSIQT_SOURCES
     src/main.cpp
     src/singleApp.cpp
     src/singleApp.h
-    src/translator.cpp
-    src/translator.h
     src/audio/audio.cpp
     src/audio/audio.h
     src/audio/configFrame.cpp
@@ -156,6 +154,10 @@ IF(NLS)
         find_package(Intl REQUIRED)
         include_directories(${Intl_INCLUDE_DIRS})
         target_link_libraries(musiqt ${Intl_LIBRARIES})
+        target_sources(musiqt PRIVATE
+            src/translator.cpp
+            src/translator.h
+        )
     ELSE(GETTEXT_FOUND)
         MESSAGE(STATUS "gettext not found, NLS disabled")
     ENDIF(GETTEXT_FOUND)

@@ -19,7 +19,6 @@
 #include "singleApp.h"
 
 #include "mainWindow.h"
-#include "translator.h"
 
 #include <QLocale>
 #include <QTime>
@@ -27,6 +26,10 @@
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
+#endif
+
+#ifdef ENABLE_NLS
+#  include "translator.h"
 #endif
 
 #ifdef QT_STATICPLUGIN
