@@ -102,6 +102,9 @@ public:
         loadSettings();
     }
 
+    /// Get Music directory
+    const QString getMusicDir() const override { return hvscPath(); }
+
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new sidConfigFrame(win); }
 
