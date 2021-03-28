@@ -101,17 +101,11 @@ sndBackend::sndBackend(const QString& fileName) :
 
 sndBackend::~sndBackend()
 {
-    if (m_sf != nullptr)
-    {
-        sf_close(m_sf);
-    }
+    sf_close(m_sf);
 }
 
 bool sndBackend::seek(int pos)
 {
-    if (m_sf == nullptr)
-        return false;
-
     sf_count_t frames = (m_si.frames * pos) / 100;
     if (sf_seek(m_sf, frames, SEEK_SET) < 0)
     {

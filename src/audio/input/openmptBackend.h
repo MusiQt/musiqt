@@ -142,10 +142,10 @@ public:
     bool rewind() override;
 
     /// Number of subtunes
-    unsigned int subtunes() const override;
+    unsigned int subtunes() const override { return m_module->get_num_subsongs(); }
 
     /// Current subtune
-    unsigned int subtune() const override;
+    unsigned int subtune() const override { return m_module->get_selected_subsong(); }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;

@@ -269,32 +269,14 @@ openmptBackend::~openmptBackend()
 
 bool openmptBackend::rewind()
 {
-    if (m_module != nullptr)
-    {
-        m_module->set_position_order_row(0, 0);
-        return true;
-    }
-    return false;
-}
-
-unsigned int openmptBackend::subtunes() const
-{
-    return (m_module != nullptr) ? m_module->get_num_subsongs() : 0;
-}
-
-unsigned int openmptBackend::subtune() const
-{
-    return (m_module != nullptr) ? m_module->get_selected_subsong() : 0;
+    m_module->set_position_order_row(0, 0);
+    return true;
 }
 
 bool openmptBackend::subtune(const unsigned int i)
 {
-    if (m_module != nullptr)
-    {
-        m_module->select_subsong(i);
-        return true;
-    }
-    return false;
+    m_module->select_subsong(i);
+    return true;
 }
 
 /*****************************************************************/

@@ -123,7 +123,7 @@ private:
     ffmpegBackend(const QString& fileName);
 
     /// Open selected stream
-    bool openStream(AVFormatContext* fc);
+    void openStream(AVFormatContext* fc);
 
     QString getMetadata(const char* type);
 
@@ -148,20 +148,10 @@ public:
     bool seek(int pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override
-    {
-        return m_audioStream ?
-            m_audioStream->codecpar->sample_rate
-            : 0;
-    }
+    unsigned int samplerate() const override { return m_audioStream->codecpar->sample_rate; }
 
     /// Get channels
-    unsigned int channels() const override
-    {
-        return m_audioStream ?
-            m_audioStream->codecpar->channels
-            : 0;
-    }
+    unsigned int channels() const override { return m_audioStream->codecpar->channels; }
 
     /// Get precision
     sample_t precision() const override { return m_precision; }

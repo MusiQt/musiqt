@@ -203,6 +203,7 @@ const char* getClockString(SidTuneInfo::clock_t clock)
 QStringList sidBackend::ext() { return QString(EXT).split("|"); }
 
 sidBackend::sidBackend(const QString& fileName) :
+    m_stil(nullptr),
     m_length(0),
     m_newSonglengthDB(false),
     m_config(name, iconSid, 126)
@@ -294,6 +295,8 @@ sidBackend::sidBackend(const QString& fileName) :
     {
         QString error(m_tune->statusString());
         delete m_tune;
+        delete m_sidplayfp;
+        delete emuSid;
         throw loadError(error);
     }
 
@@ -399,12 +402,9 @@ sidBackend::sidBackend(const QString& fileName) :
 
 sidBackend::~sidBackend()
 {
-    if (m_sidplayfp != nullptr)
-    {
-        const sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
-        delete emuSid;
-        delete m_sidplayfp;
-    }
+    const sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
+    delete m_sidplayfp;
+    delete emuSid;
 
     delete m_tune;
 
@@ -431,17 +431,13 @@ const unsigned char* sidBackend::loadRom(const QString& romPath)
 
 bool sidBackend::rewind()
 {
-    if (m_sidplayfp != nullptr)
-    {
-        m_sidplayfp->stop();
-        return true;
-    }
-    return false;
+    m_sidplayfp->stop();
+    return true;
 }
 
 bool sidBackend::subtune(const unsigned int i)
 {
-    if ((m_tune != nullptr) && (i <= m_tune->getInfo()->songs()))
+    if (i <= m_tune->getInfo()->songs())
     {
         loadTune(i);
         return true;

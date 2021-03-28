@@ -109,8 +109,6 @@ gmeBackend::gmeBackend(const QString& fileName) :
 #endif
     , m_config(name)
 {
-    const char* error;
-
     gme_type_t fileType;
     checkRetCode(gme_identify_file(fileName.toUtf8().constData(), &fileType));
 
@@ -119,6 +117,7 @@ gmeBackend::gmeBackend(const QString& fileName) :
     m_emu = gme_new_emu(fileType, m_config.samplerate());
     if (m_emu == nullptr)
         throw loadError("Error creating gme emu");
+
     if (m_config.equalizer())
     {
         gme_equalizer_t eq = { m_config.treble_dB(), m_config.bass_freq() };
@@ -130,6 +129,8 @@ gmeBackend::gmeBackend(const QString& fileName) :
 
     QFileInfo fInfo(fileName);
     gme_load_m3u(m_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
+
+    openAsma(m_config.asmaPath());
 
 #ifdef HAVE_STILVIEW
     bool hasStilInfo = m_stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
@@ -155,15 +156,13 @@ gmeBackend::gmeBackend(const QString& fileName) :
 
     getInfo();
 
-    openAsma(m_config.asmaPath());
-
     songLoaded(fileName);
 }
 
 gmeBackend::~gmeBackend()
 {
     gme_delete(m_emu);
-// 
+
 #ifdef HAVE_STILVIEW
     delete m_stil;
 #endif
@@ -214,12 +213,8 @@ void gmeBackend::checkRetCode(const char* error)
 
 bool gmeBackend::rewind()
 {
-    if (m_emu != nullptr)
-    {
-        gme_seek_samples(m_emu, 0);
-        return true;
-    }
-    return false;
+    gme_seek_samples(m_emu, 0);
+    return true;
 }
 
 bool gmeBackend::subtune(const unsigned int i)

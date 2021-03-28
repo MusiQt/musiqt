@@ -137,7 +137,15 @@ oggBackend::oggBackend(const QString& fileName) :
         throw loadError(QString("Error code: %1").arg(error));
     }
 
-    m_vi = ov_info(m_vf, -1);
+    vorbis_info *m_vi = ov_info(m_vf, -1);
+    if (!m_vi)
+    {
+        delete m_vf;
+        m_file.close();
+        throw loadError(QString("Error getting info"));
+    }
+    m_samplerate = m_vi->rate;
+    m_channels = m_vi->channels;
 
     setDuration(static_cast<unsigned int>(ov_time_total(m_vf, -1)*1000.));
 
@@ -241,18 +249,12 @@ oggBackend::oggBackend(const QString& fileName) :
 
 oggBackend::~oggBackend()
 {
-    if (m_vf != nullptr)
-    {
-        ov_clear(m_vf);
-        m_file.close();
-    }
+    ov_clear(m_vf);
+    m_file.close();
 }
 
 bool oggBackend::seek(int pos)
 {
-    if (m_vf == nullptr)
-        return false;
-
     ogg_int64_t length = ov_pcm_total(m_vf, -1);
 
     if (length < 0)

@@ -149,17 +149,17 @@ mpcBackend::mpcBackend(const QString& fileName) :
 #ifdef MPCDEC_SV8
     m_demux = mpc_demux_init(&m_mpcReader);
     if (!m_demux)
-        goto error;
+        throw loadError("Error initializing demuxer");
 
     mpc_demux_get_info(m_demux, &m_si);
 #else
     mpc_streaminfo_init(&m_si);
     if (mpc_streaminfo_read(&m_si, &m_mpcReader) != ERROR_CODE_OK)
-        goto error;
+        throw loadError("Error reading streaminfo");
 
     mpc_decoder_setup(&m_decoder, &m_mpcReader);
     if (!mpc_decoder_initialize(&m_decoder, &m_si))
-        goto error;
+        throw loadError("Error initializing decoder");
 #endif
 
     setDuration(static_cast<unsigned int>(mpc_streaminfo_get_length(&m_si)*1000.));
@@ -198,19 +198,15 @@ mpcBackend::mpcBackend(const QString& fileName) :
     m_bufLen = 0;
 
     songLoaded(fileName);
-
-error:
-    throw loadError("Error");
 }
 
 mpcBackend::~mpcBackend()
 {
-    m_file.close();
-
 #ifdef MPCDEC_SV8
-    if (!songLoaded().isNull())
-        mpc_demux_exit(m_demux);
+    mpc_demux_exit(m_demux);
 #endif
+
+    m_file.close();
 }
 
 bool mpcBackend::seek(int pos)

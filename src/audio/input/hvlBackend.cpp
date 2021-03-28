@@ -184,31 +184,20 @@ hvlBackend::hvlBackend(const QString& fileName) :
 
 hvlBackend::~hvlBackend()
 {
-    if (m_tune)
-    {
-        hvl_FreeTune(m_tune);
-        delete[] m_buffer;
-    }
+    hvl_FreeTune(m_tune);
+    delete[] m_buffer;
 }
 
 bool hvlBackend::rewind()
 {
-    if (m_tune != nullptr)
-    {
-        hvl_InitSubsong(m_tune, m_tune->ht_SongNum);
-        return true;
-    }
-    return false;
+    hvl_InitSubsong(m_tune, m_tune->ht_SongNum);
+    return true;
 }
 
 bool hvlBackend::subtune(const unsigned int i)
 {
-    if (m_tune != nullptr)
-    {
-        hvl_InitSubsong(m_tune, i);
-        return true;
-    }
-    return false;
+    hvl_InitSubsong(m_tune, i);
+    return true;
 }
 
 /*****************************************************************/

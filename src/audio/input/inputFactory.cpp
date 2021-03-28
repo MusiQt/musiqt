@@ -175,10 +175,13 @@ input* iFactory::get(const QString& fileName)
         if (supports(i.supportedExt(), fileName))
         {
             qDebug() << "Trying input backend " << i.name;
-            try {
+            try
+            {
                 std::unique_ptr<input> ib(i.factory(fileName));
                 return ib.release();
-            } catch (input::loadError const &e) {
+            }
+            catch (input::loadError const &e)
+            {
                 qWarning() << e.message();
             }
         }

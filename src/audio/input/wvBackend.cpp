@@ -114,7 +114,6 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
 QStringList wvBackend::ext() { return QStringList(EXT); }
 
 wvBackend::wvBackend(const QString& fileName) :
-    m_decodeBuf(nullptr),
     m_config(name, iconWv, 375)
 {
     char tmp[255];
@@ -194,11 +193,8 @@ wvBackend::wvBackend(const QString& fileName) :
 
 wvBackend::~wvBackend()
 {
-    if (m_wvContext != nullptr)
-    {
-        m_wvContext = WavpackCloseFile(m_wvContext);
-        delete [] m_decodeBuf;
-    }
+    m_wvContext = WavpackCloseFile(m_wvContext);
+    delete [] m_decodeBuf;
 }
 
 void wvBackend::getId3Tag(const char* tag, metaData::mpris_t meta)
@@ -219,9 +215,6 @@ void wvBackend::getApeTag(const char* tag, metaData::mpris_t meta)
 
 bool wvBackend::seek(int pos)
 {
-    if (m_wvContext == nullptr)
-        return false;
-
     uint32_t samples = WavpackGetNumSamples(m_wvContext);
 
     if (samples == -1)

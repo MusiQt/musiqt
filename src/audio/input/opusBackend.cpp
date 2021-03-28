@@ -218,18 +218,12 @@ opusBackend::opusBackend(const QString& fileName) :
 
 opusBackend::~opusBackend()
 {
-    if (m_of != nullptr)
-    {
-        op_free(m_of);
-        m_file.close();
-    }
+    op_free(m_of);
+    m_file.close();
 }
 
 bool opusBackend::seek(int pos)
 {
-    if (m_of == nullptr)
-        return false;
-
     ogg_int64_t length = op_pcm_total(m_of, -1);
 
     if (length < 0)
