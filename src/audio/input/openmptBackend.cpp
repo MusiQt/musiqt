@@ -201,7 +201,7 @@ openmptBackend::openmptBackend(const QString& fileName) :
         if (unzGoToFirstFile(modZip) != UNZ_OK)
         {
             unzClose(modZip);
-            throw loadError("Unzip errors");
+            throw loadError("Unzip error");
         }
 
         fName = tempFile(fileName);
@@ -228,17 +228,16 @@ openmptBackend::openmptBackend(const QString& fileName) :
     QByteArray data = f.read(f.size());
     f.close();
 
+    delTempFile(tmpFile, fName);
+
     try
     {
         m_module = new openmpt::module(data.constData(), data.length());
     }
     catch (const openmpt::exception &e)
     {
-        delete m_module;
         throw loadError(e.what());
     }
-
-    delTempFile(tmpFile, fName);
 
     m_module->set_render_param(openmpt::module::RENDER_INTERPOLATIONFILTER_LENGTH, m_config.resamplingMode());
     m_module->set_render_param(openmpt::module::RENDER_MASTERGAIN_MILLIBEL, m_config.masterGain());

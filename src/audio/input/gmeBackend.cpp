@@ -222,10 +222,10 @@ bool gmeBackend::subtune(const unsigned int i)
     if ((i > 0) && (i <= (unsigned int)gme_track_count(m_emu)))
     {
         m_currentTrack = i - 1;
-        try {
-            checkRetCode(gme_start_track(m_emu, m_currentTrack));
-        } catch (const loadError& e) {
-            qWarning() << e.message();
+        const char* error = gme_start_track(m_emu, m_currentTrack);
+        if (error)
+        {
+            qWarning() << error;
             return false;
         }
 

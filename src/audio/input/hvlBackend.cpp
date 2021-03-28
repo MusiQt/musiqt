@@ -166,7 +166,7 @@ hvlBackend::hvlBackend(const QString& fileName) :
     if (m_tune == nullptr)
         throw loadError("Error loading tune");
 
-    hvl_InitSubsong(m_tune, 0); // TODO check return value
+    hvl_InitSubsong(m_tune, 0);
 
     m_metaData.addInfo(metaData::TITLE, (char*)m_tune->ht_Name);
     QString comment = QString();
@@ -190,14 +190,12 @@ hvlBackend::~hvlBackend()
 
 bool hvlBackend::rewind()
 {
-    hvl_InitSubsong(m_tune, m_tune->ht_SongNum);
-    return true;
+    return hvl_InitSubsong(m_tune, m_tune->ht_SongNum);
 }
 
 bool hvlBackend::subtune(const unsigned int i)
 {
-    hvl_InitSubsong(m_tune, i);
-    return true;
+    return hvl_InitSubsong(m_tune, i);
 }
 
 /*****************************************************************/

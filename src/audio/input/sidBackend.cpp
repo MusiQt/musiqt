@@ -48,6 +48,8 @@
 #include <QButtonGroup>
 #include <QMessageBox>
 
+#include <memory>
+
 // created by reswrap from file sid.gif
 extern const unsigned char iconSid[126] =
 {
@@ -208,13 +210,13 @@ sidBackend::sidBackend(const QString& fileName) :
     m_newSonglengthDB(false),
     m_config(name, iconSid, 126)
 {
-    m_sidplayfp = new sidplayfp;
+    std::unique_ptr<sidplayfp> emu(new sidplayfp());
 
     {
         const unsigned char* kernal = loadRom(m_config.kernalPath());
         const unsigned char* basic = loadRom(m_config.basicPath());
         const unsigned char* chargen = loadRom(m_config.chargenPath());
-        m_sidplayfp->setRoms(kernal, basic, chargen);
+        emu->setRoms(kernal, basic, chargen);
         delete [] kernal;
         delete [] basic;
         delete [] chargen;
@@ -227,7 +229,7 @@ sidBackend::sidBackend(const QString& fileName) :
     if (!m_config.engine().compare(engines[eng++]))
     {
         ReSIDfpBuilder *tmpResid = new ReSIDfpBuilder("Musiqt reSIDfp");
-        tmpResid->create(m_sidplayfp->info().maxsids());
+        tmpResid->create(emu->info().maxsids());
 
         tmpResid->filter(m_config.filter());
         tmpResid->filter6581Curve((double)m_config.filter6581Curve()/1000.);
@@ -240,10 +242,11 @@ sidBackend::sidBackend(const QString& fileName) :
     if (!m_config.engine().compare(engines[eng++]))
     {
         ReSIDBuilder *tmpResid = new ReSIDBuilder("Musiqt reSID");
-        tmpResid->create(m_sidplayfp->info().maxsids());
+        tmpResid->create(emu->info().maxsids());
 
         tmpResid->filter(m_config.filter());
         tmpResid->bias((double)m_config.bias()/1000.0);
+
         emuSid = (sidbuilder*)tmpResid;
     }
 #endif
@@ -251,9 +254,10 @@ sidBackend::sidBackend(const QString& fileName) :
     if (!m_config.engine().compare(engines[eng++]))
     {
         HardSIDBuilder *tmpHardsid = new HardSIDBuilder("Musiqt hardSID");
-        tmpHardsid->create(m_sidplayfp->info().maxsids());
+        tmpHardsid->create(emu->info().maxsids());
 
         tmpHardsid->filter(m_config.filter());
+
         emuSid = (sidbuilder*)tmpHardsid;
     }
 #endif
@@ -261,16 +265,16 @@ sidBackend::sidBackend(const QString& fileName) :
     if (!m_config.engine().compare(engines[eng++]))
     {
         exSIDBuilder *tmpExsid = new exSIDBuilder("Musiqt exSID");
-        tmpExsid->create(m_sidplayfp->info().maxsids());
+        tmpExsid->create(emu->info().maxsids());
 
         tmpExsid->filter(m_config.filter());
+
         emuSid = (sidbuilder*)tmpExsid;
     }
 #endif
 
     if (emuSid == nullptr)
     {
-        delete m_sidplayfp;
         throw loadError("Error creating emu engine");
     }
 
@@ -288,14 +292,12 @@ sidBackend::sidBackend(const QString& fileName) :
     cfg.sidEmulation = emuSid;
     cfg.samplingMethod = m_config.samplingMethod();
     cfg.fastSampling = m_config.fastSampling();
-    m_sidplayfp->config(cfg);
+    emu->config(cfg);
 
-    m_tune = new SidTune(fileName.toUtf8().constData());
-    if (!m_tune->getStatus())
+    std::unique_ptr<SidTune> sidTune(new SidTune(fileName.toUtf8().constData()));
+    if (!sidTune->getStatus())
     {
-        QString error(m_tune->statusString());
-        delete m_tune;
-        delete m_sidplayfp;
+        QString error(sidTune->statusString());
         delete emuSid;
         throw loadError(error);
     }
@@ -313,7 +315,7 @@ sidBackend::sidBackend(const QString& fileName) :
 
     loadTune(0);
 
-    const SidTuneInfo* tuneInfo = m_tune->getInfo();
+    const SidTuneInfo* tuneInfo = sidTune->getInfo();
 
     /*
      * SID tunes have three info strings (title, artis, released)
@@ -371,7 +373,7 @@ sidBackend::sidBackend(const QString& fileName) :
         m_metaData.addInfo(metaData::COMMENT, comment);
     }
 
-    m_metaData.addInfo(gettext("speed"), m_sidplayfp->info().speedString());
+    m_metaData.addInfo(gettext("speed"), emu->info().speedString());
     m_metaData.addInfo(gettext("file format"), tuneInfo->formatString());
     m_metaData.addInfo(gettext("song clock"), getClockString(tuneInfo->clockSpeed()));
 #ifdef ENABLE_3SID
@@ -397,12 +399,15 @@ sidBackend::sidBackend(const QString& fileName) :
                           QString("$%1").arg(tuneInfo->sidChipBase2(), 4, 16, QChar('0')));
     }
 #endif
+
+    m_tune = sidTune.release();
+    m_sidplayfp = emu.release();
     songLoaded(fileName);
 }
 
 sidBackend::~sidBackend()
 {
-    const sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
+    sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
     delete m_sidplayfp;
     delete emuSid;
 

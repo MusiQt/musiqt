@@ -30,6 +30,8 @@
 #include <QLabel>
 #include <QTextCodec>
 
+#include <memory>
+
 extern const unsigned char iconOgg[523] =
 {
     0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x10, 0x00, 0x0f, 0x00, 0xf6, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -128,26 +130,24 @@ oggBackend::oggBackend(const QString& fileName) :
         throw loadError(m_file.errorString());
     }
 
-    m_vf = new OggVorbis_File;
-    int error = ov_open_callbacks(&m_file, m_vf, NULL, 0, vorbis_callbacks);
+    std::unique_ptr<OggVorbis_File> ovFile(new OggVorbis_File());
+    int error = ov_open_callbacks(&m_file, ovFile.get(), NULL, 0, vorbis_callbacks);
     if (error < 0)
     {
-        delete m_vf;
         m_file.close();
         throw loadError(QString("Error code: %1").arg(error));
     }
 
-    vorbis_info *m_vi = ov_info(m_vf, -1);
+    vorbis_info *m_vi = ov_info(ovFile.get(), -1);
     if (!m_vi)
     {
-        delete m_vf;
         m_file.close();
         throw loadError(QString("Error getting info"));
     }
     m_samplerate = m_vi->rate;
     m_channels = m_vi->channels;
 
-    setDuration(static_cast<unsigned int>(ov_time_total(m_vf, -1)*1000.));
+    setDuration(static_cast<unsigned int>(ov_time_total(ovFile.get(), -1)*1000.));
 
     QString title;
     QString artist;
@@ -159,7 +159,7 @@ oggBackend::oggBackend(const QString& fileName) :
     QString mime;
     QByteArray image;
 
-    char **ptr = ov_comment(m_vf, -1)->user_comments;
+    char **ptr = ov_comment(ovFile.get(), -1)->user_comments;
     while (*ptr)
     {
         qDebug() << *ptr;
@@ -244,6 +244,7 @@ oggBackend::oggBackend(const QString& fileName) :
     if (!mime.isNull())
         m_metaData.addInfo(new QByteArray(image));
 
+    m_vf = ovFile.release();
     songLoaded(fileName);
 }
 

@@ -199,6 +199,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 : MPG123_RVA_OFF,
             0.);
 
+        // Get metadata
         mpg123_id3v1* id3v1;
         mpg123_id3v2* id3v2;
         err = mpg123_id3(m_handle, &id3v1, &id3v2);
@@ -368,8 +369,9 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
     }
     catch (const loadError& e)
     {
-        m_file.close();
+        mpg123_close(m_handle);
         mpg123_delete(m_handle);
+        m_file.close();
 
         throw e;
     }    

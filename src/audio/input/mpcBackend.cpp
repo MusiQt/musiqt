@@ -121,16 +121,16 @@ QStringList mpcBackend::ext() { return QStringList(EXT); }
 mpcBackend::mpcBackend(const QString& fileName) :
     m_config(name, iconMpc, 417)
 {
+    m_file.setFileName(fileName);
+    if (!m_file.open(QIODevice::ReadOnly))
+        throw loadError(m_file.errorString());
+
     m_mpcReader.read = mpcBackend::read_func;
     m_mpcReader.seek = mpcBackend::seek_func;
     m_mpcReader.tell = mpcBackend::tell_func;
     m_mpcReader.get_size = mpcBackend::get_size_func;
     m_mpcReader.canseek = mpcBackend::canseek_func;
     m_mpcReader.data = &m_file;
-
-    m_file.setFileName(fileName);
-    if (!m_file.open(QIODevice::ReadOnly))
-        throw loadError(m_file.errorString());
 
     const tag tagPtr(&m_file);
 
