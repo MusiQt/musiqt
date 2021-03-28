@@ -300,6 +300,8 @@ sidBackend::sidBackend(const QString& fileName) :
         throw loadError(error);
     }
 
+    openHvsc(m_config.hvscPath());
+
     if (fileName.endsWith(".mus"))
     {
         loadWDS(fileName, "wds");
@@ -349,8 +351,6 @@ sidBackend::sidBackend(const QString& fileName) :
             m_metaData.addInfo(metaData::COMMENT, info);
         }
     }
-
-    openHvsc(m_config.hvscPath());
 
     if (m_stil != nullptr)
     {
@@ -473,8 +473,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
     if (hvscPath.isEmpty())
         return;
 
-    if (m_stil == nullptr)
-        m_stil = new STIL(HVSC_STIL, HVSC_BUGLIST);
+    m_stil = new STIL(HVSC_STIL, HVSC_BUGLIST);
 
     if (!m_stil->setBaseDir(hvscPath.toLocal8Bit().constData()))
     {
@@ -482,8 +481,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
         utils::delPtr(m_stil);
     }
 
-    if (m_db == nullptr)
-        m_db = new SidDatabase();
+    m_db = new SidDatabase();
 
     QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath, QDir::separator()));
     qDebug() << "SL DB path: " << slDbPath;
