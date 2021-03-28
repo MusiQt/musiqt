@@ -202,51 +202,10 @@ const char* getClockString(SidTuneInfo::clock_t clock)
 
 QStringList sidBackend::ext() { return QString(EXT).split("|"); }
 
-sidBackend::sidBackend() :
-    m_sidplayfp(nullptr),
-    m_tune(nullptr),
-    m_stil(nullptr),
-    m_db(nullptr),
+sidBackend::sidBackend(const QString& fileName) :
     m_length(0),
     m_newSonglengthDB(false),
     m_config(name, iconSid, 126)
-{
-    openHvsc(m_config.hvscPath());
-}
-
-sidBackend::~sidBackend()
-{
-    if (m_sidplayfp != nullptr)
-    {
-        const sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
-        delete emuSid;
-        delete m_sidplayfp;
-    }
-
-    delete m_tune;
-
-    delete m_db;
-    delete m_stil;
-}
-
-const unsigned char* sidBackend::loadRom(const QString& romPath)
-{
-    if (romPath.isEmpty())
-        return nullptr;
-
-    QFile f;
-    f.setFileName(romPath);
-    if (!f.open(QIODevice::ReadOnly))
-        return nullptr;
-
-    const long size = f.size();
-    char* data = new char[size];
-    f.read(data, size);
-    f.close();
-    return (const unsigned char*)data;
-}
-
-bool sidBackend::open(const QString& fileName)
 {
     m_sidplayfp = new sidplayfp;
 
@@ -311,7 +270,7 @@ bool sidBackend::open(const QString& fileName)
     if (emuSid == nullptr)
     {
         utils::delPtr(m_sidplayfp);
-        return false;
+        throw loadError();
     }
 
     SidConfig cfg;
@@ -334,8 +293,8 @@ bool sidBackend::open(const QString& fileName)
     if (!m_tune->getStatus())
     {
         qWarning() << m_tune->statusString();
-        utils::delPtr(m_tune);
-        return 0;
+        delete m_tune;
+        throw loadError();
     }
 
     if (fileName.endsWith(".mus"))
@@ -388,6 +347,8 @@ bool sidBackend::open(const QString& fileName)
         }
     }
 
+    openHvsc(m_config.hvscPath());
+
     if (m_stil != nullptr)
     {
         const char* fName = fileName.toUtf8().constData();
@@ -434,7 +395,38 @@ bool sidBackend::open(const QString& fileName)
     }
 #endif
     songLoaded(fileName);
-    return true;
+}
+
+sidBackend::~sidBackend()
+{
+    if (m_sidplayfp != nullptr)
+    {
+        const sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
+        delete emuSid;
+        delete m_sidplayfp;
+    }
+
+    delete m_tune;
+
+    delete m_db;
+    delete m_stil;
+}
+
+const unsigned char* sidBackend::loadRom(const QString& romPath)
+{
+    if (romPath.isEmpty())
+        return nullptr;
+
+    QFile f;
+    f.setFileName(romPath);
+    if (!f.open(QIODevice::ReadOnly))
+        return nullptr;
+
+    const long size = f.size();
+    char* data = new char[size];
+    f.read(data, size);
+    f.close();
+    return (const unsigned char*)data;
 }
 
 bool sidBackend::rewind()

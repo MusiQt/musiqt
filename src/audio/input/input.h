@@ -87,6 +87,9 @@ public:
  */
 class input
 {
+public:
+    class loadError {};
+
 private:
     unsigned int m_time;
 
@@ -125,9 +128,6 @@ public:
 
     /// Get fractional scale for fixed point types
     virtual unsigned int fract() const { return 0; }
-
-    /// Open file
-    virtual bool open(const QString& fileName) =0;
 
     /// Rewind to start
     virtual bool rewind() { return seek(0); }

@@ -237,7 +237,7 @@ bool ffmpegBackend::init()
 
 QStringList ffmpegBackend::ext() { return m_ext; }
 
-ffmpegBackend::ffmpegBackend() :
+ffmpegBackend::ffmpegBackend(const QString& fileName) :
     m_audioStream(nullptr),
     m_formatContext(nullptr),
     m_codecContext(nullptr),
@@ -246,42 +246,10 @@ ffmpegBackend::ffmpegBackend() :
     m_config(name, iconFfmpeg, 86)
 {
     m_packet.data = 0;
-}
-
-ffmpegBackend::~ffmpegBackend()
-{
-    dl_av_frame_free(&m_frame);
-
-    if (m_packet.data)
-        dl_av_packet_unref(&m_packet);
-
-    dl_avcodec_free_context(&m_codecContext);
-    dl_avformat_close_input(&m_formatContext);
-}
-
-QString ffmpegBackend::getMetadata(const char* type)
-{
-    AVDictionaryEntry* mTag = nullptr;
-    QString info;
-    for (;;)
-    {
-        mTag = dl_av_dict_get(m_formatContext->metadata, type, mTag, 0);
-        if (!mTag)
-            break;
-        if (!info.isEmpty())
-            info.append(", ");
-        info.append(QString::fromUtf8(mTag->value).trimmed());
-    }
-
-    return info;
-}
-
-bool ffmpegBackend::open(const QString& fileName)
-{
     if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
     {
         qWarning() << "Cannot open input";
-        return false;
+        throw loadError();
     }
 
     if (dl_avformat_find_stream_info(m_formatContext, nullptr) < 0)
@@ -337,13 +305,41 @@ bool ffmpegBackend::open(const QString& fileName)
     setDuration(m_formatContext->duration/1000);
 
     songLoaded(fileName);
-    return true;
+    return;
 
 error:
     dl_avcodec_free_context(&m_codecContext);
     dl_avformat_close_input(&m_formatContext);
 
-    return false;
+    throw loadError();
+}
+
+ffmpegBackend::~ffmpegBackend()
+{
+    dl_av_frame_free(&m_frame);
+
+    if (m_packet.data)
+        dl_av_packet_unref(&m_packet);
+
+    dl_avcodec_free_context(&m_codecContext);
+    dl_avformat_close_input(&m_formatContext);
+}
+
+QString ffmpegBackend::getMetadata(const char* type)
+{
+    AVDictionaryEntry* mTag = nullptr;
+    QString info;
+    for (;;)
+    {
+        mTag = dl_av_dict_get(m_formatContext->metadata, type, mTag, 0);
+        if (!mTag)
+            break;
+        if (!info.isEmpty())
+            info.append(", ");
+        info.append(QString::fromUtf8(mTag->value).trimmed());
+    }
+
+    return info;
 }
 
 bool ffmpegBackend::seek(int pos)

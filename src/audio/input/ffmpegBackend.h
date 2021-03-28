@@ -120,7 +120,7 @@ private:
     static int64_t (*dl_av_rescale_q)(int64_t, AVRational, AVRational);
 
 private:
-    ffmpegBackend();
+    ffmpegBackend(const QString& fileName);
 
     /// Open selected stream
     bool openStream(AVFormatContext* fc);
@@ -135,14 +135,11 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new ffmpegBackend(); }
+    static input* factory(const QString& fileName) { return new ffmpegBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }

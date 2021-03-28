@@ -105,7 +105,7 @@ private:
     openmptConfig m_config;
 
 private:
-    openmptBackend();
+    openmptBackend(const QString& fileName);
 
     /// Get temp file name
     const QString tempFile(const QString& fileName)
@@ -132,14 +132,11 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new openmptBackend(); }
+    static input* factory(const QString& fileName) { return new openmptBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext() { return m_ext; }
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Rewind to start
     bool rewind() override;

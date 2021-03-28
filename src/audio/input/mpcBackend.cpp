@@ -118,7 +118,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 QStringList mpcBackend::ext() { return QStringList(EXT); }
 
-mpcBackend::mpcBackend() :
+mpcBackend::mpcBackend(const QString& fileName) :
     m_config(name, iconMpc, 417)
 {
     m_mpcReader.read = mpcBackend::read_func;
@@ -127,23 +127,10 @@ mpcBackend::mpcBackend() :
     m_mpcReader.get_size = mpcBackend::get_size_func;
     m_mpcReader.canseek = mpcBackend::canseek_func;
     m_mpcReader.data = &m_file;
-}
 
-mpcBackend::~mpcBackend()
-{
-    m_file.close();
-
-#ifdef MPCDEC_SV8
-    if (!songLoaded().isNull())
-        mpc_demux_exit(m_demux);
-#endif
-}
-
-bool mpcBackend::open(const QString& fileName)
-{
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
-        return false;
+        throw loadError();
 
     const tag tagPtr(&m_file);
 
@@ -211,10 +198,19 @@ bool mpcBackend::open(const QString& fileName)
     m_bufLen = 0;
 
     songLoaded(fileName);
-    return true;
 
 error:
-    return false;
+    throw loadError();
+}
+
+mpcBackend::~mpcBackend()
+{
+    m_file.close();
+
+#ifdef MPCDEC_SV8
+    if (!songLoaded().isNull())
+        mpc_demux_exit(m_demux);
+#endif
 }
 
 bool mpcBackend::seek(int pos)

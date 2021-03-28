@@ -102,46 +102,31 @@ bool gmeBackend::init()
 
 QStringList gmeBackend::ext() { return QString(EXT).split("|"); }
 
-gmeBackend::gmeBackend() :
-    m_emu(nullptr),
+gmeBackend::gmeBackend(const QString& fileName) :
     m_currentTrack(0)
 #ifdef HAVE_STILVIEW
     , m_stil(nullptr)
 #endif
     , m_config(name)
 {
-    openAsma(m_config.asmaPath());
-}
-
-gmeBackend::~gmeBackend()
-{
-    gme_delete(m_emu);
-// 
-#ifdef HAVE_STILVIEW
-    delete m_stil;
-#endif
-}
-
-bool gmeBackend::open(const QString& fileName)
-{
     gme_type_t fileType;
     if (!checkRetCode(gme_identify_file(fileName.toUtf8().constData(), &fileType)))
-        return false;
+        throw loadError();
 
     qDebug() << "System " << gme_type_system(fileType);
 
     m_emu = gme_new_emu(fileType, m_config.samplerate());
     if (m_emu == nullptr)
-        return false;
+        throw loadError();
     if (m_config.equalizer())
     {
         gme_equalizer_t eq = { m_config.treble_dB(), m_config.bass_freq() };
         gme_set_equalizer(m_emu, &eq);
     }
     if (!checkRetCode(gme_load_file(m_emu, fileName.toUtf8().constData())))
-        return false;
+        throw loadError();
     if (!checkRetCode(gme_start_track(m_emu, 0)))
-        return false;
+        throw loadError();
 
     QFileInfo fInfo(fileName);
     gme_load_m3u(m_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
@@ -170,8 +155,18 @@ bool gmeBackend::open(const QString& fileName)
 
     getInfo();
 
+    openAsma(m_config.asmaPath());
+
     songLoaded(fileName);
-    return true;
+}
+
+gmeBackend::~gmeBackend()
+{
+    gme_delete(m_emu);
+// 
+#ifdef HAVE_STILVIEW
+    delete m_stil;
+#endif
 }
 
 void gmeBackend::getInfo()

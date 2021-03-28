@@ -95,7 +95,7 @@ private:
     static long tell_func(void *datasource);
 
 private:
-    oggBackend();
+    oggBackend(const QString& fileName);
 
 public:
     ~oggBackend();
@@ -103,14 +103,11 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new oggBackend(); }
+    static input* factory(const QString& fileName) { return new oggBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }

@@ -133,27 +133,14 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 QStringList opusBackend::ext() { return QStringList(EXT); }
 
-opusBackend::opusBackend() :
-    m_of(nullptr),
+opusBackend::opusBackend(const QString& fileName) :
     m_config(name, iconOpus, 952)
-{}
-
-opusBackend::~opusBackend()
-{
-    if (m_of != nullptr)
-    {
-        op_free(m_of);
-        m_file.close();
-    }
-}
-
-bool opusBackend::open(const QString& fileName)
 {
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
     {
         qWarning() << m_file.errorString();
-        return false;
+        throw loadError();
     }
 
     int error;
@@ -162,7 +149,7 @@ bool opusBackend::open(const QString& fileName)
     {
         qDebug() << "Error code: " << error;
         m_file.close();
-        return false;
+        throw loadError();
     }
 
     setDuration(static_cast<unsigned int>(op_pcm_total(m_of, -1)/48));
@@ -229,7 +216,15 @@ bool opusBackend::open(const QString& fileName)
         m_metaData.addInfo(new QByteArray((char*)image.data(), image.size()));
 
     songLoaded(fileName);
-    return true;
+}
+
+opusBackend::~opusBackend()
+{
+    if (m_of != nullptr)
+    {
+        op_free(m_of);
+        m_file.close();
+    }
 }
 
 bool opusBackend::seek(int pos)

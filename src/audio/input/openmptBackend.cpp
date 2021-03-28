@@ -173,17 +173,8 @@ bool openmptBackend::init()
     return true;
 }
 
-openmptBackend::openmptBackend() :
-    m_module(nullptr),
+openmptBackend::openmptBackend(const QString& fileName) :
     m_config(name, iconOpenmpt, 990)
-{}
-
-openmptBackend::~openmptBackend()
-{
-    delete m_module;
-}
-
-bool openmptBackend::open(const QString& fileName)
 {
     bool tmpFile = false;
     QString fName;
@@ -210,7 +201,7 @@ bool openmptBackend::open(const QString& fileName)
         if (unzGoToFirstFile(modZip) != UNZ_OK)
         {
             unzClose(modZip);
-            return false;
+            throw loadError();
         }
 
         fName = tempFile(fileName);
@@ -244,7 +235,7 @@ bool openmptBackend::open(const QString& fileName)
     catch (const openmpt::exception &e)
     {
         utils::delPtr(m_module);
-        return false;
+        throw loadError();
     }
 
     delTempFile(tmpFile, fName);
@@ -269,7 +260,11 @@ bool openmptBackend::open(const QString& fileName)
     setDuration(m_module->get_duration_seconds()*1000);
 
     songLoaded(fileName);
-    return true;
+}
+
+openmptBackend::~openmptBackend()
+{
+    delete m_module;
 }
 
 bool openmptBackend::rewind()

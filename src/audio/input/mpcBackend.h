@@ -97,7 +97,7 @@ private:
     static mpc_bool_t canseek_func(DATAPARM);
 
 private:
-    mpcBackend();
+    mpcBackend(const QString& fileName);
 
 public:
     ~mpcBackend();
@@ -105,14 +105,11 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new mpcBackend(); }
+    static input* factory(const QString& fileName) { return new mpcBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }

@@ -119,28 +119,14 @@ void oggConfig::saveSettings()
 
 QStringList oggBackend::ext() { return QString(EXT).split("|"); }
 
-oggBackend::oggBackend() :
-    m_vf(nullptr),
-    m_vi(nullptr),
+oggBackend::oggBackend(const QString& fileName) :
     m_config(name, iconOgg, 523)
-{}
-
-oggBackend::~oggBackend()
-{
-    if (m_vf != nullptr)
-    {
-        ov_clear(m_vf);
-        m_file.close();
-    }
-}
-
-bool oggBackend::open(const QString& fileName)
 {
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
     {
         qWarning() << m_file.errorString();
-        return false;
+        throw loadError();
     }
 
     m_vf = new OggVorbis_File;
@@ -150,7 +136,7 @@ bool oggBackend::open(const QString& fileName)
         qDebug() << "Error code: " << error;
         utils::delPtr(m_vf);
         m_file.close();
-        return false;
+        throw loadError();
     }
 
     m_vi = ov_info(m_vf, -1);
@@ -253,7 +239,15 @@ bool oggBackend::open(const QString& fileName)
         m_metaData.addInfo(new QByteArray(image));
 
     songLoaded(fileName);
-    return true;
+}
+
+oggBackend::~oggBackend()
+{
+    if (m_vf != nullptr)
+    {
+        ov_clear(m_vf);
+        m_file.close();
+    }
 }
 
 bool oggBackend::seek(int pos)

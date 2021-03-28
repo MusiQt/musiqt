@@ -137,26 +137,14 @@ bool mpg123Backend::init()
 
 QStringList mpg123Backend::ext() { return QStringList(EXT); }
 
-mpg123Backend::mpg123Backend() :
-    m_handle(nullptr),
+mpg123Backend::mpg123Backend(const QString& fileName) :
     m_config(name, iconMpg123, 560)
-{}
-
-mpg123Backend::~mpg123Backend()
-{
-    mpg123_close(m_handle);
-    mpg123_delete(m_handle);
-
-    m_file.close();
-}
-
-bool mpg123Backend::open(const QString& fileName)
 {
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
     {
         qWarning() << m_file.errorString();
-        return false;
+        throw loadError();
     }
 
     int err;
@@ -376,12 +364,19 @@ bool mpg123Backend::open(const QString& fileName)
     }
 
     songLoaded(fileName);
-    return true;
 
 error:
     qWarning() << mpg123_strerror(m_handle);
     m_file.close();
-    return false;
+    throw loadError();
+}
+
+mpg123Backend::~mpg123Backend()
+{
+    mpg123_close(m_handle);
+    mpg123_delete(m_handle);
+
+    m_file.close();
 }
 
 bool mpg123Backend::seek(int pos)

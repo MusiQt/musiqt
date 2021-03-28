@@ -155,29 +155,16 @@ void hvlConfig::saveSettings()
 
 QStringList hvlBackend::ext() { return QString(EXT).split("|"); }
 
-hvlBackend::hvlBackend() :
-    m_tune(nullptr),
+hvlBackend::hvlBackend(const QString& fileName) :
     m_buffer(nullptr),
     m_config(name, iconHvl, 1006)
 {
     hvl_InitReplayer();
-}
 
-hvlBackend::~hvlBackend()
-{
-    if (m_tune)
-    {
-        hvl_FreeTune(m_tune);
-        delete[] m_buffer;
-    }
-}
-
-bool hvlBackend::open(const QString& fileName)
-{
     m_tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), m_config.samplerate(), 2);
 
     if (m_tune == nullptr)
-        return false;
+        throw loadError();
 
     hvl_InitSubsong(m_tune, 0); // TODO check return value
 
@@ -193,7 +180,15 @@ bool hvlBackend::open(const QString& fileName)
     m_buffer = new char[m_size];
 
     songLoaded(fileName);
-    return true;
+}
+
+hvlBackend::~hvlBackend()
+{
+    if (m_tune)
+    {
+        hvl_FreeTune(m_tune);
+        delete[] m_buffer;
+    }
 }
 
 bool hvlBackend::rewind()

@@ -169,7 +169,7 @@ private:
     sidConfig m_config;
 
 private:
-    sidBackend();
+    sidBackend(const QString& fileName);
 
     void loadTune(const int num);
 
@@ -185,32 +185,29 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new sidBackend(); }
+    static input* factory(const QString& fileName) { return new sidBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
 
-    /// Open file
-    bool open(const QString& fileName) override;
-
     /// Rewind to start
     bool rewind() override;
 
     /// Number of subtunes
-    unsigned int subtunes() const override { return m_tune ? m_tune->getInfo()->songs() : 0; }
+    unsigned int subtunes() const override { return m_tune->getInfo()->songs(); }
 
     /// Current subtune
-    unsigned int subtune() const override { return m_tune ? m_tune->getInfo()->currentSong() : 0; }
+    unsigned int subtune() const override { return m_tune->getInfo()->currentSong(); }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return m_tune ? m_config.samplerate() : 0; }
+    unsigned int samplerate() const override { return m_config.samplerate(); }
 
     /// Get channels
-    unsigned int channels() const override { return m_tune ? m_config.channels() : 0; }
+    unsigned int channels() const override { return m_config.channels(); }
 
     /// Get precision
     sample_t precision() const override { return sample_t::S16; }

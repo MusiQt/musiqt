@@ -113,29 +113,16 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
 
 QStringList wvBackend::ext() { return QStringList(EXT); }
 
-wvBackend::wvBackend() :
-    m_wvContext(nullptr),
+wvBackend::wvBackend(const QString& fileName) :
     m_decodeBuf(nullptr),
     m_config(name, iconWv, 375)
-{}
-
-wvBackend::~wvBackend()
-{
-    if (m_wvContext != nullptr)
-    {
-        m_wvContext = WavpackCloseFile(m_wvContext);
-        delete [] m_decodeBuf;
-    }
-}
-
-bool wvBackend::open(const QString& fileName)
 {
     char tmp[255];
     m_wvContext = WavpackOpenFileInput(fileName.toUtf8().constData(), tmp, OPEN_WVC|OPEN_TAGS|OPEN_2CH_MAX|OPEN_NORMALIZE, 0);
     if (m_wvContext == nullptr)
     {
         qWarning() << "Error - " << tmp;
-        return false;
+        throw loadError();
     }
 
     const int mode = WavpackGetMode(m_wvContext);
@@ -204,7 +191,15 @@ bool wvBackend::open(const QString& fileName)
     m_bufSize = 0;
 
     songLoaded(fileName);
-    return true;
+}
+
+wvBackend::~wvBackend()
+{
+    if (m_wvContext != nullptr)
+    {
+        m_wvContext = WavpackCloseFile(m_wvContext);
+        delete [] m_decodeBuf;
+    }
 }
 
 void wvBackend::getId3Tag(const char* tag, metaData::mpris_t meta)

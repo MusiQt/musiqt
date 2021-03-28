@@ -29,7 +29,7 @@ class inputBackend;
 
 class iFactory
 {
-    typedef input* (*inputFactory)();
+    typedef input* (*inputFactory)(const QString& fileName);
     typedef inputConfig* (*configFactory)();
     typedef QStringList (*extFunc)();
 
