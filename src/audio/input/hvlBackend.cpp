@@ -164,7 +164,7 @@ hvlBackend::hvlBackend(const QString& fileName) :
     m_tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), m_config.samplerate(), 2);
 
     if (m_tune == nullptr)
-        throw loadError();
+        throw loadError("Error loading tune");
 
     hvl_InitSubsong(m_tune, 0); // TODO check return value
 

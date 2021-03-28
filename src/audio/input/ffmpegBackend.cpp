@@ -248,14 +248,13 @@ ffmpegBackend::ffmpegBackend(const QString& fileName) :
     m_packet.data = 0;
     if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
     {
-        qWarning() << "Cannot open input";
-        throw loadError();
+        throw loadError("Cannot open input");
     }
 
     if (dl_avformat_find_stream_info(m_formatContext, nullptr) < 0)
     {
-        qWarning() << "Cannot find stream info";
-        goto error;
+        dl_avformat_close_input(&m_formatContext);
+        throw loadError("Cannot find stream info");
     }
 
     if (!openStream(m_formatContext))
@@ -311,7 +310,7 @@ error:
     dl_avcodec_free_context(&m_codecContext);
     dl_avformat_close_input(&m_formatContext);
 
-    throw loadError();
+    throw loadError("Error"); // FIXME
 }
 
 ffmpegBackend::~ffmpegBackend()

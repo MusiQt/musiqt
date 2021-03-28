@@ -201,7 +201,7 @@ openmptBackend::openmptBackend(const QString& fileName) :
         if (unzGoToFirstFile(modZip) != UNZ_OK)
         {
             unzClose(modZip);
-            throw loadError();
+            throw loadError("Unzip errors");
         }
 
         fName = tempFile(fileName);
@@ -234,8 +234,8 @@ openmptBackend::openmptBackend(const QString& fileName) :
     }
     catch (const openmpt::exception &e)
     {
-        utils::delPtr(m_module);
-        throw loadError();
+        delete m_module;
+        throw loadError(e.what());
     }
 
     delTempFile(tmpFile, fName);

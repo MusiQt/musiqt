@@ -143,8 +143,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
     {
-        qWarning() << m_file.errorString();
-        throw loadError();
+        throw loadError(m_file.errorString());
     }
 
     int err;
@@ -366,9 +365,8 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
     songLoaded(fileName);
 
 error:
-    qWarning() << mpg123_strerror(m_handle);
     m_file.close();
-    throw loadError();
+    throw loadError(mpg123_strerror(m_handle));
 }
 
 mpg123Backend::~mpg123Backend()

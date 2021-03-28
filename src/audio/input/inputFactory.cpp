@@ -178,9 +178,9 @@ input* iFactory::get(const QString& fileName)
             try {
                 std::unique_ptr<input> ib(i.factory(fileName));
                 return ib.release();
-            } catch (input::loadError const &) {
-                // go on
-            };
+            } catch (input::loadError const &e) {
+                qWarning() << e.message();
+            }
         }
     }
 

@@ -269,8 +269,8 @@ sidBackend::sidBackend(const QString& fileName) :
 
     if (emuSid == nullptr)
     {
-        utils::delPtr(m_sidplayfp);
-        throw loadError();
+        delete m_sidplayfp;
+        throw loadError("Error creating emu engine");
     }
 
     SidConfig cfg;
@@ -292,9 +292,9 @@ sidBackend::sidBackend(const QString& fileName) :
     m_tune = new SidTune(fileName.toUtf8().constData());
     if (!m_tune->getStatus())
     {
-        qWarning() << m_tune->statusString();
+        QString error(m_tune->statusString());
         delete m_tune;
-        throw loadError();
+        throw loadError(error);
     }
 
     if (fileName.endsWith(".mus"))

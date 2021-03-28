@@ -125,18 +125,16 @@ oggBackend::oggBackend(const QString& fileName) :
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
     {
-        qWarning() << m_file.errorString();
-        throw loadError();
+        throw loadError(m_file.errorString());
     }
 
     m_vf = new OggVorbis_File;
     int error = ov_open_callbacks(&m_file, m_vf, NULL, 0, vorbis_callbacks);
     if (error < 0)
     {
-        qDebug() << "Error code: " << error;
-        utils::delPtr(m_vf);
+        delete m_vf;
         m_file.close();
-        throw loadError();
+        throw loadError(QString("Error code: %1").arg(error));
     }
 
     m_vi = ov_info(m_vf, -1);

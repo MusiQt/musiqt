@@ -79,8 +79,7 @@ sndBackend::sndBackend(const QString& fileName) :
 #endif
     if (m_sf == nullptr)
     {
-        qWarning() <<  sf_strerror(0);
-        throw loadError();
+        throw loadError(sf_strerror(0));
     }
 
     sf_command(m_sf, SFC_SET_SCALE_FLOAT_INT_READ, 0, SF_TRUE);

@@ -139,17 +139,15 @@ opusBackend::opusBackend(const QString& fileName) :
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
     {
-        qWarning() << m_file.errorString();
-        throw loadError();
+        throw loadError(m_file.errorString());
     }
 
     int error;
     m_of = op_open_callbacks(&m_file, &opus_callbacks, nullptr, 0, &error);
     if (m_of == nullptr)
     {
-        qDebug() << "Error code: " << error;
         m_file.close();
-        throw loadError();
+        throw loadError(QString("Error code: %1").arg(error));
     }
 
     setDuration(static_cast<unsigned int>(op_pcm_total(m_of, -1)/48));

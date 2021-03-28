@@ -88,7 +88,16 @@ public:
 class input
 {
 public:
-    class loadError {};
+    class loadError {
+    private:
+        QString m_msg;
+    public:
+        loadError(const char* msg) :
+            m_msg(msg) {}
+        loadError(const QString& msg) :
+            m_msg(msg) {}
+        QString message() const { return m_msg; }
+    };
 
 private:
     unsigned int m_time;

@@ -121,8 +121,7 @@ wvBackend::wvBackend(const QString& fileName) :
     m_wvContext = WavpackOpenFileInput(fileName.toUtf8().constData(), tmp, OPEN_WVC|OPEN_TAGS|OPEN_2CH_MAX|OPEN_NORMALIZE, 0);
     if (m_wvContext == nullptr)
     {
-        qWarning() << "Error - " << tmp;
-        throw loadError();
+        throw loadError(QString("Error: %1").arg(tmp));
     }
 
     const int mode = WavpackGetMode(m_wvContext);

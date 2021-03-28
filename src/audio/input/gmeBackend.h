@@ -118,7 +118,7 @@ private:
 
     void getInfo();
 
-    bool checkRetCode(const char* error);
+    void checkRetCode(const char* error);
 
 public:
     ~gmeBackend();

@@ -130,7 +130,7 @@ mpcBackend::mpcBackend(const QString& fileName) :
 
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
-        throw loadError();
+        throw loadError(m_file.errorString());
 
     const tag tagPtr(&m_file);
 
@@ -200,7 +200,7 @@ mpcBackend::mpcBackend(const QString& fileName) :
     songLoaded(fileName);
 
 error:
-    throw loadError();
+    throw loadError("Error");
 }
 
 mpcBackend::~mpcBackend()
