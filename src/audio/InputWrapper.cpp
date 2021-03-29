@@ -94,6 +94,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
     if (m_maxPlayTime && (m_milliSeconds > m_maxPlayTime))
     {
         qDebug() << "reached max playing time";
+        emit songFinished();
         return 0;
     }
 
@@ -112,6 +113,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
         else
         {
             qDebug() << "finished playing";
+            emit songFinished();
             return 0;
         }
     }

@@ -130,6 +130,8 @@ bool audio::play(input* i)
         return false;
     }
 
+    connect(m_iw, &InputWrapper::songFinished, m_audioOutput, &qaudioBackend::songEnded);
+
     if (SETTINGS->bs2b() && (i->channels() == 2))
         m_iw->enableBs2b();
 

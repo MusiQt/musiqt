@@ -35,6 +35,7 @@ signals:
     void updateTime();
     void preloadSong();
     void switchSong();
+    void songFinished();
 
 private:
     qint64 fillBuffer(char *data, qint64 maxSize);
