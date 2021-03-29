@@ -196,7 +196,9 @@ void gmeBackend::getInfo()
     }
     else if (ti->loop_length > 0)
     {
-        setDuration(ti->intro_length + ti->loop_length);
+        const int startFade = ti->intro_length + ti->loop_length;
+        setDuration(startFade + ti->loop_length);
+        gme_set_fade(m_emu, startFade, ti->loop_length);
     }
 
     gme_free_info(ti);
