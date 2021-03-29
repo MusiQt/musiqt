@@ -57,11 +57,18 @@ converter* cFactory::get(audioFormat_t inFormat, audioFormat_t outFormat,
                 return (converter*)new resampler<float, unsigned char>(inFormat.sampleRate, outFormat.sampleRate,
                     size, outFormat.channels, new quantizerFloat<unsigned char>());
             }
-            else
+            else if (outFormat.sampleType == sample_t::S16)
             {
                 qDebug() << "resampler float->S16";
                 return (converter*)new resampler<float, short>(inFormat.sampleRate, outFormat.sampleRate,
                     size, outFormat.channels, new quantizerFloat<short>());
+            }
+            else
+            {
+                qDebug() << "resampler float->float";
+                //return (converter*)new resampler<float, float>(inFormat.sampleRate, outFormat.sampleRate,
+                //    size, outFormat.channels, new quantizerVoid<float>());
+                return nullptr; // FIXME
             }
         }
         else
@@ -71,11 +78,13 @@ converter* cFactory::get(audioFormat_t inFormat, audioFormat_t outFormat,
                 qDebug() << "converter float->U8";
                 return (converter*)new converterDecimal<float, unsigned char>(size, outFormat.channels, new quantizerFloat<unsigned char>());
             }
-            else
+            else if (outFormat.sampleType == sample_t::S16)
             {
                 qDebug() << "converter float->S16";
                 return (converter*)new converterDecimal<float, short>(size, outFormat.channels, new quantizerFloat<short>());
             }
+            else
+                return nullptr;
         }
     case sample_t::SAMPLE_FIXED:
         if (inFormat.sampleRate != outFormat.sampleRate)

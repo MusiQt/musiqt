@@ -84,7 +84,7 @@ void qaudioBackend::onStateChange(QAudio::State newState)
     }
 }
 
-size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* device)
+size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat)
 {
     int sampleSize;
     QAudioFormat::SampleType sampleType;
@@ -107,9 +107,10 @@ size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* d
         sampleSize = 32;
         sampleType = QAudioFormat::SignedInt;
         break;
-    //case sample_t::SAMPLE_FLOAT:
-    //    sampleSize = 32;
-    //    sampleType = QAudioFormat::Float;
+    case sample_t::SAMPLE_FLOAT:
+        sampleSize = 32;
+        sampleType = QAudioFormat::Float;
+        break;
     default:
         qWarning() << "Unexpected sample type";
         return 0;
@@ -128,12 +129,41 @@ size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* d
     if (!list[card].isFormatSupported(qFormat))
     {
         qFormat = list[card].nearestFormat(qFormat);
-        //format.sampleRate = qFormat.sampleRate();
-
-        // FIXME
-        qWarning() << "Audio format not supported";
-        return 0;
+        outputFormat.sampleRate = qFormat.sampleRate();
+        outputFormat.channels = qFormat.channelCount();
+        if ((qFormat.sampleType() == QAudioFormat::UnSignedInt)
+            && (qFormat.sampleSize() == 8))
+        {
+            outputFormat.sampleType = sample_t::U8;
+        }
+        else if ((qFormat.sampleType() == QAudioFormat::SignedInt)
+            && (qFormat.sampleSize() == 16))
+        {
+            outputFormat.sampleType = sample_t::S16;
+        }
+        else if ((qFormat.sampleType() == QAudioFormat::SignedInt)
+            && (qFormat.sampleSize() == 24))
+        {
+            outputFormat.sampleType = sample_t::S24;
+        }
+        else if ((qFormat.sampleType() == QAudioFormat::SignedInt)
+            && (qFormat.sampleSize() == 32))
+        {
+            outputFormat.sampleType = sample_t::S32;
+        }
+        else if ((qFormat.sampleType() == QAudioFormat::Float)
+            && (qFormat.sampleSize() == 32))
+        {
+            outputFormat.sampleType = sample_t::SAMPLE_FLOAT;
+        }
+        else
+        {
+            qWarning() << "Audio format not supported";
+            return 0;
+        }
     }
+    else
+        outputFormat = format;
 
     m_audioOutput = new AudioOutputWrapper();
     

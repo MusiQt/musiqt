@@ -74,6 +74,8 @@ public:
     virtual void process(void* buffer, size_t size) =0;
 };
 
+/*****************************************************************/
+
 class audioProcess8 : public audioProcess
 {
     void init(int sampleRate)
@@ -94,6 +96,8 @@ class audioProcess8 : public audioProcess
 #endif
     }
 };
+
+/*****************************************************************/
 
 class audioProcess16 : public audioProcess
 {
@@ -130,6 +134,29 @@ class audioProcess16 : public audioProcess
                 buf += 2;
             } while (buf < end);
 #endif
+        }
+#endif
+    }
+};
+
+/*****************************************************************/
+
+class audioProcessFloat : public audioProcess
+{
+    void init(int sampleRate)
+    {
+#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
+        initBs2b(sampleRate);
+#endif
+    }
+
+    void process(void* buffer, size_t size)
+    {
+#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
+        if (m_bs2bdp)
+        {
+            float *buf = (float*)buffer;
+            bs2b_cross_feed_fle(m_bs2bdp, buf, size/8);
         }
 #endif
     }
