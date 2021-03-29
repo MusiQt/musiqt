@@ -412,12 +412,8 @@ void sidBackend::loadTune(const int num)
         qDebug() << "Tune md5: " << md5;
         songLength = m_db->length(md5, m_tune->getInfo()->currentSong()) * 1000;
 #endif
-        m_length = (songLength < 0) ? 0 : songLength;
+        setDuration((songLength < 0) ? 0 : songLength);
     }
-    else
-        m_length = 0;
-
-    setDuration(m_length);
 }
 
 void sidBackend::getInfo(const SidTuneInfo* tuneInfo) noexcept

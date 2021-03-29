@@ -163,7 +163,6 @@ private:
     STIL *m_stil;
 
     SidDatabase *m_db;
-    unsigned int m_length;
     bool m_newSonglengthDB;
 
     sidConfig m_config;
@@ -219,7 +218,7 @@ public:
     sample_t precision() const override { return sample_t::S16; }
 
     /// Get max play time in milliseconds, 0 if none
-    virtual unsigned int maxPlayTime() const override { return m_length; }
+    unsigned int maxPlayTime() const override { return songDuration(); }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
