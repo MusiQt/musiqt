@@ -146,7 +146,6 @@ opusBackend::opusBackend(const QString& fileName) :
     m_of = op_open_callbacks(&m_file, &opus_callbacks, nullptr, 0, &error);
     if (m_of == nullptr)
     {
-        m_file.close();
         throw loadError(QString("Error code: %1").arg(error));
     }
 
@@ -219,7 +218,6 @@ opusBackend::opusBackend(const QString& fileName) :
 opusBackend::~opusBackend()
 {
     op_free(m_of);
-    m_file.close();
 }
 
 bool opusBackend::seek(int pos)

@@ -228,7 +228,11 @@ openmptBackend::openmptBackend(const QString& fileName) :
     QByteArray data = f.read(f.size());
     f.close();
 
-    delTempFile(tmpFile, fName);
+    if (tmpFile)
+    {
+        qDebug() << "Deleting temp file: " << fName;
+        QFile::remove(fName);
+    }
 
     try
     {

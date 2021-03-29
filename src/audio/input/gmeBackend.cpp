@@ -241,8 +241,7 @@ void gmeBackend::openAsma(const QString& asmaPath)
     if (asmaPath.isEmpty())
         return;
 
-    if (m_stil == nullptr)
-        m_stil = new STIL(ASMA_STIL, ASMA_BUGLIST);
+    m_stil = new STIL(ASMA_STIL, ASMA_BUGLIST);
 
     if (!m_stil->setBaseDir(asmaPath.toLocal8Bit().constData()))
     {

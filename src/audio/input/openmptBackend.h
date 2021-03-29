@@ -114,16 +114,6 @@ private:
         return QDir::tempPath() + QDir::separator() + fInfo.completeBaseName() + ".mod";
     }
 
-    /// Delete temp file
-    void delTempFile(bool del, const QString& tmpFile)
-    {
-        if (del)
-        {
-            qWarning() << "Deleting temp file: " << tmpFile;
-            QFile::remove(tmpFile);
-        }
-    }
-
 public:
     ~openmptBackend();
 

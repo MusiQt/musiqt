@@ -205,8 +205,6 @@ mpcBackend::~mpcBackend()
 #ifdef MPCDEC_SV8
     mpc_demux_exit(m_demux);
 #endif
-
-    m_file.close();
 }
 
 bool mpcBackend::seek(int pos)

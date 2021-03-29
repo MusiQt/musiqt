@@ -134,14 +134,12 @@ oggBackend::oggBackend(const QString& fileName) :
     int error = ov_open_callbacks(&m_file, ovFile.get(), NULL, 0, vorbis_callbacks);
     if (error < 0)
     {
-        m_file.close();
         throw loadError(QString("Error code: %1").arg(error));
     }
 
     vorbis_info *m_vi = ov_info(ovFile.get(), -1);
     if (!m_vi)
     {
-        m_file.close();
         throw loadError(QString("Error getting info"));
     }
     m_samplerate = m_vi->rate;
@@ -251,7 +249,6 @@ oggBackend::oggBackend(const QString& fileName) :
 oggBackend::~oggBackend()
 {
     ov_clear(m_vf);
-    m_file.close();
 }
 
 bool oggBackend::seek(int pos)

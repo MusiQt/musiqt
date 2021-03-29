@@ -371,7 +371,6 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
     {
         mpg123_close(m_handle);
         mpg123_delete(m_handle);
-        m_file.close();
 
         throw e;
     }    
@@ -381,8 +380,6 @@ mpg123Backend::~mpg123Backend()
 {
     mpg123_close(m_handle);
     mpg123_delete(m_handle);
-
-    m_file.close();
 }
 
 bool mpg123Backend::seek(int pos)
