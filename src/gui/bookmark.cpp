@@ -51,7 +51,9 @@ void bookmark::save()
         return;
 
     for (int i=0; i<n; i++)
+    {
         m_settings.setValue(key(i), item(i)->text());
+    }
 
     clear();
 }
@@ -66,10 +68,9 @@ void bookmark::add(const QString& dirName)
 void bookmark::dropEvent(QDropEvent *event)
 {
     QList<QUrl> urlList = event->mimeData()->urls();
-    for (int i=0; i<urlList.size(); ++i)
+    for (QUrl url : urlList)
     {
-        QString url = urlList.at(i).toLocalFile();
-        add(url);
+        add(url.toLocalFile());
     }
 }
 

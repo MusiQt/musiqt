@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2019 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ const wchar_t* utils::convertUtf(const QString& string)
 
 #endif //_WIN32
 
-#define MAX_CHARS	20
+constexpr int MAX_CHARS = 20;
 
 QString utils::shrink(const QString& string)
 {
