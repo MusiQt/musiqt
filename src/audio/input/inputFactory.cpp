@@ -64,7 +64,6 @@ public:
     unsigned int samplerate() const override { return 0; }
     unsigned int channels() const override { return 0; }
     sample_t precision() const override { return sample_t::S16; }
-    bool open(const QString& fileName) override { return true; }
     size_t fillBuffer(void* buffer, const size_t bufferSize) override { return 0; }
 };
 
@@ -176,11 +175,15 @@ input* iFactory::get(const QString& fileName)
         if (supports(i.supportedExt(), fileName))
         {
             qDebug() << "Trying input backend " << i.name;
-            input* ib = i.factory();
-            if (ib->open(fileName))
-                return ib;
-
-            delete ib;
+            try
+            {
+                std::unique_ptr<input> ib(i.factory(fileName));
+                return ib.release();
+            }
+            catch (input::loadError const &e)
+            {
+                qWarning() << e.message();
+            }
         }
     }
 

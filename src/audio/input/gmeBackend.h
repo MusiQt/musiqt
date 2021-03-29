@@ -112,13 +112,13 @@ private:
     gmeConfig m_config;
 
 private:
-    gmeBackend();
+    gmeBackend(const QString& fileName);
 
     void openAsma(const QString& asmaPath);
 
     void getInfo();
 
-    bool checkRetCode(const char* error);
+    void checkRetCode(const char* error);
 
 public:
     ~gmeBackend();
@@ -128,20 +128,17 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new gmeBackend(); }
+    static input* factory(const QString& fileName) { return new gmeBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
 
-    /// Open file
-    bool open(const QString& fileName) override;
-
     /// Rewind to start
     bool rewind() override;
 
     /// Get number of subtunes
-    unsigned int subtunes() const override { return m_emu ? gme_track_count(m_emu) : 0; }
+    unsigned int subtunes() const override { return gme_track_count(m_emu); }
 
     /// Get current subtune
     unsigned int subtune() const override { return m_currentTrack+1; }

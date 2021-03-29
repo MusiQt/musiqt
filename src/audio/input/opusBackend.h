@@ -76,7 +76,7 @@ private:
     static opus_int64 tell_func(void *_stream);
 
 private:
-    opusBackend();
+    opusBackend(const QString& fileName);
 
 public:
     ~opusBackend();
@@ -84,14 +84,11 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new opusBackend(); }
+    static input* factory(const QString& fileName) { return new opusBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }

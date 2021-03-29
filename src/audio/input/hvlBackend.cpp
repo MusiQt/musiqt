@@ -155,31 +155,18 @@ void hvlConfig::saveSettings()
 
 QStringList hvlBackend::ext() { return QString(EXT).split("|"); }
 
-hvlBackend::hvlBackend() :
-    m_tune(nullptr),
+hvlBackend::hvlBackend(const QString& fileName) :
     m_buffer(nullptr),
     m_config(name, iconHvl, 1006)
 {
     hvl_InitReplayer();
-}
 
-hvlBackend::~hvlBackend()
-{
-    if (m_tune)
-    {
-        hvl_FreeTune(m_tune);
-        delete[] m_buffer;
-    }
-}
-
-bool hvlBackend::open(const QString& fileName)
-{
     m_tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), m_config.samplerate(), 2);
 
     if (m_tune == nullptr)
-        return false;
+        throw loadError("Error loading tune");
 
-    hvl_InitSubsong(m_tune, 0); // TODO check return value
+    hvl_InitSubsong(m_tune, 0);
 
     m_metaData.addInfo(metaData::TITLE, (char*)m_tune->ht_Name);
     QString comment = QString();
@@ -193,27 +180,22 @@ bool hvlBackend::open(const QString& fileName)
     m_buffer = new char[m_size];
 
     songLoaded(fileName);
-    return true;
+}
+
+hvlBackend::~hvlBackend()
+{
+    hvl_FreeTune(m_tune);
+    delete[] m_buffer;
 }
 
 bool hvlBackend::rewind()
 {
-    if (m_tune != nullptr)
-    {
-        hvl_InitSubsong(m_tune, m_tune->ht_SongNum);
-        return true;
-    }
-    return false;
+    return hvl_InitSubsong(m_tune, m_tune->ht_SongNum);
 }
 
 bool hvlBackend::subtune(const unsigned int i)
 {
-    if (m_tune != nullptr)
-    {
-        hvl_InitSubsong(m_tune, i);
-        return true;
-    }
-    return false;
+    return hvl_InitSubsong(m_tune, i);
 }
 
 /*****************************************************************/

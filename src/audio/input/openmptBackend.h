@@ -105,7 +105,7 @@ private:
     openmptConfig m_config;
 
 private:
-    openmptBackend();
+    openmptBackend(const QString& fileName);
 
     /// Get temp file name
     const QString tempFile(const QString& fileName)
@@ -132,23 +132,20 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new openmptBackend(); }
+    static input* factory(const QString& fileName) { return new openmptBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext() { return m_ext; }
 
-    /// Open file
-    bool open(const QString& fileName) override;
-
     /// Rewind to start
     bool rewind() override;
 
     /// Number of subtunes
-    unsigned int subtunes() const override;
+    unsigned int subtunes() const override { return m_module->get_num_subsongs(); }
 
     /// Current subtune
-    unsigned int subtune() const override;
+    unsigned int subtune() const override { return m_module->get_selected_subsong(); }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;

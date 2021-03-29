@@ -120,10 +120,10 @@ private:
     static int64_t (*dl_av_rescale_q)(int64_t, AVRational, AVRational);
 
 private:
-    ffmpegBackend();
+    ffmpegBackend(const QString& fileName);
 
     /// Open selected stream
-    bool openStream(AVFormatContext* fc);
+    void openStream(AVFormatContext* fc);
 
     QString getMetadata(const char* type);
 
@@ -135,14 +135,11 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new ffmpegBackend(); }
+    static input* factory(const QString& fileName) { return new ffmpegBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }
@@ -151,20 +148,10 @@ public:
     bool seek(int pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override
-    {
-        return m_audioStream ?
-            m_audioStream->codecpar->sample_rate
-            : 0;
-    }
+    unsigned int samplerate() const override { return m_audioStream->codecpar->sample_rate; }
 
     /// Get channels
-    unsigned int channels() const override
-    {
-        return m_audioStream ?
-            m_audioStream->codecpar->channels
-            : 0;
-    }
+    unsigned int channels() const override { return m_audioStream->codecpar->channels; }
 
     /// Get precision
     sample_t precision() const override { return m_precision; }

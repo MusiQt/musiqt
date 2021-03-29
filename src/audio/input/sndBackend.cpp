@@ -60,15 +60,8 @@ bool sndBackend::init()
     return true;
 }
 
-sndBackend::~sndBackend()
-{
-    if (m_sf != nullptr)
-    {
-        sf_close(m_sf);
-    }
-}
-
-bool sndBackend::open(const QString& fileName)
+sndBackend::sndBackend(const QString& fileName) :
+    m_config(name)
 {
     m_si.format = 0;
 #if defined (_WIN32) && defined (UNICODE)
@@ -86,8 +79,7 @@ bool sndBackend::open(const QString& fileName)
 #endif
     if (m_sf == nullptr)
     {
-        qWarning() <<  sf_strerror(0);
-        return false;
+        throw loadError(sf_strerror(0));
     }
 
     sf_command(m_sf, SFC_SET_SCALE_FLOAT_INT_READ, 0, SF_TRUE);
@@ -105,14 +97,15 @@ bool sndBackend::open(const QString& fileName)
     setDuration(milliseconds);
 
     songLoaded(fileName);
-    return true;
+}
+
+sndBackend::~sndBackend()
+{
+    sf_close(m_sf);
 }
 
 bool sndBackend::seek(int pos)
 {
-    if (m_sf == nullptr)
-        return false;
-
     sf_count_t frames = (m_si.frames * pos) / 100;
     if (sf_seek(m_sf, frames, SEEK_SET) < 0)
     {

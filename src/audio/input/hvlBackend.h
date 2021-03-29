@@ -94,7 +94,7 @@ private:
     hvlConfig m_config;
 
 private:
-    hvlBackend();
+    hvlBackend(const QString& fileName);
 
 public:
     ~hvlBackend();
@@ -102,23 +102,20 @@ public:
     static const char name[];
 
     /// Factory methods
-    static input* factory() { return new hvlBackend(); }
+    static input* factory(const QString& fileName) { return new hvlBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
 
-    /// Open file
-    bool open(const QString& fileName) override;
-
     /// Rewind to start
     bool rewind() override;
 
     /// Get number of subtunes
-    unsigned int subtunes() const override { return m_tune ? m_tune->ht_SubsongNr : 0; }
+    unsigned int subtunes() const override { return m_tune->ht_SubsongNr; }
 
     /// Get current subtune
-    unsigned int subtune() const override { return m_tune ? m_tune->ht_SongNum : 0; }
+    unsigned int subtune() const override { return m_tune->ht_SongNum; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;

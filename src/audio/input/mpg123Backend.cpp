@@ -137,10 +137,245 @@ bool mpg123Backend::init()
 
 QStringList mpg123Backend::ext() { return QStringList(EXT); }
 
-mpg123Backend::mpg123Backend() :
+mpg123Backend::mpg123Backend(const QString& fileName) :
     m_handle(nullptr),
     m_config(name, iconMpg123, 560)
-{}
+{
+    m_file.setFileName(fileName);
+    if (!m_file.open(QIODevice::ReadOnly))
+    {
+        throw loadError(m_file.errorString());
+    }
+
+    int err;
+    qDebug() << "Setting decoder: " << m_config.decoder();
+    const char *decoder = QString::compare(m_config.decoder(), "auto")
+        ? m_config.decoder().toLocal8Bit().constData()
+        : nullptr;
+
+    try
+    {
+        m_handle = mpg123_new(decoder, &err);
+        if (m_handle == nullptr)
+            throw loadError("Error creating new mpg123 instance");
+
+        err = mpg123_replace_reader_handle(m_handle, read_func, seek_func, NULL);
+        if (err == MPG123_OK)
+        {
+            err = mpg123_open_handle(m_handle, &m_file);
+        }
+        if (err != MPG123_OK)
+        {
+            throw loadError(mpg123_strerror(m_handle));
+        }
+
+        if (!m_config.fastscan())
+        {
+            err = mpg123_param(m_handle, MPG123_ADD_FLAGS, MPG123_PICTURE, 0.);
+
+            err = mpg123_scan(m_handle);
+            if (err != MPG123_OK)
+            {
+                qWarning() << mpg123_plain_strerror(err);
+            }
+        }
+
+        int encoding;
+        err = mpg123_getformat(m_handle, &m_samplerate, &m_channels, &encoding);
+        if (err != MPG123_OK)
+        {
+            throw loadError(mpg123_strerror(m_handle));
+        }
+
+        err = mpg123_length(m_handle);
+        if (err != MPG123_ERR)
+        {
+            setDuration((err*1000LL)/m_samplerate);
+        }
+
+        err = mpg123_param(m_handle, MPG123_RVA,
+            SETTINGS->replayGain()
+                ? (SETTINGS->replayGainMode() == 0) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
+                : MPG123_RVA_OFF,
+            0.);
+
+        // Get metadata
+        mpg123_id3v1* id3v1;
+        mpg123_id3v2* id3v2;
+        err = mpg123_id3(m_handle, &id3v1, &id3v2);
+        if (err == MPG123_OK)
+        {
+            QString info;
+
+            if (id3v2 && id3v2->title)
+            {
+                info = QString::fromUtf8(id3v2->title->p);
+            }
+            else if (id3v1)
+            {
+                info = QString(id3v1->title).trimmed();
+                if (info.size() > 30)
+                    info.resize(30);
+            }
+            else
+            {
+                info = QString();
+            }
+            qDebug() << "TITLE: " << info;
+            m_metaData.addInfo(metaData::TITLE, info);
+
+            if (id3v2 && id3v2->artist)
+            {
+                info = QString::fromUtf8(id3v2->artist->p);
+            }
+            else if (id3v1)
+            {
+                info = QString(id3v1->artist).trimmed();
+                if (info.size() > 30)
+                    info.resize(30);
+            }
+            else
+            {
+                info = QString();
+            }
+            qDebug() << "ARTIST: " << info;
+            m_metaData.addInfo(metaData::ARTIST, info);
+
+            if (id3v2 && id3v2->album)
+            {
+                info = QString::fromUtf8(id3v2->album->p);
+            }
+            else if (id3v1)
+            {
+                info = QString(id3v1->album).trimmed();
+                if (info.size() > 30)
+                    info.resize(30);
+            }
+            else
+            {
+                info = QString();
+            }
+            qDebug() << "ALBUM: " << info;
+            m_metaData.addInfo(metaData::ALBUM, info);
+
+            if (id3v2 && id3v2->genre)
+            {
+                qDebug() << "genre id3v2: " << id3v2->genre->p;
+                info = QString::fromUtf8(id3v2->genre->p);
+                int st = info.indexOf('(');
+                if (st >= 0)
+                {
+                    QStringRef tmp = info.midRef(st, info.indexOf(')')-st);
+                    const unsigned int idx = tmp.string()->toInt();
+                    if (idx < GENRES)
+                        info = QString(genre[idx]);
+                }
+            }
+            else if (id3v1 && (id3v1->genre < GENRES))
+            {
+                info = genre[id3v1->genre];
+            qDebug() << "genre id3v1: " << id3v1->genre;
+            }
+            else
+            {
+                info = QString();
+            }
+            qDebug() << "GENRE: " << info;
+            m_metaData.addInfo(metaData::GENRE, info);
+
+            if (id3v2 && id3v2->year)
+            {
+                info = QString::fromUtf8(id3v2->year->p);
+                // TODO support multiple genres
+                // RX    Remix
+                // CR    Cover
+            }
+            else if (id3v1)
+            {
+                info = QString(id3v1->year).trimmed();
+                if (info.size() > 4)
+                    info.resize(4);
+            }
+            else
+            {
+                info = QString();
+            }
+            qDebug() << "YEAR: " << info;
+            m_metaData.addInfo(metaData::YEAR, info);
+
+            if (id3v1 && (id3v1->comment[28] == 0))
+            {
+                info = QString::number(id3v1->comment[29]);
+            }
+            else
+            {
+                info = QString();
+            }
+            qDebug() << "TRACK: " << info;
+            m_metaData.addInfo(metaData::TRACK, info);
+
+            info = QString();
+            if (id3v2)
+            {
+                for (unsigned int i=0; i<id3v2->comments; i++)
+                {
+                    mpg123_text *entry = &id3v2->comment_list[i];
+                    if ((entry->description.fill == 0) || (entry->description.p[0] == 0))
+                        info = QString::fromUtf8(entry->text.p).trimmed(); // FIXME append
+                }
+            }
+
+            if (info.isEmpty() && id3v1)
+            {
+                info = QString(id3v1->comment).trimmed();
+                if (info.size() > 30)
+                    info.resize(30);
+            }
+
+            if (!info.isEmpty())
+            {
+                qDebug() << "COMMENT: " << info;
+                m_metaData.addInfo(metaData::COMMENT, info);
+            }
+
+            if (id3v2)
+            {
+                info = QString();
+                for (unsigned int i=0; i<id3v2->texts; i++)
+                {
+                    mpg123_text *entry = &id3v2->text[i];
+                    if (!qstrcmp(entry->id, "USLT"))
+                        info = QString::fromUtf8(entry->text.p).trimmed();
+                }
+                if (!info.isEmpty())
+                {
+                    qDebug() << "LYRICS: " << info;
+                    m_metaData.addInfo(metaData::LYRICS, info);
+                }
+            }
+
+            if (id3v2 && id3v2->pictures)
+            {
+                mpg123_picture picture = id3v2->picture[0];
+                QString mime(picture.mime_type.p);
+                qDebug() << "mime: " << mime;
+                QString desc(picture.description.p);
+                qDebug() << "description: " << desc;
+                m_metaData.addInfo(new QByteArray((char*)picture.data, picture.size));
+            }
+        }
+
+        songLoaded(fileName);
+    }
+    catch (const loadError& e)
+    {
+        mpg123_close(m_handle);
+        mpg123_delete(m_handle);
+        m_file.close();
+
+        throw e;
+    }    
+}
 
 mpg123Backend::~mpg123Backend()
 {
@@ -150,245 +385,8 @@ mpg123Backend::~mpg123Backend()
     m_file.close();
 }
 
-bool mpg123Backend::open(const QString& fileName)
-{
-    m_file.setFileName(fileName);
-    if (!m_file.open(QIODevice::ReadOnly))
-    {
-        qWarning() << m_file.errorString();
-        return false;
-    }
-
-    int err;
-    qDebug() << "Setting decoder: " << m_config.decoder();
-    const char *decoder = QString::compare(m_config.decoder(), "auto")
-        ? m_config.decoder().toLocal8Bit().constData()
-        : nullptr;
-    m_handle = mpg123_new(decoder, &err);
-    if (m_handle == nullptr)
-        goto error;
-
-    err = mpg123_replace_reader_handle(m_handle, read_func, seek_func, NULL);
-    if (err == MPG123_OK)
-    {
-        err = mpg123_open_handle(m_handle, &m_file);
-    }
-    if (err != MPG123_OK)
-    {
-        mpg123_delete(m_handle);
-        goto error;
-    }
-
-    if (!m_config.fastscan())
-    {
-        err = mpg123_param(m_handle, MPG123_ADD_FLAGS, MPG123_PICTURE, 0.);
-
-        err = mpg123_scan(m_handle);
-        if (err != MPG123_OK)
-        {
-            qWarning() << mpg123_plain_strerror(err);
-        }
-    }
-
-    int encoding;
-    err = mpg123_getformat(m_handle, &m_samplerate, &m_channels, &encoding);
-    if (err != MPG123_OK)
-    {
-        mpg123_delete(m_handle);
-        goto error;
-    }
-
-    err = mpg123_length(m_handle);
-    if (err != MPG123_ERR)
-    {
-        setDuration((err*1000LL)/m_samplerate);
-    }
-
-    err = mpg123_param(m_handle, MPG123_RVA,
-        SETTINGS->replayGain()
-            ? (SETTINGS->replayGainMode() == 0) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
-            : MPG123_RVA_OFF,
-        0.);
-
-    mpg123_id3v1* id3v1;
-    mpg123_id3v2* id3v2;
-    err = mpg123_id3(m_handle, &id3v1, &id3v2);
-    if (err == MPG123_OK)
-    {
-        QString info;
-
-        if (id3v2 && id3v2->title)
-        {
-            info = QString::fromUtf8(id3v2->title->p);
-        }
-        else if (id3v1)
-        {
-            info = QString(id3v1->title).trimmed();
-            if (info.size() > 30)
-                info.resize(30);
-        }
-        else
-        {
-            info = QString();
-        }
-        qDebug() << "TITLE: " << info;
-        m_metaData.addInfo(metaData::TITLE, info);
-
-        if (id3v2 && id3v2->artist)
-        {
-            info = QString::fromUtf8(id3v2->artist->p);
-        }
-        else if (id3v1)
-        {
-            info = QString(id3v1->artist).trimmed();
-            if (info.size() > 30)
-                info.resize(30);
-        }
-        else
-        {
-            info = QString();
-        }
-        qDebug() << "ARTIST: " << info;
-        m_metaData.addInfo(metaData::ARTIST, info);
-
-        if (id3v2 && id3v2->album)
-        {
-            info = QString::fromUtf8(id3v2->album->p);
-        }
-        else if (id3v1)
-        {
-            info = QString(id3v1->album).trimmed();
-            if (info.size() > 30)
-                info.resize(30);
-        }
-        else
-        {
-            info = QString();
-        }
-        qDebug() << "ALBUM: " << info;
-        m_metaData.addInfo(metaData::ALBUM, info);
-
-        if (id3v2 && id3v2->genre)
-        {
-            qDebug() << "genre id3v2: " << id3v2->genre->p;
-            info = QString::fromUtf8(id3v2->genre->p);
-            int st = info.indexOf('(');
-            if (st >= 0)
-            {
-                QStringRef tmp = info.midRef(st, info.indexOf(')')-st);
-                const unsigned int idx = tmp.string()->toInt();
-                if (idx < GENRES)
-                    info = QString(genre[idx]);
-            }
-        }
-        else if (id3v1 && (id3v1->genre < GENRES))
-        {
-            info = genre[id3v1->genre];
-        qDebug() << "genre id3v1: " << id3v1->genre;
-        }
-        else
-        {
-            info = QString();
-        }
-        qDebug() << "GENRE: " << info;
-        m_metaData.addInfo(metaData::GENRE, info);
-
-        if (id3v2 && id3v2->year)
-        {
-            info = QString::fromUtf8(id3v2->year->p);
-            // TODO support multiple genres
-            // RX    Remix
-            // CR    Cover
-        }
-        else if (id3v1)
-        {
-            info = QString(id3v1->year).trimmed();
-            if (info.size() > 4)
-                info.resize(4);
-        }
-        else
-        {
-            info = QString();
-        }
-        qDebug() << "YEAR: " << info;
-        m_metaData.addInfo(metaData::YEAR, info);
-
-        if (id3v1 && (id3v1->comment[28] == 0))
-        {
-            info = QString::number(id3v1->comment[29]);
-        }
-        else
-        {
-            info = QString();
-        }
-        qDebug() << "TRACK: " << info;
-        m_metaData.addInfo(metaData::TRACK, info);
-
-        info = QString();
-        if (id3v2)
-        {
-            for (unsigned int i=0; i<id3v2->comments; i++)
-            {
-                mpg123_text *entry = &id3v2->comment_list[i];
-                if ((entry->description.fill == 0) || (entry->description.p[0] == 0))
-                    info = QString::fromUtf8(entry->text.p).trimmed(); // FIXME append
-            }
-        }
-
-        if (info.isEmpty() && id3v1)
-        {
-            info = QString(id3v1->comment).trimmed();
-            if (info.size() > 30)
-                info.resize(30);
-        }
-
-        if (!info.isEmpty())
-        {
-            qDebug() << "COMMENT: " << info;
-            m_metaData.addInfo(metaData::COMMENT, info);
-        }
-
-        if (id3v2)
-        {
-            info = QString();
-            for (unsigned int i=0; i<id3v2->texts; i++)
-            {
-                mpg123_text *entry = &id3v2->text[i];
-                if (!qstrcmp(entry->id, "USLT"))
-                    info = QString::fromUtf8(entry->text.p).trimmed();
-            }
-            if (!info.isEmpty())
-            {
-                qDebug() << "LYRICS: " << info;
-                m_metaData.addInfo(metaData::LYRICS, info);
-            }
-        }
-
-        if (id3v2 && id3v2->pictures)
-        {
-            mpg123_picture picture = id3v2->picture[0];
-            QString mime(picture.mime_type.p);
-            qDebug() << "mime: " << mime;
-            QString desc(picture.description.p);
-            qDebug() << "description: " << desc;
-            m_metaData.addInfo(new QByteArray((char*)picture.data, picture.size));
-        }
-    }
-
-    songLoaded(fileName);
-    return true;
-
-error:
-    qWarning() << mpg123_strerror(m_handle);
-    m_file.close();
-    return false;
-}
-
 bool mpg123Backend::seek(int pos)
 {
-    if (songLoaded().isEmpty())
-        return false;
-
     off_t frames = mpg123_length(m_handle);
     if (frames < 0)
         return false;

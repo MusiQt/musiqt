@@ -73,9 +73,7 @@ private:
     sndConfig m_config;
 
 private:
-    sndBackend() :
-        m_sf(nullptr),
-        m_config(name) {}
+    sndBackend(const QString& fileName);
 
 public:
     ~sndBackend();
@@ -85,14 +83,11 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new sndBackend(); }
+    static input* factory(const QString& fileName) { return new sndBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext() { return m_ext; }
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }

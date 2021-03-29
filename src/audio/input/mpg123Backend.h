@@ -98,7 +98,7 @@ public:
     static QStringList m_decoders;
 
 private:
-    mpg123Backend();
+    mpg123Backend(const QString& fileName);
 
 public:
     ~mpg123Backend();
@@ -108,14 +108,11 @@ public:
     static bool init();
 
     /// Factory method
-    static input* factory() { return new mpg123Backend(); }
+    static input* factory(const QString& fileName) { return new mpg123Backend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }

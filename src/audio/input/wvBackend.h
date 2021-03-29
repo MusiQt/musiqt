@@ -75,7 +75,7 @@ private:
     void getId3Tag(const char* tag, metaData::mpris_t meta);
 
 private:
-    wvBackend();
+    wvBackend(const QString& fileName);
 
 public:
     ~wvBackend();
@@ -83,14 +83,11 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new wvBackend(); }
+    static input* factory(const QString& fileName) { return new wvBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }
@@ -101,17 +98,13 @@ public:
     /// Get samplerate
     unsigned int samplerate() const override
     {
-        return m_wvContext != nullptr
-            ? WavpackGetSampleRate(m_wvContext)
-            : 0;
+        return WavpackGetSampleRate(m_wvContext);
     }
 
     /// Get channels
     unsigned int channels() const override
     {
-        return m_wvContext != nullptr
-            ? WavpackGetReducedChannels(m_wvContext)
-            : 0;
+        return WavpackGetReducedChannels(m_wvContext);
     }
 
     /// Get precision

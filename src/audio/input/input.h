@@ -87,6 +87,18 @@ public:
  */
 class input
 {
+public:
+    class loadError {
+    private:
+        QString m_msg;
+    public:
+        loadError(const char* msg) :
+            m_msg(msg) {}
+        loadError(const QString& msg) :
+            m_msg(msg) {}
+        QString message() const { return m_msg; }
+    };
+
 private:
     unsigned int m_time;
 
@@ -125,9 +137,6 @@ public:
 
     /// Get fractional scale for fixed point types
     virtual unsigned int fract() const { return 0; }
-
-    /// Open file
-    virtual bool open(const QString& fileName) =0;
 
     /// Rewind to start
     virtual bool rewind() { return seek(0); }

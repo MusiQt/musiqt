@@ -102,49 +102,35 @@ bool gmeBackend::init()
 
 QStringList gmeBackend::ext() { return QString(EXT).split("|"); }
 
-gmeBackend::gmeBackend() :
-    m_emu(nullptr),
+gmeBackend::gmeBackend(const QString& fileName) :
     m_currentTrack(0)
 #ifdef HAVE_STILVIEW
     , m_stil(nullptr)
 #endif
     , m_config(name)
 {
-    openAsma(m_config.asmaPath());
-}
-
-gmeBackend::~gmeBackend()
-{
-    gme_delete(m_emu);
-// 
-#ifdef HAVE_STILVIEW
-    delete m_stil;
-#endif
-}
-
-bool gmeBackend::open(const QString& fileName)
-{
     gme_type_t fileType;
-    if (!checkRetCode(gme_identify_file(fileName.toUtf8().constData(), &fileType)))
-        return false;
+    checkRetCode(gme_identify_file(fileName.toUtf8().constData(), &fileType));
 
     qDebug() << "System " << gme_type_system(fileType);
 
     m_emu = gme_new_emu(fileType, m_config.samplerate());
     if (m_emu == nullptr)
-        return false;
+        throw loadError("Error creating gme emu");
+
     if (m_config.equalizer())
     {
         gme_equalizer_t eq = { m_config.treble_dB(), m_config.bass_freq() };
         gme_set_equalizer(m_emu, &eq);
     }
-    if (!checkRetCode(gme_load_file(m_emu, fileName.toUtf8().constData())))
-        return false;
-    if (!checkRetCode(gme_start_track(m_emu, 0)))
-        return false;
+
+    checkRetCode(gme_load_file(m_emu, fileName.toUtf8().constData()));
+    checkRetCode(gme_start_track(m_emu, 0));
 
     QFileInfo fInfo(fileName);
     gme_load_m3u(m_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
+
+    openAsma(m_config.asmaPath());
 
 #ifdef HAVE_STILVIEW
     bool hasStilInfo = m_stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
@@ -171,7 +157,15 @@ bool gmeBackend::open(const QString& fileName)
     getInfo();
 
     songLoaded(fileName);
-    return true;
+}
+
+gmeBackend::~gmeBackend()
+{
+    gme_delete(m_emu);
+
+#ifdef HAVE_STILVIEW
+    delete m_stil;
+#endif
 }
 
 void gmeBackend::getInfo()
@@ -208,35 +202,33 @@ void gmeBackend::getInfo()
     gme_free_info(ti);
 }
 
-bool gmeBackend::checkRetCode(const char* error)
+void gmeBackend::checkRetCode(const char* error)
 {
     if (error)
     {
         gme_delete(m_emu);
-        m_emu = nullptr;
-        qWarning() << "Error: " << error;
-        return false;
+        throw loadError(QString("Error: %1").arg(error));
     }
-    return true;
 }
 
 bool gmeBackend::rewind()
 {
-    if (m_emu != nullptr)
-    {
-        gme_seek_samples(m_emu, 0);
-        return true;
-    }
-    return false;
+    gme_seek_samples(m_emu, 0);
+    return true;
 }
 
 bool gmeBackend::subtune(const unsigned int i)
 {
-    if ((m_emu != nullptr) && (i > 0) && (i <= (unsigned int)gme_track_count(m_emu)))
+    if ((i > 0) && (i <= (unsigned int)gme_track_count(m_emu)))
     {
         m_currentTrack = i - 1;
-        if (!checkRetCode(gme_start_track(m_emu, m_currentTrack)))
+        const char* error = gme_start_track(m_emu, m_currentTrack);
+        if (error)
+        {
+            qWarning() << error;
             return false;
+        }
+
         getInfo();
         return true;
     }

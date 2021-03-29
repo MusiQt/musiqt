@@ -80,9 +80,11 @@ class oggBackend : public input
 {
 private:
     OggVorbis_File *m_vf;
-    vorbis_info *m_vi;
 
     QFile m_file;
+    
+    unsigned int m_samplerate;
+    unsigned int m_channels;
 
     oggConfig m_config;
 
@@ -95,7 +97,7 @@ private:
     static long tell_func(void *datasource);
 
 private:
-    oggBackend();
+    oggBackend(const QString& fileName);
 
 public:
     ~oggBackend();
@@ -103,14 +105,11 @@ public:
     static const char name[];
 
     /// Factory method
-    static input* factory() { return new oggBackend(); }
+    static input* factory(const QString& fileName) { return new oggBackend(fileName); }
     static inputConfig* cFactory();
 
     /// Get supported extension
     static QStringList ext();
-
-    /// Open file
-    bool open(const QString& fileName) override;
 
     /// Seek support
     bool seekable() const override { return true; }
@@ -119,10 +118,10 @@ public:
     bool seek(int pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return m_vi != nullptr ? m_vi->rate : 0; }
+    unsigned int samplerate() const override { return m_samplerate; }
 
     /// Get channels
-    unsigned int channels() const override { return m_vi != nullptr ? m_vi->channels : 0; }
+    unsigned int channels() const override { return m_channels; }
 
     /// Get precision
     sample_t precision() const override { return m_config.precision(); }

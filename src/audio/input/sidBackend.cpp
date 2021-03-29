@@ -48,6 +48,8 @@
 #include <QButtonGroup>
 #include <QMessageBox>
 
+#include <memory>
+
 // created by reswrap from file sid.gif
 extern const unsigned char iconSid[126] =
 {
@@ -202,59 +204,19 @@ const char* getClockString(SidTuneInfo::clock_t clock)
 
 QStringList sidBackend::ext() { return QString(EXT).split("|"); }
 
-sidBackend::sidBackend() :
-    m_sidplayfp(nullptr),
-    m_tune(nullptr),
+sidBackend::sidBackend(const QString& fileName) :
     m_stil(nullptr),
-    m_db(nullptr),
     m_length(0),
     m_newSonglengthDB(false),
     m_config(name, iconSid, 126)
 {
-    openHvsc(m_config.hvscPath());
-}
-
-sidBackend::~sidBackend()
-{
-    if (m_sidplayfp != nullptr)
-    {
-        const sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
-        delete emuSid;
-        delete m_sidplayfp;
-    }
-
-    delete m_tune;
-
-    delete m_db;
-    delete m_stil;
-}
-
-const unsigned char* sidBackend::loadRom(const QString& romPath)
-{
-    if (romPath.isEmpty())
-        return nullptr;
-
-    QFile f;
-    f.setFileName(romPath);
-    if (!f.open(QIODevice::ReadOnly))
-        return nullptr;
-
-    const long size = f.size();
-    char* data = new char[size];
-    f.read(data, size);
-    f.close();
-    return (const unsigned char*)data;
-}
-
-bool sidBackend::open(const QString& fileName)
-{
-    m_sidplayfp = new sidplayfp;
+    std::unique_ptr<sidplayfp> emu(new sidplayfp());
 
     {
         const unsigned char* kernal = loadRom(m_config.kernalPath());
         const unsigned char* basic = loadRom(m_config.basicPath());
         const unsigned char* chargen = loadRom(m_config.chargenPath());
-        m_sidplayfp->setRoms(kernal, basic, chargen);
+        emu->setRoms(kernal, basic, chargen);
         delete [] kernal;
         delete [] basic;
         delete [] chargen;
@@ -267,7 +229,7 @@ bool sidBackend::open(const QString& fileName)
     if (!m_config.engine().compare(engines[eng++]))
     {
         ReSIDfpBuilder *tmpResid = new ReSIDfpBuilder("Musiqt reSIDfp");
-        tmpResid->create(m_sidplayfp->info().maxsids());
+        tmpResid->create(emu->info().maxsids());
 
         tmpResid->filter(m_config.filter());
         tmpResid->filter6581Curve((double)m_config.filter6581Curve()/1000.);
@@ -280,10 +242,11 @@ bool sidBackend::open(const QString& fileName)
     if (!m_config.engine().compare(engines[eng++]))
     {
         ReSIDBuilder *tmpResid = new ReSIDBuilder("Musiqt reSID");
-        tmpResid->create(m_sidplayfp->info().maxsids());
+        tmpResid->create(emu->info().maxsids());
 
         tmpResid->filter(m_config.filter());
         tmpResid->bias((double)m_config.bias()/1000.0);
+
         emuSid = (sidbuilder*)tmpResid;
     }
 #endif
@@ -291,9 +254,10 @@ bool sidBackend::open(const QString& fileName)
     if (!m_config.engine().compare(engines[eng++]))
     {
         HardSIDBuilder *tmpHardsid = new HardSIDBuilder("Musiqt hardSID");
-        tmpHardsid->create(m_sidplayfp->info().maxsids());
+        tmpHardsid->create(emu->info().maxsids());
 
         tmpHardsid->filter(m_config.filter());
+
         emuSid = (sidbuilder*)tmpHardsid;
     }
 #endif
@@ -301,17 +265,17 @@ bool sidBackend::open(const QString& fileName)
     if (!m_config.engine().compare(engines[eng++]))
     {
         exSIDBuilder *tmpExsid = new exSIDBuilder("Musiqt exSID");
-        tmpExsid->create(m_sidplayfp->info().maxsids());
+        tmpExsid->create(emu->info().maxsids());
 
         tmpExsid->filter(m_config.filter());
+
         emuSid = (sidbuilder*)tmpExsid;
     }
 #endif
 
     if (emuSid == nullptr)
     {
-        utils::delPtr(m_sidplayfp);
-        return false;
+        throw loadError("Error creating emu engine");
     }
 
     SidConfig cfg;
@@ -328,15 +292,17 @@ bool sidBackend::open(const QString& fileName)
     cfg.sidEmulation = emuSid;
     cfg.samplingMethod = m_config.samplingMethod();
     cfg.fastSampling = m_config.fastSampling();
-    m_sidplayfp->config(cfg);
+    emu->config(cfg);
 
-    m_tune = new SidTune(fileName.toUtf8().constData());
-    if (!m_tune->getStatus())
+    std::unique_ptr<SidTune> sidTune(new SidTune(fileName.toUtf8().constData()));
+    if (!sidTune->getStatus())
     {
-        qWarning() << m_tune->statusString();
-        utils::delPtr(m_tune);
-        return 0;
+        QString error(sidTune->statusString());
+        delete emuSid;
+        throw loadError(error);
     }
+
+    openHvsc(m_config.hvscPath());
 
     if (fileName.endsWith(".mus"))
     {
@@ -349,7 +315,7 @@ bool sidBackend::open(const QString& fileName)
 
     loadTune(0);
 
-    const SidTuneInfo* tuneInfo = m_tune->getInfo();
+    const SidTuneInfo* tuneInfo = sidTune->getInfo();
 
     /*
      * SID tunes have three info strings (title, artis, released)
@@ -407,7 +373,7 @@ bool sidBackend::open(const QString& fileName)
         m_metaData.addInfo(metaData::COMMENT, comment);
     }
 
-    m_metaData.addInfo(gettext("speed"), m_sidplayfp->info().speedString());
+    m_metaData.addInfo(gettext("speed"), emu->info().speedString());
     m_metaData.addInfo(gettext("file format"), tuneInfo->formatString());
     m_metaData.addInfo(gettext("song clock"), getClockString(tuneInfo->clockSpeed()));
 #ifdef ENABLE_3SID
@@ -433,23 +399,50 @@ bool sidBackend::open(const QString& fileName)
                           QString("$%1").arg(tuneInfo->sidChipBase2(), 4, 16, QChar('0')));
     }
 #endif
+
+    m_tune = sidTune.release();
+    m_sidplayfp = emu.release();
     songLoaded(fileName);
-    return true;
+}
+
+sidBackend::~sidBackend()
+{
+    sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
+    delete m_sidplayfp;
+    delete emuSid;
+
+    delete m_tune;
+
+    delete m_db;
+    delete m_stil;
+}
+
+const unsigned char* sidBackend::loadRom(const QString& romPath)
+{
+    if (romPath.isEmpty())
+        return nullptr;
+
+    QFile f;
+    f.setFileName(romPath);
+    if (!f.open(QIODevice::ReadOnly))
+        return nullptr;
+
+    const long size = f.size();
+    char* data = new char[size];
+    f.read(data, size);
+    f.close();
+    return (const unsigned char*)data;
 }
 
 bool sidBackend::rewind()
 {
-    if (m_sidplayfp != nullptr)
-    {
-        m_sidplayfp->stop();
-        return true;
-    }
-    return false;
+    m_sidplayfp->stop();
+    return true;
 }
 
 bool sidBackend::subtune(const unsigned int i)
 {
-    if ((m_tune != nullptr) && (i <= m_tune->getInfo()->songs()))
+    if (i <= m_tune->getInfo()->songs())
     {
         loadTune(i);
         return true;
@@ -485,8 +478,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
     if (hvscPath.isEmpty())
         return;
 
-    if (m_stil == nullptr)
-        m_stil = new STIL(HVSC_STIL, HVSC_BUGLIST);
+    m_stil = new STIL(HVSC_STIL, HVSC_BUGLIST);
 
     if (!m_stil->setBaseDir(hvscPath.toLocal8Bit().constData()))
     {
@@ -494,8 +486,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
         utils::delPtr(m_stil);
     }
 
-    if (m_db == nullptr)
-        m_db = new SidDatabase();
+    m_db = new SidDatabase();
 
     QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath, QDir::separator()));
     qDebug() << "SL DB path: " << slDbPath;

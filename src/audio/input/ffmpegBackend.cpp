@@ -237,15 +237,79 @@ bool ffmpegBackend::init()
 
 QStringList ffmpegBackend::ext() { return m_ext; }
 
-ffmpegBackend::ffmpegBackend() :
-    m_audioStream(nullptr),
+ffmpegBackend::ffmpegBackend(const QString& fileName) :
     m_formatContext(nullptr),
     m_codecContext(nullptr),
-    m_frame(nullptr),
     m_decodeBufOffset(0),
     m_config(name, iconFfmpeg, 86)
 {
     m_packet.data = 0;
+
+    try
+    {
+        if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
+        {
+            throw loadError("Cannot open input");
+        }
+
+        if (dl_avformat_find_stream_info(m_formatContext, nullptr) < 0)
+        {
+            throw loadError("Cannot find stream info");
+        }
+
+        openStream(m_formatContext);
+
+        m_audioStream = m_formatContext->streams[m_audioStreamIndex];
+        m_frame = dl_av_frame_alloc();
+
+        switch(m_codecContext->sample_fmt)
+        {
+        case AV_SAMPLE_FMT_U8:
+        case AV_SAMPLE_FMT_U8P:
+            m_sampleSize = 1;
+            m_precision = sample_t::U8;
+            break;
+        case AV_SAMPLE_FMT_S16:
+        case AV_SAMPLE_FMT_S16P:
+            m_sampleSize = 2;
+            m_precision = sample_t::S16;
+            break;
+        case AV_SAMPLE_FMT_S32:
+        case AV_SAMPLE_FMT_S32P:
+            m_sampleSize = 4;
+            m_precision = sample_t::S32;
+            break;
+        case AV_SAMPLE_FMT_FLT:
+        case AV_SAMPLE_FMT_FLTP:
+            m_sampleSize = 4;
+            m_precision = sample_t::SAMPLE_FLOAT;
+            break;
+        default:
+            throw loadError(QString("Unrecognized fomat %1").arg(m_codecContext->sample_fmt));
+        }
+
+        m_planar = dl_av_sample_fmt_is_planar(m_codecContext->sample_fmt);
+
+        m_metaData.addInfo(metaData::TITLE, getMetadata("title"));
+        m_metaData.addInfo(metaData::ARTIST, getMetadata("artist"));
+        m_metaData.addInfo(metaData::ALBUM, getMetadata("album"));
+        m_metaData.addInfo(metaData::GENRE, getMetadata("genre"));
+        m_metaData.addInfo(gettext("copyright"), getMetadata("copyright"));
+        m_metaData.addInfo(metaData::YEAR, getMetadata("date"));
+        m_metaData.addInfo(metaData::TRACK, getMetadata("track"));
+        m_metaData.addInfo(metaData::COMMENT, getMetadata("comment"));
+
+        setDuration(m_formatContext->duration/1000);
+
+        songLoaded(fileName);
+    }
+    catch (const loadError& e)
+    {
+        dl_avcodec_free_context(&m_codecContext);
+        dl_avformat_close_input(&m_formatContext);
+
+        throw e;
+    }
 }
 
 ffmpegBackend::~ffmpegBackend()
@@ -276,76 +340,6 @@ QString ffmpegBackend::getMetadata(const char* type)
     return info;
 }
 
-bool ffmpegBackend::open(const QString& fileName)
-{
-    if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
-    {
-        qWarning() << "Cannot open input";
-        return false;
-    }
-
-    if (dl_avformat_find_stream_info(m_formatContext, nullptr) < 0)
-    {
-        qWarning() << "Cannot find stream info";
-        goto error;
-    }
-
-    if (!openStream(m_formatContext))
-        goto error;
-
-    m_audioStream = m_formatContext->streams[m_audioStreamIndex];
-    m_frame = dl_av_frame_alloc();
-
-    switch(m_codecContext->sample_fmt)
-    {
-    case AV_SAMPLE_FMT_U8:
-    case AV_SAMPLE_FMT_U8P:
-        m_sampleSize = 1;
-        m_precision = sample_t::U8;
-        break;
-    case AV_SAMPLE_FMT_S16:
-    case AV_SAMPLE_FMT_S16P:
-        m_sampleSize = 2;
-        m_precision = sample_t::S16;
-        break;
-    case AV_SAMPLE_FMT_S32:
-    case AV_SAMPLE_FMT_S32P:
-        m_sampleSize = 4;
-        m_precision = sample_t::S32;
-        break;
-    case AV_SAMPLE_FMT_FLT:
-    case AV_SAMPLE_FMT_FLTP:
-        m_sampleSize = 4;
-        m_precision = sample_t::SAMPLE_FLOAT;
-        break;
-    default:
-        qWarning() << "Unrecognized fomat " << m_codecContext->sample_fmt;
-        goto error;
-    }
-
-    m_planar = dl_av_sample_fmt_is_planar(m_codecContext->sample_fmt);
-
-    m_metaData.addInfo(metaData::TITLE, getMetadata("title"));
-    m_metaData.addInfo(metaData::ARTIST, getMetadata("artist"));
-    m_metaData.addInfo(metaData::ALBUM, getMetadata("album"));
-    m_metaData.addInfo(metaData::GENRE, getMetadata("genre"));
-    m_metaData.addInfo(gettext("copyright"), getMetadata("copyright"));
-    m_metaData.addInfo(metaData::YEAR, getMetadata("date"));
-    m_metaData.addInfo(metaData::TRACK, getMetadata("track"));
-    m_metaData.addInfo(metaData::COMMENT, getMetadata("comment"));
-
-    setDuration(m_formatContext->duration/1000);
-
-    songLoaded(fileName);
-    return true;
-
-error:
-    dl_avcodec_free_context(&m_codecContext);
-    dl_avformat_close_input(&m_formatContext);
-
-    return false;
-}
-
 bool ffmpegBackend::seek(int pos)
 {
     int64_t timestamp = (m_formatContext->duration * pos) / 100;
@@ -370,7 +364,7 @@ bool ffmpegBackend::seek(int pos)
     return true;
 }
 
-bool ffmpegBackend::openStream(AVFormatContext* fc)
+void ffmpegBackend::openStream(AVFormatContext* fc)
 {
     // check for album art, it is treated as a single frame video stream
     int imageStreamIndex = dl_av_find_best_stream(m_formatContext, AVMEDIA_TYPE_VIDEO , -1, -1, 0, 0);
@@ -389,35 +383,28 @@ bool ffmpegBackend::openStream(AVFormatContext* fc)
     m_audioStreamIndex = dl_av_find_best_stream(fc, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0);
     if (m_audioStreamIndex == AVERROR_STREAM_NOT_FOUND)
     {
-        qWarning() << "No audio stream found";
-        return false;
+        throw loadError("No audio stream found");
     }
     if ((m_audioStreamIndex == AVERROR_DECODER_NOT_FOUND) || (codec == nullptr))
     {
-        qWarning() << "No decoder found";
-        return false;
+        throw loadError("No decoder found");
     }
 
     m_codecContext = dl_avcodec_alloc_context3(codec);
     if (m_codecContext == nullptr)
     {
-        qWarning() << "Cannot alloc context";
-        return false;
+        throw loadError("Cannot alloc context");
     }
 
     if (dl_avcodec_parameters_to_context(m_codecContext, fc->streams[m_audioStreamIndex]->codecpar) < 0)
     {
-        qWarning() << "Error filling the codec context";
-        return false;
+        throw loadError("Error filling the codec context");
     }
 
     if (dl_avcodec_open2(m_codecContext, codec, nullptr) < 0)
     {
-        qWarning() << "Cannot open stream";
-        return false;
+        throw loadError("Cannot open stream");
     }
-
-    return true;
 }
 
 /*****************************************************************/
