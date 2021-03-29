@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2019 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,13 @@ enum class sample_t
     S32,          ///< S32 - 32 bit signed
     SAMPLE_FLOAT, ///< FLOAT - 32 bit float
     SAMPLE_FIXED  ///< FIXED - 32 bit fixed point
+};
+
+struct audioFormat_t
+{
+    unsigned int sampleRate;
+    unsigned int channels;
+    sample_t sampleType;
 };
 
 #endif

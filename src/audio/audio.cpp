@@ -81,26 +81,28 @@ bool audio::play(input* i)
         }
     }
 
-    unsigned int sampleRate = i->samplerate();
+    audioFormat_t format;
+    format.sampleRate = i->samplerate();
+    format.channels = i->channels();
 
-    sample_t sampleType;
     switch (i->precision())
     {
     case sample_t::U8:
     case sample_t::S16:
     case sample_t::S24:
     case sample_t::S32:
-        sampleType = i->precision();
+        format.sampleType = i->precision();
         break;
     case sample_t::SAMPLE_FLOAT:
+        qDebug() << "SAMPLE_FLOAT";
     case sample_t::SAMPLE_FIXED:
         switch (SETTINGS->bits())
         {
         case 8:
-            sampleType = sample_t::U8;
+            format.sampleType = sample_t::U8;
             break;
         case 16:
-            sampleType = sample_t::S16;
+            format.sampleType = sample_t::S16;
             break;
         default:
             qWarning() << "Unhandled sample type " << SETTINGS->bits();
@@ -108,19 +110,19 @@ bool audio::play(input* i)
         }
     }
 
-    qDebug() << "Setting parameters " << sampleRate << ":" << i->channels() << ":" << sampleTypeString(sampleType);
+    qDebug() << "Setting parameters " << format.sampleRate << ":" << i->channels() << ":" << sampleTypeString(format.sampleType);
     m_iw = new InputWrapper(i);
     connect(m_iw, &InputWrapper::switchSong,  this, &audio::songEnded);
     connect(m_iw, &InputWrapper::updateTime,  this, &audio::updateTime);
     connect(m_iw, &InputWrapper::preloadSong, this, &audio::preloadSong);
-    size_t bufferSize = m_audioOutput->open(selectedCard, sampleRate, i->channels(), sampleType, m_iw);
+    size_t bufferSize = m_audioOutput->open(selectedCard, format, m_iw);
     if (!bufferSize)
         return false;
 
-    qDebug() << "Output samplerate " << sampleRate;
+    //qDebug() << "Output samplerate " << format.sampleRate;
     qDebug() << "bufferSize: " << bufferSize << " bytes";
 
-    if (!m_iw->setFormat(sampleRate, i->channels(), sampleType, bufferSize))
+    if (!m_iw->setFormat(format, bufferSize))
     {
         m_audioOutput->close();
         return false;

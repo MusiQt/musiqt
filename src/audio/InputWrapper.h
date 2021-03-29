@@ -52,7 +52,7 @@ public:
 
     void enableBs2b();
 
-    bool setFormat(int sampleRate, int channels, sample_t sampleType, int bufferSize);
+    bool setFormat(audioFormat_t format, int bufferSize);
 
     int getSeconds() const { return m_milliSeconds/1000; }
 

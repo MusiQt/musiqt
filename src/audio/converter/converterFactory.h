@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2017 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,10 +37,8 @@ public:
     static cFactory* instance();
 
     /// Instantiate backend
-    converter* get(const unsigned int srIn, const unsigned int srOut,
-        const size_t size, const unsigned int channels,
-        const sample_t inputPrecision, const sample_t outputPrecision,
-        const unsigned int fract);
+    converter* get(audioFormat_t inFormat, audioFormat_t outFormat,
+        size_t size, unsigned int fract);
 
 };
 
