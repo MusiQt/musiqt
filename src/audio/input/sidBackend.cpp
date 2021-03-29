@@ -206,9 +206,76 @@ QStringList sidBackend::ext() { return QString(EXT).split("|"); }
 
 sidBackend::sidBackend(const QString& fileName) :
     m_stil(nullptr),
-    m_length(0),
+    m_db(nullptr),
     m_newSonglengthDB(false),
     m_config(name, iconSid, 126)
+{
+    createEmu();
+
+    std::unique_ptr<SidTune> sidTune(new SidTune(fileName.toUtf8().constData()));
+    if (!sidTune->getStatus())
+    {
+        QString error(sidTune->statusString());
+        deleteEmu();
+        throw loadError(error);
+    }
+
+    openHvsc(m_config.hvscPath());
+
+    if (fileName.endsWith(".mus"))
+    {
+        loadWDS(fileName, "wds");
+    }
+    else if (fileName.endsWith(".MUS"))
+    {
+        loadWDS(fileName, "WDS");
+    }
+
+    m_tune = sidTune.release();
+    loadTune(0);
+
+    getInfo(m_tune->getInfo());
+
+    if (m_stil != nullptr)
+    {
+        const char* fName = fileName.toUtf8().constData();
+        qDebug() << "Retrieving STIL info";
+        QString comment = QString(m_stil->getAbsGlobalComment(fName));
+        if (!comment.isEmpty())
+            comment.append('\n');
+
+        comment.append(QString(m_stil->getAbsEntry(fName)));
+
+        QString bug = QString(m_stil->getAbsBug(fName));
+        if (!bug.isEmpty())
+        {
+            comment.append('\n');
+            comment.append(bug);
+        }
+        m_metaData.addInfo(metaData::COMMENT, comment);
+    }
+
+    songLoaded(fileName);
+}
+
+sidBackend::~sidBackend()
+{
+    deleteEmu();
+
+    delete m_tune;
+
+    delete m_db;
+    delete m_stil;
+}
+
+void sidBackend::deleteEmu()
+{
+    sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
+    delete m_sidplayfp;
+    delete emuSid;
+}
+
+void sidBackend::createEmu()
 {
     std::unique_ptr<sidplayfp> emu(new sidplayfp());
 
@@ -275,7 +342,7 @@ sidBackend::sidBackend(const QString& fileName) :
 
     if (emuSid == nullptr)
     {
-        throw loadError("Error creating emu engine");
+        throw loadError(QString("Error creating emu engine %1").arg(m_config.engine()));
     }
 
     SidConfig cfg;
@@ -294,127 +361,7 @@ sidBackend::sidBackend(const QString& fileName) :
     cfg.fastSampling = m_config.fastSampling();
     emu->config(cfg);
 
-    std::unique_ptr<SidTune> sidTune(new SidTune(fileName.toUtf8().constData()));
-    if (!sidTune->getStatus())
-    {
-        QString error(sidTune->statusString());
-        delete emuSid;
-        throw loadError(error);
-    }
-
-    openHvsc(m_config.hvscPath());
-
-    if (fileName.endsWith(".mus"))
-    {
-        loadWDS(fileName, "wds");
-    }
-    else if (fileName.endsWith(".MUS"))
-    {
-        loadWDS(fileName, "WDS");
-    }
-
-    loadTune(0);
-
-    const SidTuneInfo* tuneInfo = sidTune->getInfo();
-
-    /*
-     * SID tunes have three info strings (title, artis, released)
-     * p00 files have only title
-     * prg files have none
-     */
-    switch (tuneInfo->numberOfInfoStrings())
-    {
-    case 3:
-        m_metaData.addInfo(gettext("released"), QString::fromLatin1(tuneInfo->infoString(2)));
-        // fall-through
-    case 2:
-        m_metaData.addInfo(metaData::ARTIST, QString::fromLatin1(tuneInfo->infoString(1)));
-        // fall-through
-    case 1:
-        m_metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));
-    }
-
-    /*
-     * MUS files have only comments
-     */
-    const unsigned int n = tuneInfo->numberOfCommentStrings();
-    if (n != 0)
-    {
-        QString info;
-        for (unsigned int i=0; i<n; i++)
-        {
-            if (!info.isEmpty())
-                info.append('\n');
-            info.append(tuneInfo->commentString(i));
-        }
-
-        if (!info.isEmpty())
-        {
-            m_metaData.addInfo(metaData::COMMENT, info);
-        }
-    }
-
-    if (m_stil != nullptr)
-    {
-        const char* fName = fileName.toUtf8().constData();
-        qDebug() << "Retrieving STIL info";
-        QString comment = QString(m_stil->getAbsGlobalComment(fName));
-        if (!comment.isEmpty())
-            comment.append('\n');
-
-        comment.append(QString(m_stil->getAbsEntry(fName)));
-
-        QString bug = QString(m_stil->getAbsBug(fName));
-        if (!bug.isEmpty())
-        {
-            comment.append('\n');
-            comment.append(bug);
-        }
-        m_metaData.addInfo(metaData::COMMENT, comment);
-    }
-
-    m_metaData.addInfo(gettext("speed"), emu->info().speedString());
-    m_metaData.addInfo(gettext("file format"), tuneInfo->formatString());
-    m_metaData.addInfo(gettext("song clock"), getClockString(tuneInfo->clockSpeed()));
-#ifdef ENABLE_3SID
-    m_metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel(0)));
-    if (tuneInfo->sidChips() > 1)
-    {
-        m_metaData.addInfo(gettext("2nd SID model"), getModelString(tuneInfo->sidModel(1)));
-        m_metaData.addInfo(gettext("2nd SID address"),
-                          QString("$%1").arg(tuneInfo->sidChipBase(1), 4, 16, QChar('0')));
-        if (tuneInfo->sidChips() > 2)
-        {
-            m_metaData.addInfo(gettext("3rd SID model"), getModelString(tuneInfo->sidModel(2)));
-            m_metaData.addInfo(gettext("3rd SID address"),
-                              QString("$%1").arg(tuneInfo->sidChipBase(2), 4, 16, QChar('0')));
-        }
-    }
-#else
-    m_metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel1()));
-    if (tuneInfo->isStereo())
-    {
-        m_metaData.addInfo(gettext("2nd SID model"), getModelString(tuneInfo->sidModel2()));
-        m_metaData.addInfo(gettext("2nd SID address"),
-                          QString("$%1").arg(tuneInfo->sidChipBase2(), 4, 16, QChar('0')));
-    }
-#endif
-
-    m_tune = sidTune.release();
     m_sidplayfp = emu.release();
-    songLoaded(fileName);
-}
-
-sidBackend::~sidBackend()
-{
-    sidbuilder *emuSid = m_sidplayfp->config().sidEmulation;
-    delete m_sidplayfp;
-    delete emuSid;
-
-    delete m_tune;
-
-    delete m_db;
-    delete m_stil;
 }
 
 const unsigned char* sidBackend::loadRom(const QString& romPath)
@@ -471,6 +418,73 @@ void sidBackend::loadTune(const int num)
         m_length = 0;
 
     setDuration(m_length);
+}
+
+void sidBackend::getInfo(const SidTuneInfo* tuneInfo) noexcept
+{
+    /*
+     * SID tunes have three info strings (title, artis, released)
+     * p00 files have only title
+     * prg files have none
+     */
+    switch (tuneInfo->numberOfInfoStrings())
+    {
+    case 3:
+        m_metaData.addInfo(gettext("released"), QString::fromLatin1(tuneInfo->infoString(2)));
+        // fall-through
+    case 2:
+        m_metaData.addInfo(metaData::ARTIST, QString::fromLatin1(tuneInfo->infoString(1)));
+        // fall-through
+    case 1:
+        m_metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));
+    }
+
+    /*
+     * MUS files have only comments
+     */
+    const unsigned int n = tuneInfo->numberOfCommentStrings();
+    if (n != 0)
+    {
+        QString info;
+        for (unsigned int i=0; i<n; i++)
+        {
+            if (!info.isEmpty())
+                info.append('\n');
+            info.append(tuneInfo->commentString(i));
+        }
+
+        if (!info.isEmpty())
+        {
+            m_metaData.addInfo(metaData::COMMENT, info);
+        }
+    }
+
+    m_metaData.addInfo(gettext("speed"), m_sidplayfp->info().speedString());
+    m_metaData.addInfo(gettext("file format"), tuneInfo->formatString());
+    m_metaData.addInfo(gettext("song clock"), getClockString(tuneInfo->clockSpeed()));
+#ifdef ENABLE_3SID
+    m_metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel(0)));
+    if (tuneInfo->sidChips() > 1)
+    {
+        m_metaData.addInfo(gettext("2nd SID model"), getModelString(tuneInfo->sidModel(1)));
+        m_metaData.addInfo(gettext("2nd SID address"),
+                          QString("$%1").arg(tuneInfo->sidChipBase(1), 4, 16, QChar('0')));
+        if (tuneInfo->sidChips() > 2)
+        {
+            m_metaData.addInfo(gettext("3rd SID model"), getModelString(tuneInfo->sidModel(2)));
+            m_metaData.addInfo(gettext("3rd SID address"),
+                              QString("$%1").arg(tuneInfo->sidChipBase(2), 4, 16, QChar('0')));
+        }
+    }
+#else
+    m_metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel1()));
+    if (tuneInfo->isStereo())
+    {
+        m_metaData.addInfo(gettext("2nd SID model"), getModelString(tuneInfo->sidModel2()));
+        m_metaData.addInfo(gettext("2nd SID address"),
+                          QString("$%1").arg(tuneInfo->sidChipBase2(), 4, 16, QChar('0')));
+    }
+#endif
 }
 
 void sidBackend::openHvsc(const QString& hvscPath)

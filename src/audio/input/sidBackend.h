@@ -171,11 +171,17 @@ private:
 private:
     sidBackend(const QString& fileName);
 
+    void createEmu();
+
+    void deleteEmu();
+
     void loadTune(const int num);
 
     void openHvsc(const QString& hvscPath);
 
     const unsigned char* loadRom(const QString& romPath);
+
+    void getInfo(const SidTuneInfo* tuneInfo) noexcept;
 
     void loadWDS(const QString& musFileName, const char* ext);
 
