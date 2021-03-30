@@ -196,6 +196,10 @@ bool InputWrapper::setFormat(audioFormat_t format, int bufferSize)
         m_audioProcess = new audioProcess16();
         precision = 2;
         break;
+    case sample_t::S32:
+        m_audioProcess = new audioProcess32();
+        precision = 4;
+        break;
     case sample_t::SAMPLE_FLOAT:
         m_audioProcess = new audioProcessFloat();
         precision = 4;

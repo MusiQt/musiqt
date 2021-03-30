@@ -27,6 +27,7 @@
 #  include <bs2b.h>
 #endif
 
+#include <QtEndian>
 #include <QDebug>
 
 class audioProcess
@@ -115,7 +116,7 @@ class audioProcess16 : public audioProcess
             const quint16 *end = buf+(size/2);
             do {
                 const quint16 tmp = *buf;
-                *buf++ = ((tmp & 0x00FF)<<8) & ((tmp & 0xFF00)>>8);
+                *buf++ = qToLittleEndian(tmp);
             } while (buf<end);
         }
 #endif
@@ -134,6 +135,39 @@ class audioProcess16 : public audioProcess
                 buf += 2;
             } while (buf < end);
 #endif
+        }
+#endif
+    }
+};
+
+/*****************************************************************/
+
+class audioProcess32 : public audioProcess
+{
+    void init(int sampleRate)
+    {
+        initBs2b(sampleRate);
+    }
+
+    void process(void* buffer, size_t size)
+    {
+#if (Q_BYTE_ORDER == Q_BIG_ENDIAN)
+        {
+            //Swap bytes on big endian machines
+            quint32 *buf = (quint32*)buffer;
+            const quint32 *end = buf+(size/4);
+            do {
+                const quint32 tmp = *buf;
+                *buf++ = qToLittleEndian(tmp);
+            } while (buf<end);
+        }
+#endif
+
+#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
+        if (m_bs2bdp)
+        {
+            int32_t *buf = (int32_t*)buffer;
+            bs2b_cross_feed_s32le(m_bs2bdp, buf, size/4);
         }
 #endif
     }
