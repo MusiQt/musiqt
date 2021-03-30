@@ -232,7 +232,13 @@ sidBackend::sidBackend(const QString& fileName) :
     }
 
     m_tune = sidTune.release();
-    loadTune(0);
+    if (!loadTune(0))
+    {
+        delete m_tune;
+        QString error(m_sidplayfp->error());
+        deleteEmu();
+        throw loadError(error);
+    }
 
     getInfo(m_tune->getInfo());
 
@@ -359,7 +365,11 @@ void sidBackend::createEmu()
     cfg.sidEmulation = emuSid;
     cfg.samplingMethod = m_config.samplingMethod();
     cfg.fastSampling = m_config.fastSampling();
-    emu->config(cfg);
+    if (!emu->config(cfg))
+    {
+        delete emuSid;
+        throw loadError(emu->error());
+    }
 
     m_sidplayfp = emu.release();
 }
@@ -391,16 +401,20 @@ bool sidBackend::subtune(const unsigned int i)
 {
     if (i <= m_tune->getInfo()->songs())
     {
-        loadTune(i);
-        return true;
+        if (loadTune(i))
+            return true;
+
+        qWarning() << m_sidplayfp->error();
     }
     return false;
 }
 
-void sidBackend::loadTune(const int num)
+bool sidBackend::loadTune(int num)
 {
     m_tune->selectSong(num);
-    m_sidplayfp->load(m_tune);
+    if (!m_sidplayfp->load(m_tune))
+        return false;
+
     if (m_db != nullptr)
     {
         int_least32_t songLength;
@@ -414,6 +428,8 @@ void sidBackend::loadTune(const int num)
 #endif
         setDuration((songLength < 0) ? 0 : songLength);
     }
+
+    return true;
 }
 
 void sidBackend::getInfo(const SidTuneInfo* tuneInfo) noexcept

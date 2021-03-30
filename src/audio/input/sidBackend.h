@@ -174,7 +174,7 @@ private:
 
     void deleteEmu();
 
-    void loadTune(const int num);
+    bool loadTune(int num);
 
     void openHvsc(const QString& hvscPath);
 
