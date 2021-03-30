@@ -197,8 +197,13 @@ void gmeBackend::getInfo()
     else if (ti->loop_length > 0)
     {
         const int startFade = ti->intro_length + ti->loop_length;
+#if GME_VERSION >= 0x000700
         setDuration(startFade + ti->loop_length);
         gme_set_fade(m_emu, startFade, ti->loop_length);
+#else
+        setDuration(startFade + 8000);
+        gme_set_fade(m_emu, startFade);
+#endif
     }
 
     gme_free_info(ti);
