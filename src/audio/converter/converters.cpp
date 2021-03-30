@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2020 Leandro Nini
+ *  Copyright (C) 2009-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ template size_t resampler<int, unsigned char>::convert(const void* buf, const si
 template size_t resampler<int, short>::convert(const void* buf, const size_t len);
 template size_t resampler<float, unsigned char>::convert(const void* buf, const size_t len);
 template size_t resampler<float, short>::convert(const void* buf, const size_t len);
+template size_t resampler<float, float>::convert(const void* buf, const size_t len);
 
 /******************************************************************************/
 

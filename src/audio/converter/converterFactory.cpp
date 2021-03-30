@@ -66,9 +66,8 @@ converter* cFactory::get(audioFormat_t inFormat, audioFormat_t outFormat,
             else
             {
                 qDebug() << "resampler float->float";
-                //return (converter*)new resampler<float, float>(inFormat.sampleRate, outFormat.sampleRate,
-                //    size, outFormat.channels, new quantizerVoid<float>());
-                return nullptr; // FIXME
+                return (converter*)new resampler<float, float>(inFormat.sampleRate, outFormat.sampleRate,
+                    size, outFormat.channels, new quantizerVoid<float>());
             }
         }
         else
