@@ -120,6 +120,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/gui)
 include_directories(${CMAKE_SOURCE_DIR}/src/trackList)
 include_directories(${CMAKE_SOURCE_DIR}/src/utils)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 find_package(PkgConfig REQUIRED)
 
@@ -182,9 +183,23 @@ add_custom_target(update_pot
 ##################################################################
 # Check for Qt
 
-find_package(Qt5 COMPONENTS Widgets Network Multimedia REQUIRED)
-
+find_package(Qt5 COMPONENTS Widgets Network Multimedia  REQUIRED)
 target_link_libraries(musiqt Qt5::Widgets Qt5::Network Qt5::Multimedia)
+
+find_package(Qt5 OPTIONAL_COMPONENTS DBus)
+if (Qt5DBus_FOUND)
+    SET(ENABLE_DBUS 1)
+    qt5_add_dbus_adaptor( MPRIS_ADAPTOR_SRC
+            org.mpris.MediaPlayer2.Player.xml
+            dbusHandler.h
+            dbusHandler )
+    target_sources(musiqt PRIVATE
+        ${MPRIS_ADAPTOR_SRC}
+        src/dbusHandler.h
+        src/dbusHandler.cpp
+    )
+    target_link_libraries(musiqt Qt5::DBus)
+endif()
 
 ##################################################################
 # Search for zlib

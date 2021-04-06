@@ -6,6 +6,9 @@
    language is requested. */
 #cmakedefine  ENABLE_NLS @ENABLE_NLS@
 
+/* Define to 1 if QtDBus is present. */
+#cmakedefine  ENABLE_DBUS @ENABLE_DBUS@
+
 /* Define to 1 if you have libsndfile>=1.0.21 on MinGW. */
 #cmakedefine  ENABLE_SNDFILE_WINDOWS_PROTOTYPES @ENABLE_SNDFILE_WINDOWS_PROTOTYPES@
 

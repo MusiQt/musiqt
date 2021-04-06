@@ -32,6 +32,10 @@
 #  include "translator.h"
 #endif
 
+#ifdef ENABLE_DBUS
+#  include "dbusHandler.h"
+#endif
+
 #ifdef QT_STATICPLUGIN
 #include <QtPlugin>
 #  ifdef _WIN32
@@ -91,6 +95,10 @@ int main(int argc, char *argv[])
 #ifdef ENABLE_NLS
     // Add translator
     app.installTranslator(new translator(&app));
+#endif
+
+#ifdef ENABLE_DBUS
+    dbusHandler dbus;
 #endif
 
     mainWindow window;
