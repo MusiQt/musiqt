@@ -556,10 +556,10 @@ void centralFrame::onCmdSongLoaded(input* res)
 {
     QApplication::restoreOverrideCursor();
 
+    m_player->loaded(res, SETTINGS->subtunes());
+
     if (res != nullptr)
     {
-        m_player->loaded(res, SETTINGS->subtunes());
-
         emit setDisplay(m_player.data());
 
         if (m_playing)
@@ -570,19 +570,13 @@ void centralFrame::onCmdSongLoaded(input* res)
     }
     else
     {
-        loadError();
+        qWarning() << "Error loading song";
+
+        emit clearDisplay(false);
+
+        m_playDir = QString();
+        changeState();
     }
-}
-
-void centralFrame::loadError()
-{
-    qWarning() << "Error loading song";
-
-    m_player->unload();
-    emit clearDisplay(false);
-
-    m_playDir = QString();
-    changeState();
 }
 
 void centralFrame::onCmdSongPreLoaded(input* res)
@@ -591,7 +585,7 @@ void centralFrame::onCmdSongPreLoaded(input* res)
 
     m_player->preloaded(res, SETTINGS->subtunes());
 
-    return;
+    qDebug() << "Song preloaded";
 }
 
 void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)

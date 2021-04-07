@@ -133,7 +133,6 @@ private:
     QString getFilter() const;
     QStringList getPattern() const;
     void changeState();
-    void loadError();
 
 private:
     QScopedPointer<player> m_player;

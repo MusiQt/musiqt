@@ -31,40 +31,46 @@ player::player() :
 bool player::tryPreload(const QString& song)
 {
     QString songPreloaded = m_preload->songLoaded();
-    if (!songPreloaded.isEmpty())
+    if (songPreloaded.isEmpty())
+        return false;
+
+    input* i = m_preload.take();
+    m_preload.reset(IFACTORY->get());
+
+    if (!songPreloaded.compare(song))
     {
-        if (songPreloaded.compare(song))
-        {
-            m_preload.reset(IFACTORY->get());
-            return false;
-        }
-        else
-        {
-            m_input.reset(m_preload.take());
-            m_preload.reset(IFACTORY->get());
-            return true;
-        }
+        m_input.reset(i);
+        return true;
     }
-            return false;
+    else
+    {
+        return false;
+    }
 }
 
 void player::loaded(input* res, bool subtunes)
 {
-    m_input.reset(res);
+    if (res != nullptr)
+    {
+        m_input.reset(res);
 
-    if (subtunes)
-        m_input->subtune(1);
+        if (subtunes)
+            m_input->subtune(1);
+    }
+    else
+    {
+        m_input.reset(IFACTORY->get());
+    }
 }
 
 void player::preloaded(input* res, bool subtunes)
 {
-    m_preload.reset(res);
     if ((res != nullptr) && m_audio->gapless(res))
     {
+        m_preload.reset(res);
+
         if (subtunes)
             m_preload->subtune(1);
-
-        //qDebug() << "Song preloaded";
     }
     else
     {

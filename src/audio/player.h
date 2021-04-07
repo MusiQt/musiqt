@@ -112,7 +112,6 @@ public:
 
     bool tryPreload(const QString& song);
 
-    // FIXME remove
     void loaded(input* res, bool subtunes);
     void preloaded(input* res, bool subtunes);
 };
