@@ -31,7 +31,21 @@ class dbusHandler : public QObject
     Q_OBJECT
 
 public:
-    dbusHandler();
+    dbusHandler(QObject* parent = nullptr);
+
+    Q_PROPERTY(bool CanQuit READ getCanQuit)
+    Q_PROPERTY(bool CanRaise READ getCanRaise)
+    Q_PROPERTY(bool HasTrackList READ getHasTrackList)
+    Q_PROPERTY(QString Identity READ getIdentity)
+    Q_PROPERTY(QStringList SupportedUriSchemes READ getSupportedUriSchemes)
+    Q_PROPERTY(QStringList SupportedMimeTypes READ getSupportedMimeTypes)
+
+    bool getCanQuit() const;
+    bool getCanRaise() const;
+    bool getHasTrackList() const;
+    QString getIdentity() const;
+    QStringList getSupportedUriSchemes() const;
+    QStringList getSupportedMimeTypes() const;
 
 public slots:
     void Raise();

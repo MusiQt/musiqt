@@ -189,10 +189,10 @@ target_link_libraries(musiqt Qt5::Widgets Qt5::Network Qt5::Multimedia)
 find_package(Qt5 OPTIONAL_COMPONENTS DBus)
 if (Qt5DBus_FOUND)
     SET(ENABLE_DBUS 1)
-    qt5_add_dbus_adaptor( MPRIS_ADAPTOR_SRC
-            org.mpris.MediaPlayer2.Player.xml
+    qt5_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
+            src/org.mpris.MediaPlayer2.xml
             dbusHandler.h
-            dbusHandler )
+            dbusHandler)
     target_sources(musiqt PRIVATE
         ${MPRIS_ADAPTOR_SRC}
         src/dbusHandler.h

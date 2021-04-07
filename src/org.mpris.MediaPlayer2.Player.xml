@@ -1,11 +1,5 @@
 <?xml version="1.0" ?>
 <node>
-  <interface name="org.mpris.MediaPlayer2">
-    <method name="Raise"/>
-    <method name="Quit"/>
-    <property name="CanRaise" type="b" access="read">
-    <property name="CanQuit" type="b" access="read">
-  </interface>
 <!--
   <interface name="org.mpris.MediaPlayer2.Player">
     <method name="Next"/>
