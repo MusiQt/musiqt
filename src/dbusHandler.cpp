@@ -18,7 +18,7 @@
 
 #include "dbusHandler.h"
 
-#include "playeradaptor.h"
+#include "mediaplayer2adaptor.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
