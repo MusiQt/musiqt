@@ -19,9 +19,8 @@
 #ifndef CENTRALFRAME_H
 #define CENTRALFRAME_H
 
-#include "audio.h"
+#include "player.h"
 
-#include <QScopedPointer>
 #include <QThread>
 #include <QWidget>
 
@@ -86,8 +85,8 @@ public:
     void setPlayMode(bool mode) { m_playMode = mode; }
     bool getPlayMode() const { return m_playMode; }
 
-    int volume() const { return m_audio->volume(); }
-    void setVolume(int vol) { m_audio->volume(vol); }
+    int volume() const { return m_player->volume(); }
+    void setVolume(int vol) { m_player->volume(vol); }
 
     void changeSubtune(dir_t dir);
 
@@ -137,9 +136,7 @@ private:
     void loadError();
 
 private:
-    QScopedPointer<input> m_input;
-    QScopedPointer<input> m_preload;
-    QScopedPointer<audio> m_audio;
+    QScopedPointer<player> m_player;
 
     bool m_playing;
     // Play mode: true=playlist / false=single song

@@ -24,7 +24,6 @@
 #include "playlistModel.h"
 #include "proxymodel.h"
 #include "input/inputFactory.h"
-#include "input/input.h"
 #include "input/metaData.h"
 #include "settings.h"
 #include "trackListFactory.h"
@@ -59,16 +58,14 @@ void loadThread::run()
 
 centralFrame::centralFrame(QWidget *parent) :
     QWidget(parent),
-    m_input(IFACTORY->get()),
-    m_preload(IFACTORY->get()),
-    m_audio(new audio),
+    m_player(new player()),
     m_playing(false),
     m_playDir(QString())
 {
     //connect(m_audio, &audio::outputError, this, &onCmdStopSong);
-    connect(m_audio.data(), &audio::updateTime,  this, &centralFrame::onUpdateTime);
-    connect(m_audio.data(), &audio::songEnded,   this, &centralFrame::songEnded);
-    connect(m_audio.data(), &audio::preloadSong, this, &centralFrame::preloadSong);
+    connect(m_player.data(), &player::updateTime,  this, &centralFrame::onUpdateTime);
+    connect(m_player.data(), &player::songEnded,   this, &centralFrame::songEnded);
+    connect(m_player.data(), &player::preloadSong, this, &centralFrame::preloadSong);
 
     // dir view
     m_fsm = new QFileSystemModel(this);
@@ -211,7 +208,7 @@ centralFrame::centralFrame(QWidget *parent) :
         {
             int pos = m_slider->sliderPosition();
             qDebug() << "seek: " << pos;
-            m_audio->seek(pos);
+            m_player->seek(pos);
         }
     );
     connect(this, &centralFrame::updateSlider, m_slider, &QSlider::setValue);
@@ -224,7 +221,7 @@ centralFrame::~centralFrame()
     m_bookmarkList->save();
 
     QSettings settings;
-    QString file = m_input->songLoaded();
+    QString file = m_player->loadedSong();
     settings.setValue("General Settings/file", file);
 }
 
@@ -265,8 +262,8 @@ void centralFrame::createHomeMenu()
 
 void centralFrame::changeState()
 {
-    emit stateChanged(m_audio->state());
-    switch (m_audio->state())
+    emit stateChanged(m_player->state());
+    switch (m_player->state())
     {
     case state_t::STOP:
         m_playing = false;
@@ -274,7 +271,7 @@ void centralFrame::changeState()
         break;
     case state_t::PLAY:
         m_playing = true;
-        m_slider->setDisabled(!m_input->seekable());
+        m_slider->setDisabled(!m_player->seekable());
         break;
     case state_t::PAUSE:
         m_slider->setDisabled(true);
@@ -320,7 +317,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
     }
     else
     {
-        QString songLoaded = m_input->songLoaded();
+        QString songLoaded = m_player->loadedSong();
         if (songLoaded.isEmpty())
         {
             m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
@@ -354,7 +351,7 @@ void centralFrame::onCmdCurrentDir()
         return;
 
     qDebug() << "onCmdCurrentDir";
-    QString file = m_input->songLoaded();
+    QString file = m_player->loadedSong();
     if (file.isEmpty())
         return;
 
@@ -455,14 +452,14 @@ done:
 
 void centralFrame::onCmdPlayPauseSong()
 {
-    if (m_audio->state() != state_t::STOP)
+    if (m_player->state() != state_t::STOP)
     {
-        m_audio->pause();
+        m_player->pause();
     }
     else
     {
         // if loaded song is not the selected one don't play
-        QString songLoaded = m_input->songLoaded();
+        QString songLoaded = m_player->loadedSong();
         const QString song = m_proxyModel->data(m_playlist->currentIndex(), Qt::UserRole).toString();
         qDebug() << "Song: " << song;
         if (!song.isEmpty() && song.compare(songLoaded))
@@ -470,7 +467,7 @@ void centralFrame::onCmdPlayPauseSong()
             return;
         }
 
-        if (m_audio->play(m_input.data()))
+        if (m_player->play())
         {
             QFileInfo fileInfo(songLoaded);
             setDir(fileInfo.absolutePath());
@@ -484,7 +481,7 @@ void centralFrame::onCmdPlayPauseSong()
 void centralFrame::onCmdStopSong()
 {
     qDebug() << "centralFrame::onCmdStopSong";
-    if (m_audio->stop())
+    if (m_player->stop())
     {
         emit updateTime(0);
         emit updateSlider(0);
@@ -532,10 +529,7 @@ void centralFrame::onCmdChangeSong(dir_t dir)
 
     if (index.isValid())
     {
-        if (!m_preload->songLoaded().isEmpty())
-        {
-            m_preload.reset(IFACTORY->get());
-        }
+        m_player->invalidatePreload();
         m_playlist->setCurrentIndex(index);
     }
 }
@@ -564,12 +558,12 @@ void centralFrame::onCmdSongLoaded(input* res)
 
     if (res != nullptr)
     {
-        m_input.reset(res);
+        m_player->loaded(res);
 
-        emit setDisplay(m_input.data());
+        emit setDisplay(m_player->data());
 
         if (SETTINGS->subtunes())
-            m_input->subtune(1);
+            m_player->subtune(1);
 
         if (m_playing)
         {
@@ -587,7 +581,7 @@ void centralFrame::loadError()
 {
     qWarning() << "Error loading song";
 
-    m_input.reset(IFACTORY->get());
+    m_player->unload();
     emit clearDisplay(false);
 
     m_playDir = QString();
@@ -598,19 +592,7 @@ void centralFrame::onCmdSongPreLoaded(input* res)
 {
     QApplication::restoreOverrideCursor();
 
-    m_preload.reset(res);
-
-    if ((res != nullptr) && m_audio->gapless(res))
-    {
-        if (SETTINGS->subtunes())
-            m_preload->subtune(1);
-
-        qDebug() << "Song preloaded";
-    }
-    else
-    {
-        m_preload.reset(IFACTORY->get());
-    }
+    m_player->preloaded(res, SETTINGS->subtunes());
 
     return;
 }
@@ -624,7 +606,7 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     if (!currentRow.isValid())
         return;
 
-    QString songLoaded = m_input->songLoaded();
+    QString songLoaded = m_player->loadedSong();
     const QString song = m_proxyModel->data(currentRow, Qt::UserRole).toString();
     if (!songLoaded.isEmpty() && !song.compare(songLoaded))
         return;
@@ -634,23 +616,12 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     if (!m_playlist->isVisible())
         updateSongs();
 
-    QString songPreloaded = m_preload->songLoaded();
-    if (!songPreloaded.isEmpty())
+    if (m_player->tryPreload(song))
     {
-        if (songPreloaded.compare(song))
-        {
-            m_preload.reset(IFACTORY->get());
-        }
-        else
-        {
-            m_input.reset(m_preload.take());
-            m_preload.reset(IFACTORY->get());
-            emit setDisplay(m_input.data());
-            return;
-        }
+        emit setDisplay(m_player->data());
     }
 
-    m_audio->stop();
+    m_player->stop();
     emit clearDisplay(true);
 
     load(song);
@@ -659,19 +630,19 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 void centralFrame::onUpdateTime()
 {
     // Playing may have stopped while message was in queue
-    if (m_audio->state() != state_t::STOP)
+    if (m_player->state() != state_t::STOP)
     {
-        emit updateTime(m_audio->seconds());
+        emit updateTime(m_player->seconds());
 
-        if (!m_slider->isSliderDown() && m_input->seekable())
-            emit updateSlider(m_audio->getPosition());
+        if (!m_slider->isSliderDown() && m_player->seekable())
+            emit updateSlider(m_player->getPosition());
     }
 }
 
 void centralFrame::preloadSong()
 {
     qDebug("centralFrame::preloadSong");
-    if (m_playMode && m_input->gapless() && !m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
+    if (m_playMode && m_player->gapless() && !m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
     {
         const int nextSong = m_playlist->currentIndex().row()+1;
         QModelIndex index = m_proxyModel->index(nextSong, 0);
@@ -685,7 +656,7 @@ void centralFrame::preloadSong()
 void centralFrame::songEnded()
 {
     qDebug("centralFrame::songEnded");
-    if (SETTINGS->subtunes() && (m_input->subtune()<m_input->subtunes()))
+    if (SETTINGS->subtunes() && (m_player->subtune()<m_player->subtunes()))
     {
         changeSubtune(dir_t::ID_NEXT);
         return;
@@ -714,11 +685,11 @@ void centralFrame::onSettingsChanged()
 {
     createHomeMenu();
 
-    QString songLoaded = m_input->songLoaded();
+    QString songLoaded = m_player->loadedSong();
     if (!songLoaded.isEmpty())
     {
         // we must reload the song
-        m_input.reset(IFACTORY->get());
+        m_player->unload();
         const QModelIndex curItem = m_playlist->currentIndex();
         m_playlist->setCurrentIndex(QModelIndex());
         m_playlist->setCurrentIndex(curItem);
@@ -838,10 +809,10 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
 
 void centralFrame::changeSubtune(dir_t dir)
 {
-    if (m_input->subtunes() <= 1)
+    if (m_player->subtunes() <= 1)
         return;
 
-    unsigned int i = m_input->subtune();
+    unsigned int i = m_player->subtune();
     switch (dir)
     {
     case dir_t::ID_PREV:
@@ -852,13 +823,13 @@ void centralFrame::changeSubtune(dir_t dir)
         break;
     }
 
-    if ((i < 1) || (i > m_input->subtunes()))
+    if ((i < 1) || (i > m_player->subtunes()))
         return;
 
-    m_audio->stop();
+    m_player->stop();
 
-    if (m_input->subtune(i))
-        emit setDisplay(m_input.data());
+    if (m_player->subtune(i))
+        emit setDisplay(m_player->data());
 
     if (m_playing)
     {
@@ -968,7 +939,7 @@ void centralFrame::init()
     m_bookmarkList->load();
 }
 
-const metaData* centralFrame::getMetaData() const { return m_input->getMetaData(); }
+const metaData* centralFrame::getMetaData() const { return m_player->getMetaData(); }
 
 QString centralFrame::getFilter() const
 {
