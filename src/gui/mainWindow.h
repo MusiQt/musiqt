@@ -19,7 +19,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "audio.h"
+#include "player.h"
 
 #include <QMainWindow>
 #include <QApplication>
@@ -64,7 +64,7 @@ private:
     void onInfo();
     void setPlayButton(state_t state);
 
-    void setDisplay(input* i);
+    void setDisplay(player* i);
     void clearDisplay(bool loading);
 
     void updateTime(int seconds);

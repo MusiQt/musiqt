@@ -94,7 +94,7 @@ public:
 
 signals:
     void stateChanged(state_t state);
-    void setDisplay(input*);
+    void setDisplay(player*);
     void clearDisplay(bool);
     void updateTime(int);
     void updateSlider(int);

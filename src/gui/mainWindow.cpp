@@ -470,7 +470,7 @@ void mainWindow::setPlayButton(state_t state)
     }
 }
 
-void mainWindow::setDisplay(input* i)
+void mainWindow::setDisplay(player* i)
 {
     m_timeDisplay->setTime(0);
     m_songTime->setTime(i->songDuration() / 1000);
@@ -480,7 +480,7 @@ void mainWindow::setDisplay(input* i)
     const metaData* data = i->getMetaData();
     QString songTitle = data->getInfo(metaData::TITLE);
     if (songTitle.isEmpty())
-        songTitle = QFileInfo(i->songLoaded()).fileName();
+        songTitle = QFileInfo(i->loadedSong()).fileName();
 
     setWindowTitle(songTitle);
 

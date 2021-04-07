@@ -44,6 +44,14 @@ bool player::tryPreload(const QString& song)
             return false;
 }
 
+void player::loaded(input* res, bool subtunes)
+{
+    m_input.reset(res);
+
+    if (subtunes)
+        m_input->subtune(1);
+}
+
 void player::preloaded(input* res, bool subtunes)
 {
     m_preload.reset(res);

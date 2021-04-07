@@ -558,12 +558,9 @@ void centralFrame::onCmdSongLoaded(input* res)
 
     if (res != nullptr)
     {
-        m_player->loaded(res);
+        m_player->loaded(res, SETTINGS->subtunes());
 
-        emit setDisplay(m_player->data());
-
-        if (SETTINGS->subtunes())
-            m_player->subtune(1);
+        emit setDisplay(m_player.data());
 
         if (m_playing)
         {
@@ -618,7 +615,7 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 
     if (m_player->tryPreload(song))
     {
-        emit setDisplay(m_player->data());
+        emit setDisplay(m_player.data());
     }
 
     m_player->stop();
@@ -829,7 +826,7 @@ void centralFrame::changeSubtune(dir_t dir)
     m_player->stop();
 
     if (m_player->subtune(i))
-        emit setDisplay(m_player->data());
+        emit setDisplay(m_player.data());
 
     if (m_playing)
     {

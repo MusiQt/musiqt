@@ -101,8 +101,8 @@ public:
     /// Song loaded
     QString loadedSong() const { return m_input->songLoaded(); }
 
-    /// Song preloaded
-    //QString preloadedSong() const { return m_preload->songLoaded(); }
+    /// Get song duration in milliseconds
+    unsigned int songDuration() const { return m_input->songDuration(); }
 
     /// Unload song
     void unload() { return m_input.reset(IFACTORY->get()); }
@@ -113,9 +113,8 @@ public:
     bool tryPreload(const QString& song);
 
     // FIXME remove
-    void loaded(input* res) { m_input.reset(res); }
+    void loaded(input* res, bool subtunes);
     void preloaded(input* res, bool subtunes);
-    input* data() { return m_input.data(); }
 };
 
 #endif
