@@ -725,7 +725,7 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
         const int itemRow = item.row();
 
         QWidgetAction *wa = new QWidgetAction(&pane);
-        QLabel *label = new QLabel(utils::shrink(m_playlistModel->data(item, Qt::UserRole).toString()));
+        QLabel *label = new QLabel(utils::shrink(m_proxyModel->data(item, Qt::UserRole).toString()));
         label->setAlignment(Qt::AlignCenter);
         wa->setDefaultWidget(label);
         pane.addAction(wa);
@@ -735,7 +735,7 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
             [this, itemRow]()
             {
                 qDebug() << "remove item " << itemRow;
-                m_playlistModel->removeRow(itemRow);
+                m_proxyModel->removeRow(itemRow);
             }
         );
         delitem->setStatusTip(tr("Remove selected item from playlist"));
