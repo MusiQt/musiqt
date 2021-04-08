@@ -112,7 +112,9 @@ centralFrame::centralFrame(QWidget *parent) :
     selectionModel = m_playlist->selectionModel();
     connect(selectionModel, &QItemSelectionModel::currentRowChanged, this, &centralFrame::onCmdSongSelected);
     connect(m_playlist, &playlist::doubleClicked, this, &centralFrame::onCmdPlayPauseSong);
-    connect(m_playlist, &playlist::changed, this, &centralFrame::updateSongs);
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &centralFrame::updateSongs);
+    connect(m_proxyModel, &proxymodel::rowsInserted, this, &centralFrame::updateSongs);
+    connect(m_proxyModel, &proxymodel::rowsRemoved, this, &centralFrame::updateSongs);
 
     m_playlist->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_playlist, &playlist::customContextMenuRequested, this, &centralFrame::onRgtClkPlayList);
