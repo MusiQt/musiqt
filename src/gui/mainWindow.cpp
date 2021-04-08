@@ -53,6 +53,7 @@
 
 mainWindow::mainWindow(QWidget *parent) :
     QMainWindow(parent),
+    m_player(new player()),
     m_infoDialog(nullptr)
 {
     // Read settings
@@ -74,7 +75,7 @@ mainWindow::mainWindow(QWidget *parent) :
     quit->setDefaultAction(m_quitAction);
     statusBar()->addPermanentWidget(quit);
 
-    m_cFrame = new centralFrame(this);
+    m_cFrame = new centralFrame(m_player.data(), this);
     setCentralWidget(m_cFrame);
 
     connect(m_playAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdPlayPauseSong);
@@ -222,7 +223,7 @@ QToolBar *mainWindow::createSecondaryBar()
     //volume->setNotchesVisible(true);
     volume->setRange(0, 100);
     volume->setStatusTip(tr("Volume"));
-    volume->setValue(m_cFrame->volume());
+    volume->setValue(m_player->volume());
     connect(volume, &QDial::valueChanged, this, &mainWindow::onCmdVol);
 
     QToolBar *secondaryBar = new QToolBar("secondaryBar", this);
@@ -409,7 +410,7 @@ void mainWindow::onInfo()
         return;
 
     m_infoDialog = new infoDialog(this);
-    m_infoDialog->setInfo(m_cFrame->getMetaData());
+    m_infoDialog->setInfo(m_player->getMetaData());
     m_infoDialog->setAttribute(Qt::WA_QuitOnClose, false);
     connect(m_infoDialog, &infoDialog::finished,
         [this]()
@@ -470,17 +471,17 @@ void mainWindow::setPlayButton(state_t state)
     }
 }
 
-void mainWindow::setDisplay(player* i)
+void mainWindow::setDisplay()
 {
     m_timeDisplay->setTime(0);
-    m_songTime->setTime(i->songDuration() / 1000);
+    m_songTime->setTime(m_player->songDuration() / 1000);
 
-    m_subtunes->setText(QString("%1/%2").arg(i->subtune()).arg(i->subtunes()));
+    m_subtunes->setText(QString("%1/%2").arg(m_player->subtune()).arg(m_player->subtunes()));
 
-    const metaData* data = i->getMetaData();
+    const metaData* data = m_player->getMetaData();
     QString songTitle = data->getInfo(metaData::TITLE);
     if (songTitle.isEmpty())
-        songTitle = QFileInfo(i->loadedSong()).fileName();
+        songTitle = QFileInfo(m_player->loadedSong()).fileName();
 
     setWindowTitle(songTitle);
 
@@ -508,7 +509,7 @@ void mainWindow::clearDisplay(bool loading)
     m_songInfo->setToolTip(QString());
 
     if (m_infoDialog != nullptr)
-        m_infoDialog->setInfo(m_cFrame->getMetaData());
+        m_infoDialog->setInfo(m_player->getMetaData());
 }
 
 void mainWindow::updateTime(int seconds)
@@ -541,7 +542,7 @@ void mainWindow::setPlayMode(QAction *action, bool mode)
 
 void mainWindow::onCmdVol(int vol)
 {
-    m_cFrame->setVolume(vol);
+    m_player->volume(vol);
 }
 
 void mainWindow::onPrevSubtune()

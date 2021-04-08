@@ -75,18 +75,13 @@ public:
     };
 
 public:
-    centralFrame(QWidget *parent = 0);
+    centralFrame(player* p, QWidget *parent = 0);
     ~centralFrame();
-
-    const metaData* getMetaData() const;
 
     void onSettingsChanged();
 
     void setPlayMode(bool mode) { m_playMode = mode; }
     bool getPlayMode() const { return m_playMode; }
-
-    int volume() const { return m_player->volume(); }
-    void setVolume(int vol) { m_player->volume(vol); }
 
     void changeSubtune(dir_t dir);
 
@@ -94,7 +89,7 @@ public:
 
 signals:
     void stateChanged(state_t state);
-    void setDisplay(player*);
+    void setDisplay();
     void clearDisplay(bool);
     void updateTime(int);
     void updateSlider(int);
@@ -135,7 +130,7 @@ private:
     void changeState();
 
 private:
-    QScopedPointer<player> m_player;
+    player* m_player;
 
     // Play mode: true=playlist / false=single song
     bool m_playMode;

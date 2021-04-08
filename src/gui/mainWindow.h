@@ -27,6 +27,7 @@
 #include <QLabel>
 #include <QSystemTrayIcon>
 #include <QSettings>
+#include <QScopedPointer>
 
 class centralFrame;
 class bookmark;
@@ -64,7 +65,7 @@ private:
     void onInfo();
     void setPlayButton(state_t state);
 
-    void setDisplay(player* i);
+    void setDisplay();
     void clearDisplay(bool loading);
 
     void updateTime(int seconds);
@@ -83,6 +84,8 @@ private:
     QToolBar *createInfoBar();
 
 private:
+    QScopedPointer<player> m_player;
+
     centralFrame *m_cFrame;
 
     QSystemTrayIcon *m_trayIcon;

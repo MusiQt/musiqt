@@ -56,15 +56,15 @@ void loadThread::run()
 
 /*****************************************************************/
 
-centralFrame::centralFrame(QWidget *parent) :
+centralFrame::centralFrame(player* p, QWidget *parent) :
     QWidget(parent),
-    m_player(new player()),
+    m_player(p),
     m_playDir(QString())
 {
     //connect(m_audio, &audio::outputError, this, &onCmdStopSong);
-    connect(m_player.data(), &player::updateTime,  this, &centralFrame::onUpdateTime);
-    connect(m_player.data(), &player::songEnded,   this, &centralFrame::songEnded);
-    connect(m_player.data(), &player::preloadSong, this, &centralFrame::preloadSong);
+    connect(m_player, &player::updateTime,  this, &centralFrame::onUpdateTime);
+    connect(m_player, &player::songEnded,   this, &centralFrame::songEnded);
+    connect(m_player, &player::preloadSong, this, &centralFrame::preloadSong);
 
     // dir view
     m_fsm = new QFileSystemModel(this);
@@ -553,7 +553,7 @@ void centralFrame::onCmdSongLoaded(input* res)
 
     if (res != nullptr)
     {
-        emit setDisplay(m_player.data());
+        emit setDisplay();
 
         changeState();
 
@@ -600,7 +600,7 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 
     if (m_player->tryPreload(song))
     {
-        emit setDisplay(m_player.data());
+        emit setDisplay();
     }
     else
     {
@@ -808,7 +808,7 @@ void centralFrame::changeSubtune(dir_t dir)
         return;
 
     if (m_player->subtune(i))
-        emit setDisplay(m_player.data());
+        emit setDisplay();
 }
 
 void centralFrame::onCmdPlEdit(bool checked)
@@ -912,8 +912,6 @@ void centralFrame::init()
 
     m_bookmarkList->load();
 }
-
-const metaData* centralFrame::getMetaData() const { return m_player->getMetaData(); }
 
 QString centralFrame::getFilter() const
 {
