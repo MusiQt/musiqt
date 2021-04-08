@@ -60,7 +60,7 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
     m_player(p)
 {
     //connect(m_audio, &audio::outputError, this, &onPlaybackStopped);
-    connect(m_player, &player::playbackStopped, this, &onPlaybackStopped);
+    connect(m_player, &player::playbackStopped, this, &centralFrame::onPlaybackStopped);
     connect(m_player, &player::updateTime,  this, &centralFrame::onUpdateTime);
     connect(m_player, &player::songEnded,   this, &centralFrame::onSongEnded);
     connect(m_player, &player::preloadSong, this, &centralFrame::onPreloadSong);
