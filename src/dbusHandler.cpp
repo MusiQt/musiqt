@@ -110,14 +110,14 @@ bool dbusHandler::canPlay() const { return false; }
 bool dbusHandler::canPause() const { return false; }
 bool dbusHandler::canSeek() const { return false; }
 bool dbusHandler::canControl() const { return false; }
-QString dbusHandler::loopStatus() const { return QString(); }
+QString dbusHandler::loopStatus() const { return QString("None"); } // "None", "Track" or "Playlist"
 void dbusHandler::setLoopStatus(const QString &value) {}
-double dbusHandler::maximumRate() const { return 0.; }
+double dbusHandler::maximumRate() const { return 1.; }
 QVariantMap dbusHandler::metadata() const { return QVariantMap(); }
-double dbusHandler::minimumRate() const { return 0.; }
-QString dbusHandler::playbackStatus() const { return QString(); }
+double dbusHandler::minimumRate() const { return 1.; }
+QString dbusHandler::playbackStatus() const { return QString(); } // "Playing", "Paused" or "Stopped"
 qlonglong dbusHandler::position() const { return 0; }
-double dbusHandler::rate() const { return 0.; }
+double dbusHandler::rate() const { return 1.; }
 void dbusHandler::setRate(double value) {}
 double dbusHandler::volume() const { return 0.; }
 void dbusHandler::setVolume(double value) {}
