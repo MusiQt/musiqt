@@ -42,13 +42,13 @@ signals:
     void updateTime();
     void songEnded();
     void preloadSong();
-    void songLoaded();
+    //void songLoaded();
 
 public:
     player();
     ~player() {}
 
-    void load(const QString& filename, bool preload);
+    //void load(const QString& filename, bool preload);
 
     /// Start stream
     bool play() { return m_audio->play(m_input.data()); }
@@ -105,10 +105,10 @@ public:
     unsigned int songDuration() const { return m_input->songDuration(); }
 
     /// Unload song
-    void unload() { return m_input.reset(IFACTORY->get()); }
+    void unload() { m_input.reset(IFACTORY->get()); }
 
     /// Unload preloaded song
-    void invalidatePreload() { return m_preload.reset(IFACTORY->get()); }
+    void invalidatePreload() { m_preload.reset(IFACTORY->get()); }
 
     bool tryPreload(const QString& song);
 
