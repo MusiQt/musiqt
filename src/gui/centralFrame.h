@@ -137,7 +137,6 @@ private:
 private:
     QScopedPointer<player> m_player;
 
-    bool m_playing;
     // Play mode: true=playlist / false=single song
     bool m_playMode;
     // Directory of the song currently loaded

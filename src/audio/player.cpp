@@ -50,12 +50,18 @@ bool player::tryPreload(const QString& song)
 
 void player::loaded(input* res, bool subtunes)
 {
+    state_t state = m_audio->state();
+    stop();
+
     if (res != nullptr)
     {
         m_input.reset(res);
 
         if (subtunes)
             m_input->subtune(1);
+
+        if (state == state_t::PLAY)
+            play();
     }
     else
     {

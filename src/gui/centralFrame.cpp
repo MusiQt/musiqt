@@ -59,7 +59,6 @@ void loadThread::run()
 centralFrame::centralFrame(QWidget *parent) :
     QWidget(parent),
     m_player(new player()),
-    m_playing(false),
     m_playDir(QString())
 {
     //connect(m_audio, &audio::outputError, this, &onCmdStopSong);
@@ -266,11 +265,9 @@ void centralFrame::changeState()
     switch (m_player->state())
     {
     case state_t::STOP:
-        m_playing = false;
         m_slider->setDisabled(true);
         break;
     case state_t::PLAY:
-        m_playing = true;
         m_slider->setDisabled(!m_player->seekable());
         break;
     case state_t::PAUSE:
@@ -332,7 +329,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
                 m_playlist->setCurrentIndex(items.at(0));
                 m_playlist->scrollTo(items.at(0));
             }
-            else if (!m_playing)
+            else if (m_player->state() == state_t::STOP)
                 m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
         }
     }
@@ -385,7 +382,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     const bool selected = items.empty() ? false : m_playlist->selectionModel()->isSelected(items.at(0));
 
     // Check if requested song is already playing
-    if (m_playing && selected)
+    if ((m_player->state() != state_t::STOP) && selected)
         return;
 
     QModelIndex val;
@@ -399,7 +396,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     {
         if (dirSelected)
         {
-            if (play && !m_playing)
+            if (play && (m_player->state() == state_t::STOP))
             {
                 onCmdPlayPauseSong();
             }
@@ -411,7 +408,7 @@ void centralFrame::setFile(const QString& file, const bool play)
             setDir(file);
             m_playMode = true; // TODO sync GUI
         }
-        goto done;
+        return;
     }
 
     {
@@ -445,9 +442,6 @@ void centralFrame::setFile(const QString& file, const bool play)
         m_dirlist->setProperty("UserData", QVariant(fileInfo.completeBaseName()));
         setDir(fileInfo.dir().absolutePath());
     }
-
-done:
-    m_playing = play;
 }
 
 void centralFrame::onCmdPlayPauseSong()
@@ -508,7 +502,7 @@ void centralFrame::onCmdNextSong()
 void centralFrame::onCmdChangeSong(dir_t dir)
 {
     qDebug() << "playDir " << m_playDir;
-    if (m_playing && m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
+    if ((m_player->state() != state_t::STOP) && m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
         return;
 
     int row = m_playlist->currentIndex().row();
@@ -562,10 +556,8 @@ void centralFrame::onCmdSongLoaded(input* res)
     {
         emit setDisplay(m_player.data());
 
-        if (m_playing)
-        {
-            onCmdPlayPauseSong();
-        }
+        changeState();
+
         qDebug() << "Song loaded";
     }
     else
@@ -612,7 +604,6 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
         emit setDisplay(m_player.data());
     }
 
-    m_player->stop();
     emit clearDisplay(true);
 
     load(song);
@@ -817,15 +808,8 @@ void centralFrame::changeSubtune(dir_t dir)
     if ((i < 1) || (i > m_player->subtunes()))
         return;
 
-    m_player->stop();
-
     if (m_player->subtune(i))
         emit setDisplay(m_player.data());
-
-    if (m_playing)
-    {
-        onCmdPlayPauseSong();
-    }
 }
 
 void centralFrame::onCmdPlEdit(bool checked)
@@ -879,7 +863,7 @@ void centralFrame::onCmdPlSave()
 
 void centralFrame::updateSongs()
 {
-    if (m_playing && m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
+    if ((m_player->state() != state_t::STOP) && m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
         return;
 
     const int tunes = m_proxyModel->rowCount();
