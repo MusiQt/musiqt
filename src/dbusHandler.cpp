@@ -70,12 +70,12 @@ static QStringList mimeTypes = QStringList()
 ;
 
 // MediaPlayer2 properties
-bool dbusHandler::getCanQuit() const { return true; }
-bool dbusHandler::getCanRaise() const { return true; }
-bool dbusHandler::getHasTrackList() const { return false; }
-QString dbusHandler::getIdentity() const { return QApplication::applicationName(); }
-QStringList dbusHandler::getSupportedUriSchemes() const { return QStringList("file"); }
-QStringList dbusHandler::getSupportedMimeTypes() const { return mimeTypes; }
+bool dbusHandler::canQuit() const { return true; }
+bool dbusHandler::canRaise() const { return true; }
+bool dbusHandler::hasTrackList() const { return false; }
+QString dbusHandler::identity() const { return QApplication::applicationName(); }
+QStringList dbusHandler::supportedUriSchemes() const { return QStringList("file"); }
+QStringList dbusHandler::supportedMimeTypes() const { return mimeTypes; }
 
 // MediaPlayer2 methods
 dbusHandler::dbusHandler(QObject* parent) :
@@ -102,6 +102,25 @@ void dbusHandler::Raise()
 }
 
 void dbusHandler::Quit() { QApplication::instance()->quit(); }
+
+// MediaPlayer2.Player properties
+bool dbusHandler::canGoNext() const { return false; }
+bool dbusHandler::canGoPrevious() const { return false; }
+bool dbusHandler::canPlay() const { return false; }
+bool dbusHandler::canPause() const { return false; }
+bool dbusHandler::canSeek() const { return false; }
+bool dbusHandler::canControl() const { return false; }
+QString dbusHandler::loopStatus() const { return QString(); }
+void dbusHandler::setLoopStatus(const QString &value) {}
+double dbusHandler::maximumRate() const { return 0.; }
+QVariantMap dbusHandler::metadata() const { return QVariantMap(); }
+double dbusHandler::minimumRate() const { return 0.; }
+QString dbusHandler::playbackStatus() const { return QString(); }
+qlonglong dbusHandler::position() const { return 0; }
+double dbusHandler::rate() const { return 0.; }
+void dbusHandler::setRate(double value) {}
+double dbusHandler::volume() const { return 0.; }
+void dbusHandler::setVolume(double value) {}
 
 // MediaPlayer2.Player methods
 void dbusHandler::Play() {}
