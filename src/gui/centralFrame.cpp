@@ -523,7 +523,6 @@ void centralFrame::onCmdChangeSong(dir_t dir)
 
     if (index.isValid())
     {
-        m_player->invalidatePreload();
         m_playlist->setCurrentIndex(index);
     }
 }
@@ -673,10 +672,8 @@ void centralFrame::onSettingsChanged()
     if (!songLoaded.isEmpty())
     {
         // we must reload the song
-        m_player->unload();
-        const QModelIndex curItem = m_playlist->currentIndex();
-        m_playlist->setCurrentIndex(QModelIndex());
-        m_playlist->setCurrentIndex(curItem);
+        m_player->loaded(nullptr, false);
+        onCmdSongSelected(m_playlist->currentIndex());
     }
 }
 
