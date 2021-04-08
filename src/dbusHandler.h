@@ -50,6 +50,16 @@ public:
 public slots:
     void Raise();
     void Quit();
+
+    void Play();
+    void Pause();
+    void PlayPause();
+    void Stop();
+    void Previous();
+    void Next();
+    void Seek(qlonglong Offset);
+    void SetPosition(const QDBusObjectPath &TrackId, qlonglong Position);
+    void OpenUri(const QString &Uri);
 };
 
 #endif

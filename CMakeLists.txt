@@ -195,6 +195,10 @@ if (Qt5DBus_FOUND)
             src/org.mpris.MediaPlayer2.xml
             dbusHandler.h
             dbusHandler)
+    qt5_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
+            src/org.mpris.MediaPlayer2.Player.xml
+            dbusHandler.h
+            dbusHandler)
     target_sources(musiqt PRIVATE
         ${MPRIS_ADAPTOR_SRC}
         src/dbusHandler.h

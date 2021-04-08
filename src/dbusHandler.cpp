@@ -19,11 +19,14 @@
 #include "dbusHandler.h"
 
 #include "mediaplayer2adaptor.h"
+#include "playeradaptor.h"
+
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
 
+// TODO move into backends
 static QStringList mimeTypes = QStringList()
 #if defined HAVE_MPG123 || defined HAVE_LIBAVFORMAT_AVFORMAT_H
     << "audio/mpeg"
@@ -99,3 +102,14 @@ void dbusHandler::Raise()
 }
 
 void dbusHandler::Quit() { QApplication::instance()->quit(); }
+
+// MediaPlayer2.Player methods
+void dbusHandler::Play() {}
+void dbusHandler::Pause() {}
+void dbusHandler::PlayPause() {}
+void dbusHandler::Stop() {}
+void dbusHandler::Previous() {}
+void dbusHandler::Next() {}
+void dbusHandler::Seek(qlonglong Offset) {}
+void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position) {}
+void dbusHandler::OpenUri(const QString &Uri) {}
