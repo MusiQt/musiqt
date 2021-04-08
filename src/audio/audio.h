@@ -74,7 +74,7 @@ public:
     int seconds() const;
 
     /// Set volume
-    void volume(const int vol);
+    void volume(int vol);
 
     /// Get volume
     int volume() const { return m_volume; }

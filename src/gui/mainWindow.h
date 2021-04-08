@@ -36,7 +36,6 @@ class timeLabel;
 class timeDisplay;
 class infoLabel;
 class infoDialog;
-class metaData;
 
 class QMenu;
 class QAction;

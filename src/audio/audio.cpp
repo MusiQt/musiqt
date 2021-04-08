@@ -184,7 +184,7 @@ bool audio::stop()
     return true;
 }
 
-void audio::volume(const int vol)
+void audio::volume(int vol)
 {
     m_volume = vol;
     m_audioOutput->volume(m_volume);

@@ -21,7 +21,6 @@
 
 #include "audio.h"
 #include "input/input.h"
-#include "input/inputFactory.h"
 
 #include <QScopedPointer>
 

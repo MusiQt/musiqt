@@ -24,7 +24,6 @@
 #include "playlistModel.h"
 #include "proxymodel.h"
 #include "input/inputFactory.h"
-#include "input/metaData.h"
 #include "settings.h"
 #include "trackListFactory.h"
 #include "xdg.h"
@@ -63,8 +62,8 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
 {
     //connect(m_audio, &audio::outputError, this, &onCmdStopSong);
     connect(m_player, &player::updateTime,  this, &centralFrame::onUpdateTime);
-    connect(m_player, &player::songEnded,   this, &centralFrame::songEnded);
-    connect(m_player, &player::preloadSong, this, &centralFrame::preloadSong);
+    connect(m_player, &player::songEnded,   this, &centralFrame::onSongEnded);
+    connect(m_player, &player::preloadSong, this, &centralFrame::onPreloadSong);
 
     // dir view
     m_fsm = new QFileSystemModel(this);
@@ -622,9 +621,9 @@ void centralFrame::onUpdateTime()
     }
 }
 
-void centralFrame::preloadSong()
+void centralFrame::onPreloadSong()
 {
-    qDebug("centralFrame::preloadSong");
+    qDebug("centralFrame::onPreloadSong");
     if (m_playMode && m_player->gapless() && !m_playDir.compare(m_fsm->fileName(m_dirlist->currentIndex())))
     {
         const int nextSong = m_playlist->currentIndex().row()+1;
@@ -636,9 +635,9 @@ void centralFrame::preloadSong()
     }
 }
 
-void centralFrame::songEnded()
+void centralFrame::onSongEnded()
 {
-    qDebug("centralFrame::songEnded");
+    qDebug("centralFrame::onSongEnded");
     if (SETTINGS->subtunes() && (m_player->subtune()<m_player->subtunes()))
     {
         changeSubtune(dir_t::ID_NEXT);

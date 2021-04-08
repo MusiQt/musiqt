@@ -18,6 +18,8 @@
 
 #include "player.h"
 
+#include "input/inputFactory.h"
+
 player::player() :
     m_input(IFACTORY->get()),
     m_preload(IFACTORY->get()),

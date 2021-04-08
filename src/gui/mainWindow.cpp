@@ -30,7 +30,6 @@
 #include "settings.h"
 #include "timeDisplay.h"
 #include "centralFrame.h"
-#include "input/input.h"
 
 #include <QStatusBar>
 #include <QAction>
@@ -391,7 +390,6 @@ void mainWindow::onConfig()
             switch (result)
             {
             case QDialog::Accepted:
-                m_cFrame->onCmdStopSong();
                 SETTINGS->save(m_settings);
                 m_cFrame->onSettingsChanged();
                 break;

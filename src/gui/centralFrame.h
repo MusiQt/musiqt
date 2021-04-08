@@ -25,8 +25,6 @@
 #include <QWidget>
 
 class bookmark;
-class input;
-class metaData;
 class playlist;
 class playlistModel;
 class proxymodel;
@@ -113,8 +111,8 @@ private:
     void onCmdSongLoaded(input* res);
     void onCmdSongPreLoaded(input* res);
     void onCmdSongSelected(const QModelIndex& currentRow);
-    void preloadSong();
-    void songEnded();
+    void onPreloadSong();
+    void onSongEnded();
     void onUpdateTime();
     void onRgtClkDirList(const QPoint& pos);
     void onRgtClkPlayList(const QPoint& pos);
