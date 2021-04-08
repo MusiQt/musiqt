@@ -603,10 +603,12 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     {
         emit setDisplay(m_player.data());
     }
+    else
+    {
+        emit clearDisplay(true);
 
-    emit clearDisplay(true);
-
-    load(song);
+        load(song);
+    }
 }
 
 void centralFrame::onUpdateTime()
