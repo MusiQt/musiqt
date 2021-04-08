@@ -21,25 +21,16 @@
 
 #include <QListView>
 #include <QMouseEvent>
+#include <QDebug>
 
 class playlist : public QListView
 {
     Q_OBJECT
 
-signals:
-    void changed();
-
 private:
     playlist() {}
     playlist(const playlist&);
     playlist& operator=(const playlist&);
-
-protected:
-    void paintEvent(QPaintEvent *event) override
-    {
-        emit changed();
-        QListView::paintEvent(event);
-    }
 
 public:
     playlist(QWidget * parent) :
