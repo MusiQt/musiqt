@@ -639,7 +639,7 @@ void centralFrame::onSongEnded()
     qDebug("centralFrame::onSongEnded");
     if (SETTINGS->subtunes() && (m_player->subtune()<m_player->subtunes()))
     {
-        changeSubtune(dir_t::ID_NEXT);
+        m_player->changeSubtune(dir_t::ID_NEXT);
         return;
     }
 
@@ -784,29 +784,6 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
     pane.addAction(rnd);
 
     pane.exec(m_playlist->mapToGlobal(pos));
-}
-
-void centralFrame::changeSubtune(dir_t dir)
-{
-    if (m_player->subtunes() <= 1)
-        return;
-
-    unsigned int i = m_player->subtune();
-    switch (dir)
-    {
-    case dir_t::ID_PREV:
-        i--;
-        break;
-    case dir_t::ID_NEXT:
-        i++;
-        break;
-    }
-
-    if ((i < 1) || (i > m_player->subtunes()))
-        return;
-
-    if (m_player->subtune(i))
-        emit setDisplay();
 }
 
 void centralFrame::onCmdPlEdit(bool checked)

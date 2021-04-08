@@ -24,6 +24,12 @@
 
 #include <QScopedPointer>
 
+enum class dir_t
+{
+    ID_PREV,
+    ID_NEXT
+};
+
 class player : public QObject
 {
     Q_OBJECT
@@ -39,6 +45,7 @@ private:
 
 signals:
     void playbackStopped();
+    void subtunechanged();
 
     void updateTime();
     void songEnded();
@@ -94,7 +101,8 @@ public:
     unsigned int subtune() const { return m_input->subtune(); }
 
     /// Change subtune
-    bool subtune(unsigned int i) { return m_input->subtune(i); }
+    //bool subtune(unsigned int i) { return m_input->subtune(i); }
+    void changeSubtune(dir_t dir);
 
     /// Song loaded
     QString loadedSong() const { return m_input->songLoaded(); }

@@ -55,6 +55,8 @@ mainWindow::mainWindow(QWidget *parent) :
     m_player(new player()),
     m_infoDialog(nullptr)
 {
+    connect(m_player.data(), &player::subtunechanged,  this, &mainWindow::setDisplay);
+
     // Read settings
     SETTINGS->load(m_settings);
 
@@ -549,12 +551,12 @@ void mainWindow::onCmdVol(int vol)
 
 void mainWindow::onPrevSubtune()
 {
-    m_cFrame->changeSubtune(centralFrame::dir_t::ID_PREV);
+    m_player->changeSubtune(dir_t::ID_PREV);
 }
 
 void mainWindow::onNextSubtune()
 {
-    m_cFrame->changeSubtune(centralFrame::dir_t::ID_NEXT);
+    m_player->changeSubtune(dir_t::ID_NEXT);
 }
 
 void mainWindow::onStatusbarChanged(const QString &message)

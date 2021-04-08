@@ -91,3 +91,26 @@ void player::preloaded(input* res, bool subtunes)
         m_preload.reset(IFACTORY->get());
     }
 }
+
+void player::changeSubtune(dir_t dir)
+{
+    if (m_input->subtunes() <= 1)
+        return;
+
+    unsigned int i = m_input->subtune();
+    switch (dir)
+    {
+    case dir_t::ID_PREV:
+        i--;
+        break;
+    case dir_t::ID_NEXT:
+        i++;
+        break;
+    }
+
+    if ((i < 1) || (i > m_input->subtunes()))
+        return;
+
+    if (m_input->subtune(i))
+        emit subtunechanged();
+}

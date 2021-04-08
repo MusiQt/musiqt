@@ -66,13 +66,6 @@ class centralFrame : public QWidget
     Q_OBJECT
 
 public:
-    enum class dir_t
-    {
-        ID_PREV,
-        ID_NEXT
-    };
-
-public:
     centralFrame(player* p, QWidget *parent = 0);
     ~centralFrame();
 
@@ -80,8 +73,6 @@ public:
 
     void setPlayMode(bool mode) { m_playMode = mode; }
     bool getPlayMode() const { return m_playMode; }
-
-    void changeSubtune(dir_t dir);
 
     void init();
 
