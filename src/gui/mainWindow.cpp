@@ -128,6 +128,8 @@ mainWindow::~mainWindow()
     }
     m_settings.setValue("General Settings/pos", pos());
     m_settings.setValue("General Settings/playlist mode", m_cFrame->getPlayMode());
+
+    m_settings.setValue("General Settings/file", m_player->loadedSong());
 }
 
 void mainWindow::init(const char* arg)

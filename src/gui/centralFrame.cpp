@@ -217,10 +217,6 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
 centralFrame::~centralFrame()
 {
     m_bookmarkList->save();
-
-    QSettings settings;
-    QString file = m_player->loadedSong();
-    settings.setValue("General Settings/file", file);
 }
 
 void centralFrame::createHomeMenu()
