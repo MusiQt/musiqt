@@ -78,7 +78,9 @@ mainWindow::mainWindow(QWidget *parent) :
     setCentralWidget(m_cFrame);
 
     connect(m_playAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdPlayPauseSong);
-    connect(m_stopAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdStopSong);
+    connect(m_stopAction, &QAction::triggered,
+        [this]() { m_player->stop(); }
+    );
     connect(m_prevAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdPrevSong);
     connect(m_nextAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdNextSong);
 
@@ -564,7 +566,7 @@ void mainWindow::keyPressEvent(QKeyEvent *event)
     switch (event->key())
     {
     case Qt::Key_MediaPlay: m_cFrame->onCmdPlayPauseSong(); event->accept(); break;
-    case Qt::Key_MediaStop: m_cFrame->onCmdStopSong(); event->accept(); break;
+    case Qt::Key_MediaStop: m_player->stop(); event->accept(); break;
     case Qt::Key_MediaPause: m_cFrame->onCmdPlayPauseSong(); event->accept(); break;
     case Qt::Key_MediaPrevious: m_cFrame->onCmdPrevSong(); event->accept(); break;
     case Qt::Key_MediaNext: m_cFrame->onCmdNextSong(); event->accept(); break;

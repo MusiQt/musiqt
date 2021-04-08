@@ -38,6 +38,8 @@ private:
     player& operator=(const player&);
 
 signals:
+    void playbackStopped();
+
     void updateTime();
     void songEnded();
     void preloadSong();
@@ -53,7 +55,7 @@ public:
     void pause() { m_audio->pause(); }
 
     /// Stop stream
-    bool stop() { return m_audio->stop(); }
+    void stop();
 
     /// Get state
     state_t state() const { return m_audio->state(); }

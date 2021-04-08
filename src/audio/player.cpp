@@ -30,6 +30,12 @@ player::player() :
     connect(m_audio.data(), &audio::preloadSong, this, &player::preloadSong);
 }
 
+void player::stop()
+{
+    if (m_audio->stop())
+        emit playbackStopped();
+}
+
 bool player::tryPreload(const QString& song)
 {
     QString songPreloaded = m_preload->songLoaded();

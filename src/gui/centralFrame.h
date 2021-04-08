@@ -95,7 +95,7 @@ signals:
 
 public slots:
     void onCmdPlayPauseSong();
-    void onCmdStopSong();
+    void onPlaybackStopped();
     void onCmdPrevSong();
     void onCmdNextSong();
 
@@ -127,13 +127,14 @@ private:
     QStringList getPattern() const;
     void changeState();
 
+    // Is the song currently loaded from the selected directory?
+    bool isPlaylistDirSelected();
+
 private:
     player* m_player;
 
     // Play mode: true=playlist / false=single song
     bool m_playMode;
-    // Directory of the song currently loaded
-    QString m_playDir;
 
     QFileSystemModel *m_fsm;
     QTreeView *m_dirlist;
