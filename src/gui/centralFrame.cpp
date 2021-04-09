@@ -259,7 +259,6 @@ void centralFrame::createHomeMenu()
 
 void centralFrame::changeState()
 {
-    emit stateChanged(m_player->state());
     switch (m_player->state())
     {
     case state_t::PLAY:

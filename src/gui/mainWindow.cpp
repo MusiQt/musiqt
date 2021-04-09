@@ -30,6 +30,7 @@
 #include "settings.h"
 #include "timeDisplay.h"
 #include "centralFrame.h"
+#include "player.h"
 
 #include <QStatusBar>
 #include <QAction>
@@ -50,12 +51,13 @@
 #include "ledYellow.xpm"
 #include "ledGreen.xpm"
 
-mainWindow::mainWindow(QWidget *parent) :
+mainWindow::mainWindow(player* p, QWidget *parent) :
     QMainWindow(parent),
-    m_player(new player()),
+    m_player(p),
     m_infoDialog(nullptr)
 {
-    connect(m_player.data(), &player::subtunechanged,  this, &mainWindow::setDisplay);
+    connect(m_player, &player::subtunechanged,  this, &mainWindow::setDisplay);
+    connect(m_player, &player::stateChanged, this, &mainWindow::setPlayButton);
 
     // Read settings
     SETTINGS->load(m_settings);
@@ -82,7 +84,7 @@ mainWindow::mainWindow(QWidget *parent) :
     quit->setDefaultAction(m_quitAction);
     statusBar()->addPermanentWidget(quit);
 
-    m_cFrame = new centralFrame(m_player.data(), this);
+    m_cFrame = new centralFrame(m_player, this);
     setCentralWidget(m_cFrame);
 
     connect(m_playAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdPlayPauseSong);
@@ -92,7 +94,6 @@ mainWindow::mainWindow(QWidget *parent) :
     connect(m_prevAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdPrevSong);
     connect(m_nextAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdNextSong);
 
-    connect(m_cFrame, &centralFrame::stateChanged, this, &mainWindow::setPlayButton);
     connect(m_cFrame, &centralFrame::setDisplay,   this, &mainWindow::setDisplay);
     connect(m_cFrame, &centralFrame::clearDisplay, this, &mainWindow::clearDisplay);
 
@@ -240,7 +241,7 @@ QToolBar *mainWindow::createSecondaryBar()
     volume->setRange(0, 100);
     volume->setStatusTip(tr("Volume"));
     volume->setValue(m_player->getVolume());
-    connect(volume, &QDial::valueChanged, m_player.data(), &player::setVolume);
+    connect(volume, &QDial::valueChanged, m_player, &player::setVolume);
 
     QToolBar *secondaryBar = new QToolBar("secondaryBar", this);
     secondaryBar->addAction(prevtune);
@@ -438,8 +439,9 @@ void mainWindow::onInfo()
     m_infoDialog->show();
 }
 
-void mainWindow::setPlayButton(state_t state)
+void mainWindow::setPlayButton()
 {
+    state_t state = m_player->state();
     QString label;
 
     {

@@ -19,6 +19,7 @@
 #include "singleApp.h"
 
 #include "mainWindow.h"
+#include "player.h"
 
 #include <QLocale>
 #include <QTime>
@@ -97,11 +98,13 @@ int main(int argc, char *argv[])
     app.installTranslator(new translator(&app));
 #endif
 
+    player p;
+
 #ifdef ENABLE_DBUS
     dbusHandler dbus;
 #endif
 
-    mainWindow window;
+    mainWindow window(&p);
     QObject::connect(&app, &singleApp::sendMessage, &window, &mainWindow::onMessage);
 
     window.show();

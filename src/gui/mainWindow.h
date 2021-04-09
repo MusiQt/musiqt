@@ -19,15 +19,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "player.h"
-
 #include <QMainWindow>
 #include <QApplication>
 #include <QPushButton>
 #include <QLabel>
 #include <QSystemTrayIcon>
 #include <QSettings>
-#include <QScopedPointer>
 
 class centralFrame;
 class bookmark;
@@ -36,6 +33,7 @@ class timeLabel;
 class timeDisplay;
 class infoLabel;
 class infoDialog;
+class player;
 
 class QMenu;
 class QAction;
@@ -44,7 +42,7 @@ class QToolBar;
 class mainWindow : public QMainWindow
 {
 public:
-    explicit mainWindow(QWidget *parent = 0);
+    mainWindow(player* p, QWidget *parent = 0);
     ~mainWindow();
 
     void init(const char* arg);
@@ -61,7 +59,7 @@ private:
     void onAbout();
     void onConfig();
     void onInfo();
-    void setPlayButton(state_t state);
+    void setPlayButton();
 
     void setDisplay();
     void clearDisplay(const QString& text);
@@ -75,7 +73,7 @@ private:
     QToolBar *createInfoBar();
 
 private:
-    QScopedPointer<player> m_player;
+    player *m_player;
 
     centralFrame *m_cFrame;
 

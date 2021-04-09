@@ -77,7 +77,6 @@ public:
     void init();
 
 signals:
-    void stateChanged(state_t state);
     void setDisplay();
     void clearDisplay(const QString&);
     void updateTime(int);
