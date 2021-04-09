@@ -86,7 +86,6 @@ mainWindow::mainWindow(QWidget *parent) :
     connect(m_prevAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdPrevSong);
     connect(m_nextAction, &QAction::triggered, m_cFrame, &centralFrame::onCmdNextSong);
 
-    connect(m_cFrame, &centralFrame::updateTime,   this, &mainWindow::updateTime);
     connect(m_cFrame, &centralFrame::stateChanged, this, &mainWindow::setPlayButton);
     connect(m_cFrame, &centralFrame::setDisplay,   this, &mainWindow::setDisplay);
     connect(m_cFrame, &centralFrame::clearDisplay, this, &mainWindow::clearDisplay);
@@ -184,6 +183,8 @@ QToolBar *mainWindow::createControlBar()
     connect(act, &QAction::triggered, this, &mainWindow::onConfig);
 
     controlBar->setMovable(false);
+
+    connect(m_cFrame, &centralFrame::updateTime,   m_timeDisplay, &timeDisplay::setTime);
 
     return controlBar;
 }
@@ -514,11 +515,6 @@ void mainWindow::clearDisplay(bool loading)
 
     if (m_infoDialog != nullptr)
         m_infoDialog->setInfo(m_player->getMetaData());
-}
-
-void mainWindow::updateTime(int seconds)
-{
-    m_timeDisplay->setTime(seconds);
 }
 
 void mainWindow::onPlaymode()

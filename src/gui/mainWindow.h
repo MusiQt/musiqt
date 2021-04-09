@@ -67,8 +67,6 @@ private:
     void setDisplay();
     void clearDisplay(bool loading);
 
-    void updateTime(int seconds);
-
     void onCmdVol(int vol);
     void onPrevSubtune();
     void onNextSubtune();
