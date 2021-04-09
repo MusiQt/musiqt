@@ -76,10 +76,12 @@ dbusHandler::dbusHandler(player* p, QObject* parent) :
     m_player(p)
 {
     new MediaPlayer2Adaptor(this);
+    new PlayerAdaptor(this);
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerService("org.mpris.MediaPlayer2.musiqt");
     dbus.registerObject("/org/mpris/MediaPlayer2", this);
+    dbus.registerObject("/org/mpris/MediaPlayer2/Player", this);
 }
 
 // MediaPlayer2 properties
