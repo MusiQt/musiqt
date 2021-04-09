@@ -35,15 +35,10 @@ player::player() :
  * If already playing, this has no effect.
  * If paused, playback resumes from the current position.
  */
-bool player::play()
+void player::play()
 {
     if (m_audio->play(m_input.data()))
-    {
-        emit playbackStarted();
-        return true;
-    }
-
-    return false;
+        emit stateChanged();
 }
 
 /*
@@ -53,7 +48,7 @@ bool player::play()
 void player::stop()
 {
     if (m_audio->stop())
-        emit playbackStopped();
+        emit stateChanged();
 }
 
 /*
@@ -63,7 +58,7 @@ void player::stop()
 void player::pause()
 {
     m_audio->pause();
-    emit playbackPaused();
+    emit stateChanged();
 }
 
 /*

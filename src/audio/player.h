@@ -44,9 +44,8 @@ private:
     player& operator=(const player&);
 
 signals:
-    void playbackStarted();
-    void playbackStopped();
-    void playbackPaused();
+    void stateChanged();
+
     void subtunechanged();
 
     void updateTime();
@@ -58,7 +57,7 @@ public:
     ~player() {}
 
     /// Start playback
-    bool play();
+    void play();
 
     /// Pause playback
     void pause();

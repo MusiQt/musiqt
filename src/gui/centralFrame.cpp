@@ -60,9 +60,8 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
     m_player(p)
 {
     //connect(m_audio, &audio::outputError, this, &onPlaybackStopped);
-    connect(m_player, &player::playbackStarted, this, &centralFrame::changeState);
-    connect(m_player, &player::playbackStopped, this, &centralFrame::onPlaybackStopped);
-    connect(m_player, &player::playbackPaused, this, &centralFrame::changeState);
+    connect(m_player, &player::stateChanged, this, &centralFrame::changeState);
+
     connect(m_player, &player::updateTime,  this, &centralFrame::onUpdateTime);
     connect(m_player, &player::songEnded,   this, &centralFrame::onSongEnded);
     connect(m_player, &player::preloadSong, this, &centralFrame::onPreloadSong);
@@ -265,11 +264,22 @@ void centralFrame::changeState()
     {
     case state_t::PLAY:
         m_slider->setDisabled(!m_player->seekable());
+        {
+            QFileInfo fileInfo(m_player->loadedSong());
+            setDir(fileInfo.absolutePath());
+        }
         break;
-    case state_t::STOP:
-        // fall-through
     case state_t::PAUSE:
         m_slider->setDisabled(true);
+        break;
+    case state_t::STOP:
+        m_slider->setDisabled(true);
+        emit updateTime(0);
+        emit updateSlider(0);
+        if (!isPlaylistDirSelected())
+        {
+            onDirSelected(m_dirlist->currentIndex());
+        }
         break;
     }
 }
@@ -460,34 +470,7 @@ void centralFrame::onCmdPlayPauseSong()
     }
     else
     {
-        QString songLoaded = m_player->loadedSong();
-        const QString song = m_proxyModel->data(m_playlist->currentIndex(), Qt::UserRole).toString();
-
-        // if loaded song is not the selected one don't play
-        if (song.compare(songLoaded))
-        {
-            qDebug() << "Song: " << song;
-            return;
-        }
-
-        if (m_player->play())
-        {
-            QFileInfo fileInfo(songLoaded);
-            setDir(fileInfo.absolutePath());
-        }
-    }
-}
-
-void centralFrame::onPlaybackStopped()
-{
-    qDebug() << "centralFrame::onPlaybackStopped";
-
-    emit updateTime(0);
-    emit updateSlider(0);
-    changeState();
-    if (!isPlaylistDirSelected())
-    {
-        onDirSelected(m_dirlist->currentIndex());
+        m_player->play();
     }
 }
 

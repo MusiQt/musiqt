@@ -86,7 +86,6 @@ signals:
 
 public slots:
     void onCmdPlayPauseSong();
-    void onPlaybackStopped();
     void onCmdPrevSong();
     void onCmdNextSong();
 
