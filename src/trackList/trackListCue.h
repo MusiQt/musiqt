@@ -22,7 +22,7 @@
 #include "trackListBackend.h"
 
 extern "C" {
-#  include <libcue/libcue.h>
+#  include <libcue.h>
 }
 
 #include <QDebug>
@@ -35,9 +35,21 @@ public:
     /// Load playlist
     tracks_t* load() override
     {
-        FILE* file = fopen(m_path.text(), "r");
-        Cd* cue = cue_parse_file(file);  //Cd* cue_parse_string(const char*);
-        fclose(file);
+        QFile file(m_path);
+        if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
+            return QStringList();
+
+        QByteArray line = file.readAll();
+        file.close();
+
+        Cd* cue = cue_parse_string(line.constData());
+        if (!cue)
+            return QStringList();
+
+        //const char *val;
+        //Cdtext *cdtext = cd_get_cdtext(cue);
+        //val = cdtext_get(PTI_TITLE, cdtext);
+        //val = cdtext_get(PTI_PERFORMER, cdtext);
 
         const int track_num = cd_get_ntrack(cue);
         qDebug() << "tracks: " << track_num;
@@ -46,8 +58,10 @@ public:
         for (int num_track=1; num_track<=track_num; num_track++)
         {
             Track* track = cd_get_track(cue, num_track);
-        
+
             char* fileName = track_get_filename(track);
+            //cdtext = track_get_cdtext(track);
+            //val = cdtext_get(PTI_TITLE, cdtext);
             //long start=track_get_start(track);
             //long length=track_get_length(track);
             qDebug() << "File: " << fileName;
