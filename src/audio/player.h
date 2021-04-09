@@ -77,10 +77,10 @@ public:
     int getPosition() const { return m_audio->getPosition(); }
 
     /// Set volume
-    void volume(int vol) { m_audio->volume(vol); }
+    void setVolume(int vol) { m_audio->volume(vol); }
 
     /// Get volume
-    int volume() const { return m_audio->volume(); }
+    int getVolume() const { return m_audio->volume(); }
 
     /// Check if gapless playback is supported
     bool preload(input* const i);

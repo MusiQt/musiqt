@@ -57,7 +57,6 @@ protected:
 
 private:
     void onCompact();
-    void onPlaymode();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void onAbout();
     void onConfig();
@@ -66,11 +65,6 @@ private:
 
     void setDisplay();
     void clearDisplay(bool loading);
-
-    void onCmdVol(int vol);
-    void onPrevSubtune();
-    void onNextSubtune();
-    void onStatusbarChanged(const QString &message);
 
     void createTrayIcon();
     void createActions();

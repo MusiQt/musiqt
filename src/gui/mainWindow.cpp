@@ -64,7 +64,13 @@ mainWindow::mainWindow(QWidget *parent) :
 
     //setAttribute(Qt::WA_AlwaysShowToolTips);
     statusBar()->showMessage(PACKAGE_STRING);
-    connect(statusBar(), &QStatusBar::messageChanged, this, &mainWindow::onStatusbarChanged);
+    connect(statusBar(), &QStatusBar::messageChanged,
+        [this](const QString &message)
+        {
+            if (message.isNull())
+                statusBar()->showMessage(PACKAGE_STRING);
+        }
+    );
 
     QToolButton *about = new QToolButton();
     about->setAutoRaise(true);
@@ -194,18 +200,23 @@ QToolBar *mainWindow::createSecondaryBar()
     QAction *prevtune = new QAction(GET_ICON(icon_goprevious), tr("Previous"), this);
     prevtune->setToolTip(tr("Previous"));
     prevtune->setStatusTip(tr("Go to previous subtune"));
-    connect(prevtune, &QAction::triggered, this, &mainWindow::onPrevSubtune);
+    connect(prevtune, &QAction::triggered,
+        [this]() { m_player->changeSubtune(dir_t::ID_PREV); }
+    );
 
     QAction *nexttune = new QAction(GET_ICON(icon_gonext), tr("Next"), this);
     nexttune->setToolTip(tr("Next"));
     nexttune->setStatusTip(tr("Go to next subtune"));
-    connect(nexttune, &QAction::triggered, this, &mainWindow::onNextSubtune);
+    connect(nexttune, &QAction::triggered,
+        [this]() { m_player->changeSubtune(dir_t::ID_NEXT); }
+    );
 
     QAction *playlist = new QAction(GET_ICON(icon_playlist), tr("Playlist"), this);
     const bool playMode = m_settings.value("General Settings/playlist mode", true).toBool();
-    m_cFrame->setPlayMode(playMode);
     setPlayMode(playlist, playMode);
-    connect(playlist, &QAction::triggered, this, &mainWindow::onPlaymode);
+    connect(playlist, &QAction::triggered,
+        [this, playlist]() { setPlayMode(playlist, !m_cFrame->getPlayMode()); }
+    );
 
     m_subtunes = new QLabel(this);
     m_subtunes->setFrameStyle(QFrame::Panel|QFrame::Sunken);
@@ -226,11 +237,10 @@ QToolBar *mainWindow::createSecondaryBar()
     empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     QDial *volume = new QDial(this);
-    //volume->setNotchesVisible(true);
     volume->setRange(0, 100);
     volume->setStatusTip(tr("Volume"));
-    volume->setValue(m_player->volume());
-    connect(volume, &QDial::valueChanged, this, &mainWindow::onCmdVol);
+    volume->setValue(m_player->getVolume());
+    connect(volume, &QDial::valueChanged, m_player.data(), &player::setVolume);
 
     QToolBar *secondaryBar = new QToolBar("secondaryBar", this);
     secondaryBar->addAction(prevtune);
@@ -517,15 +527,9 @@ void mainWindow::clearDisplay(bool loading)
         m_infoDialog->setInfo(m_player->getMetaData());
 }
 
-void mainWindow::onPlaymode()
-{
-    const bool playMode = !m_cFrame->getPlayMode();
-    setPlayMode((QAction*)sender(), playMode);
-    m_cFrame->setPlayMode(playMode);
-}
-
 void mainWindow::setPlayMode(QAction *action, bool mode)
 {
+    m_cFrame->setPlayMode(mode);
     if (mode)
     {
         action->setToolTip(tr("Song mode"));
@@ -538,27 +542,6 @@ void mainWindow::setPlayMode(QAction *action, bool mode)
         action->setStatusTip(tr("Switch to playlist mode"));
         action->setIcon(GET_ICON(icon_song));
     }
-}
-
-void mainWindow::onCmdVol(int vol)
-{
-    m_player->volume(vol);
-}
-
-void mainWindow::onPrevSubtune()
-{
-    m_player->changeSubtune(dir_t::ID_PREV);
-}
-
-void mainWindow::onNextSubtune()
-{
-    m_player->changeSubtune(dir_t::ID_NEXT);
-}
-
-void mainWindow::onStatusbarChanged(const QString &message)
-{
-    if (message.isNull())
-        statusBar()->showMessage(PACKAGE_STRING);
 }
 
 void mainWindow::keyPressEvent(QKeyEvent *event)
