@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     player p;
 
 #ifdef ENABLE_DBUS
-    dbusHandler dbus;
+    dbusHandler dbus(&p);
 #endif
 
     mainWindow window(&p);

@@ -71,8 +71,8 @@ public:
     /// Get current position in seconds
     int seconds() const { return m_audio->seconds(); }
 
-    /// Set current position
-    void seek(int pos) { return m_audio->seek(pos); }
+    /// Set current position in percent
+    void setPosition(int pos) { return m_audio->seek(pos); }
 
     /// Get position in percent
     int getPosition() const { return m_audio->getPosition(); }

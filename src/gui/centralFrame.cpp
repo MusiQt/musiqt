@@ -209,7 +209,7 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
         {
             int pos = m_slider->sliderPosition();
             qDebug() << "seek: " << pos;
-            m_player->seek(pos);
+            m_player->setPosition(pos);
         }
     );
     connect(this, &centralFrame::updateSlider, m_slider, &QSlider::setValue);

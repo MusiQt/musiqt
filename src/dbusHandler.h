@@ -26,12 +26,14 @@
 
 #include <QDebug>
 
+class player;
+
 class dbusHandler : public QObject
 {
     Q_OBJECT
 
 public:
-    dbusHandler(QObject* parent = nullptr);
+    dbusHandler(player* p, QObject* parent = nullptr);
 
     // MediaPlayer2 properties
     Q_PROPERTY(bool CanQuit READ canQuit)
@@ -114,6 +116,9 @@ public slots:
 
 signals:
     void Seeked(qlonglong Position);
+
+private:
+    player *m_player;
 };
 
 #endif

@@ -18,6 +18,8 @@
 
 #include "dbusHandler.h"
 
+#include "player.h"
+
 #include "mediaplayer2adaptor.h"
 #include "playeradaptor.h"
 
@@ -69,6 +71,17 @@ static QStringList mimeTypes = QStringList()
 #endif
 ;
 
+dbusHandler::dbusHandler(player* p, QObject* parent) :
+    QObject(parent),
+    m_player(p)
+{
+    new MediaPlayer2Adaptor(this);
+
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerService("org.mpris.MediaPlayer2.musiqt");
+    dbus.registerObject("/org/mpris/MediaPlayer2", this);
+}
+
 // MediaPlayer2 properties
 bool dbusHandler::canQuit() const { return true; }
 bool dbusHandler::canRaise() const { return true; }
@@ -78,16 +91,6 @@ QStringList dbusHandler::supportedUriSchemes() const { return QStringList("file"
 QStringList dbusHandler::supportedMimeTypes() const { return mimeTypes; }
 
 // MediaPlayer2 methods
-dbusHandler::dbusHandler(QObject* parent) :
-    QObject(parent)
-{
-    new MediaPlayer2Adaptor(this);
-
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerService("org.mpris.MediaPlayer2.musiqt");
-    dbus.registerObject("/org/mpris/MediaPlayer2", this);
-}
-
 void dbusHandler::Raise()
 {
     const QWidgetList topLevelWidgets = QApplication::topLevelWidgets();
@@ -106,29 +109,56 @@ void dbusHandler::Quit() { QApplication::instance()->quit(); }
 // MediaPlayer2.Player properties
 bool dbusHandler::canGoNext() const { return false; }
 bool dbusHandler::canGoPrevious() const { return false; }
-bool dbusHandler::canPlay() const { return false; }
-bool dbusHandler::canPause() const { return false; }
-bool dbusHandler::canSeek() const { return false; }
-bool dbusHandler::canControl() const { return false; }
+bool dbusHandler::canPlay() const { return true; }
+bool dbusHandler::canPause() const { return true; }
+bool dbusHandler::canSeek() const { return m_player->seekable(); }
+bool dbusHandler::canControl() const { return true; }
 QString dbusHandler::loopStatus() const { return QString("None"); } // "None", "Track" or "Playlist"
-void dbusHandler::setLoopStatus(const QString &value) {}
+void dbusHandler::setLoopStatus(const QString &value) { /* ignore */ }
 double dbusHandler::maximumRate() const { return 1.; }
-QVariantMap dbusHandler::metadata() const { return QVariantMap(); }
+QVariantMap dbusHandler::metadata() const { return QVariantMap(); } // TODO
 double dbusHandler::minimumRate() const { return 1.; }
-QString dbusHandler::playbackStatus() const { return QString(); } // "Playing", "Paused" or "Stopped"
-qlonglong dbusHandler::position() const { return 0; }
+
+QString dbusHandler::playbackStatus() const
+{
+    switch (m_player->state())
+    {
+    case state_t::PLAY:  return QString("Playing");
+    case state_t::PAUSE: return QString("Paused");
+    case state_t::STOP:  return QString("Stopped");
+    default: return QString();
+    }
+}
+
+qlonglong dbusHandler::position() const
+{
+    // (position / 100) * duration * 1000
+    return m_player->getPosition() * m_player->songDuration() * 10;
+}
+    
 double dbusHandler::rate() const { return 1.; }
-void dbusHandler::setRate(double value) {}
-double dbusHandler::volume() const { return 0.; }
-void dbusHandler::setVolume(double value) {}
+void dbusHandler::setRate(double value) { /* ignore */ }
+double dbusHandler::volume() const { return m_player->getVolume() / 100.; }
+void dbusHandler::setVolume(double value) { m_player->setVolume(value*100.); }
 
 // MediaPlayer2.Player methods
-void dbusHandler::Play() {}
-void dbusHandler::Pause() {}
-void dbusHandler::PlayPause() {}
-void dbusHandler::Stop() {}
-void dbusHandler::Previous() {}
-void dbusHandler::Next() {}
-void dbusHandler::Seek(qlonglong Offset) {}
-void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position) {}
-void dbusHandler::OpenUri(const QString &Uri) {}
+void dbusHandler::Play() { m_player->play(); }
+void dbusHandler::Pause() { m_player->pause(); }
+void dbusHandler::PlayPause() { /* TODO */ }
+void dbusHandler::Stop() { m_player->stop(); }
+void dbusHandler::Previous() { /* ignore */ }
+void dbusHandler::Next() { /* ignore */ }
+
+void dbusHandler::Seek(qlonglong Offset)
+{
+    qlonglong Position = position() + Offset;
+    m_player->setPosition((Position/1000)/m_player->songDuration());
+}
+
+void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position)
+{
+    // TODO check TrackId
+    m_player->setPosition((Position/1000)/m_player->songDuration());
+}
+
+void dbusHandler::OpenUri(const QString &Uri) { /* TODO */ }
