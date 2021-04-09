@@ -61,7 +61,7 @@ public:
     /// Start stream
     bool play(input* i);
 
-    /// Pause stream
+    /// Pause/unpause stream
     void pause();
 
     /// Stop stream
