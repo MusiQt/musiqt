@@ -64,7 +64,7 @@ private:
     void setPlayButton(state_t state);
 
     void setDisplay();
-    void clearDisplay(bool loading);
+    void clearDisplay(const QString& text);
 
     void createTrayIcon();
     void createActions();

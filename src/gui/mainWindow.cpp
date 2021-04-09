@@ -512,7 +512,7 @@ void mainWindow::setDisplay()
         m_infoDialog->setInfo(data);
 }
 
-void mainWindow::clearDisplay(bool loading)
+void mainWindow::clearDisplay(const QString& text)
 {
     m_timeDisplay->reset();
     m_songTime->reset();
@@ -520,7 +520,7 @@ void mainWindow::clearDisplay(bool loading)
     setWindowTitle(QString(PACKAGE_STRING));
     m_trayIcon->setToolTip(PACKAGE_STRING);
 
-    m_songInfo->setText(loading ? tr("Loading...") : QString());
+    m_songInfo->setText(text);
     m_songInfo->setToolTip(QString());
 
     if (m_infoDialog != nullptr)

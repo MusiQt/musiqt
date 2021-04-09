@@ -560,7 +560,7 @@ void centralFrame::onCmdSongLoaded(input* res)
     }
     else
     {
-        emit clearDisplay(false);
+        emit clearDisplay(QString());
 
         qWarning() << "Error loading song";
     }
@@ -603,7 +603,7 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     }
     else
     {
-        emit clearDisplay(true);
+        emit clearDisplay(tr("Loading..."));
 
         load(song);
     }

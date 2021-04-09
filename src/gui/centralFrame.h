@@ -79,7 +79,7 @@ public:
 signals:
     void stateChanged(state_t state);
     void setDisplay();
-    void clearDisplay(bool);
+    void clearDisplay(const QString&);
     void updateTime(int);
     void updateSlider(int);
     void songUpdated(const QString&);
