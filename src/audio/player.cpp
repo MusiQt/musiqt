@@ -56,7 +56,7 @@ void player::stop()
         emit playbackStopped();
 }
 
- * /*
+/*
  * Pauses playback.
  * If playback is already paused, this has no effect.
  */
