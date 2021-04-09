@@ -36,6 +36,12 @@ void player::stop()
         emit playbackStopped();
 }
 
+void player::pause()
+{
+    m_audio->pause();
+    emit playbackPaused();
+}
+
 bool player::tryPreload(const QString& song)
 {
     QString songPreloaded = m_preload->songLoaded();

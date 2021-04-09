@@ -550,7 +550,7 @@ void mainWindow::keyPressEvent(QKeyEvent *event)
     {
     case Qt::Key_MediaPlay: m_cFrame->onCmdPlayPauseSong(); event->accept(); break;
     case Qt::Key_MediaStop: m_player->stop(); event->accept(); break;
-    case Qt::Key_MediaPause: m_cFrame->onCmdPlayPauseSong(); event->accept(); break;
+    case Qt::Key_MediaPause: m_player->pause(); event->accept(); break;
     case Qt::Key_MediaPrevious: m_cFrame->onCmdPrevSong(); event->accept(); break;
     case Qt::Key_MediaNext: m_cFrame->onCmdNextSong(); event->accept(); break;
     default: QMainWindow::keyPressEvent(event); break;

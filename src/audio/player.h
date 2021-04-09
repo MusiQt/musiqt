@@ -45,6 +45,7 @@ private:
 
 signals:
     void playbackStopped();
+    void playbackPaused();
     void subtunechanged();
 
     void updateTime();
@@ -59,7 +60,7 @@ public:
     bool play() { return m_audio->play(m_input.data()); }
 
     /// Pause stream
-    void pause() { m_audio->pause(); }
+    void pause();
 
     /// Stop stream
     void stop();
@@ -101,7 +102,6 @@ public:
     unsigned int subtune() const { return m_input->subtune(); }
 
     /// Change subtune
-    //bool subtune(unsigned int i) { return m_input->subtune(i); }
     void changeSubtune(dir_t dir);
 
     /// Song loaded

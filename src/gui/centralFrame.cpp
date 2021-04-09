@@ -61,6 +61,7 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
 {
     //connect(m_audio, &audio::outputError, this, &onPlaybackStopped);
     connect(m_player, &player::playbackStopped, this, &centralFrame::onPlaybackStopped);
+    connect(m_player, &player::playbackPaused, this, &centralFrame::changeState);
     connect(m_player, &player::updateTime,  this, &centralFrame::onUpdateTime);
     connect(m_player, &player::songEnded,   this, &centralFrame::onSongEnded);
     connect(m_player, &player::preloadSong, this, &centralFrame::onPreloadSong);
@@ -261,12 +262,11 @@ void centralFrame::changeState()
     emit stateChanged(m_player->state());
     switch (m_player->state())
     {
-    case state_t::STOP:
-        m_slider->setDisabled(true);
-        break;
     case state_t::PLAY:
         m_slider->setDisabled(!m_player->seekable());
         break;
+    case state_t::STOP:
+        // fall-through
     case state_t::PAUSE:
         m_slider->setDisabled(true);
         break;
@@ -556,18 +556,17 @@ void centralFrame::onCmdSongLoaded(input* res)
     {
         emit setDisplay();
 
-        changeState();
-
         qDebug() << "Song loaded";
     }
     else
     {
-        qWarning() << "Error loading song";
-
         emit clearDisplay(false);
 
-        changeState();
+        qWarning() << "Error loading song";
     }
+
+    changeState();
+
 }
 
 void centralFrame::onCmdSongPreLoaded(input* res)
