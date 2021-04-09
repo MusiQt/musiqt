@@ -275,7 +275,7 @@ void centralFrame::changeState()
         m_slider->setDisabled(true);
         emit updateTime(0);
         emit updateSlider(0);
-        if (!isPlaylistDirSelected())
+        if (!m_player->loadedSong().isEmpty() &&!isPlaylistDirSelected())
         {
             onDirSelected(m_dirlist->currentIndex());
         }
