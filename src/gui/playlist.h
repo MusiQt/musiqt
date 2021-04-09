@@ -21,7 +21,6 @@
 
 #include <QListView>
 #include <QMouseEvent>
-#include <QDebug>
 
 class playlist : public QListView
 {
