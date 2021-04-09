@@ -548,7 +548,7 @@ void mainWindow::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key())
     {
-    case Qt::Key_MediaPlay:             m_cFrame->onCmdPlayPauseSong();                 event->accept(); break;
+    case Qt::Key_MediaPlay:             m_player->play();                               event->accept(); break;
     case Qt::Key_MediaStop:             m_player->stop();                               event->accept(); break;
     case Qt::Key_MediaPause:            m_player->pause();                              event->accept(); break;
     case Qt::Key_MediaTogglePlayPause:  m_cFrame->onCmdPlayPauseSong();                 event->accept(); break;

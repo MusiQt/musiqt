@@ -30,17 +30,48 @@ player::player() :
     connect(m_audio.data(), &audio::preloadSong, this, &player::preloadSong);
 }
 
+/*
+ * Starts or resumes playback.
+ * If already playing, this has no effect.
+ * If paused, playback resumes from the current position.
+ */
+bool player::play()
+{
+    if (m_audio->play(m_input.data()))
+    {
+        emit playbackStarted();
+        return true;
+    }
+
+    return false;
+}
+
+/*
+ * Stops playback.
+ * If playback is already stopped, this has no effect.
+ */
 void player::stop()
 {
     if (m_audio->stop())
         emit playbackStopped();
 }
 
+ * /*
+ * Pauses playback.
+ * If playback is already paused, this has no effect.
+ */
 void player::pause()
 {
     m_audio->pause();
     emit playbackPaused();
 }
+
+/*
+ * Pauses playback.
+ * If playback is already paused, resumes playback.
+ * If playback is stopped, starts playback.
+ */
+// void player::playpause() TODO
 
 bool player::tryPreload(const QString& song)
 {

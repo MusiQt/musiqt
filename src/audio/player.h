@@ -44,6 +44,7 @@ private:
     player& operator=(const player&);
 
 signals:
+    void playbackStarted();
     void playbackStopped();
     void playbackPaused();
     void subtunechanged();
@@ -56,13 +57,13 @@ public:
     player();
     ~player() {}
 
-    /// Start stream
-    bool play() { return m_audio->play(m_input.data()); }
+    /// Start playback
+    bool play();
 
-    /// Pause stream
+    /// Pause playback
     void pause();
 
-    /// Stop stream
+    /// Stop playback
     void stop();
 
     /// Get state

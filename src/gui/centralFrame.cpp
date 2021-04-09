@@ -60,6 +60,7 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
     m_player(p)
 {
     //connect(m_audio, &audio::outputError, this, &onPlaybackStopped);
+    connect(m_player, &player::playbackStarted, this, &centralFrame::changeState);
     connect(m_player, &player::playbackStopped, this, &centralFrame::onPlaybackStopped);
     connect(m_player, &player::playbackPaused, this, &centralFrame::changeState);
     connect(m_player, &player::updateTime,  this, &centralFrame::onUpdateTime);
@@ -459,11 +460,12 @@ void centralFrame::onCmdPlayPauseSong()
     }
     else
     {
-        // if loaded song is not the selected one don't play
         QString songLoaded = m_player->loadedSong();
         const QString song = m_proxyModel->data(m_playlist->currentIndex(), Qt::UserRole).toString();
         qDebug() << "Song: " << song;
-        if (!song.isEmpty() && song.compare(songLoaded))
+
+        // if loaded song is not the selected one don't play
+        if (song.compare(songLoaded))
         {
             return;
         }
@@ -474,8 +476,6 @@ void centralFrame::onCmdPlayPauseSong()
             setDir(fileInfo.absolutePath());
         }
     }
-
-    changeState();
 }
 
 void centralFrame::onPlaybackStopped()
