@@ -83,13 +83,30 @@ dbusHandler::dbusHandler(player* p, QObject* parent) :
     dbus.registerService("org.mpris.MediaPlayer2.musiqt");
     dbus.registerObject("/org/mpris/MediaPlayer2", this);
     dbus.registerObject("/org/mpris/MediaPlayer2/Player", this);
+
+    connect(m_player, &player::stateChanged, this, &dbusHandler::stateChanged);
+}
+
+void propertyChanged(const QString& name, const QVariant& value)
+{
+    QVariantMap props;
+    props.insert(name, value);
+    QDBusMessage msg = QDBusMessage::createSignal(
+        "/org/mpris/MediaPlayer2", "org.freedesktop.DBus.Properties", "PropertiesChanged");
+    QList<QVariant> arguments;
+    arguments << QString("org.mpris.MediaPlayer2.Player"); // interface_name
+    arguments << props; // changed_properties
+    arguments << QStringList(); // invalidated_properties
+    msg.setArguments(arguments);
+    QDBusConnection::sessionBus().send(msg);
 }
 
 // MediaPlayer2 properties
 bool dbusHandler::canQuit() const { return true; }
 bool dbusHandler::canRaise() const { return true; }
 bool dbusHandler::hasTrackList() const { return false; }
-QString dbusHandler::identity() const { return QApplication::applicationName(); }
+QString dbusHandler::identity() const { return "MusiQt"; }
+QString dbusHandler::desktopEntry() const { return "musiqt"; }
 QStringList dbusHandler::supportedUriSchemes() const { return QStringList("file"); }
 QStringList dbusHandler::supportedMimeTypes() const { return mimeTypes; }
 
@@ -137,7 +154,7 @@ QVariantMap dbusHandler::metadata() const
     //mprisData.insert("mpris:trackid", QDBusObjectPath(...));
     mprisData.insert("mpris:length", qlonglong(m_player->songDuration())*1000ll);
     mprisData.insert("xesam:title", data->getInfo(metaData::TITLE));
-    mprisData.insert("xesam:artist", data->getInfo(metaData::ARTIST));
+    mprisData.insert("xesam:artist", QStringList(data->getInfo(metaData::ARTIST)));
     mprisData.insert("xesam:album", data->getInfo(metaData::ALBUM));
     mprisData.insert("xesam:trackNumber", data->getInfo(metaData::TRACK_NUMBER).toInt());
     mprisData.insert("xesam:genre", QStringList(data->getInfo(metaData::GENRE)));
@@ -208,3 +225,8 @@ void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position
 }
 
 void dbusHandler::OpenUri(const QString &Uri) { /* TODO */ }
+
+void dbusHandler::stateChanged()
+{
+    propertyChanged("PlaybackStatus", playbackStatus());
+}

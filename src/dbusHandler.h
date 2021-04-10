@@ -48,6 +48,9 @@ public:
     Q_PROPERTY(QString Identity READ identity)
     QString identity() const;
 
+    Q_PROPERTY(QString DesktopEntry READ desktopEntry)
+    QString desktopEntry() const;
+
     Q_PROPERTY(QStringList SupportedMimeTypes READ supportedMimeTypes)
     QStringList supportedMimeTypes() const;
 
@@ -116,6 +119,9 @@ public slots:
 
 signals:
     void Seeked(qlonglong Position);
+
+private:
+    void stateChanged();
 
 private:
     player *m_player;
