@@ -124,6 +124,8 @@ QVariantMap dbusHandler::metadata() const
     const metaData* data = m_player->getMetaData();
 
     QVariantMap mprisData;
+    //mprisData.insert("mpris:trackid", QDBusObjectPath(...));
+    mprisData.insert("mpris:length", qlonglong(m_player->songDuration())*1000ll);
     mprisData.insert("xesam:title", data->getInfo(metaData::TITLE));
     mprisData.insert("xesam:artist", data->getInfo(metaData::ARTIST));
     mprisData.insert("xesam:album", data->getInfo(metaData::ALBUM));
@@ -132,6 +134,7 @@ QVariantMap dbusHandler::metadata() const
     mprisData.insert("xesam:comment", QStringList(data->getInfo(metaData::COMMENT)));
     mprisData.insert("xesam:asText", data->getInfo(metaData::AS_TEXT));
     //mprisData.insert("xesam:contentCreated", data->getInfo(metaData::YEAR)); // format as ISO 8601 date
+    mprisData.insert("xesam:url", data->getInfo(metaData::URL));
 
     return mprisData;
 }
