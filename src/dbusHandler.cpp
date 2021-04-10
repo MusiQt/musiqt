@@ -118,7 +118,24 @@ bool dbusHandler::canControl() const { return true; }
 QString dbusHandler::loopStatus() const { return QString("None"); } // "None", "Track" or "Playlist"
 void dbusHandler::setLoopStatus(const QString &value) { /* ignore */ }
 double dbusHandler::maximumRate() const { return 1.; }
-QVariantMap dbusHandler::metadata() const { return QVariantMap(); } // TODO
+
+QVariantMap dbusHandler::metadata() const
+{
+    const metaData* data = m_player->getMetaData();
+
+    QVariantMap mprisData;
+    mprisData.insert("xesam:title", data->getInfo(metaData::TITLE));
+    mprisData.insert("xesam:artist", data->getInfo(metaData::ARTIST));
+    mprisData.insert("xesam:album", data->getInfo(metaData::ALBUM));
+    mprisData.insert("xesam:trackNumber", data->getInfo(metaData::TRACK).toInt());
+    mprisData.insert("xesam:genre", QStringList(data->getInfo(metaData::GENRE)));
+    mprisData.insert("xesam:comment", QStringList(data->getInfo(metaData::COMMENT)));
+    mprisData.insert("xesam:asText", data->getInfo(metaData::LYRICS));
+    //mprisData.insert("xesam:contentCreated", data->getInfo(metaData::YEAR)); // format as ISO 8601 date
+
+    return mprisData;
+}
+
 double dbusHandler::minimumRate() const { return 1.; }
 
 QString dbusHandler::playbackStatus() const
