@@ -152,7 +152,7 @@ void infoDialog::setInfo(const metaData* mtd)
 
     QGridLayout* gLayout = (QGridLayout*)m_matrix->layout();
 
-    QString location = mtd->getInfo(metaData::LOCATION);
+    QString location = mtd->getInfo(metaData::URL);
     if (location.isEmpty())
     {
         gLayout->addWidget(new QLabel(tr("No song loaded"), m_matrix));
@@ -170,7 +170,7 @@ void infoDialog::setInfo(const metaData* mtd)
     while ((j = mtd->moreInfo(j)) >= 0)
     {
         QString key = mtd->getKey(j);
-        if (!key.compare(mtd->getKey(metaData::LOCATION)))
+        if (!key.compare(mtd->getKey(metaData::URL)))
             continue;
 
         QString info = mtd->getInfo(j);
@@ -216,7 +216,7 @@ void infoDialog::setInfo(const metaData* mtd)
             m_commentButton->click();
             showExtraBox = true;
         }
-        else if (!key.compare(mtd->getKey(metaData::LYRICS)))
+        else if (!key.compare(mtd->getKey(metaData::AS_TEXT)))
         {
             m_lyrics->setPlainText(info);
             m_lyricsButton->setEnabled(true);

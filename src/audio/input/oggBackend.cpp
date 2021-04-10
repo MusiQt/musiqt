@@ -170,7 +170,7 @@ oggBackend::oggBackend(const QString& fileName) :
         {
             if (oggTag::isTag(*ptr, "tracknumber"))
             {
-                m_metaData.addInfo(metaData::TRACK, QString(*ptr).mid(12));
+                m_metaData.addInfo(metaData::TRACK_NUMBER, QString(*ptr).mid(12));
             }
             else if (oggTag::isTag(*ptr, "UNSYNCEDLYRICS"))
             {
@@ -235,9 +235,9 @@ oggBackend::oggBackend(const QString& fileName) :
     m_metaData.addInfo(metaData::ARTIST, artist);
     m_metaData.addInfo(metaData::ALBUM, album);
     m_metaData.addInfo(metaData::GENRE, genre);
-    m_metaData.addInfo(metaData::YEAR, year);
+    m_metaData.addInfo(metaData::CONTENT_CREATED, year);
     m_metaData.addInfo(metaData::COMMENT, comment);
-    m_metaData.addInfo(metaData::LYRICS, lyrics);
+    m_metaData.addInfo(metaData::AS_TEXT, lyrics);
 
     if (!mime.isNull())
         m_metaData.addInfo(new QByteArray(image));

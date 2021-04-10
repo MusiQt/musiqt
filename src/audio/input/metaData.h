@@ -26,23 +26,35 @@
 class metaData
 {
 public:
-enum mpris_t
-{
-    LOCATION,
-    TITLE,
-    ARTIST,
-    ALBUM,
-    TRACK,
-    TIME,
-    MTIME,
-    GENRE,
-    COMMENT,
-    RATING,
-    YEAR,
-    ARTURL,
-    LYRICS,
-    LAST_ID
-};
+    // https://www.freedesktop.org/wiki/Specifications/mpris-spec/metadata/
+    enum mpris_t
+    {
+        // MPRIS-specific
+        TRACK_ID,
+        LENGTH,
+        ART_URL,
+        // Common Xesam properties
+        ALBUM,
+        ALBUM_ARTIST,
+        ARTIST,
+        AS_TEXT,
+        AUDIO_BPM,
+        AUTO_RATING,
+        COMMENT,
+        COMPOSER,
+        CONTENT_CREATED,
+        DISC_NUMBER,
+        FIRST_USED,
+        GENRE,
+        LAST_USED,
+        LYRICIST,
+        TITLE,
+        TRACK_NUMBER,
+        URL,
+        USER_COUNT,
+        USER_RATING,
+        LAST_ID
+    };
 
 public:
     virtual int moreInfo(const int i) const =0;

@@ -24,28 +24,36 @@
 
 const char* metaDataImpl::mprisTags[LAST_ID] =
 {
-    gettext("location"), // file location
-    gettext("title"),
-    gettext("artist"),
+    gettext("trackId"),
+    gettext("length"),
+    gettext("artUrl"),
     gettext("album"),
-    gettext("track"),    //tracknumber
-    gettext("time"),
-    gettext("mtime"),
-    gettext("genre"),
+    gettext("album artist"),
+    gettext("artist"),
+    gettext("lyrics"),
+    gettext("BPM"),
+    gettext("Rating"),
     gettext("comment"),
-    gettext("rating"),
+    gettext("composer"),
     gettext("year"),
-    gettext("arturl"),
-    gettext("lyrics")
+    gettext("disc number"),
+    gettext("first used"),
+    gettext("genre"),
+    gettext("last used"),
+    gettext("lyricist"),
+    gettext("title"),
+    gettext("track"),
+    gettext("URL"),
+    gettext("user count"),
+    gettext("user rating"),
 };
 
 void metaDataImpl::addInfo(QString type, QString info)
 {
-    qDebug() << "adding metadata: " << type << ", value: "<< info;
-
     if (!info.isEmpty())
     {
-        m_infos.remove(type);
+        qDebug() << "adding metadata: " << type << ", value: "<< info;
+
         m_infos.insert(type, info);
     }
 }

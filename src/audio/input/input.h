@@ -151,7 +151,7 @@ public:
     virtual size_t fillBuffer(void* buffer, size_t bufferSize) =0;
 
     /// Song is loaded
-    QString songLoaded() const { return m_metaData.getInfo(metaData::LOCATION); }
+    QString songLoaded() const { return m_metaData.getInfo(metaData::URL); }
 
     /// Get number of subtunes
     virtual unsigned int subtunes() const { return 0; }

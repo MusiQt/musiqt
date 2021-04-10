@@ -59,7 +59,7 @@ void inputConfig::save(const char* key, QString value)
 void input::songLoaded(const QString& location)
 {
     if (!location.isEmpty())
-        m_metaData.addInfo(metaData::LOCATION, location);
+        m_metaData.addInfo(metaData::URL, location);
     else
         m_metaData.clearInfo();
 }

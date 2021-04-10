@@ -127,10 +127,10 @@ QVariantMap dbusHandler::metadata() const
     mprisData.insert("xesam:title", data->getInfo(metaData::TITLE));
     mprisData.insert("xesam:artist", data->getInfo(metaData::ARTIST));
     mprisData.insert("xesam:album", data->getInfo(metaData::ALBUM));
-    mprisData.insert("xesam:trackNumber", data->getInfo(metaData::TRACK).toInt());
+    mprisData.insert("xesam:trackNumber", data->getInfo(metaData::TRACK_NUMBER).toInt());
     mprisData.insert("xesam:genre", QStringList(data->getInfo(metaData::GENRE)));
     mprisData.insert("xesam:comment", QStringList(data->getInfo(metaData::COMMENT)));
-    mprisData.insert("xesam:asText", data->getInfo(metaData::LYRICS));
+    mprisData.insert("xesam:asText", data->getInfo(metaData::AS_TEXT));
     //mprisData.insert("xesam:contentCreated", data->getInfo(metaData::YEAR)); // format as ISO 8601 date
 
     return mprisData;

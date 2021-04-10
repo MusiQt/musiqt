@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Leandro Nini
+ *  Copyright (C) 2010-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -52,14 +52,14 @@ void infoLabel::setInfo(const metaData *data)
         }
         else
         {
-            QFileInfo fi(data->getInfo(metaData::LOCATION));
+            QFileInfo fi(data->getInfo(metaData::URL));
             label = fi.fileName();
         }
         appendInfo(data, metaData::TITLE, tip);
         appendInfo(data, metaData::ARTIST, tip);
         appendInfo(data, metaData::ALBUM, tip);
-        appendInfo(data, metaData::YEAR, tip);
-        appendInfo(data, metaData::TRACK, tip);
+        appendInfo(data, metaData::CONTENT_CREATED, tip);
+        appendInfo(data, metaData::TRACK_NUMBER, tip);
         if (tip.isEmpty())
             tip = tr("No info");
     }

@@ -295,8 +295,8 @@ ffmpegBackend::ffmpegBackend(const QString& fileName) :
         m_metaData.addInfo(metaData::ALBUM, getMetadata("album"));
         m_metaData.addInfo(metaData::GENRE, getMetadata("genre"));
         m_metaData.addInfo(gettext("copyright"), getMetadata("copyright"));
-        m_metaData.addInfo(metaData::YEAR, getMetadata("date"));
-        m_metaData.addInfo(metaData::TRACK, getMetadata("track"));
+        m_metaData.addInfo(metaData::CONTENT_CREATED, getMetadata("date"));
+        m_metaData.addInfo(metaData::TRACK_NUMBER, getMetadata("track"));
         m_metaData.addInfo(metaData::COMMENT, getMetadata("comment"));
 
         setDuration(m_formatContext->duration/1000);

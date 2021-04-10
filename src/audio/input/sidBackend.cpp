@@ -546,7 +546,7 @@ void sidBackend::loadWDS(const QString& musFileName, const char* ext)
                     ascii.push_back(val);
             }
 
-            m_metaData.addInfo(metaData::LYRICS, QString::fromLatin1(ascii));
+            m_metaData.addInfo(metaData::AS_TEXT, QString::fromLatin1(ascii));
         }
     }
 }

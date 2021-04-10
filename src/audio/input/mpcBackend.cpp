@@ -138,9 +138,9 @@ mpcBackend::mpcBackend(const QString& fileName) :
     m_metaData.addInfo(metaData::ARTIST, tagPtr.artist());
     m_metaData.addInfo(metaData::ALBUM, tagPtr.album());
     m_metaData.addInfo(metaData::GENRE, tagPtr.genre());
-    m_metaData.addInfo(metaData::YEAR, tagPtr.year());
+    m_metaData.addInfo(metaData::CONTENT_CREATED, tagPtr.year());
     m_metaData.addInfo(gettext("publisher"), tagPtr.publisher());
-    m_metaData.addInfo(metaData::TRACK, tagPtr.track());
+    m_metaData.addInfo(metaData::TRACK_NUMBER, tagPtr.track());
     m_metaData.addInfo(metaData::COMMENT, tagPtr.comment());
     m_metaData.addInfo(tagPtr.image());
 

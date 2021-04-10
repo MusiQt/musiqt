@@ -301,7 +301,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 info = QString();
             }
             qDebug() << "YEAR: " << info;
-            m_metaData.addInfo(metaData::YEAR, info);
+            m_metaData.addInfo(metaData::CONTENT_CREATED, info);
 
             if (id3v1 && (id3v1->comment[28] == 0))
             {
@@ -312,7 +312,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 info = QString();
             }
             qDebug() << "TRACK: " << info;
-            m_metaData.addInfo(metaData::TRACK, info);
+            m_metaData.addInfo(metaData::TRACK_NUMBER, info);
 
             info = QString();
             if (id3v2)
@@ -350,7 +350,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 if (!info.isEmpty())
                 {
                     qDebug() << "LYRICS: " << info;
-                    m_metaData.addInfo(metaData::LYRICS, info);
+                    m_metaData.addInfo(metaData::AS_TEXT, info);
                 }
             }
 

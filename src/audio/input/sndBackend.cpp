@@ -87,10 +87,10 @@ sndBackend::sndBackend(const QString& fileName) :
     m_metaData.addInfo(metaData::TITLE, sf_get_string(m_sf, SF_STR_TITLE));
     m_metaData.addInfo(metaData::ARTIST, sf_get_string(m_sf, SF_STR_ARTIST));
     m_metaData.addInfo(metaData::ALBUM, sf_get_string(m_sf, SF_STR_ALBUM));
-    m_metaData.addInfo(metaData::YEAR, sf_get_string(m_sf, SF_STR_DATE));
+    m_metaData.addInfo(metaData::CONTENT_CREATED, sf_get_string(m_sf, SF_STR_DATE));
     m_metaData.addInfo(gettext("copyright"), sf_get_string(m_sf, SF_STR_COPYRIGHT));
     m_metaData.addInfo(metaData::COMMENT, sf_get_string(m_sf, SF_STR_COMMENT));
-    m_metaData.addInfo(metaData::TRACK, sf_get_string(m_sf, SF_STR_TRACKNUMBER));
+    m_metaData.addInfo(metaData::TRACK_NUMBER, sf_get_string(m_sf, SF_STR_TRACKNUMBER));
     m_metaData.addInfo(metaData::GENRE, sf_get_string(m_sf, SF_STR_GENRE));
 
     const unsigned int milliseconds = (m_si.frames * 1000LL) / m_si.samplerate;

@@ -156,8 +156,8 @@ wvBackend::wvBackend(const QString& fileName) :
             getApeTag("Title", metaData::TITLE);
             getApeTag("Artist", metaData::ARTIST);
             getApeTag("Album", metaData::ALBUM);
-            getApeTag("Year", metaData::YEAR);
-            getApeTag("Track", metaData::TRACK);
+            getApeTag("Year", metaData::CONTENT_CREATED);
+            getApeTag("Track", metaData::TRACK_NUMBER);
             getApeTag("Comment", metaData::COMMENT);
             getApeTag("Genre", metaData::GENRE);
 
@@ -176,8 +176,8 @@ wvBackend::wvBackend(const QString& fileName) :
             getId3Tag("title", metaData::TITLE);
             getId3Tag("artist", metaData::ARTIST);
             getId3Tag("album", metaData::ALBUM);
-            getId3Tag("year", metaData::YEAR);
-            getId3Tag("track", metaData::TRACK);
+            getId3Tag("year", metaData::CONTENT_CREATED);
+            getId3Tag("track", metaData::TRACK_NUMBER);
             getId3Tag("comment", metaData::COMMENT);
         }
     }
