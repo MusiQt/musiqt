@@ -146,7 +146,18 @@ void dbusHandler::setVolume(double value) { m_player->setVolume(value*100.); }
 // MediaPlayer2.Player methods
 void dbusHandler::Play() { m_player->play(); }
 void dbusHandler::Pause() { m_player->pause(); }
-void dbusHandler::PlayPause() { /* TODO */ }
+
+void dbusHandler::PlayPause()
+{
+    switch (m_player->state())
+    {
+    default:
+    case state_t::PLAY: // fall-through
+    case state_t::PAUSE: m_player->pause(); break;
+    case state_t::STOP:  m_player->play();  break;
+    }
+}
+
 void dbusHandler::Stop() { m_player->stop(); }
 void dbusHandler::Previous() { /* ignore */ }
 void dbusHandler::Next() { /* ignore */ }
