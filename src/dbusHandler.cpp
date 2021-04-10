@@ -23,6 +23,7 @@
 #include "mediaplayer2adaptor.h"
 #include "playeradaptor.h"
 
+#include <QDate>
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -115,9 +116,18 @@ bool dbusHandler::canPlay() const { return true; }
 bool dbusHandler::canPause() const { return true; }
 bool dbusHandler::canSeek() const { return m_player->seekable(); }
 bool dbusHandler::canControl() const { return true; }
+
 QString dbusHandler::loopStatus() const { return QString("None"); } // "None", "Track" or "Playlist"
 void dbusHandler::setLoopStatus(const QString &value) { /* ignore */ }
+
 double dbusHandler::maximumRate() const { return 1.; }
+double dbusHandler::minimumRate() const { return 1.; }
+
+QString getDate(QString year)
+{
+    QDate date(year.toInt(), 1, 1);
+    return date.toString(Qt::ISODate);
+}
 
 QVariantMap dbusHandler::metadata() const
 {
@@ -133,13 +143,12 @@ QVariantMap dbusHandler::metadata() const
     mprisData.insert("xesam:genre", QStringList(data->getInfo(metaData::GENRE)));
     mprisData.insert("xesam:comment", QStringList(data->getInfo(metaData::COMMENT)));
     mprisData.insert("xesam:asText", data->getInfo(metaData::AS_TEXT));
-    //mprisData.insert("xesam:contentCreated", data->getInfo(metaData::YEAR)); // format as ISO 8601 date
+    mprisData.insert("xesam:contentCreated", getDate(data->getInfo(metaData::CONTENT_CREATED)));
+    
     mprisData.insert("xesam:url", data->getInfo(metaData::URL));
 
     return mprisData;
 }
-
-double dbusHandler::minimumRate() const { return 1.; }
 
 QString dbusHandler::playbackStatus() const
 {
@@ -155,7 +164,7 @@ QString dbusHandler::playbackStatus() const
 qlonglong dbusHandler::position() const
 {
     // (position / 100) * duration * 1000
-    return m_player->getPosition() * m_player->songDuration() * 10;
+    return m_player->getPosition() * m_player->songDuration() * 10ll;
 }
     
 double dbusHandler::rate() const { return 1.; }
