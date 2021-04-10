@@ -179,7 +179,8 @@ void InputWrapper::seek(int pos)
 
 int InputWrapper::tell() const
 {
-    return (100*m_milliSeconds)/m_currentSong->songDuration();
+    unsigned int duration = m_currentSong->songDuration();
+    return duration ? (100*m_milliSeconds)/duration : 0;
 }
 
 bool InputWrapper::setFormat(audioFormat_t format, int bufferSize)

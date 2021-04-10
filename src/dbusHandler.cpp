@@ -160,15 +160,10 @@ QString dbusHandler::playbackStatus() const
     default: return QString();
     }
 }
-
-qlonglong dbusHandler::position() const
-{
-    // (position / 100) * duration * 1000
-    return m_player->getPosition() * m_player->songDuration() * 10ll;
-}
-    
+  
 double dbusHandler::rate() const { return 1.; }
 void dbusHandler::setRate(double value) { /* ignore */ }
+
 double dbusHandler::volume() const { return m_player->getVolume() / 100.; }
 void dbusHandler::setVolume(double value) { m_player->setVolume(value*100.); }
 
@@ -188,6 +183,7 @@ void dbusHandler::PlayPause()
 }
 
 void dbusHandler::Stop() { m_player->stop(); }
+
 void dbusHandler::Previous() { /* ignore */ }
 void dbusHandler::Next() { /* ignore */ }
 
@@ -197,6 +193,14 @@ void dbusHandler::Seek(qlonglong Offset)
     m_player->setPosition((Position/1000)/m_player->songDuration());
 }
 
+qlonglong dbusHandler::position() const
+{
+    if (m_player->state() == state_t::STOP)
+        return 0;
+    // (position / 100) * duration * 1000
+    return m_player->getPosition() * m_player->songDuration() * 10ll;
+}
+  
 void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position)
 {
     // TODO check TrackId
