@@ -30,29 +30,29 @@ public:
     enum mpris_t
     {
         // MPRIS-specific
-        TRACK_ID,
-        LENGTH,
-        ART_URL,
+        TRACK_ID,         // DBus path
+        LENGTH,           // 64-bit integer
+        ART_URL,          // URI
         // Common Xesam properties
-        ALBUM,
-        ALBUM_ARTIST,
-        ARTIST,
-        AS_TEXT,
-        AUDIO_BPM,
-        AUTO_RATING,
-        COMMENT,
-        COMPOSER,
-        CONTENT_CREATED,
-        DISC_NUMBER,
-        FIRST_USED,
-        GENRE,
-        LAST_USED,
-        LYRICIST,
-        TITLE,
-        TRACK_NUMBER,
-        URL,
-        USER_COUNT,
-        USER_RATING,
+        ALBUM,            // String
+        ALBUM_ARTIST,     // List of Strings
+        ARTIST,           // List of Strings
+        AS_TEXT,          // String
+        AUDIO_BPM,        // Integer
+        AUTO_RATING,      // Float
+        COMMENT,          // List of Strings
+        COMPOSER,         // List of Strings
+        CONTENT_CREATED,  // Date/Time
+        DISC_NUMBER,      // Integer
+        FIRST_USED,       // Date/Time
+        GENRE,            // List of Strings
+        LAST_USED,        // Date/Time
+        LYRICIST,         // List of Strings
+        TITLE,            // String
+        TRACK_NUMBER,     // Integer
+        URL,              // URI
+        USER_COUNT,       // Integer
+        USER_RATING,      // Float
         LAST_ID
     };
 
