@@ -194,7 +194,7 @@ void audio::setVolume(int vol)
 
 bool audio::gapless(input* const i) const { return m_iw->tryPreload(i); }
 
-void audio::seek(int pos)
+void audio::seek(double pos)
 {
     m_audioOutput->pause();
     m_iw->setPosition(pos);

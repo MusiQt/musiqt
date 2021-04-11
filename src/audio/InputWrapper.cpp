@@ -172,10 +172,10 @@ void InputWrapper::unload()
     m_preloadedSong = nullptr;
 }
 
-void InputWrapper::setPosition(int pos)
+void InputWrapper::setPosition(double pos)
 {
     if (m_currentSong->seek(pos))
-        m_milliSeconds = (pos * m_currentSong->songDuration()) / 100;
+        m_milliSeconds = static_cast<unsigned int>(pos * m_currentSong->songDuration());
 }
 
 bool InputWrapper::setFormat(audioFormat_t format, int bufferSize)

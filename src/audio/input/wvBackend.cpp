@@ -213,14 +213,14 @@ void wvBackend::getApeTag(const char* tag, metaData::mpris_t meta)
         m_metaData.addInfo(meta, QString::fromUtf8(tmp, size).replace('\0', ','));
 }
 
-bool wvBackend::seek(int pos)
+bool wvBackend::seek(double pos)
 {
     uint32_t samples = WavpackGetNumSamples(m_wvContext);
 
     if (samples == -1)
         return false;
 
-    uint32_t sample = (samples * pos) / 100;
+    uint32_t sample = samples * pos;
     if (!WavpackSeekSample(m_wvContext, sample))
     {
         return false;

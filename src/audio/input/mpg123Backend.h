@@ -118,7 +118,7 @@ public:
     bool seekable() const override { return true; }
 
     /// Seek specified position
-    bool seek(int pos) override;
+    bool seek(double pos) override;
 
     /// Get samplerate
     unsigned int samplerate() const override { return m_samplerate; }

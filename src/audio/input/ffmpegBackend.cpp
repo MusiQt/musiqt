@@ -340,9 +340,9 @@ QString ffmpegBackend::getMetadata(const char* type)
     return info;
 }
 
-bool ffmpegBackend::seek(int pos)
+bool ffmpegBackend::seek(double pos)
 {
-    int64_t timestamp = (m_formatContext->duration * pos) / 100;
+    int64_t timestamp = m_formatContext->duration * pos;
     if (dl_av_seek_frame(m_formatContext,
             m_audioStreamIndex,
             dl_av_rescale_q(timestamp, AV_TIME_BASE_Q, m_audioStream->time_base),

@@ -57,8 +57,8 @@ public:
 
     unsigned int getPosition() const { return m_milliSeconds; }
 
-    // Set position in percent
-    void setPosition(int pos);
+    // Set position [0,1]
+    void setPosition(double pos);
 
 private:
     input *m_currentSong;

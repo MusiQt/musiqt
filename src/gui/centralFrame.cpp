@@ -207,7 +207,7 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
     connect(m_slider, &QSlider::actionTriggered,
         [this]()
         {
-            int pos = m_slider->sliderPosition();
+            double pos = static_cast<double>(m_slider->sliderPosition())/100.;
             qDebug() << "seek: " << pos;
             m_player->setPosition(pos);
         }

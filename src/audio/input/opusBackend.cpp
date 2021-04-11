@@ -220,14 +220,14 @@ opusBackend::~opusBackend()
     op_free(m_of);
 }
 
-bool opusBackend::seek(int pos)
+bool opusBackend::seek(double pos)
 {
     ogg_int64_t length = op_pcm_total(m_of, -1);
 
     if (length < 0)
         return false;
 
-    ogg_int64_t offset = (length * pos) / 100;
+    ogg_int64_t offset = length * pos;
     if (op_pcm_seek(m_of, offset) < 0)
         return false;
 

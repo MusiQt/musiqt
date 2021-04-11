@@ -145,7 +145,7 @@ public:
     virtual bool seekable() const { return false; }
 
     /// Seek specified position
-    virtual bool seek(int pos) { return false; }
+    virtual bool seek(double pos) { return false; }
 
     /// Callback function
     virtual size_t fillBuffer(void* buffer, size_t bufferSize) =0;

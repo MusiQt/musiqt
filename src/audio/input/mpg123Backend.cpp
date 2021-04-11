@@ -382,13 +382,13 @@ mpg123Backend::~mpg123Backend()
     mpg123_delete(m_handle);
 }
 
-bool mpg123Backend::seek(int pos)
+bool mpg123Backend::seek(double pos)
 {
     off_t frames = mpg123_length(m_handle);
     if (frames < 0)
         return false;
 
-    off_t offset = (frames * pos) / 100;
+    off_t offset = frames * pos;
     if (mpg123_seek(m_handle, offset, SEEK_SET) < 0)
     {
         qWarning() << mpg123_strerror(m_handle);

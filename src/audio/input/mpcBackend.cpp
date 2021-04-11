@@ -207,15 +207,15 @@ mpcBackend::~mpcBackend()
 #endif
 }
 
-bool mpcBackend::seek(int pos)
+bool mpcBackend::seek(double pos)
 {
     mpc_int64_t length = mpc_streaminfo_get_length_samples(&m_si);
 
 #ifdef MPCDEC_SV8
-    mpc_uint64_t sample = (length * pos) / 100;
+    mpc_uint64_t sample = length * pos;
     if (mpc_demux_seek_sample(m_demux, sample) != MPC_STATUS_OK)
 #else
-    mpc_int64_t sample = (length * pos) / 100;
+    mpc_int64_t sample = length * pos;
     if (!mpc_decoder_seek_sample(&m_decoder, sample))
 #endif
         return false;

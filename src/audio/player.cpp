@@ -61,7 +61,7 @@ void player::pause()
     emit stateChanged();
 }
 
-void player::setPosition(int pos)
+void player::setPosition(double pos)
 {
     m_audio->seek(pos);
     emit positionChanged();

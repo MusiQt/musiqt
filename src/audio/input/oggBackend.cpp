@@ -251,14 +251,14 @@ oggBackend::~oggBackend()
     ov_clear(m_vf);
 }
 
-bool oggBackend::seek(int pos)
+bool oggBackend::seek(double pos)
 {
     ogg_int64_t length = ov_pcm_total(m_vf, -1);
 
     if (length < 0)
         return false;
 
-    ogg_int64_t offset = (length * pos) / 100;
+    ogg_int64_t offset = length * pos;
     if (ov_pcm_seek(m_vf, offset) != 0)
         return false;
 

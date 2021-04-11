@@ -104,9 +104,9 @@ sndBackend::~sndBackend()
     sf_close(m_sf);
 }
 
-bool sndBackend::seek(int pos)
+bool sndBackend::seek(double pos)
 {
-    sf_count_t frames = (m_si.frames * pos) / 100;
+    sf_count_t frames = m_si.frames * pos;
     if (sf_seek(m_sf, frames, SEEK_SET) < 0)
     {
         qWarning() << sf_strerror(m_sf);

@@ -111,7 +111,7 @@ QString trackId(const metaData* data)
 
 void dbusHandler::setPosition(qlonglong Position)
 {
-     m_player->setPosition((Position/10)/m_player->songDuration());
+     m_player->setPosition(static_cast<double>(Position/1000)/m_player->songDuration());
 }
 
 // MediaPlayer2 properties

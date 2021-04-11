@@ -83,7 +83,7 @@ public:
     void unload();
 
     /// Set current position
-    void seek(int pos);
+    void seek(double pos);
 
     /// Get current position in milliseconds
     int getPosition() const;
