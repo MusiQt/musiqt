@@ -61,6 +61,12 @@ void player::pause()
     emit stateChanged();
 }
 
+void player::setPosition(int pos)
+{
+    m_audio->seek(pos);
+    emit positionChanged();
+}
+
 /*
  * Pauses playback.
  * If playback is already paused, resumes playback.
@@ -107,6 +113,8 @@ void player::loaded(input* res, bool subtunes)
     {
         m_input.reset(IFACTORY->get());
     }
+
+    emit songLoaded();
 }
 
 void player::preloaded(input* res, bool subtunes)

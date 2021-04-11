@@ -52,6 +52,10 @@ signals:
     void songEnded();
     void preloadSong();
 
+    void songLoaded();
+    void volumeChanged();
+    void positionChanged();
+
 public:
     player();
     ~player() {}
@@ -72,7 +76,7 @@ public:
     int seconds() const { return m_audio->seconds(); }
 
     /// Set current position in percent
-    void setPosition(int pos) { return m_audio->seek(pos); }
+    void setPosition(int pos);
 
     /// Get position in percent
     int getPosition() const { return m_audio->getPosition(); }

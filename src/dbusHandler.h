@@ -122,6 +122,8 @@ signals:
 
 private:
     void stateChanged();
+    void songLoaded();
+    void positionChanged();
 
 private:
     player *m_player;

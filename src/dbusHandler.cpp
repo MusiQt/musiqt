@@ -85,6 +85,8 @@ dbusHandler::dbusHandler(player* p, QObject* parent) :
     dbus.registerObject("/org/mpris/MediaPlayer2/Player", this);
 
     connect(m_player, &player::stateChanged, this, &dbusHandler::stateChanged);
+    connect(m_player, &player::songLoaded, this, &dbusHandler::songLoaded);
+    connect(m_player, &player::positionChanged, this, &dbusHandler::positionChanged);
 }
 
 void propertyChanged(const QString& name, const QVariant& value)
@@ -229,4 +231,15 @@ void dbusHandler::OpenUri(const QString &Uri) { /* TODO */ }
 void dbusHandler::stateChanged()
 {
     propertyChanged("PlaybackStatus", playbackStatus());
+}
+
+void dbusHandler::songLoaded()
+{
+    propertyChanged("CanSeek", canSeek());
+    propertyChanged("Metadata", metadata());
+}
+
+void dbusHandler::positionChanged()
+{
+    emit Seeked(position());
 }
