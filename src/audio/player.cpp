@@ -67,6 +67,13 @@ void player::setPosition(int pos)
     emit positionChanged();
 }
 
+int player::getPosition() const
+{
+    // FIXME
+    unsigned int duration = m_input->songDuration();
+    return duration ? (100*m_audio->getPosition())/duration : 0;
+}
+
 /*
  * Pauses playback.
  * If playback is already paused, resumes playback.

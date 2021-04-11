@@ -79,7 +79,7 @@ public:
     void setPosition(int pos);
 
     /// Get position in percent
-    int getPosition() const { return m_audio->getPosition(); }
+    int getPosition() const;
 
     /// Set volume
     void setVolume(int vol) { m_audio->volume(vol); }

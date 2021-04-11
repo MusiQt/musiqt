@@ -55,11 +55,9 @@ public:
 
     bool setFormat(audioFormat_t format, int bufferSize);
 
-    int getSeconds() const { return m_milliSeconds/1000; }
+    unsigned int getPosition() const { return m_milliSeconds; }
 
     void seek(int pos);
-
-    int tell() const;
 
 private:
     input *m_currentSong;
