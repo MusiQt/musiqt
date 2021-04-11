@@ -228,7 +228,7 @@ void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position
 {
     if (TrackId.path() != trackId(m_player->getMetaData()))
         return;
-    m_player->setPosition((Position/1000)/m_player->songDuration());
+    m_player->setPosition((Position/10)/m_player->songDuration());
 }
 
 void dbusHandler::OpenUri(const QString &Uri) { /* TODO */ }
