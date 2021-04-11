@@ -82,7 +82,7 @@ public:
     int getPosition() const;
 
     /// Set volume
-    void setVolume(int vol) { m_audio->setVolume(vol); }
+    void setVolume(int vol);
 
     /// Get volume
     int getVolume() const { return m_audio->getVolume(); }

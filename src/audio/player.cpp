@@ -73,6 +73,12 @@ int player::getPosition() const
     return duration ? (100*m_audio->getPosition())/duration : 0;
 }
 
+void player::setVolume(int vol)
+{
+    m_audio->setVolume(vol);
+    emit volumeChanged();
+}
+
 /*
  * Pauses playback.
  * If playback is already paused, resumes playback.

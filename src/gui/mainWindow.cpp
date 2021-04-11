@@ -42,6 +42,7 @@
 #include <QMenu>
 #include <QToolBar>
 #include <QKeyEvent>
+#include <QSignalBlocker>
 
 #ifdef _WIN32
 #  include <windows.h>
@@ -242,6 +243,13 @@ QToolBar *mainWindow::createSecondaryBar()
     volume->setStatusTip(tr("Volume"));
     volume->setValue(m_player->getVolume());
     connect(volume, &QDial::valueChanged, m_player, &player::setVolume);
+    connect(m_player, &player::volumeChanged,
+        [this, volume]()
+        {
+            const QSignalBlocker blocker(volume);
+            volume->setValue(m_player->getVolume());
+        }
+    );
 
     QToolBar *secondaryBar = new QToolBar("secondaryBar", this);
     secondaryBar->addAction(prevtune);

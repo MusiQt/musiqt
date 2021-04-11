@@ -124,6 +124,7 @@ private:
     void stateChanged();
     void songLoaded();
     void positionChanged();
+    void volumeChanged();
 
     void setPosition(qlonglong Position);
 

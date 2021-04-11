@@ -87,6 +87,7 @@ dbusHandler::dbusHandler(player* p, QObject* parent) :
     connect(m_player, &player::stateChanged, this, &dbusHandler::stateChanged);
     connect(m_player, &player::songLoaded, this, &dbusHandler::songLoaded);
     connect(m_player, &player::positionChanged, this, &dbusHandler::positionChanged);
+    connect(m_player, &player::volumeChanged, this, &dbusHandler::volumeChanged);
 }
 
 void propertyChanged(const QString& name, const QVariant& value)
@@ -188,7 +189,7 @@ QString dbusHandler::playbackStatus() const
     default: return QString();
     }
 }
-  
+
 double dbusHandler::rate() const { return 1.; }
 void dbusHandler::setRate(double value) { /* ignore */ }
 
@@ -227,7 +228,7 @@ qlonglong dbusHandler::position() const
     // (position / 100) * duration * 1000
     return m_player->getPosition() * m_player->songDuration() * 10ll;
 }
-  
+
 void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position)
 {
     if (TrackId.path() != trackId(m_player->getMetaData()))
@@ -251,4 +252,9 @@ void dbusHandler::songLoaded()
 void dbusHandler::positionChanged()
 {
     emit Seeked(position());
+}
+
+void dbusHandler::volumeChanged()
+{
+    propertyChanged("Volume", volume());
 }
