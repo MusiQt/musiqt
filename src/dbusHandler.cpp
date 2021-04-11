@@ -103,6 +103,11 @@ void propertyChanged(const QString& name, const QVariant& value)
     QDBusConnection::sessionBus().send(msg);
 }
 
+QString trackId(const metaData* data)
+{
+    return QString("/org/musiqt/MusiQt/TrackList/%1").arg("1");
+}
+
 // MediaPlayer2 properties
 bool dbusHandler::canQuit() const { return true; }
 bool dbusHandler::canRaise() const { return true; }
@@ -153,7 +158,7 @@ QVariantMap dbusHandler::metadata() const
     const metaData* data = m_player->getMetaData();
 
     QVariantMap mprisData;
-    //mprisData.insert("mpris:trackid", QDBusObjectPath(...));
+    mprisData.insert("mpris:trackid", QDBusObjectPath(trackId(data)));
     mprisData.insert("mpris:length", qlonglong(m_player->songDuration())*1000ll);
     mprisData.insert("xesam:title", data->getInfo(metaData::TITLE));
     mprisData.insert("xesam:artist", QStringList(data->getInfo(metaData::ARTIST)));
@@ -163,7 +168,6 @@ QVariantMap dbusHandler::metadata() const
     mprisData.insert("xesam:comment", QStringList(data->getInfo(metaData::COMMENT)));
     mprisData.insert("xesam:asText", data->getInfo(metaData::AS_TEXT));
     mprisData.insert("xesam:contentCreated", getDate(data->getInfo(metaData::CONTENT_CREATED)));
-    
     mprisData.insert("xesam:url", data->getInfo(metaData::URL));
 
     return mprisData;
@@ -222,7 +226,8 @@ qlonglong dbusHandler::position() const
   
 void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position)
 {
-    // TODO check TrackId
+    if (TrackId.path() != trackId(m_player->getMetaData()))
+        return;
     m_player->setPosition((Position/1000)/m_player->songDuration());
 }
 
