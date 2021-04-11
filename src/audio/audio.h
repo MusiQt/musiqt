@@ -70,17 +70,14 @@ public:
     /// Get state
     state_t state() const { return m_state; }
 
-    /// Get current position in seconds
-    int seconds() const;
-
     /// Set volume
-    void volume(int vol);
+    void setVolume(int vol);
 
     /// Get volume
-    int volume() const { return m_volume; }
+    int getVolume() const { return m_volume; }
 
     /// Check if gapless playback is supported
-    bool gapless(input* const i);
+    bool gapless(input* const i) const;
 
     void unload();
 

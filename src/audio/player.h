@@ -73,19 +73,19 @@ public:
     state_t state() const { return m_audio->state(); }
 
     /// Get current position in seconds
-    int seconds() const { return m_audio->seconds(); }
+    int seconds() const { return m_audio->getPosition()/1000; }
 
     /// Set current position in percent
     void setPosition(int pos);
 
-    /// Get position in percent
+    /// Get current position in percent
     int getPosition() const;
 
     /// Set volume
-    void setVolume(int vol) { m_audio->volume(vol); }
+    void setVolume(int vol) { m_audio->setVolume(vol); }
 
     /// Get volume
-    int getVolume() const { return m_audio->volume(); }
+    int getVolume() const { return m_audio->getVolume(); }
 
     /// Check if gapless playback is supported
     bool preload(input* const i);

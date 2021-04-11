@@ -135,7 +135,7 @@ bool audio::play(input* i)
     if (SETTINGS->bs2b() && (i->channels() == 2))
         m_iw->enableBs2b();
 
-    m_audioOutput->volume(m_volume);
+    m_audioOutput->setVolume(m_volume);
 
     // We're ready, resume playback
     m_audioOutput->unpause();
@@ -184,20 +184,18 @@ bool audio::stop()
     return true;
 }
 
-void audio::volume(int vol)
+void audio::setVolume(int vol)
 {
     m_volume = vol;
-    m_audioOutput->volume(m_volume);
+    m_audioOutput->setVolume(m_volume);
 }
 
-bool audio::gapless(input* const i) { return m_iw->tryPreload(i); }
-
-int audio::seconds() const { return m_iw->getPosition()/1000; }
+bool audio::gapless(input* const i) const { return m_iw->tryPreload(i); }
 
 void audio::seek(int pos)
 {
     m_audioOutput->pause();
-    m_iw->seek(pos); // TODO check ret
+    m_iw->setPosition(pos);
     m_audioOutput->unpause();
 }
 

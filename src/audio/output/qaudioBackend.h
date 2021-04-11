@@ -75,10 +75,10 @@ public:
     void stop();
 
     /// Set volume
-    void volume(int vol);
+    void setVolume(int vol);
 
     /// Get volume
-    int volume();
+    int getVolume();
 };
 
 #endif

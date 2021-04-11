@@ -224,7 +224,7 @@ void qaudioBackend::stop()
     QMetaObject::invokeMethod(m_audioOutput, "stop");
 }
 
-void qaudioBackend::volume(int vol)
+void qaudioBackend::setVolume(int vol)
 {
     if (m_audioOutput.isNull())
         return;
@@ -239,7 +239,7 @@ void qaudioBackend::volume(int vol)
     QMetaObject::invokeMethod(m_audioOutput, "setVolume", Q_ARG(qreal, volume));
 }
 
-int qaudioBackend::volume()
+int qaudioBackend::getVolume()
 {
     if (m_audioOutput.isNull())
         return 0;
