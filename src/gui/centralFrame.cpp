@@ -547,8 +547,7 @@ void centralFrame::onCmdSongLoaded(input* res)
         qWarning() << "Error loading song";
     }
 
-    changeState();
-
+    //changeState();
 }
 
 void centralFrame::onCmdSongPreLoaded(input* res)
