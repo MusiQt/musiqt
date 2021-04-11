@@ -125,6 +125,8 @@ private:
     void songLoaded();
     void positionChanged();
 
+    void setPosition(qlonglong Position);
+
 private:
     player *m_player;
 };

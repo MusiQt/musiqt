@@ -108,6 +108,11 @@ QString trackId(const metaData* data)
     return QString("/org/musiqt/MusiQt/TrackList/%1").arg("1");
 }
 
+void dbusHandler::setPosition(qlonglong Position)
+{
+     m_player->setPosition((Position/10)/m_player->songDuration());
+}
+
 // MediaPlayer2 properties
 bool dbusHandler::canQuit() const { return true; }
 bool dbusHandler::canRaise() const { return true; }
@@ -212,8 +217,7 @@ void dbusHandler::Next() { /* ignore */ }
 
 void dbusHandler::Seek(qlonglong Offset)
 {
-    qlonglong Position = position() + Offset;
-    m_player->setPosition((Position/1000)/m_player->songDuration());
+    setPosition(position() + Offset);
 }
 
 qlonglong dbusHandler::position() const
@@ -228,7 +232,7 @@ void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position
 {
     if (TrackId.path() != trackId(m_player->getMetaData()))
         return;
-    m_player->setPosition((Position/10)/m_player->songDuration());
+    setPosition(Position);
 }
 
 void dbusHandler::OpenUri(const QString &Uri) { /* TODO */ }
