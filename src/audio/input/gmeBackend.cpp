@@ -136,17 +136,21 @@ gmeBackend::gmeBackend(const QString& fileName) :
     bool hasStilInfo = m_stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
     if (hasStilInfo)
     {
+        const char* fName = fileName.toLocal8Bit().constData();
         qDebug("Retrieving STIL info");
-        QString comment = QString::fromLatin1(m_stil->getAbsGlobalComment(fileName.toLocal8Bit().constData()));
+        QString comment = QString::fromLatin1(m_stil->getAbsGlobalComment(fName));
         if (!comment.isEmpty())
             comment.append('\n');
-        comment.append(QString::fromLatin1(m_stil->getAbsEntry(fileName.toLocal8Bit().constData())));
-        QString bug = QString::fromLatin1(m_stil->getAbsBug(fileName.toLocal8Bit().constData()));
+        comment.append(QString::fromLatin1(m_stil->getAbsEntry(fName)));
+#  if 0 // not supported
+        QString bug = QString::fromLatin1(m_stil->getAbsBug(fName));
         if (!bug.isEmpty())
         {
-            comment.append('\n');
+            if (!comment.isEmpty())
+                comment.append('\n');
             comment.append(bug);
         }
+#  endif
         if (!comment.isEmpty())
         {
             m_metaData.addInfo(metaData::COMMENT, comment);
