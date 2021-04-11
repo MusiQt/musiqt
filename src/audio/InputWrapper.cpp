@@ -40,6 +40,7 @@
 InputWrapper::InputWrapper(input* song) :
     m_currentSong(song),
     m_preloadedSong(nullptr),
+    m_audioProcess(nullptr),
     m_audioConverter(nullptr),
     m_bytes(0),
     m_milliSeconds(0),

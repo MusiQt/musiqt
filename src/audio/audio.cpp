@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "InputWrapper.h"
 #include "input/input.h"
+#include "input/inputFactory.h"
 #include "output/qaudioBackend.h"
 
 #include <QDebug>
@@ -44,6 +45,7 @@ const char* sampleTypeString(sample_t sampleType)
 }
 
 audio::audio() :
+    m_iw(new InputWrapper(IFACTORY->get())),
     m_state(state_t::STOP)
 {
     m_volume = m_settings.value("Audio Settings/volume", 50).toInt();
@@ -111,13 +113,13 @@ bool audio::play(input* i)
     }
 
     qDebug() << "Setting parameters " << format.sampleRate << ":" << format.channels << ":" << sampleTypeString(format.sampleType);
-    m_iw = new InputWrapper(i);
-    connect(m_iw, &InputWrapper::switchSong,  this, &audio::songEnded);
-    connect(m_iw, &InputWrapper::updateTime,  this, &audio::updateTime);
-    connect(m_iw, &InputWrapper::preloadSong, this, &audio::preloadSong);
+    m_iw.reset(new InputWrapper(i));
+    connect(m_iw.data(), &InputWrapper::switchSong,  this, &audio::songEnded);
+    connect(m_iw.data(), &InputWrapper::updateTime,  this, &audio::updateTime);
+    connect(m_iw.data(), &InputWrapper::preloadSong, this, &audio::preloadSong);
 
     audioFormat_t outputFormat;
-    size_t bufferSize = m_audioOutput->open(selectedCard, format, m_iw, outputFormat);
+    size_t bufferSize = m_audioOutput->open(selectedCard, format, m_iw.data(), outputFormat);
     if (!bufferSize)
         return false;
 
@@ -130,7 +132,7 @@ bool audio::play(input* i)
         return false;
     }
 
-    connect(m_iw, &InputWrapper::songFinished, m_audioOutput, &qaudioBackend::songEnded);
+    connect(m_iw.data(), &InputWrapper::songFinished, m_audioOutput, &qaudioBackend::songEnded);
 
     if (SETTINGS->bs2b() && (i->channels() == 2))
         m_iw->enableBs2b();
@@ -179,7 +181,7 @@ bool audio::stop()
 
     m_state = state_t::STOP;
 
-    delete m_iw;
+    m_iw.reset(new InputWrapper(IFACTORY->get()));
 
     return true;
 }

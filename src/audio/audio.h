@@ -22,6 +22,7 @@
 #include "inputTypes.h"
 
 #include <QSettings>
+#include <QScopedPointer>
 
 class input;
 class InputWrapper;
@@ -36,9 +37,9 @@ class audio : public QObject
     Q_OBJECT
 
 private:
-    QSettings m_settings;
-    InputWrapper *m_iw;
+    QScopedPointer<InputWrapper> m_iw;
     qaudioBackend *m_audioOutput;
+    QSettings m_settings;
 
     state_t m_state;
 
