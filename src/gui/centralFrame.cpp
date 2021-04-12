@@ -388,8 +388,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     // Check if requested file/directory exists
     if (!fileInfo.exists())
     {
-        // ???
-        //if (curItem.isValid())
+        //if (!curItem.isValid())
         //    onHome();
         return;
     }
@@ -406,8 +405,8 @@ void centralFrame::setFile(const QString& file, const bool play)
     if (!items.empty())
         val = items.at(0);
 
-    QString currentDir = m_fsm->fileName(m_dirlist->currentIndex());
-    const bool dirSelected = !currentDir.compare(fileInfo.dir().absolutePath());
+    QString currentDir = m_fsm->filePath(m_dirlist->currentIndex());
+    const bool dirSelected = currentDir == fileInfo.dir().absolutePath();
 
     if (fileInfo.isDir() || (TFACTORY->plExt().indexOf(fileInfo.suffix().toLower()) >= 0))
     {
@@ -415,7 +414,7 @@ void centralFrame::setFile(const QString& file, const bool play)
         {
             if (play && (m_player->state() == state_t::STOP))
             {
-                onCmdPlayPauseSong();
+                m_player->play();
             }
             return;
         }
@@ -425,6 +424,8 @@ void centralFrame::setFile(const QString& file, const bool play)
             setDir(file);
             m_playMode = true; // TODO sync GUI
         }
+
+        m_player->play();
         return;
     }
 
@@ -448,7 +449,7 @@ void centralFrame::setFile(const QString& file, const bool play)
         {
             if (val == curItem)
             {
-                onCmdPlayPauseSong();
+                m_player->play();
             }
             else
                 m_playlist->setCurrentIndex(val);
@@ -458,6 +459,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     {
         m_dirlist->setProperty("UserData", QVariant(fileInfo.completeBaseName()));
         setDir(fileInfo.dir().absolutePath());
+        m_player->play();
     }
 }
 
