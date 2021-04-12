@@ -71,7 +71,8 @@ private:
     int m_bytes;
     int m_bytePerMilliSec;
     unsigned int m_milliSeconds;
-    unsigned int m_maxPlayTime;
+
+    const unsigned int m_maxPlayTime;
 };
 
 #endif
