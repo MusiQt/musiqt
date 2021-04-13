@@ -516,8 +516,6 @@ void centralFrame::load(const QString& filename, bool preload)
 {
     qDebug() << "Loading " << filename;
 
-    emit updateSlider(0);
-
     loadThread* loader = new loadThread(filename);
     if (preload)
         connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongPreLoaded);
@@ -539,6 +537,7 @@ void centralFrame::onCmdSongLoaded(input* res)
     if (res != nullptr)
     {
         emit setDisplay();
+        emit updateSlider(0);
 
         qDebug() << "Song loaded";
     }
