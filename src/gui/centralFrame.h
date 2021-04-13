@@ -83,7 +83,6 @@ private:
     void updateSongs();
 
     void createHomeMenu();
-    void load(const QString& filename);
     void onCmdChangeSong(dir_t);
     void setDir(const QString& index);
     QString getFilter() const;

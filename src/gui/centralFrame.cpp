@@ -268,7 +268,7 @@ void centralFrame::changeState()
         m_slider->setDisabled(true);
         emit updateTime(0);
         emit updateSlider(0);
-        if (!m_player->loadedSong().isEmpty() &&!isPlaylistDirSelected())
+        if (!m_player->loadedSong().isEmpty() && !isPlaylistDirSelected())
         {
             onDirSelected(m_dirlist->currentIndex());
         }
@@ -505,19 +505,6 @@ void centralFrame::onCmdChangeSong(dir_t dir)
     }
 }
 
-void centralFrame::load(const QString& filename)
-{
-    qDebug() << "Loading " << filename;
-
-    loadThread* loader = new loadThread(filename, SETTINGS->subtunes());
-    connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
-    connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-
-    loader->start();
-}
-
 void centralFrame::onCmdSongLoaded(input* res)
 {
     QApplication::restoreOverrideCursor();
@@ -552,13 +539,10 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 
     QString songLoaded = m_player->loadedSong();
     const QString song = m_proxyModel->data(currentRow, Qt::UserRole).toString();
-    if (!songLoaded.isEmpty() && !song.compare(songLoaded))
+    if (!songLoaded.isEmpty() && (song == songLoaded))
         return;
 
     m_playlist->scrollTo(currentRow);
-
-    if (!m_playlist->isVisible())
-        updateSongs();
 
     if (m_player->tryPreload(song))
     {
@@ -568,7 +552,15 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     {
         emit clearDisplay(tr("Loading..."));
 
-        load(song);
+        qDebug() << "Loading " << song;
+
+        loadThread* loader = new loadThread(song, SETTINGS->subtunes());
+        connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
+        connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
+
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+
+        loader->start();
     }
 }
 
