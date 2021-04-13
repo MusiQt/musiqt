@@ -310,38 +310,37 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
         return;
     }
 
-    const QString fileName = m_dirlist->property("UserData").toString();
-    if (!fileName.isEmpty())
+    QString fileName = m_dirlist->property("UserData").toString();
+    if (fileName.isEmpty())
     {
+        QString songLoaded = m_player->loadedSong();
+        if (!songLoaded.isEmpty())
+        {
+            QFileInfo fileInfo(songLoaded);
+            fileName = fileInfo.completeBaseName();
+        }
+    }
+    else
+        m_dirlist->setProperty("UserData", QVariant(QString()));
+
+    if (fileName.isEmpty())
+    {
+        // No file, select first item
+        m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
+    }
+    else
+    {
+        // Select file, if not found and not playing select first item
         qDebug() << "selecting file " << fileName;
         QModelIndexList items = m_proxyModel->match(m_proxyModel->index(0, 0), Qt::DisplayRole,
                 QVariant::fromValue(fileName), 1, Qt::MatchExactly|Qt::MatchCaseSensitive);
         if (!items.empty())
         {
             m_playlist->setCurrentIndex(items.at(0));
-            m_dirlist->setProperty("UserData", QVariant(QString()));
+            m_playlist->scrollTo(items.at(0));
         }
-    }
-    else
-    {
-        QString songLoaded = m_player->loadedSong();
-        if (songLoaded.isEmpty())
-        {
+        else if (m_player->state() == state_t::STOP)
             m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
-        }
-        else
-        {
-            QFileInfo fileInfo(songLoaded);
-            QModelIndexList items = m_proxyModel->match(m_proxyModel->index(0, 0), Qt::DisplayRole,
-                    QVariant::fromValue(fileInfo.completeBaseName()), 1, Qt::MatchExactly|Qt::MatchCaseSensitive);
-            if (!items.empty())
-            {
-                m_playlist->setCurrentIndex(items.at(0));
-                m_playlist->scrollTo(items.at(0));
-            }
-            else if (m_player->state() == state_t::STOP)
-                m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
-        }
     }
 }
 
