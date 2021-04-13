@@ -48,13 +48,6 @@
 #include <QDebug>
 
 
-void loadThread::run()
-{
-    emit loaded(IFACTORY->get(fileName));
-}
-
-/*****************************************************************/
-
 centralFrame::centralFrame(player* p, QWidget *parent) :
     QWidget(parent),
     m_player(p)
@@ -512,15 +505,12 @@ void centralFrame::onCmdChangeSong(dir_t dir)
     }
 }
 
-void centralFrame::load(const QString& filename, bool preload)
+void centralFrame::load(const QString& filename)
 {
     qDebug() << "Loading " << filename;
 
-    loadThread* loader = new loadThread(filename);
-    if (preload)
-        connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongPreLoaded);
-    else
-        connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
+    loadThread* loader = new loadThread(filename, SETTINGS->subtunes());
+    connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
     connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -532,7 +522,7 @@ void centralFrame::onCmdSongLoaded(input* res)
 {
     QApplication::restoreOverrideCursor();
 
-    m_player->loaded(res, SETTINGS->subtunes());
+    m_player->loaded(res);
 
     if (res != nullptr)
     {
@@ -549,15 +539,6 @@ void centralFrame::onCmdSongLoaded(input* res)
     }
 
     //changeState();
-}
-
-void centralFrame::onCmdSongPreLoaded(input* res)
-{
-    QApplication::restoreOverrideCursor();
-
-    m_player->preloaded(res, SETTINGS->subtunes());
-
-    qDebug() << "Song preloaded";
 }
 
 void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
@@ -612,7 +593,7 @@ void centralFrame::onPreloadSong()
         QModelIndex index = m_proxyModel->index(nextSong, 0);
         if (index.isValid())
         {
-            load(m_proxyModel->data(index, Qt::UserRole).toString(), true);
+            m_player->preload(m_proxyModel->data(index, Qt::UserRole).toString(), SETTINGS->subtunes());
         }
     }
 }
@@ -653,7 +634,7 @@ void centralFrame::onSettingsChanged()
     if (!songLoaded.isEmpty())
     {
         // we must reload the song
-        m_player->loaded(nullptr, false);
+        m_player->loaded(nullptr);
         onCmdSongSelected(m_playlist->currentIndex());
     }
 }

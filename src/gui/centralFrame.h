@@ -21,7 +21,6 @@
 
 #include "player.h"
 
-#include <QThread>
 #include <QWidget>
 
 class bookmark;
@@ -36,30 +35,6 @@ class QFileSystemModel;
 class QItemSelectionModel;
 class QPushButton;
 class QSlider;
-
-/*****************************************************************/
-
-class loadThread : public QThread
-{
-    Q_OBJECT
-
-private:
-    QString fileName;
-
-protected:
-    void run();
-
-signals:
-    void loaded(input* res);
-
-public:
-    loadThread(QString name) :
-        QThread(),
-        fileName(name)
-   {}
-};
-
-/*****************************************************************/
 
 class centralFrame : public QWidget
 {
@@ -98,7 +73,6 @@ private:
     void onHome(QAction* action);
     void onCmdCurrentDir();
     void onCmdSongLoaded(input* res);
-    void onCmdSongPreLoaded(input* res);
     void onCmdSongSelected(const QModelIndex& currentRow);
     void onPreloadSong();
     void onSongEnded();
@@ -109,7 +83,7 @@ private:
     void updateSongs();
 
     void createHomeMenu();
-    void load(const QString& filename, bool preload=false);
+    void load(const QString& filename);
     void onCmdChangeSong(dir_t);
     void setDir(const QString& index);
     QString getFilter() const;

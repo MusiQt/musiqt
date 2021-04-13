@@ -20,6 +20,19 @@
 
 #include "input/inputFactory.h"
 
+#include <QDebug>
+
+void loadThread::run()
+{
+    input *i = IFACTORY->get(m_fileName);
+    if (m_subtunes && (i != nullptr))
+        i->subtune(1);
+
+    emit loaded(i);
+}
+
+/*****************************************************************/
+
 player::player() :
     m_input(IFACTORY->get()),
     m_preload(IFACTORY->get()),
@@ -106,7 +119,7 @@ bool player::tryPreload(const QString& song)
     }
 }
 
-void player::loaded(input* res, bool subtunes)
+void player::loaded(input* res)
 {
     state_t state = m_audio->state();
     stop();
@@ -114,9 +127,6 @@ void player::loaded(input* res, bool subtunes)
     if (res != nullptr)
     {
         m_input.reset(res);
-
-        if (subtunes)
-            m_input->subtune(1);
 
         if (state == state_t::PLAY)
             play();
@@ -129,18 +139,27 @@ void player::loaded(input* res, bool subtunes)
     emit songLoaded();
 }
 
-void player::preloaded(input* res, bool subtunes)
+void player::preload(const QString& filename, bool subtunes)
+{
+    loadThread* loader = new loadThread(filename, subtunes);
+    connect(loader, &loadThread::loaded, this, &player::preloaded);
+    connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
+    loader->start();
+}
+
+void player::preloaded(input* res)
 {
     if ((res != nullptr) && m_audio->gapless(res))
     {
         m_preload.reset(res);
 
-        if (subtunes)
-            m_preload->subtune(1);
+        qDebug() << "Song preloaded";
     }
     else
     {
         m_preload.reset(IFACTORY->get());
+
+        qDebug() << "Discard preloaded song";
     }
 }
 

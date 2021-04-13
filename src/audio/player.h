@@ -23,12 +23,39 @@
 #include "input/input.h"
 
 #include <QScopedPointer>
+#include <QThread>
+
+class loadThread : public QThread
+{
+    Q_OBJECT
+
+private:
+    const QString m_fileName;
+    const bool m_subtunes;
+
+protected:
+    void run();
+
+signals:
+    void loaded(input* res);
+
+public:
+    loadThread(QString name, bool subtunes) :
+        QThread(),
+        m_fileName(name),
+        m_subtunes(subtunes)
+   {}
+};
+
+/*****************************************************************/
 
 enum class dir_t
 {
     ID_PREV,
     ID_NEXT
 };
+
+/*****************************************************************/
 
 class player : public QObject
 {
@@ -42,6 +69,8 @@ private:
 private:
     player(const player&);
     player& operator=(const player&);
+
+    void preloaded(input* res);
 
 signals:
     void stateChanged();
@@ -114,10 +143,13 @@ public:
     /// Get song duration in milliseconds
     unsigned int songDuration() const { return m_input->songDuration(); }
 
+    /// Try switching to preloaded song
     bool tryPreload(const QString& song);
 
-    void loaded(input* res, bool subtunes);
-    void preloaded(input* res, bool subtunes);
+    void loaded(input* res);
+
+    /// Preload song
+    void preload(const QString& filename, bool subtunes);
 };
 
 #endif
