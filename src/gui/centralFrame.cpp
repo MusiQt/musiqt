@@ -385,7 +385,12 @@ void centralFrame::setFile(const QString& file, const bool play)
         return;
     }
 
-    QModelIndexList items = m_playlistModel->match(m_playlistModel->index(0, 0), Qt::DisplayRole, QVariant::fromValue(file), -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
+    QModelIndexList items = m_proxyModel->match(
+        m_proxyModel->index(0, 0),
+        Qt::DisplayRole,
+        QVariant::fromValue(fileInfo.completeBaseName()),
+        1,
+        Qt::MatchExactly|Qt::MatchCaseSensitive);
 
     const bool selected = items.empty() ? false : m_playlist->selectionModel()->isSelected(items.at(0));
 
@@ -439,12 +444,12 @@ void centralFrame::setFile(const QString& file, const bool play)
     {
         if (val.isValid())
         {
-            if (val == curItem)
+            if (val != curItem)
             {
-                m_player->play();
-            }
-            else
                 m_playlist->setCurrentIndex(val);
+            }
+
+            m_player->play();
         }
     }
     else
