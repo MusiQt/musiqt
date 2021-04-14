@@ -286,6 +286,20 @@ bool centralFrame::isPlaylistDirSelected()
     return playDir==currentDir;
 }
 
+QModelIndex centralFrame::findItem(const QFileInfo& file)
+{
+    QModelIndexList items = m_proxyModel->match(
+        m_proxyModel->index(0, 0),
+        Qt::DisplayRole,
+        QVariant::fromValue(file.completeBaseName()),
+        1,
+        Qt::MatchExactly|Qt::MatchCaseSensitive);
+    if (!items.empty())
+        return items.at(0);
+
+    return QModelIndex();
+}
+
 void centralFrame::onDirSelected(const QModelIndex& idx)
 {
     qDebug() << "onDirSelected";
@@ -317,37 +331,41 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
         return;
     }
 
-    QString fileName = m_dirlist->property("UserData").toString();
-    if (fileName.isEmpty())
+    QFileInfo fileInfo;
     {
-        QString songLoaded = m_player->loadedSong();
-        if (!songLoaded.isEmpty())
+        QString fileName = m_dirlist->property("UserData").toString();
+        if (fileName.isEmpty())
         {
-            QFileInfo fileInfo(songLoaded);
-            fileName = fileInfo.completeBaseName();
+            QString songLoaded = m_player->loadedSong();
+            if (!songLoaded.isEmpty())
+            {
+                fileInfo.setFile(songLoaded);
+            }
+        }
+        else
+        {
+            fileInfo.setFile(fileName);
+            m_dirlist->setProperty("UserData", QVariant(QString()));
         }
     }
-    else
-        m_dirlist->setProperty("UserData", QVariant(QString()));
 
-    if (fileName.isEmpty())
-    {
-        // No file, select first item
-        m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
-    }
-    else
+    if (fileInfo.isFile())
     {
         // Select file, if not found and not playing select first item
-        qDebug() << "selecting file " << fileName;
-        QModelIndexList items = m_proxyModel->match(m_proxyModel->index(0, 0), Qt::DisplayRole,
-                QVariant::fromValue(fileName), 1, Qt::MatchExactly|Qt::MatchCaseSensitive);
-        if (!items.empty())
+        qDebug() << "selecting file " << fileInfo.fileName();
+        QModelIndex item = findItem(fileInfo);
+        if (item.isValid())
         {
-            m_playlist->setCurrentIndex(items.at(0));
-            m_playlist->scrollTo(items.at(0));
+            m_playlist->setCurrentIndex(item);
+            m_playlist->scrollTo(item);
         }
         else if (m_player->state() == state_t::STOP)
             m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
+    }
+    else
+    {
+        // No file, select first item
+        m_playlist->setCurrentIndex(m_proxyModel->index(0, 0));
     }
 }
 
@@ -370,11 +388,8 @@ void centralFrame::onCmdCurrentDir()
 
     QFileInfo fileInfo(file);
     setDir(fileInfo.absolutePath());
-    QModelIndexList items = m_proxyModel->match(m_proxyModel->index(0, 0),
-        Qt::DisplayRole, QVariant::fromValue(fileInfo.completeBaseName()),
-        -1, Qt::MatchExactly|Qt::MatchCaseSensitive);
-
-    m_playlist->setCurrentIndex(items.at(0));
+    QModelIndex item = findItem(fileInfo);
+    m_playlist->setCurrentIndex(item);
 }
 
 void centralFrame::setFile(const QString& file, const bool play)
@@ -392,22 +407,13 @@ void centralFrame::setFile(const QString& file, const bool play)
         return;
     }
 
-    QModelIndexList items = m_proxyModel->match(
-        m_proxyModel->index(0, 0),
-        Qt::DisplayRole,
-        QVariant::fromValue(fileInfo.completeBaseName()),
-        1,
-        Qt::MatchExactly|Qt::MatchCaseSensitive);
+    QModelIndex item = findItem(fileInfo);
 
-    const bool selected = items.empty() ? false : m_playlist->selectionModel()->isSelected(items.at(0));
+    const bool selected = item.isValid() ? m_playlist->selectionModel()->isSelected(item) : false;
 
     // Check if requested song is already playing
     if ((m_player->state() != state_t::STOP) && selected)
         return;
-
-    QModelIndex val;
-    if (!items.empty())
-        val = items.at(0);
 
     QString currentDir = m_fsm->filePath(m_dirlist->currentIndex());
     const bool dirSelected = currentDir == fileInfo.dir().absolutePath();
@@ -449,11 +455,11 @@ void centralFrame::setFile(const QString& file, const bool play)
 
     if (dirSelected)
     {
-        if (val.isValid())
+        if (item.isValid())
         {
-            if (val != curItem)
+            if (item != curItem)
             {
-                m_playlist->setCurrentIndex(val);
+                m_playlist->setCurrentIndex(item);
             }
 
             m_player->play();
@@ -461,7 +467,7 @@ void centralFrame::setFile(const QString& file, const bool play)
     }
     else
     {
-        m_dirlist->setProperty("UserData", QVariant(fileInfo.completeBaseName()));
+        m_dirlist->setProperty("UserData", QVariant(file));
         setDir(fileInfo.dir().absolutePath());
         m_player->play();
     }

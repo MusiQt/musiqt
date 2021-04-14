@@ -29,6 +29,7 @@ class playlistModel;
 class proxymodel;
 
 class QComboBox;
+class QFileInfo;
 class QModelIndex;
 class QTreeView;
 class QFileSystemModel;
@@ -91,6 +92,8 @@ private:
 
     // Is the song currently loaded from the selected directory?
     bool isPlaylistDirSelected();
+
+    QModelIndex findItem(const QFileInfo& file);
 
 private:
     player* m_player;
