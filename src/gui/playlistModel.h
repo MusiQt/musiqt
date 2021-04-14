@@ -19,8 +19,6 @@
 #ifndef PLAYLISTMODEL_H
 #define PLAYLISTMODEL_H
 
-#include "trackListFactory.h"
-
 #include <QStringListModel>
 #include <QFileInfo>
 #include <QStringList>
@@ -73,16 +71,6 @@ public:
         const int rows = rowCount();
         insertRow(rows);
         setData(index(rows, 0), data);
-    }
-
-    void load(const QString& path)
-    {
-        std::unique_ptr<trackList> tracklist(TFACTORY->get(path));
-
-        if (tracklist.get() == nullptr)
-            clear();
-        else
-            setStringList(tracklist->load());
     }
 
     bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const override

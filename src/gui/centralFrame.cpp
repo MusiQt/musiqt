@@ -303,10 +303,17 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
     const QString mPath = m_fsm->fileInfo(idx).absoluteFilePath();
     qDebug() << "Full path: " << mPath;
 
-    m_playlistModel->load(mPath);
+    std::unique_ptr<trackList> tracklist(TFACTORY->get(mPath));
+
+    QStringList files;
+    if (tracklist.get() != nullptr)
+        files = tracklist->load();
+
+    m_playlistModel->setStringList(files);
 
     if (m_proxyModel->rowCount() == 0)
     {
+        // No supported files
         return;
     }
 
