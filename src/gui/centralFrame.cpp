@@ -525,6 +525,20 @@ void centralFrame::onCmdSongLoaded(bool res)
         emit setDisplay();
         emit updateSlider(0);
 
+        QString songLoaded = m_player->loadedSong();
+        const QString songSelected = m_proxyModel->data(m_playlist->currentIndex(), Qt::UserRole).toString();
+        if (songLoaded != songSelected)
+        {
+            QFileInfo fileInfo(songLoaded);
+            if (!isPlaylistDirSelected())
+            {
+                setDir(fileInfo.absolutePath());
+            }
+
+            QModelIndex item = findItem(fileInfo);
+            m_playlist->setCurrentIndex(item);
+        }
+
         qDebug() << "Song loaded";
     }
     else

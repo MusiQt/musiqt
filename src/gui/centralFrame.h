@@ -64,8 +64,6 @@ public slots:
     void onCmdPrevSong();
     void onCmdNextSong();
 
-    void setFile(const QString& file);
-
 private:
     void onCmdPlEdit(bool);
     void onCmdPlSave();
@@ -89,6 +87,8 @@ private:
     QString getFilter() const;
     QStringList getPattern() const;
     void changeState();
+
+    void setFile(const QString& file);
 
     // Is the song currently loaded from the selected directory?
     bool isPlaylistDirSelected();

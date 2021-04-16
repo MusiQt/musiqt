@@ -155,19 +155,28 @@ void mainWindow::init(const char* arg)
 #else
         const QString message(arg);
 #endif
-        m_cFrame->setFile(QDir(message).absolutePath());
-        m_player->play();
+        onMessage(message);
     }
     else
     {
-        m_cFrame->setFile(m_settings.value("General Settings/file").toString());
+        m_player->load(m_settings.value("General Settings/file").toString());
     }
 }
 
 void mainWindow::onMessage(QString msg)
 {
-    m_cFrame->setFile(QDir(msg).absolutePath());
-    m_player->play();
+    // Start playing once loaded
+    QMetaObject::Connection * const connection = new QMetaObject::Connection;
+    *connection = connect(m_player, &player::songLoaded,
+        [this, connection] ()
+        {
+            m_player->play();
+
+            QObject::disconnect(*connection);
+            delete connection;
+        });
+
+    m_player->load(QDir(msg).absolutePath());
 }
 
 QToolBar *mainWindow::createControlBar()
