@@ -70,6 +70,8 @@ private:
     player(const player&);
     player& operator=(const player&);
 
+    void loaded(input* res);
+
     void preloaded(input* res);
 
 signals:
@@ -81,7 +83,7 @@ signals:
     void songEnded();
     void preloadSong();
 
-    void songLoaded();
+    void songLoaded(bool loaded);
     void volumeChanged();
     void positionChanged();
 
@@ -146,7 +148,11 @@ public:
     /// Try switching to preloaded song
     bool tryPreload(const QString& song);
 
-    void loaded(input* res);
+    /// Load song
+    void load(const QString& filename, bool subtunes);
+
+    /// Unload song
+    void unload() { loaded(nullptr); }
 
     /// Preload song
     void preload(const QString& filename, bool subtunes);

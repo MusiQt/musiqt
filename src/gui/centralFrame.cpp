@@ -57,6 +57,7 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
 
     connect(m_player, &player::updateTime,  this, &centralFrame::onUpdateTime);
     connect(m_player, &player::songEnded,   this, &centralFrame::onSongEnded);
+    connect(m_player, &player::songLoaded, this, &centralFrame::onCmdSongLoaded);
     connect(m_player, &player::preloadSong, this, &centralFrame::onPreloadSong);
 
     // dir view
@@ -522,13 +523,11 @@ void centralFrame::onCmdChangeSong(dir_t dir)
     }
 }
 
-void centralFrame::onCmdSongLoaded(input* res)
+void centralFrame::onCmdSongLoaded(bool res)
 {
     QApplication::restoreOverrideCursor();
 
-    m_player->loaded(res);
-
-    if (res != nullptr)
+    if (res)
     {
         emit setDisplay();
         emit updateSlider(0);
@@ -541,8 +540,6 @@ void centralFrame::onCmdSongLoaded(input* res)
 
         qWarning() << "Error loading song";
     }
-
-    //changeState();
 }
 
 void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
@@ -571,13 +568,9 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 
         qDebug() << "Loading " << song;
 
-        loadThread* loader = new loadThread(song, SETTINGS->subtunes());
-        connect(loader, &loadThread::loaded, this, &centralFrame::onCmdSongLoaded);
-        connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
-
         QApplication::setOverrideCursor(Qt::WaitCursor);
 
-        loader->start();
+        m_player->load(song, SETTINGS->subtunes());
     }
 }
 
@@ -643,7 +636,7 @@ void centralFrame::onSettingsChanged()
     if (!songLoaded.isEmpty())
     {
         // we must reload the song
-        m_player->loaded(nullptr);
+        m_player->unload();
         onCmdSongSelected(m_playlist->currentIndex());
     }
 }

@@ -73,7 +73,7 @@ private:
     void onDirSelected(const QModelIndex&);
     void onHome(QAction* action);
     void onCmdCurrentDir();
-    void onCmdSongLoaded(input* res);
+    void onCmdSongLoaded(bool res);
     void onCmdSongSelected(const QModelIndex& currentRow);
     void onPreloadSong();
     void onSongEnded();

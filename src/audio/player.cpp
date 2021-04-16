@@ -119,24 +119,37 @@ bool player::tryPreload(const QString& song)
     }
 }
 
+void player::load(const QString& filename, bool subtunes)
+{
+    loadThread* loader = new loadThread(filename, subtunes);
+    connect(loader, &loadThread::loaded, this, &player::loaded);
+    connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
+    loader->start();
+}
+
 void player::loaded(input* res)
 {
     state_t state = m_audio->state();
     stop();
 
+    bool loaded;
     if (res != nullptr)
     {
         m_input.reset(res);
 
         if (state == state_t::PLAY)
             play();
+
+        loaded = true;
     }
     else
     {
         m_input.reset(IFACTORY->get());
+
+        loaded = false;
     }
 
-    emit songLoaded();
+    emit songLoaded(loaded);
 }
 
 void player::preload(const QString& filename, bool subtunes)
