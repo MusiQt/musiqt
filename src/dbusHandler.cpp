@@ -24,6 +24,7 @@
 #include "playeradaptor.h"
 
 #include <QDate>
+#include <QUrl>
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -174,7 +175,8 @@ QVariantMap dbusHandler::metadata() const
     mprisData.insert("xesam:comment", QStringList(data->getInfo(metaData::COMMENT)));
     mprisData.insert("xesam:asText", data->getInfo(metaData::AS_TEXT));
     mprisData.insert("xesam:contentCreated", getDate(data->getInfo(metaData::CONTENT_CREATED)));
-    mprisData.insert("xesam:url", data->getInfo(metaData::URL));
+    QUrl qurl(QUrl::fromLocalFile(data->getInfo(metaData::URL)));
+    mprisData.insert("xesam:url", qurl.toString(QUrl::FullyEncoded));
 
     return mprisData;
 }
@@ -236,7 +238,12 @@ void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position
     setPosition(Position);
 }
 
-void dbusHandler::OpenUri(const QString &Uri) { /* TODO */ }
+void dbusHandler::OpenUri(const QString &Uri)
+{
+    QUrl file(Uri);
+    m_player->load(file.toLocalFile());
+    // TODO play
+}
 
 void dbusHandler::stateChanged()
 {
