@@ -570,7 +570,7 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
 
         QApplication::setOverrideCursor(Qt::WaitCursor);
 
-        m_player->load(song, SETTINGS->subtunes());
+        m_player->load(song);
     }
 }
 
@@ -595,7 +595,7 @@ void centralFrame::onPreloadSong()
         QModelIndex index = m_proxyModel->index(nextSong, 0);
         if (index.isValid())
         {
-            m_player->preload(m_proxyModel->data(index, Qt::UserRole).toString(), SETTINGS->subtunes());
+            m_player->preload(m_proxyModel->data(index, Qt::UserRole).toString());
         }
     }
 }

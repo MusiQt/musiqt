@@ -29,7 +29,6 @@ class loader : public QThread
 
 private:
     const QString m_fileName;
-    const bool m_subtunes;
 
 protected:
     void run();
@@ -38,10 +37,9 @@ signals:
     void loaded(input* res);
 
 public:
-    loader(QString name, bool subtunes) :
+    loader(QString name) :
         QThread(),
-        m_fileName(name),
-        m_subtunes(subtunes)
+        m_fileName(name)
    {}
 };
 

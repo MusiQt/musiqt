@@ -20,11 +20,12 @@
 
 #include "input/input.h"
 #include "input/inputFactory.h"
+#include "settings.h"
 
 void loader::run()
 {
     input *i = IFACTORY->get(m_fileName);
-    if (m_subtunes && (i != nullptr))
+    if (SETTINGS->subtunes() && (i != nullptr))
         i->subtune(1);
 
     emit loaded(i);

@@ -124,13 +124,13 @@ public:
     bool tryPreload(const QString& song);
 
     /// Load song
-    void load(const QString& filename, bool subtunes);
+    void load(const QString& filename);
 
     /// Unload song
     void unload() { loaded(nullptr); }
 
     /// Preload song
-    void preload(const QString& filename, bool subtunes);
+    void preload(const QString& filename);
 };
 
 #endif

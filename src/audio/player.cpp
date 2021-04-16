@@ -109,9 +109,9 @@ bool player::tryPreload(const QString& song)
     }
 }
 
-void player::load(const QString& filename, bool subtunes)
+void player::load(const QString& filename)
 {
-    loader* fileLoader = new loader(filename, subtunes);
+    loader* fileLoader = new loader(filename);
     connect(fileLoader, &loader::loaded, this, &player::loaded);
     connect(fileLoader, &loader::finished, fileLoader, &loader::deleteLater);
     fileLoader->start();
@@ -142,9 +142,9 @@ void player::loaded(input* res)
     emit songLoaded(loaded);
 }
 
-void player::preload(const QString& filename, bool subtunes)
+void player::preload(const QString& filename)
 {
-    loader* fileLoader = new loader(filename, subtunes);
+    loader* fileLoader = new loader(filename);
     connect(fileLoader, &loader::loaded, this, &player::preloaded);
     connect(fileLoader, &loader::finished, fileLoader, &loader::deleteLater);
     fileLoader->start();
