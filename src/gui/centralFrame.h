@@ -64,7 +64,7 @@ public slots:
     void onCmdPrevSong();
     void onCmdNextSong();
 
-    void setFile(const QString& file, const bool play);
+    void setFile(const QString& file);
 
 private:
     void onCmdPlEdit(bool);

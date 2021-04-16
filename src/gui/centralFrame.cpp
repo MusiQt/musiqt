@@ -393,7 +393,7 @@ void centralFrame::onCmdCurrentDir()
     m_playlist->setCurrentIndex(item);
 }
 
-void centralFrame::setFile(const QString& file, const bool play)
+void centralFrame::setFile(const QString& file)
 {
     qDebug() << "setFile " << file;
 
@@ -423,10 +423,6 @@ void centralFrame::setFile(const QString& file, const bool play)
     {
         if (dirSelected)
         {
-            if (play && (m_player->state() == state_t::STOP))
-            {
-                m_player->play();
-            }
             return;
         }
         else
@@ -462,15 +458,12 @@ void centralFrame::setFile(const QString& file, const bool play)
             {
                 m_playlist->setCurrentIndex(item);
             }
-
-            m_player->play();
         }
     }
     else
     {
         m_dirlist->setProperty("UserData", QVariant(file));
         setDir(fileInfo.dir().absolutePath());
-        m_player->play();
     }
 }
 

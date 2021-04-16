@@ -155,17 +155,19 @@ void mainWindow::init(const char* arg)
 #else
         const QString message(arg);
 #endif
-        m_cFrame->setFile(QDir(message).absolutePath(), true);
+        m_cFrame->setFile(QDir(message).absolutePath());
+        m_player->play();
     }
     else
     {
-        m_cFrame->setFile(m_settings.value("General Settings/file").toString(), false);
+        m_cFrame->setFile(m_settings.value("General Settings/file").toString());
     }
 }
 
 void mainWindow::onMessage(QString msg)
 {
-    m_cFrame->setFile(QDir(msg).absolutePath(), true);
+    m_cFrame->setFile(QDir(msg).absolutePath());
+    m_player->play();
 }
 
 QToolBar *mainWindow::createControlBar()
