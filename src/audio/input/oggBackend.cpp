@@ -176,6 +176,10 @@ oggBackend::oggBackend(const QString& fileName) :
             {
                 lyrics = QString(*ptr+15);
             }
+            if (oggTag::isTag(*ptr, "BPM"))
+            {
+                m_metaData.addInfo(metaData::AUDIO_BPM, QString(*ptr).mid(4));
+            }
             else if (oggTag::isTag(*ptr, "METADATA_BLOCK_PICTURE"))
             {
                 oggTag::readBlockPicture(QByteArray::fromBase64(*ptr+23), image, mime);
