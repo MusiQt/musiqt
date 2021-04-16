@@ -98,7 +98,7 @@ public:
     /// Stop playback
     void stop();
 
-    /// Get state
+    /// Get playback state
     state_t state() const { return m_audio->state(); }
 
     /// Get current position in seconds
@@ -122,10 +122,10 @@ public:
     /// Get song info
     const metaData* getMetaData() const { return m_input->getMetaData(); }
 
-    /// Seek support
+    /// Seeking is supported?
     bool seekable() const { return m_input->seekable(); }
 
-    /// Gapless support
+    /// Gapless plaback is supported?
     bool gapless() const { return m_input->gapless(); }
 
     /// Get number of subtunes
@@ -137,7 +137,7 @@ public:
     /// Change subtune
     void changeSubtune(dir_t dir);
 
-    /// Song loaded
+    /// Get file name of the loaded song
     QString loadedSong() const { return m_input->songLoaded(); }
 
     /// Get song duration in milliseconds
