@@ -22,10 +22,6 @@
 #include "utils.h"
 #include "xdg.h"
 
-#ifdef _WIN32
-#  include <windows.h>
-#endif
-
 #include <QDir>
 #include <QDebug>
 
@@ -39,7 +35,7 @@ singleApp::singleApp(int & argc, char ** argv) :
 bool singleApp::isRunning()
 {
 #ifdef _WIN32
-    const QString fifoFileName("\\\\.\\pipe\\musiqt.fifo");
+    const QString fifoFileName(R"(\\.\pipe\musiqt.fifo)");
 #else
     const QString fifoFileName(QString("%1/.musiqt.fifo").arg(xdg::getRuntimeDir()));
 #endif
@@ -90,6 +86,7 @@ bool singleApp::isRunning()
                 qint64 res = socket.write(block);
                 qDebug() << "res: " << res;
                 socket.flush();
+                socket.waitForBytesWritten();
                 socket.disconnectFromServer();
             }
             else
@@ -125,17 +122,18 @@ void singleApp::acceptMessage()
         return;
     }
 
-    socket->waitForReadyRead();
+    if (socket->waitForReadyRead())
+    {
+        qDebug() << "data: " << socket->bytesAvailable();
+        QDataStream in(socket);
+        in.setVersion(QDataStream::Qt_4_0);
+        QString message;
+        in >> message;
+        qDebug() << "msg: " << message;
 
-    qDebug() << "data: " << socket->bytesAvailable();
-    QDataStream in(socket);
-    in.setVersion(QDataStream::Qt_4_0);
-    QString message;
-    in >> message;
-    qDebug() << "msg: " << message;
-
-    if (!message.isEmpty())
-        emit sendMessage(message);
+        if (!message.isEmpty())
+            emit sendMessage(message);
+    }
 
     delete socket;
 }
