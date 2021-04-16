@@ -23,31 +23,6 @@
 #include "input/input.h"
 
 #include <QScopedPointer>
-#include <QThread>
-
-class loadThread : public QThread
-{
-    Q_OBJECT
-
-private:
-    const QString m_fileName;
-    const bool m_subtunes;
-
-protected:
-    void run();
-
-signals:
-    void loaded(input* res);
-
-public:
-    loadThread(QString name, bool subtunes) :
-        QThread(),
-        m_fileName(name),
-        m_subtunes(subtunes)
-   {}
-};
-
-/*****************************************************************/
 
 enum class dir_t
 {

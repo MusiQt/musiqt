@@ -27,6 +27,8 @@ set(MUSIQT_SOURCES
     src/audio/configFrame.h
     src/audio/InputWrapper.cpp
     src/audio/InputWrapper.h
+    src/audio/loader.cpp
+    src/audio/loader.h
     src/audio/player.cpp
     src/audio/player.h
     src/audio/converter/converter.h

@@ -18,20 +18,10 @@
 
 #include "player.h"
 
+#include "loader.h"
 #include "input/inputFactory.h"
 
 #include <QDebug>
-
-void loadThread::run()
-{
-    input *i = IFACTORY->get(m_fileName);
-    if (m_subtunes && (i != nullptr))
-        i->subtune(1);
-
-    emit loaded(i);
-}
-
-/*****************************************************************/
 
 player::player() :
     m_input(IFACTORY->get()),
@@ -121,10 +111,10 @@ bool player::tryPreload(const QString& song)
 
 void player::load(const QString& filename, bool subtunes)
 {
-    loadThread* loader = new loadThread(filename, subtunes);
-    connect(loader, &loadThread::loaded, this, &player::loaded);
-    connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
-    loader->start();
+    loader* fileLoader = new loader(filename, subtunes);
+    connect(fileLoader, &loader::loaded, this, &player::loaded);
+    connect(fileLoader, &loader::finished, fileLoader, &loader::deleteLater);
+    fileLoader->start();
 }
 
 void player::loaded(input* res)
@@ -154,10 +144,10 @@ void player::loaded(input* res)
 
 void player::preload(const QString& filename, bool subtunes)
 {
-    loadThread* loader = new loadThread(filename, subtunes);
-    connect(loader, &loadThread::loaded, this, &player::preloaded);
-    connect(loader, &loadThread::finished, loader, &loadThread::deleteLater);
-    loader->start();
+    loader* fileLoader = new loader(filename, subtunes);
+    connect(fileLoader, &loader::loaded, this, &player::preloaded);
+    connect(fileLoader, &loader::finished, fileLoader, &loader::deleteLater);
+    fileLoader->start();
 }
 
 void player::preloaded(input* res)
