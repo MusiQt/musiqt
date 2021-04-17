@@ -171,9 +171,9 @@ void player::loadAndPlay(const QString& filename)
     // Start playing once loaded
     QMetaObject::Connection * const connection = new QMetaObject::Connection;
     *connection = connect(this, &player::songLoaded,
-        [this, connection] ()
+        [this, connection] (bool res)
         {
-            play();
+            if (res) play();
 
             QObject::disconnect(*connection);
             delete connection;
