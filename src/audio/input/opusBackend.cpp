@@ -151,66 +151,8 @@ opusBackend::opusBackend(const QString& fileName) :
 
     setDuration(static_cast<unsigned int>(op_pcm_total(m_of, -1)/48));
 
-    QString title;
-    QString artist;
-    QString year;
-    QString album;
-    QString genre;
-    QString comment;
-    QString lyrics;
-    QString mime;
-    QByteArray image;
-
     char **ptr = op_tags(m_of, -1)->user_comments;
-    while (*ptr)
-    {
-        qDebug() << *ptr;
-        if (!oggTag::getMetadata(*ptr, &title, "title"))
-        if (!oggTag::getMetadata(*ptr, &artist, "artist"))
-        if (!oggTag::getMetadata(*ptr, &year, "date"))
-        if (!oggTag::getMetadata(*ptr, &album, "album"))
-        if (!oggTag::getMetadata(*ptr, &genre, "genre"))
-        if (!oggTag::getMetadata(*ptr, &comment, "comment"))
-        {
-            if (oggTag::isTag(*ptr, "tracknumber"))
-            {
-                m_metaData.addInfo(metaData::TRACK_NUMBER, QString(*ptr).mid(12));
-            }
-            else if (oggTag::isTag(*ptr, "UNSYNCEDLYRICS"))
-            {
-                lyrics = QString(*ptr+15);
-            }
-            else if (oggTag::isTag(*ptr, "METADATA_BLOCK_PICTURE"))
-            {
-                oggTag::readBlockPicture(QByteArray::fromBase64(*ptr+23), image, mime);
-            }
-            else if (oggTag::isTag(*ptr, "COVERARTMIME"))
-            {
-                mime = QString(*ptr+13);
-            }
-            else if (oggTag::isTag(*ptr, "COVERART"))
-            {
-                image = QByteArray::fromBase64(*ptr+9);
-            }
-            else if (oggTag::isTag(*ptr, "BINARY_COVERART"))
-            {
-                // TODO
-                qWarning() << "unsupported";
-            }
-        }
-        ++ptr;
-    }
-
-    m_metaData.addInfo(metaData::TITLE, title);
-    m_metaData.addInfo(metaData::ARTIST, artist);
-    m_metaData.addInfo(metaData::ALBUM, album);
-    m_metaData.addInfo(metaData::GENRE, genre);
-    m_metaData.addInfo(metaData::CONTENT_CREATED, year);
-    m_metaData.addInfo(metaData::COMMENT, comment);
-    m_metaData.addInfo(metaData::AS_TEXT, lyrics);
-
-    if (!mime.isNull())
-        m_metaData.addInfo(new QByteArray((char*)image.data(), image.size()));
+    oggTag::parseTags(ptr, m_metaData);
 
     songLoaded(fileName);
 }

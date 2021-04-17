@@ -28,7 +28,6 @@
 #include <QDebug>
 #include <QComboBox>
 #include <QLabel>
-#include <QTextCodec>
 
 #include <memory>
 
@@ -147,104 +146,8 @@ oggBackend::oggBackend(const QString& fileName) :
 
     setDuration(static_cast<unsigned int>(ov_time_total(ovFile.get(), -1)*1000.));
 
-    QString title;
-    QString artist;
-    QString year;
-    QString album;
-    QString genre;
-    QString comment;
-    QString lyrics;
-    QString mime;
-    QByteArray image;
-
     char **ptr = ov_comment(ovFile.get(), -1)->user_comments;
-    while (*ptr)
-    {
-        qDebug() << *ptr;
-        if (!oggTag::getMetadata(*ptr, &title, "title"))
-        if (!oggTag::getMetadata(*ptr, &artist, "artist"))
-        if (!oggTag::getMetadata(*ptr, &year, "date"))
-        if (!oggTag::getMetadata(*ptr, &album, "album"))
-        if (!oggTag::getMetadata(*ptr, &genre, "genre"))
-        if (!oggTag::getMetadata(*ptr, &comment, "comment"))
-        {
-            if (oggTag::isTag(*ptr, "tracknumber"))
-            {
-                m_metaData.addInfo(metaData::TRACK_NUMBER, QString(*ptr).mid(12));
-            }
-            else if (oggTag::isTag(*ptr, "UNSYNCEDLYRICS"))
-            {
-                lyrics = QString(*ptr+15);
-            }
-            if (oggTag::isTag(*ptr, "BPM"))
-            {
-                m_metaData.addInfo(metaData::AUDIO_BPM, QString(*ptr).mid(4));
-            }
-            else if (oggTag::isTag(*ptr, "METADATA_BLOCK_PICTURE"))
-            {
-                oggTag::readBlockPicture(QByteArray::fromBase64(*ptr+23), image, mime);
-            }
-            else if (oggTag::isTag(*ptr, "COVERARTMIME"))
-            {
-                mime = QString(*ptr+13);
-            }
-            else if (oggTag::isTag(*ptr, "COVERART"))
-            {
-                image = QByteArray::fromBase64(*ptr+9);
-            }
-            else if (oggTag::isTag(*ptr, "BINARY_COVERART"))
-            {
-                // like METADATA_BLOCK_PICTURE but not encoded
-                quint32 picType = oggTag::getNum(*ptr+16);
-                qDebug() << "picType: " << picType;
-                quint32 mimeLen = oggTag::getNum(*ptr+20);
-                mime = QString(QByteArray::fromRawData(*ptr+24, mimeLen));
-                qDebug() << "mime: " << mime;
-                quint32 descLen = oggTag::getNum(*ptr+24+mimeLen);
-                QString desc = QString(QByteArray::fromRawData(*ptr+28+mimeLen, descLen));
-                qDebug() << "desc: " << desc;
-
-                // FIXME - WTF! the image is UTF8 encoded!
-                const quint32 dataPos = 28+mimeLen+descLen+16;
-                quint32 dataLen = oggTag::getNum(*ptr+dataPos);
-#if 0
-                QString imgData = QString::fromUtf8(*ptr+4+dataPos, dataLen);
-                for (auto i = imgData.constBegin(); i != imgData.constEnd(); ++i)
-                {
-                    image.append(static_cast<char >((*i).unicode()));
-                }
-#else
-                QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-                QTextDecoder *decoder = new QTextDecoder(codec, QTextCodec::ConvertInvalidToNull);
-
-                for (int i = 0; i < dataLen; i++)
-                {
-                    QString imgData = decoder->toUnicode(*ptr+4+dataPos+i, 1);
-                    if (!imgData.isEmpty())
-                    {
-                        ushort unicode = imgData.front().unicode();
-                        if (unicode>255)
-                            qWarning() << "out of range: " << unicode;
-                        image.append(static_cast<char>(imgData.front().unicode()));
-                    }
-                }
-                delete decoder;
-            }
-#endif
-        }
-        ++ptr;
-    }
-
-    m_metaData.addInfo(metaData::TITLE, title);
-    m_metaData.addInfo(metaData::ARTIST, artist);
-    m_metaData.addInfo(metaData::ALBUM, album);
-    m_metaData.addInfo(metaData::GENRE, genre);
-    m_metaData.addInfo(metaData::CONTENT_CREATED, year);
-    m_metaData.addInfo(metaData::COMMENT, comment);
-    m_metaData.addInfo(metaData::AS_TEXT, lyrics);
-
-    if (!mime.isNull())
-        m_metaData.addInfo(new QByteArray(image));
+    oggTag::parseTags(ptr, m_metaData);
 
     m_vf = ovFile.release();
     songLoaded(fileName);

@@ -47,6 +47,7 @@ set(MUSIQT_SOURCES
     src/audio/input/inputFactory.h
     src/audio/input/metaData.cpp
     src/audio/input/metaData.h
+    src/audio/input/oggTag.cpp
     src/audio/input/oggTag.h
     src/audio/output/audioProcess.h
     src/audio/output/qaudioBackend.cpp
