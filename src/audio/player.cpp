@@ -166,6 +166,22 @@ void player::preloaded(input* res)
     }
 }
 
+void player::loadAndPlay(const QString& filename)
+{
+    // Start playing once loaded
+    QMetaObject::Connection * const connection = new QMetaObject::Connection;
+    *connection = connect(this, &player::songLoaded,
+        [this, connection] ()
+        {
+            play();
+
+            QObject::disconnect(*connection);
+            delete connection;
+        });
+
+    load(filename);
+}
+
 void player::changeSubtune(dir_t dir)
 {
     if (m_input->subtunes() <= 1)

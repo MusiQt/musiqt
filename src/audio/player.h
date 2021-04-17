@@ -126,6 +126,9 @@ public:
     /// Load song
     void load(const QString& filename);
 
+    /// Load song and start playback
+    void loadAndPlay(const QString& filename);
+
     /// Unload song
     void unload() { loaded(nullptr); }
 

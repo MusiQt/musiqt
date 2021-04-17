@@ -165,18 +165,7 @@ void mainWindow::init(const char* arg)
 
 void mainWindow::onMessage(QString msg)
 {
-    // Start playing once loaded
-    QMetaObject::Connection * const connection = new QMetaObject::Connection;
-    *connection = connect(m_player, &player::songLoaded,
-        [this, connection] ()
-        {
-            m_player->play();
-
-            QObject::disconnect(*connection);
-            delete connection;
-        });
-
-    m_player->load(QDir(msg).absolutePath());
+    m_player->loadAndPlay(QDir(msg).absolutePath());
 }
 
 QToolBar *mainWindow::createControlBar()

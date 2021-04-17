@@ -241,8 +241,7 @@ void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position
 void dbusHandler::OpenUri(const QString &Uri)
 {
     QUrl file(Uri);
-    m_player->load(file.toLocalFile());
-    // TODO play
+    m_player->loadAndPlay(file.toLocalFile());
 }
 
 void dbusHandler::stateChanged()
