@@ -187,17 +187,17 @@ add_custom_target(update_pot
 ##################################################################
 # Check for Qt
 
-find_package(Qt5 COMPONENTS Widgets Network Multimedia  REQUIRED)
-target_link_libraries(musiqt Qt5::Widgets Qt5::Network Qt5::Multimedia)
+find_package(Qt5 5.15 COMPONENTS Widgets Network Multimedia REQUIRED)
+target_link_libraries(musiqt Qt::Widgets Qt::Network Qt::Multimedia)
 
 find_package(Qt5 OPTIONAL_COMPONENTS DBus)
 if (Qt5DBus_FOUND)
     SET(ENABLE_DBUS 1)
-    qt5_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
+    qt_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
             src/org.mpris.MediaPlayer2.xml
             dbusHandler.h
             dbusHandler)
-    qt5_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
+    qt_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
             src/org.mpris.MediaPlayer2.Player.xml
             dbusHandler.h
             dbusHandler)
@@ -206,7 +206,7 @@ if (Qt5DBus_FOUND)
         src/dbusHandler.h
         src/dbusHandler.cpp
     )
-    target_link_libraries(musiqt Qt5::DBus)
+    target_link_libraries(musiqt Qt::DBus)
 endif()
 
 ##################################################################
