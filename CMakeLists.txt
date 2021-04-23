@@ -17,7 +17,6 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{CPPFLAGS}")
 
 set(MUSIQT_SOURCES
     src/resources.qrc
-    src/gettext.h
     src/main.cpp
     src/singleApp.cpp
     src/singleApp.h
@@ -161,6 +160,7 @@ IF(NLS)
         include_directories(${Intl_INCLUDE_DIRS})
         target_link_libraries(musiqt ${Intl_LIBRARIES})
         target_sources(musiqt PRIVATE
+            src/gettext.h
             src/translator.cpp
             src/translator.h
         )
