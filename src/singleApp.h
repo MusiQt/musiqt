@@ -19,10 +19,8 @@
 #ifndef SINGLEAPP_H
 #define SINGLEAPP_H
 
-#include "ioEx.h"
-
 #include <QApplication>
-
+#include <QLockFile>
 #include <QLocalServer>
 #include <QLocalSocket>
 

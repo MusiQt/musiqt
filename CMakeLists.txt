@@ -84,7 +84,6 @@ set(MUSIQT_SOURCES
     src/utils/AutoDLL.h
     src/utils/AutoDLL.cpp
     src/utils/genres.h
-    src/utils/ioEx.h
     src/utils/loadsym.h
     src/utils/utils.cpp
     src/utils/utils.h
