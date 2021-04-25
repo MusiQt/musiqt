@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 project(musiqt VERSION 0.9.0 HOMEPAGE_URL https://github.com/drfiemost/musiqt)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
@@ -321,7 +321,7 @@ ENDIF(GME)
 
 OPTION(OPENMPT "Build openmpt backend if available" ON)
 IF(OPENMPT)
-    pkg_check_modules(libopenmpt IMPORTED_TARGET libopenmpt<0.5)
+    pkg_check_modules(libopenmpt IMPORTED_TARGET libopenmpt>=0.3)
     if(libopenmpt_FOUND)
         SET(HAVE_OPENMPT 1)
         target_sources(musiqt PRIVATE
