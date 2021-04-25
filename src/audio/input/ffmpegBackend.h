@@ -26,7 +26,7 @@
 extern "C" {
 #ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
 #  include <libavformat/avformat.h>
-#  if LIBAVFORMAT_VERSION_INT <= (57<<16 | 5<<8)
+#  if LIBAVFORMAT_VERSION_INT <= (58<<16 | 12<<8)
 #    error LIBAVFORMAT too old
 #  endif
 #endif

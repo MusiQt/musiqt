@@ -197,12 +197,6 @@ bool ffmpegBackend::init()
     AVInputFormat *(*dl_av_find_input_format)(const char*);
     LOADSYM(avformatDll, av_find_input_format, AVInputFormat*(*)(const char*))
 
-    void (*dl_av_register_all)(void);
-    LOADSYM(avformatDll, av_register_all, void(*)(void))
-
-    // avcodec_register_all() is implicitly called by av_register_all()
-    dl_av_register_all(); // deprecated in ffmpeg 4.0
-
     // register supported extensions
     if (dl_av_find_input_format("aac"))
         m_ext << "aac";
