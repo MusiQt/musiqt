@@ -156,7 +156,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
     memcpy((char*)buffer, m_decodeBuf, bufferSize);
     m_decodeBufOffset = decodedSize - bufferSize;
-    memcpy(m_decodeBuf, m_decodeBuf+bufferSize, m_decodeBufOffset);
+    memmove(m_decodeBuf, m_decodeBuf+bufferSize, m_decodeBufOffset);
 
     return bufferSize;
 }
