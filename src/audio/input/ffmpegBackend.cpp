@@ -172,27 +172,28 @@ bool ffmpegBackend::init()
     LOADSYM(avcodecDll, avcodec_open2, int(*)(AVCodecContext*, const AVCodec*, AVDictionary**))
     LOADSYM(avcodecDll, avcodec_send_packet, int(*)(AVCodecContext*, const AVPacket*))
     LOADSYM(avcodecDll, avcodec_receive_frame, int(*)(AVCodecContext*, const AVFrame*))
-    LOADSYM(avutilDll, av_frame_alloc, AVFrame*(*)())
-    LOADSYM(avutilDll, av_frame_free, void(*)(AVFrame**))
-    LOADSYM(avutilDll, av_sample_fmt_is_planar, int(*)(enum AVSampleFormat))
+    LOADSYM(avcodecDll, avcodec_alloc_context3, AVCodecContext*(*)(const AVCodec *codec))
+    LOADSYM(avcodecDll, avcodec_free_context, void(*)(AVCodecContext **avctx))
+    LOADSYM(avcodecDll, avcodec_parameters_to_context, int(*)(AVCodecContext *codec,
+        const AVCodecParameters *par))
+    LOADSYM(avcodecDll, avcodec_flush_buffers, void(*)(AVCodecContext*))
+    LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
+    LOADSYM(avcodecDll, av_packet_unref, void(*)(AVPacket*))
+    
     LOADSYM(avformatDll, avformat_open_input, int(*)(AVFormatContext **ps,
         const char *filename, AVInputFormat *fmt, AVDictionary **options))
     LOADSYM(avformatDll, avformat_close_input, void(*)(AVFormatContext**))
     LOADSYM(avformatDll, avformat_find_stream_info, int(*)(AVFormatContext*, AVDictionary**))
     LOADSYM(avformatDll, av_read_frame, int(*)(AVFormatContext*, AVPacket*))
     LOADSYM(avformatDll, av_seek_frame, int(*)(AVFormatContext*, int, int64_t, int))
-    LOADSYM(avcodecDll, avcodec_alloc_context3, AVCodecContext*(*)(const AVCodec *codec))
-    LOADSYM(avcodecDll, avcodec_free_context, void(*)(AVCodecContext **avctx))
     LOADSYM(avformatDll, av_find_best_stream, int(*)(AVFormatContext *ic,
         enum AVMediaType type, int wanted_stream_nb,
         int related_stream, AVCodec **decoder_ret, int flags))
-    LOADSYM(avcodecDll, avcodec_parameters_to_context, int(*)(AVCodecContext *codec,
-        const AVCodecParameters *par))
+    LOADSYM(avutilDll, av_frame_alloc, AVFrame*(*)())
+    LOADSYM(avutilDll, av_frame_free, void(*)(AVFrame**))
+    LOADSYM(avutilDll, av_sample_fmt_is_planar, int(*)(enum AVSampleFormat))
     LOADSYM(avutilDll, av_dict_get, AVDictionaryEntry*(*)(AVDictionary*, const char*,
         const AVDictionaryEntry*, int))
-    LOADSYM(avcodecDll, avcodec_flush_buffers, void(*)(AVCodecContext*))
-    LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
-    LOADSYM(avcodecDll, av_packet_unref, void(*)(AVPacket*))
     LOADSYM(avutilDll, av_rescale_q, int64_t (*)(int64_t, AVRational, AVRational))
 
     AVInputFormat *(*dl_av_find_input_format)(const char*);
