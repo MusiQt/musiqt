@@ -95,6 +95,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
         {
             if (dl_av_read_frame(m_formatContext, &m_packet) < 0)
             {
+                // AVERROR_EOF
                 qDebug() << "Last frame: " << static_cast<int>(decodedSize);
                 memcpy(buffer, m_decodeBuf, decodedSize);
                 m_decodeBufOffset = 0;
@@ -103,27 +104,37 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
             if (m_packet.stream_index == m_audioStreamIndex)
             {
-                if (dl_avcodec_send_packet(m_codecContext, &m_packet) < 0)
+                int res = dl_avcodec_send_packet(m_codecContext, &m_packet);
+                if (res == 0)
                 {
-                    // TODO on AVERROR(EAGAIN) receive frame and send packet again
+                    m_needData = false;
+                }
+                else if (res == AVERROR(EAGAIN))
+                {
+                    // FIXME receive frames and then send same packet again
+                    break;
+                }
+                else if (res < 0)
+                {
+                    // TODO use av_err2str(res)
                     qWarning() << "Error sending packet";
                     return decodedSize;
                 }
-
-                m_needData = false;
             }
-            
+
             dl_av_packet_unref(&m_packet);
         }
 
         int res = dl_avcodec_receive_frame(m_codecContext, m_frame);
         if (res == 0)
         {
-            const int data_size = m_frame->nb_samples * m_codecContext->channels * m_sampleSize;
+            int data_size = m_frame->linesize[0];
 
             unsigned char *out = m_decodeBuf + decodedSize;
             if (m_planar && (m_codecContext->channels > 1))
             {
+                data_size *= m_codecContext->channels;
+
                 // Interleave channels
                 for (int j=0, idx=0; j<m_frame->nb_samples; j++, idx+=m_sampleSize)
                 {
@@ -145,7 +156,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
         {
             m_needData = true;
         }
-        else
+        else // TODO handle AVERROR_EOF
         {
             qWarning() << "Error receiving frame";
             return decodedSize;
@@ -244,7 +255,7 @@ ffmpegBackend::ffmpegBackend(const QString& fileName) :
 {
     try
     {
-        if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
+        if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) < 0)
         {
             throw loadError("Cannot open input");
         }
