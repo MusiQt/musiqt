@@ -58,7 +58,8 @@ int (*ffmpegBackend::dl_avformat_open_input) (AVFormatContext**, const char*, AV
 void (*ffmpegBackend::dl_avformat_close_input)(AVFormatContext**)=0;
 int (*ffmpegBackend::dl_avformat_find_stream_info)(AVFormatContext*, AVDictionary**)=0;
 int (*ffmpegBackend::dl_avcodec_open2)(AVCodecContext*, const AVCodec*, AVDictionary**)=0;
-int (*ffmpegBackend::dl_avcodec_decode_audio4)(AVCodecContext*, AVFrame*, int*, const AVPacket*)=0;
+int (*ffmpegBackend::dl_avcodec_send_packet)(AVCodecContext*, const AVPacket*)=0;
+int (*ffmpegBackend::dl_avcodec_receive_frame)(AVCodecContext*, const AVFrame*)=0;
 AVFrame* (*ffmpegBackend::dl_av_frame_alloc)();
 void (*ffmpegBackend::dl_av_frame_free)(AVFrame**)=0;
 void (*ffmpegBackend::dl_av_frame_unref)(AVFrame*)=0;
@@ -67,7 +68,6 @@ int (*ffmpegBackend::dl_av_read_frame)(AVFormatContext*, AVPacket*)=0;
 int (*ffmpegBackend::dl_av_seek_frame)(AVFormatContext*, int, int64_t, int)=0;
 AVDictionaryEntry* (*ffmpegBackend::dl_av_dict_get)(AVDictionary*, const char*, const AVDictionaryEntry*, int)=0;
 AVCodec* (*ffmpegBackend::dl_avcodec_find_decoder)(enum AVCodecID)=0;
-int (*ffmpegBackend::dl_av_new_packet)(AVPacket*, int)=0;
 void (*ffmpegBackend::dl_av_packet_unref)(AVPacket*)=0;
 void (*ffmpegBackend::dl_avcodec_flush_buffers)(AVCodecContext*)=0;
 int64_t (*ffmpegBackend::dl_av_rescale_q)(int64_t, AVRational, AVRational)=0;
@@ -89,7 +89,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
     while (decodedSize < bufferSize)
     {
-        while (!m_packet.data)
+        while (m_needData)
         {
             if (dl_av_read_frame(m_formatContext, &m_packet) < 0)
             {
@@ -98,25 +98,24 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
                 m_decodeBufOffset = 0;
                 return decodedSize;
             }
-            if (m_packet.stream_index != m_audioStreamIndex)
+
+            if (m_packet.stream_index == m_audioStreamIndex)
             {
-                dl_av_packet_unref(&m_packet);
-                m_packet.data = 0;
+                if (dl_avcodec_send_packet(m_codecContext, &m_packet) < 0)
+                {
+                    // TODO on AVERROR(EAGAIN) receive frame and send packet again
+                    qWarning() << "Error sending packet";
+                    return decodedSize;
+                }
+
+                m_needData = false;
             }
-            else
-                m_packetOffset = 0;
+            
+            dl_av_packet_unref(&m_packet);
         }
 
-        const int remaining = m_packet.size - m_packetOffset;
-        AVPacket avpkt;
-        dl_av_new_packet(&avpkt, remaining);
-        memcpy(avpkt.data, m_packet.data+m_packetOffset, remaining);
-
-        int got_frame = 0;
-        const int used = dl_avcodec_decode_audio4(m_codecContext, m_frame, &got_frame, &avpkt);
-        dl_av_packet_unref(&avpkt);
-
-        if (got_frame)
+        int res = dl_avcodec_receive_frame(m_codecContext, m_frame);
+        if (res == 0)
         {
             const int data_size = m_frame->nb_samples * m_codecContext->channels * m_sampleSize;
 
@@ -138,19 +137,16 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
                 memcpy(out, m_frame->data[0], data_size);
             }
 
-            dl_av_frame_unref(m_frame);
-
             decodedSize += data_size;
         }
-
-        if (used > 0)
+        else if (res == AVERROR(EAGAIN))
         {
-            m_packetOffset += used;
+            m_needData = true;
         }
-        if ((used < 0) || (m_packet.size <= m_packetOffset))
+        else
         {
-            dl_av_packet_unref(&m_packet);
-            m_packet.data = 0;
+            qWarning() << "Error receiving frame";
+            return decodedSize;
         }
     }
 
@@ -172,7 +168,8 @@ bool ffmpegBackend::init()
     }
 
     LOADSYM(avcodecDll, avcodec_open2, int(*)(AVCodecContext*, const AVCodec*, AVDictionary**))
-    LOADSYM(avcodecDll, avcodec_decode_audio4, int(*)(AVCodecContext*, AVFrame*, int*, const AVPacket*)) // deprecated in FFmpeg 3.1
+    LOADSYM(avcodecDll, avcodec_send_packet, int(*)(AVCodecContext*, const AVPacket*))
+    LOADSYM(avcodecDll, avcodec_receive_frame, int(*)(AVCodecContext*, const AVFrame*))
     LOADSYM(avutilDll, av_frame_alloc, AVFrame*(*)())
     LOADSYM(avutilDll, av_frame_free, void(*)(AVFrame**))
     LOADSYM(avutilDll, av_frame_unref, void(*)(AVFrame*))
@@ -188,7 +185,6 @@ bool ffmpegBackend::init()
                                          int related_stream, AVCodec **decoder_ret, int flags))
     LOADSYM(avcodecDll, avcodec_parameters_to_context, int(*)(AVCodecContext *codec, const AVCodecParameters *par))
     LOADSYM(avutilDll, av_dict_get, AVDictionaryEntry*(*)(AVDictionary*, const char*, const AVDictionaryEntry*, int))
-    LOADSYM(avcodecDll, av_new_packet, int(*)(AVPacket*, int))
     LOADSYM(avcodecDll, avcodec_flush_buffers, void(*)(AVCodecContext*))
     LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
     LOADSYM(avcodecDll, av_packet_unref, void(*)(AVPacket*))
@@ -236,11 +232,10 @@ QStringList ffmpegBackend::ext() { return m_ext; }
 ffmpegBackend::ffmpegBackend(const QString& fileName) :
     m_formatContext(nullptr),
     m_codecContext(nullptr),
+    m_needData(true),
     m_decodeBufOffset(0),
     m_config(name, iconFfmpeg, 86)
 {
-    m_packet.data = 0;
-
     try
     {
         if (dl_avformat_open_input(&m_formatContext, fileName.toUtf8().constData(), nullptr, nullptr) != 0)
@@ -312,9 +307,6 @@ ffmpegBackend::~ffmpegBackend()
 {
     dl_av_frame_free(&m_frame);
 
-    if (m_packet.data)
-        dl_av_packet_unref(&m_packet);
-
     dl_avcodec_free_context(&m_codecContext);
     dl_avformat_close_input(&m_formatContext);
 }
@@ -349,11 +341,7 @@ bool ffmpegBackend::seek(double pos)
     }
 
     m_decodeBufOffset = 0;
-    if (m_packet.data)
-    {
-        dl_av_packet_unref(&m_packet);
-        m_packet.data = 0;
-    }
+    m_needData = true;
 
     dl_avcodec_flush_buffers(m_codecContext);
 
