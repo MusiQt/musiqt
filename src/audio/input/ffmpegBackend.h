@@ -104,7 +104,6 @@ private:
     static int (*dl_avcodec_receive_frame)(AVCodecContext*, const AVFrame*);
     static AVFrame* (*dl_av_frame_alloc)();
     static void (*dl_av_frame_free)(AVFrame**);
-    static void (*dl_av_frame_unref)(AVFrame*);
     static int (*dl_av_sample_fmt_is_planar)(enum AVSampleFormat);
     static int (*dl_av_read_frame)(AVFormatContext*, AVPacket*);
     static int (*dl_av_seek_frame)(AVFormatContext*, int, int64_t, int);

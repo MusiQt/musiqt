@@ -63,7 +63,6 @@ int (*ffmpegBackend::dl_avcodec_send_packet)(AVCodecContext*, const AVPacket*)=0
 int (*ffmpegBackend::dl_avcodec_receive_frame)(AVCodecContext*, const AVFrame*)=0;
 AVFrame* (*ffmpegBackend::dl_av_frame_alloc)();
 void (*ffmpegBackend::dl_av_frame_free)(AVFrame**)=0;
-void (*ffmpegBackend::dl_av_frame_unref)(AVFrame*)=0;
 int (*ffmpegBackend::dl_av_sample_fmt_is_planar)(enum AVSampleFormat)=0;
 int (*ffmpegBackend::dl_av_read_frame)(AVFormatContext*, AVPacket*)=0;
 int (*ffmpegBackend::dl_av_seek_frame)(AVFormatContext*, int, int64_t, int)=0;
@@ -175,7 +174,6 @@ bool ffmpegBackend::init()
     LOADSYM(avcodecDll, avcodec_receive_frame, int(*)(AVCodecContext*, const AVFrame*))
     LOADSYM(avutilDll, av_frame_alloc, AVFrame*(*)())
     LOADSYM(avutilDll, av_frame_free, void(*)(AVFrame**))
-    LOADSYM(avutilDll, av_frame_unref, void(*)(AVFrame*))
     LOADSYM(avutilDll, av_sample_fmt_is_planar, int(*)(enum AVSampleFormat))
     LOADSYM(avformatDll, avformat_open_input, int(*)(AVFormatContext **ps,
         const char *filename, AVInputFormat *fmt, AVDictionary **options))
