@@ -132,7 +132,9 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
                         out += m_sampleSize;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 memcpy(out, m_frame->data[0], data_size);
             }
 
@@ -170,7 +172,7 @@ bool ffmpegBackend::init()
     }
 
     LOADSYM(avcodecDll, avcodec_open2, int(*)(AVCodecContext*, const AVCodec*, AVDictionary**))
-    LOADSYM(avcodecDll, avcodec_decode_audio4, int(*)(AVCodecContext*, AVFrame*, int*, const AVPacket*))
+    LOADSYM(avcodecDll, avcodec_decode_audio4, int(*)(AVCodecContext*, AVFrame*, int*, const AVPacket*)) // deprecated in FFmpeg 3.1
     LOADSYM(avutilDll, av_frame_alloc, AVFrame*(*)())
     LOADSYM(avutilDll, av_frame_free, void(*)(AVFrame**))
     LOADSYM(avutilDll, av_frame_unref, void(*)(AVFrame*))
@@ -199,7 +201,7 @@ bool ffmpegBackend::init()
     LOADSYM(avformatDll, av_register_all, void(*)(void))
 
     // avcodec_register_all() is implicitly called by av_register_all()
-    dl_av_register_all();
+    dl_av_register_all(); // deprecated in ffmpeg 4.0
 
     // register supported extensions
     if (dl_av_find_input_format("aac"))
@@ -257,7 +259,7 @@ ffmpegBackend::ffmpegBackend(const QString& fileName) :
             throw loadError("Cannot find stream info");
         }
 
-        openStream(m_formatContext);
+        openStream();
 
         m_audioStream = m_formatContext->streams[m_audioStreamIndex];
         m_frame = dl_av_frame_alloc();
@@ -364,7 +366,7 @@ bool ffmpegBackend::seek(double pos)
     return true;
 }
 
-void ffmpegBackend::openStream(AVFormatContext* fc)
+void ffmpegBackend::openStream()
 {
     // check for album art, it is treated as a single frame video stream
     int imageStreamIndex = dl_av_find_best_stream(m_formatContext, AVMEDIA_TYPE_VIDEO , -1, -1, 0, 0);
@@ -380,7 +382,7 @@ void ffmpegBackend::openStream(AVFormatContext* fc)
     }
 
     AVCodec* codec;
-    m_audioStreamIndex = dl_av_find_best_stream(fc, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0);
+    m_audioStreamIndex = dl_av_find_best_stream(m_formatContext, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0);
     if (m_audioStreamIndex == AVERROR_STREAM_NOT_FOUND)
     {
         throw loadError("No audio stream found");
@@ -396,7 +398,8 @@ void ffmpegBackend::openStream(AVFormatContext* fc)
         throw loadError("Cannot alloc context");
     }
 
-    if (dl_avcodec_parameters_to_context(m_codecContext, fc->streams[m_audioStreamIndex]->codecpar) < 0)
+    if (dl_avcodec_parameters_to_context(m_codecContext,
+        m_formatContext->streams[m_audioStreamIndex]->codecpar) < 0)
     {
         throw loadError("Error filling the codec context");
     }

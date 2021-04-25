@@ -123,7 +123,7 @@ private:
     ffmpegBackend(const QString& fileName);
 
     /// Open selected stream
-    void openStream(AVFormatContext* fc);
+    void openStream();
 
     QString getMetadata(const char* type);
 
