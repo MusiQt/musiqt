@@ -64,7 +64,7 @@ public:
     unsigned int samplerate() const override { return 0; }
     unsigned int channels() const override { return 0; }
     sample_t precision() const override { return sample_t::S16; }
-    size_t fillBuffer(void* buffer, const size_t bufferSize) override { return 0; }
+    size_t fillBuffer([[maybe_unused]] void* buffer, [[maybe_unused]] const size_t bufferSize) override { return 0; }
 };
 
 /*****************************************************************/

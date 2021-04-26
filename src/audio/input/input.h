@@ -145,7 +145,7 @@ public:
     virtual bool seekable() const { return false; }
 
     /// Seek specified position
-    virtual bool seek(double pos) { return false; }
+    virtual bool seek([[maybe_unused]] double pos) { return false; }
 
     /// Callback function
     virtual size_t fillBuffer(void* buffer, size_t bufferSize) =0;
@@ -160,7 +160,7 @@ public:
     virtual unsigned int subtune() const { return 0; }
 
     /// Change subtune
-    virtual bool subtune(unsigned int i) { return false; }
+    virtual bool subtune([[maybe_unused]] unsigned int i) { return false; }
 
     /// Gapless support
     virtual bool gapless() const { return false; }

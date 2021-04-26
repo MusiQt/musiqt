@@ -247,7 +247,7 @@ mpc_int32_t mpcBackend::get_size_func(DATAPARM)
     return ((QFile*)DATAFILE)->size();
 }
 
-mpc_bool_t mpcBackend::canseek_func(DATAPARM)
+mpc_bool_t mpcBackend::canseek_func([[maybe_unused]] DATAPARM)
 {
     return true;
 }

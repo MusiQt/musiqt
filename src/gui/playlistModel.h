@@ -83,7 +83,7 @@ public:
         return data->hasUrls();
     }
 
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, [[maybe_unused]] int column, const QModelIndex &parent) override
     {
         if (action == Qt::IgnoreAction)
             return true;

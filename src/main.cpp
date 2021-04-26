@@ -50,7 +50,7 @@ Q_IMPORT_PLUGIN(QTiffPlugin)
 #endif
 
 
-void messageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void messageOutput(QtMsgType type, [[maybe_unused]] const QMessageLogContext &context, const QString &msg)
 {
     QByteArray timeMsg = QTime::currentTime().toString("hh:mm:ss.zzz").toLocal8Bit();
     QByteArray localMsg = msg.toLocal8Bit();

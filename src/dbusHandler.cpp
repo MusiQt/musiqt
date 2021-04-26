@@ -105,7 +105,7 @@ void propertyChanged(const QString& name, const QVariant& value)
     QDBusConnection::sessionBus().send(msg);
 }
 
-QString trackId(const metaData* data)
+QString trackId([[maybe_unused]] const metaData* data)
 {
     return QString("/org/musiqt/MusiQt/TrackList/%1").arg("1");
 }
@@ -149,7 +149,7 @@ bool dbusHandler::canSeek() const { return m_player->seekable(); }
 bool dbusHandler::canControl() const { return true; }
 
 QString dbusHandler::loopStatus() const { return QString("None"); } // "None", "Track" or "Playlist"
-void dbusHandler::setLoopStatus(const QString &value) { /* ignore */ }
+void dbusHandler::setLoopStatus([[maybe_unused]] const QString &value) { /* ignore */ }
 
 double dbusHandler::maximumRate() const { return 1.; }
 double dbusHandler::minimumRate() const { return 1.; }
@@ -193,7 +193,7 @@ QString dbusHandler::playbackStatus() const
 }
 
 double dbusHandler::rate() const { return 1.; }
-void dbusHandler::setRate(double value) { /* ignore */ }
+void dbusHandler::setRate([[maybe_unused]] double value) { /* ignore */ }
 
 double dbusHandler::volume() const { return m_player->getVolume() / 100.; }
 void dbusHandler::setVolume(double value) { m_player->setVolume(value*100.); }
