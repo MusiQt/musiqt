@@ -161,7 +161,7 @@ static inline unsigned char petscii2ascii(unsigned char ch)
    if ((ch > 0xc0) && (ch < 0xdb)) return ch - 96;                         // lowercase chars
    else if ((ch >= 0x40) && (ch < 0x5e)) return (ch != 0x5c) ? ch : 0xa3;  // uppercase chars
    else if (ch == 0xa4) return 0x5f;                                       // underscore
-   else if ((ch >= 0x00) && (ch < 0x20)) return (ch == 0x0d) ? ch : 0;     // control codes
+   else if (ch < 0x20) return (ch == 0x0d) ? ch : 0;                       // control codes
    else if ((ch >= 0x80) && (ch < 0xa0)) return (ch == 0x8d) ? 0x0a : 0;
    return 0x20;
 }
