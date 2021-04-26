@@ -212,7 +212,7 @@ endif()
 ##################################################################
 # Search for zlib
 
-find_package(ZLIB)
+pkg_check_modules(ZLIB IMPORTED_TARGET zlib>=1.0)
 IF(ZLIB_FOUND)
     ADD_DEFINITIONS(-DNOUNCRYPT)
     SET(HAVE_LIBZ 1)
@@ -228,7 +228,7 @@ IF(ZLIB_FOUND)
             src/libs/unzip/iowin32.c
         )
     endif(MINGW)
-    target_link_libraries(musiqt ZLIB::ZLIB)
+    target_link_libraries(musiqt PkgConfig::ZLIB)
 ENDIF(ZLIB_FOUND)
 
 ##################################################################
