@@ -203,7 +203,7 @@ bool hvlBackend::subtune(const unsigned int i)
 #define HVLSETTINGS hvlConfig::m_settings
 
 hvlConfigFrame::hvlConfigFrame(QWidget* win) :
-    configFrame(win, hvlBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("Samplerate"), this), 0, 0);
     QComboBox *freqBox = new QComboBox(this);

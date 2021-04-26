@@ -412,7 +412,7 @@ void ffmpegBackend::openStream()
 /*****************************************************************/
 
 ffmpegConfigFrame::ffmpegConfigFrame(QWidget* win) :
-    configFrame(win, ffmpegBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available"), this));
 }

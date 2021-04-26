@@ -255,7 +255,7 @@ mpc_bool_t mpcBackend::canseek_func([[maybe_unused]] DATAPARM)
 /*****************************************************************/
 
 mpcConfigFrame::mpcConfigFrame(QWidget* win) :
-    configFrame(win, mpcBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available"), this));
 }

@@ -428,7 +428,7 @@ off_t mpg123Backend::seek_func(void* handle, off_t offset, int whence)
 #define MPGSETTINGS	mpg123Config::m_settings
 
 mpg123ConfigFrame::mpg123ConfigFrame(QWidget* win) :
-    configFrame(win, mpg123Backend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("Decoder"), this), 0, 0);
     QComboBox *decBox = new QComboBox(this);

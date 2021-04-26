@@ -216,7 +216,7 @@ int opusBackend::close_func(void *_stream)
 /*****************************************************************/
 
 opusConfigFrame::opusConfigFrame(QWidget* win) :
-    configFrame(win, opusBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available"), this));
 }

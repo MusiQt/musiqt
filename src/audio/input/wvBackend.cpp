@@ -235,7 +235,7 @@ bool wvBackend::seek(double pos)
 /*****************************************************************/
 
 wvConfigFrame::wvConfigFrame(QWidget* win) :
-    configFrame(win, wvBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available"), this));
 }

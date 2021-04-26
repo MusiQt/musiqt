@@ -565,7 +565,7 @@ enum
 };
 
 sidConfigFrame::sidConfigFrame(QWidget* win) :
-    configFrame(win, sidBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     int val;
 

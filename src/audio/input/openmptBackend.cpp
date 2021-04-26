@@ -287,7 +287,7 @@ bool openmptBackend::subtune(const unsigned int i)
 #define MPTSETTINGS openmptConfig::m_settings
 
 openmptConfigFrame::openmptConfigFrame(QWidget* win) :
-    configFrame(win, openmptBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     int val;
 
