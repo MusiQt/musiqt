@@ -24,6 +24,6 @@
 namespace oggTag
 {
     void parseTags(char **ptr, metaDataImpl& data);
-};
+}
 
 #endif
