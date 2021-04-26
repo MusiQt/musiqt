@@ -207,7 +207,7 @@ void dbusHandler::PlayPause()
     switch (m_player->state())
     {
     default:
-    case state_t::PLAY: // fall-through
+    case state_t::PLAY: [[fallthrough]];
     case state_t::PAUSE: m_player->pause(); break;
     case state_t::STOP:  m_player->play();  break;
     }

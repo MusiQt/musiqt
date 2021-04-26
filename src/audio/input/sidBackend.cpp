@@ -443,10 +443,10 @@ void sidBackend::getInfo(const SidTuneInfo* tuneInfo) noexcept
     {
     case 3:
         m_metaData.addInfo(gettext("released"), QString::fromLatin1(tuneInfo->infoString(2)));
-        // fall-through
+        [[fallthrough]];
     case 2:
         m_metaData.addInfo(metaData::ARTIST, QString::fromLatin1(tuneInfo->infoString(1)));
-        // fall-through
+        [[fallthrough]];
     case 1:
         m_metaData.addInfo(metaData::TITLE, QString::fromLatin1(tuneInfo->infoString(0)));
     }
