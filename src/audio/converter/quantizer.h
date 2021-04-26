@@ -44,7 +44,7 @@ public:
     virtual ~quantizerVoid() {}
 
     /// Get dithered sample
-    inline T get(const T sample, const unsigned int channel) override { return sample; }
+    inline T get(const T sample, [[maybe_unused]] const unsigned int channel) override { return sample; }
 };
 
 /******************************************************************************/
