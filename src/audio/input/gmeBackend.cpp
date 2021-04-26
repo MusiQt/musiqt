@@ -269,7 +269,7 @@ void gmeBackend::openAsma(const QString& asmaPath)
 #define GMESETTINGS gmeConfig::m_settings
 
 gmeConfigFrame::gmeConfigFrame(QWidget* win) :
-    configFrame(win, gmeBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     int val;
 

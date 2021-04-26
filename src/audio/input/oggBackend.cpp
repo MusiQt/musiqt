@@ -214,7 +214,7 @@ long oggBackend::tell_func(void *datasource)
 #define OGGSETTINGS	oggConfig::m_settings
 
 oggConfigFrame::oggConfigFrame(QWidget* win) :
-    configFrame(win, oggBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("Bits"), this), 0, 0);
     QComboBox* _bitBox = new QComboBox(this);

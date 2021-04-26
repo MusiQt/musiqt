@@ -119,7 +119,7 @@ bool sndBackend::seek(double pos)
 /*****************************************************************/
 
 sndConfigFrame::sndConfigFrame(QWidget* win) :
-    configFrame(win, sndBackend::name, CREDITS, LINK)
+    configFrame(win, CREDITS, LINK)
 {
     matrix()->addWidget(new QLabel(tr("No settings available")));
 }

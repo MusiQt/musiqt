@@ -21,7 +21,7 @@
 
 #include <QLabel>
 
-configFrame::configFrame(QWidget* p, const char* title, const char* credits, const char* link) :
+configFrame::configFrame(QWidget* p, const char* credits, const char* link) :
     QWidget(p)
 {
     QVBoxLayout* main = new QVBoxLayout();
