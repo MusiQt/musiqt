@@ -208,7 +208,7 @@ void audio::unload() { m_iw->unload(); }
 /*****************************************************************/
 
 audioConfig::audioConfig(QWidget* win) :
-    configFrame(win, "Audio")
+    configFrame(win)
 {
     matrix()->addWidget(new QLabel(tr("Card"), this));
     QComboBox* cardList = new QComboBox(this);
