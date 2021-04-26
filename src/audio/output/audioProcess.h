@@ -81,14 +81,12 @@ class audioProcess8 : public audioProcess
 {
     void init(int sampleRate)
     {
-#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
         initBs2b(sampleRate);
-#endif
     }
 
     void process(void* buffer, size_t size)
     {
-#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
+#ifdef HAVE_BS2B
         if (m_bs2bdp)
         {
             uint8_t *buf = (uint8_t*)buffer;
@@ -124,17 +122,8 @@ class audioProcess16 : public audioProcess
 #ifdef HAVE_BS2B
         if (m_bs2bdp)
         {
-#if BS2B_VERSION_MAJOR > 2
             int16_t *buf = (int16_t*)buffer;
             bs2b_cross_feed_s16le(m_bs2bdp, buf, size/4);
-#else
-            short *buf = (short*)buffer;
-            const short *end = buf+(size/2);
-            do {
-                bs2b_cross_feed_16(m_bs2bdp, buf);
-                buf += 2;
-            } while (buf < end);
-#endif
         }
 #endif
     }
@@ -163,7 +152,7 @@ class audioProcess32 : public audioProcess
         }
 #endif
 
-#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
+#ifdef HAVE_BS2B
         if (m_bs2bdp)
         {
             int32_t *buf = (int32_t*)buffer;
@@ -179,14 +168,12 @@ class audioProcessFloat : public audioProcess
 {
     void init(int sampleRate)
     {
-#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
         initBs2b(sampleRate);
-#endif
     }
 
     void process(void* buffer, size_t size)
     {
-#if defined HAVE_BS2B && BS2B_VERSION_MAJOR > 2
+#ifdef HAVE_BS2B
         if (m_bs2bdp)
         {
             float *buf = (float*)buffer;

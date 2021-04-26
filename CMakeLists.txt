@@ -445,7 +445,7 @@ ENDIF(MPC)
 ##################################################################
 # Search for bs2b
 
-pkg_check_modules(libbs2b IMPORTED_TARGET libbs2b>=2.2)
+pkg_check_modules(libbs2b IMPORTED_TARGET libbs2b>=3.0)
 if(libbs2b_FOUND)
     SET(HAVE_BS2B 1)
     target_link_libraries(musiqt PkgConfig::libbs2b)
