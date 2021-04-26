@@ -217,7 +217,7 @@ bool wvBackend::seek(double pos)
 {
     uint32_t samples = WavpackGetNumSamples(m_wvContext);
 
-    if (samples == -1)
+    if (samples == (uint32_t)-1)
         return false;
 
     uint32_t sample = samples * pos;
