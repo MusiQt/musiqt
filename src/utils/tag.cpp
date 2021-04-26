@@ -227,7 +227,7 @@ QString getID3v2Text(const char* buf, char encoding)
             // Add big-endian BOM (0xfe 0xff)
             uint size = qstrlen(buf);
             ushort* tempBuffer = new ushort[size + 1];
-            char* bom = (char*)tempBuffer;
+            unsigned char* bom = (unsigned char*)tempBuffer;
             bom[0] = 0xfe;
             bom[1] = 0xff;
             memcpy((char*)(tempBuffer)+2, buf, size*2);
@@ -258,7 +258,7 @@ QString getID3v2TextWithDesc(const char* data)
     char textEncoding = data[0];
     QString description = getID3v2Text(data+4, textEncoding);
     int i = 4;
-    i += description.length() * (textEncoding == 1) ? 2 : 1;
+    i += description.length() * ((textEncoding == 1) ? 2 : 1);
     return getID3v2Text(data+i, textEncoding);
 }
 
@@ -294,7 +294,7 @@ QString getID3v2_2TextWithDesc(const char* data)
     int i = 4;
     QString description = getID3v2_2Text(data+i, textEncoding);
     qDebug() << "Short description: " << description;
-    i += description.length() * (textEncoding == 1) ? 2 : 1;
+    i += description.length() * ((textEncoding == 1) ? 2 : 1);
     return getID3v2_2Text(data+i, textEncoding);
 }
 
@@ -370,7 +370,7 @@ int tag::getID3v2_2Frame(char* buf)
         int i = 5;
         QString description = getID3v2_2Text(data+i, textEncoding);
         qDebug() << "Pic description: " << description;
-        i += description.length() * (textEncoding == 1) ? 2 : 1;
+        i += description.length() * ((textEncoding == 1) ? 2 : 1);
         qDebug() << "imgOffset: " << i;
         m_img = new QByteArray(data+i, size-i);
     }
