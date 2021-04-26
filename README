@@ -22,10 +22,10 @@ mod, s3m, xm, it, 669, amf, ams, dbm, dmf, dsm, far, mdl, med, mtm, okt, ptm, st
 xmz, itz, mdz, s3z (if zlib is installed)
 
 * Sidplayfp
-sid, mus, prg, p00 (includes songlength db and STIL support)
+sid, mus, prg, p00 (includes songlength DB and STIL support, str and wds support for mus)
 
 * Ogg-Vorbis
-ogg
+ogg, oga
 
 * Opus
 opus
@@ -73,13 +73,15 @@ or in the same folder as musiqt binary.
 
 Required dependencies:
 
-Qt 5
+A compiler with c++17 support
+
+Qt 5.15
 http://www.qt.io/
 
 
 Optional dependencies:
 
-libopenmpt < 0.5
+libopenmpt >= 0.3
 http://lib.openmpt.org/libopenmpt/
 
 zlib 1.2.x
@@ -111,13 +113,13 @@ http://mpg123.org/
 game-music-emu >= 0.6
 https://bitbucket.org/mpyne/game-music-emu/
 
-libbs2b 2.2.x or 3.x
+libbs2b 3.x
 http://bs2b.sourceforge.net/
 
-ffmpeg >= 3.0
-libavcodec >= 57
-libavformat >= 57.5
-avutil >= 55
+ffmpeg >= 4.0
+libavcodec >= 58
+libavformat >= 58.12
+avutil >= 56
 http://www.ffmpeg.org/
 
 ####################################################################
