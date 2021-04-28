@@ -458,12 +458,15 @@ endif(libbs2b_FOUND)
 
 find_package(LASTFM)
 if(LASTFM_FOUND)
-    SET(HAVE_LASTFM 1)
-    target_sources(musiqt PRIVATE
-        src/utils/lastfm.cpp
-        src/utils/lastfm.h
-    )
-    target_link_libraries(musiqt LASTFM::LASTFM)
+    find_package(Qt5 OPTIONAL_COMPONENTS Xml)
+    if (Qt5Xml_FOUND)
+        SET(HAVE_LASTFM 1)
+        target_sources(musiqt PRIVATE
+            src/utils/lastfm.cpp
+            src/utils/lastfm.h
+        )
+        target_link_libraries(musiqt LASTFM::LASTFM Qt::Xml)
+    endif(Qt5Xml_FOUND)
 endif(LASTFM_FOUND)
 
 ##################################################################

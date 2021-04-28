@@ -19,6 +19,8 @@
 #ifndef LASTFM_H
 #define LASTFM_H
 
+#include <QString>
+
 /*****************************************************************/
 
 #include "configFrame.h"
@@ -29,6 +31,13 @@ private:
     lastfmConfig() {}
     lastfmConfig(const lastfmConfig&);
     lastfmConfig& operator=(const lastfmConfig&);
+
+private:
+    QString m_sessionKey;
+
+private:
+    void auth();
+    void gotToken();
 
 public:
     lastfmConfig(QWidget* win);
