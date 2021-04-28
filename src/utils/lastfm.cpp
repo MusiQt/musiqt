@@ -75,8 +75,11 @@ void lastfmConfig::gotToken()
     QString token;
 
     lastfm::XmlQuery query;
-    query.parse(reply);
-    // TODO check for errors
+    if (!query.parse(reply))
+    {
+        qWarning() << query.parseError().message();
+        return;
+    }
     token = query["token"].text();
     qDebug() << token;
 
@@ -99,15 +102,20 @@ void lastfmConfig::gotToken()
         [this, reply]()
         {
             lastfm::XmlQuery query;
-            query.parse(reply);
-            // TODO check for errors
-            m_sessionKey = query["session"]["key"].text();
-            //lastfm::ws::Username = query["session"]["name"].text();
-            lastfm::ws::SessionKey = m_sessionKey;
-            qDebug() << m_sessionKey;
+            if (query.parse(reply))
+            {
+                m_sessionKey = query["session"]["key"].text();
+                //lastfm::ws::Username = query["session"]["name"].text();
+                lastfm::ws::SessionKey = m_sessionKey;
+                qDebug() << m_sessionKey;
 
-            QSettings settings;
-            settings.setValue("Last.fm Settings/Session Key", m_sessionKey);
+                QSettings settings;
+                settings.setValue("Last.fm Settings/Session Key", m_sessionKey);
+            }
+            else
+            {
+                qWarning() << query.parseError().message();
+            }
         }
     );
 }
