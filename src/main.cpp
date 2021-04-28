@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
 
     app.setOrganizationName("DrFiemost");
     app.setApplicationName(PACKAGE_NAME);
+    app.setApplicationVersion(PACKAGE_VERSION);
 
 #ifdef ENABLE_NLS
     // Add translator
