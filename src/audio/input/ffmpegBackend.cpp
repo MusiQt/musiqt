@@ -76,6 +76,7 @@ void (*ffmpegBackend::dl_avcodec_free_context)(AVCodecContext **avctx)=0;
 int (*ffmpegBackend::dl_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb,
                                              int related_stream, AVCodec **decoder_ret, int flags)=0;
 int (*ffmpegBackend::dl_avcodec_parameters_to_context)(AVCodecContext *codec, const AVCodecParameters *par)=0;
+AVRational (*ffmpegBackend::dl_av_get_time_base_q)()=0;
 
 QStringList ffmpegBackend::m_ext;
 
@@ -193,6 +194,7 @@ bool ffmpegBackend::init()
     LOADSYM(avcodecDll, avcodec_find_decoder, AVCodec*(*)(enum AVCodecID))
     LOADSYM(avcodecDll, av_packet_unref, void(*)(AVPacket*))
     LOADSYM(avutilDll, av_rescale_q, int64_t (*)(int64_t, AVRational, AVRational))
+    LOADSYM(avutilDll, av_get_time_base_q, AVRational (*)())
 
     AVInputFormat *(*dl_av_find_input_format)(const char*);
     LOADSYM(avformatDll, av_find_input_format, AVInputFormat*(*)(const char*))
@@ -347,7 +349,7 @@ bool ffmpegBackend::seek(double pos)
     int64_t timestamp = m_formatContext->duration * pos;
     if (dl_av_seek_frame(m_formatContext,
             m_audioStreamIndex,
-            dl_av_rescale_q(timestamp, AV_TIME_BASE_Q, m_audioStream->time_base),
+            dl_av_rescale_q(timestamp, dl_av_get_time_base_q(), m_audioStream->time_base),
             AVSEEK_FLAG_ANY) < 0)
     {
         qWarning() << "Cannot seek";
