@@ -15,6 +15,9 @@
 /* Define if you have libbs2b (-lbs2b). */
 #cmakedefine  HAVE_BS2B
 
+/* Define if you have liblastfm5 (-llastfm5). */
+#cmakedefine  HAVE_LASTFM
+
 /* Define if you have libgme (-lgme). */
 #cmakedefine  HAVE_GME
 

@@ -36,6 +36,7 @@ static constexpr const char *icon_gonext              = ":/icons/go-next.gif";
 static constexpr const char *icon_goprevious          = ":/icons/go-previous.gif";
 static constexpr const char *icon_guioptions          = ":/icons/guioptions.gif";
 static constexpr const char *icon_helpabout           = ":/icons/help-about.gif";
+static constexpr const char *icon_lastfm              = ":/icons/lastfm.gif";
 static constexpr const char *icon_listadd             = ":/icons/list-add.gif";
 static constexpr const char *icon_listremove          = ":/icons/list-remove.gif";
 static constexpr const char *icon_logo16              = ":/icons/logo16.gif";
