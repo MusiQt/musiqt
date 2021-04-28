@@ -117,6 +117,7 @@ private:
                                          int related_stream, AVCodec **decoder_ret, int flags);
     static int (*dl_avcodec_parameters_to_context)(AVCodecContext *codec, const AVCodecParameters *par);
     static int64_t (*dl_av_rescale_q)(int64_t, AVRational, AVRational);
+    static AVRational (*dl_av_get_time_base_q)();
 
 private:
     ffmpegBackend(const QString& fileName);
