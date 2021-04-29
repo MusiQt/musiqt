@@ -48,6 +48,7 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     m_player(p)
 {
     QSettings settings;
+    QString userName = settings.value("Last.fm Settings/User Name", QString()).toString();
     QString sessionKey = settings.value("Last.fm Settings/Session Key", QString()).toString();
 
     m_timer.setSingleShot(true);
@@ -55,9 +56,11 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
 
     lastfm::ws::ApiKey          = "5cfc6d1c438c0bb0d9f2e1d6d2abd9fd";
     lastfm::ws::SharedSecret    = "5785cfb120eee3142c18bd3901494d8b";
+    lastfm::ws::Username        = userName;
     lastfm::ws::SessionKey      = sessionKey;
 
     connect(m_player, &player::stateChanged, this, &lastfmScrobbler::stateChanged);
+    //connect(m_player, &player::songEnded, this, &lastfmScrobbler::songEnded);
 }
 
 lastfmScrobbler::~lastfmScrobbler()
@@ -71,12 +74,14 @@ void lastfmScrobbler::stateChanged()
     switch (m_player->state())
     {
     case state_t::PLAY:
+        // FIXME this is not called on gapless playback
         nowPlaying();
         break;
     case state_t::PAUSE:
         m_timer.stop();
         break;
     case state_t::STOP:
+        // TODO if past scrobblePoint do scrobble
         m_timer.stop();
         m_track.reset(nullptr);
         break;
@@ -192,12 +197,14 @@ void lastfmConfig::gotToken()
             lastfm::XmlQuery query;
             if (query.parse(reply))
             {
+                QString userName = query["session"]["name"].text();
                 QString sessionKey = query["session"]["key"].text();
-                //lastfm::ws::Username = query["session"]["name"].text();
+                lastfm::ws::Username = userName;
                 lastfm::ws::SessionKey = sessionKey;
-                qDebug() << sessionKey;
+                qDebug() << userName << " - " << sessionKey;
 
                 QSettings settings;
+                settings.setValue("Last.fm Settings/User Name", userName);
                 settings.setValue("Last.fm Settings/Session Key", sessionKey);
             }
             else
