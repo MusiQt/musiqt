@@ -19,7 +19,32 @@
 #ifndef LASTFM_H
 #define LASTFM_H
 
+#include <lastfm5/Audioscrobbler.h>
+
+#include <QObject>
 #include <QString>
+
+class player;
+class metaData;
+
+/*****************************************************************/
+
+class lastfmScrobbler : public QObject
+{
+    Q_OBJECT
+
+public:
+    lastfmScrobbler(player* p, QObject* parent = nullptr);
+
+    void nowPlaying(const metaData* data);
+
+private:
+    void stateChanged();
+
+private:
+    lastfm::Audioscrobbler m_scrobbler;
+    player *m_player;
+};
 
 /*****************************************************************/
 
@@ -31,9 +56,6 @@ private:
     lastfmConfig() {}
     lastfmConfig(const lastfmConfig&);
     lastfmConfig& operator=(const lastfmConfig&);
-
-private:
-    QString m_sessionKey;
 
 private:
     void auth();

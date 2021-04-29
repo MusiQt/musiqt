@@ -18,10 +18,13 @@
 
 #include "lastfm.h"
 
+#include "player.h"
+#include "input/metaData.h"
 #include "utils/xdg.h"
 
 #include <lastfm5/misc.h>
 #include <lastfm5/ws.h>
+#include <lastfm5/Track.h>
 #include <lastfm5/XmlQuery.h>
 
 #include <QLabel>
@@ -39,18 +42,45 @@ QString signature(QString method)
 
 /*****************************************************************/
 
-#define LASTFMSETTINGS lastfmConfig::m_settings
+lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
+    QObject(parent),
+    m_scrobbler("mqt"),
+    m_player(p)
+{
+    QSettings settings;
+    QString sessionKey = settings.value("Last.fm Settings/Session Key", QString()).toString();
+
+    lastfm::ws::ApiKey          = "5cfc6d1c438c0bb0d9f2e1d6d2abd9fd";
+    lastfm::ws::SharedSecret    = "5785cfb120eee3142c18bd3901494d8b";
+    lastfm::ws::SessionKey      = sessionKey;
+
+    connect(m_player, &player::stateChanged, this, &lastfmScrobbler::stateChanged);
+}
+
+void lastfmScrobbler::stateChanged()
+{
+    if (m_player->state() == state_t::PLAY)
+    {
+        nowPlaying(m_player->getMetaData());
+    }
+}
+
+void lastfmScrobbler::nowPlaying(const metaData* data)
+{
+    lastfm::MutableTrack track;
+    track.setArtist(data->getInfo(metaData::ARTIST));
+    track.setAlbum(data->getInfo(metaData::ALBUM));
+    track.setTitle(data->getInfo(metaData::TITLE));
+    track.stamp(); //sets track start time
+
+    m_scrobbler.nowPlaying(track);
+}
+
+/*****************************************************************/
 
 lastfmConfig::lastfmConfig(QWidget* win) :
     configFrame(win)
 {
-    QSettings settings;
-    m_sessionKey = settings.value("Last.fm Settings/Session Key", QString()).toString();
-
-    lastfm::ws::ApiKey          = "5cfc6d1c438c0bb0d9f2e1d6d2abd9fd";
-    lastfm::ws::SharedSecret    = "5785cfb120eee3142c18bd3901494d8b";
-    lastfm::ws::SessionKey      = m_sessionKey;
-
     QPushButton* button = new QPushButton(tr("Authenticate"), this);
     button->setToolTip("Get session key from Last.fm");
     matrix()->addWidget(button);
@@ -99,18 +129,18 @@ void lastfmConfig::gotToken()
 
     reply = lastfm::ws::post(params);
     QObject::connect(reply, &QNetworkReply::finished,
-        [this, reply]()
+        [reply]()
         {
             lastfm::XmlQuery query;
             if (query.parse(reply))
             {
-                m_sessionKey = query["session"]["key"].text();
+                QString sessionKey = query["session"]["key"].text();
                 //lastfm::ws::Username = query["session"]["name"].text();
-                lastfm::ws::SessionKey = m_sessionKey;
-                qDebug() << m_sessionKey;
+                lastfm::ws::SessionKey = sessionKey;
+                qDebug() << sessionKey;
 
                 QSettings settings;
-                settings.setValue("Last.fm Settings/Session Key", m_sessionKey);
+                settings.setValue("Last.fm Settings/Session Key", sessionKey);
             }
             else
             {

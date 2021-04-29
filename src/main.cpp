@@ -37,6 +37,10 @@
 #  include "dbusHandler.h"
 #endif
 
+#ifdef HAVE_LASTFM
+#  include "lastfm.h"
+#endif
+
 #ifdef QT_STATICPLUGIN
 #include <QtPlugin>
 #  ifdef _WIN32
@@ -103,6 +107,9 @@ int main(int argc, char *argv[])
 
 #ifdef ENABLE_DBUS
     dbusHandler dbus(&p);
+#endif
+#ifdef HAVE_LASTFM
+    lastfmScrobbler scrobbler(&p);
 #endif
 
     mainWindow window(&p);
