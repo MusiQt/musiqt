@@ -22,7 +22,9 @@
 #include <lastfm5/Audioscrobbler.h>
 
 #include <QObject>
+#include <QScopedPointer>
 #include <QString>
+#include <QTimer>
 
 class player;
 class metaData;
@@ -35,15 +37,19 @@ class lastfmScrobbler : public QObject
 
 public:
     lastfmScrobbler(player* p, QObject* parent = nullptr);
+    ~lastfmScrobbler();
 
-    void nowPlaying(const metaData* data);
+    void nowPlaying();
 
 private:
     void stateChanged();
+    void scrobble();
 
 private:
     lastfm::Audioscrobbler m_scrobbler;
+    QScopedPointer<lastfm::Track> m_track;
     player *m_player;
+    QTimer m_timer;
 };
 
 /*****************************************************************/

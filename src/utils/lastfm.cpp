@@ -50,6 +50,9 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     QSettings settings;
     QString sessionKey = settings.value("Last.fm Settings/Session Key", QString()).toString();
 
+    m_timer.setSingleShot(true);
+    connect(&m_timer, &QTimer::timeout, this, &lastfmScrobbler::scrobble);
+
     lastfm::ws::ApiKey          = "5cfc6d1c438c0bb0d9f2e1d6d2abd9fd";
     lastfm::ws::SharedSecret    = "5785cfb120eee3142c18bd3901494d8b";
     lastfm::ws::SessionKey      = sessionKey;
@@ -57,23 +60,78 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     connect(m_player, &player::stateChanged, this, &lastfmScrobbler::stateChanged);
 }
 
+lastfmScrobbler::~lastfmScrobbler()
+{
+    // submit any pending scrobble
+    m_scrobbler.submit();
+}
+
 void lastfmScrobbler::stateChanged()
 {
-    if (m_player->state() == state_t::PLAY)
+    switch (m_player->state())
     {
-        nowPlaying(m_player->getMetaData());
+    case state_t::PLAY:
+        nowPlaying();
+        break;
+    case state_t::PAUSE:
+        m_timer.stop();
+        break;
+    case state_t::STOP:
+        m_timer.stop();
+        m_track.reset(nullptr);
+        break;
+    default:
+        break;
     }
 }
 
-void lastfmScrobbler::nowPlaying(const metaData* data)
+void lastfmScrobbler::nowPlaying()
 {
-    lastfm::MutableTrack track;
-    track.setArtist(data->getInfo(metaData::ARTIST));
-    track.setAlbum(data->getInfo(metaData::ALBUM));
-    track.setTitle(data->getInfo(metaData::TITLE));
-    track.stamp(); //sets track start time
+    if (lastfm::ws::SessionKey.isEmpty())
+        return;
 
-    m_scrobbler.nowPlaying(track);
+    int songDuration = m_player->songDuration()/1000;
+    // The track must be longer than 30 seconds.
+    if (songDuration < 30)
+        return;
+
+    int scrobblePoint = m_player->songDuration()/2;
+    // The track has been played for at least half its duration, or for 4 minutes
+    if (scrobblePoint > 240)
+            scrobblePoint = 240;
+
+    if (m_player->seconds() == 0)
+    {
+        // playback is starting
+        const metaData* data = m_player->getMetaData();
+        lastfm::MutableTrack *track = new lastfm::MutableTrack;
+        track->setArtist(data->getInfo(metaData::ARTIST));
+        track->setAlbum(data->getInfo(metaData::ALBUM));
+        track->setTitle(data->getInfo(metaData::TITLE));
+        track->setDuration(songDuration);
+        track->stamp(); //sets track start time
+        m_track.reset(track);
+
+        m_scrobbler.nowPlaying(*m_track);
+
+        m_timer.setInterval(scrobblePoint);
+        m_timer.start();
+    }
+    else
+    {
+        // unpausing
+        if (m_track.data() != nullptr)
+        {
+            m_timer.setInterval(scrobblePoint - m_player->seconds());
+            m_timer.start();
+        }
+    }
+}
+
+void lastfmScrobbler::scrobble()
+{
+    m_scrobbler.cache(*m_track);
+    m_track.reset(nullptr);
 }
 
 /*****************************************************************/
