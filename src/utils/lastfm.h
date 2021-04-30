@@ -43,6 +43,7 @@ public:
 
 private:
     void stateChanged();
+    void songLoaded(bool res);
     void scrobble();
 
 private:
@@ -58,6 +59,8 @@ private:
 
 class lastfmConfig : public configFrame
 {
+    Q_OBJECT
+
 private:
     lastfmConfig() {}
     lastfmConfig(const lastfmConfig&);
@@ -66,6 +69,10 @@ private:
 private:
     void auth();
     void gotToken();
+
+signals:
+    void usernameChanged(const QString &text);
+    void sessionChanged(const QString &text);
 
 public:
     lastfmConfig(QWidget* win);

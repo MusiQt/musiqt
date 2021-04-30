@@ -60,6 +60,7 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     lastfm::ws::SessionKey      = sessionKey;
 
     connect(m_player, &player::stateChanged, this, &lastfmScrobbler::stateChanged);
+    connect(m_player, &player::songLoaded, this, &lastfmScrobbler::songLoaded);
     connect(m_player, &player::songEnded, &m_scrobbler, &lastfm::Audioscrobbler::submit);
 }
 
@@ -74,7 +75,6 @@ void lastfmScrobbler::stateChanged()
     switch (m_player->state())
     {
     case state_t::PLAY:
-        // FIXME this is not called on gapless playback
         nowPlaying();
         break;
     case state_t::PAUSE:
@@ -89,6 +89,12 @@ void lastfmScrobbler::stateChanged()
     default:
         break;
     }
+}
+
+void lastfmScrobbler::songLoaded(bool res)
+{
+    if (res && (m_player->state() == state_t::PLAY))
+        nowPlaying();
 }
 
 void lastfmScrobbler::nowPlaying()
@@ -156,11 +162,13 @@ lastfmConfig::lastfmConfig(QWidget* win) :
     QLineEdit* lineEdit = new QLineEdit(userName, this);
     lineEdit->setReadOnly(true);
     matrix()->addWidget(lineEdit, 0, 1);
+    connect(this, lastfmConfig::usernameChanged, lineEdit, &QLineEdit::setText);
     label = new QLabel(tr("Session:"), this);
     matrix()->addWidget(label);
-    lineEdit = new QLineEdit(sessionKey.isEmpty() ? tr("none") : tr("active"), this);
+    lineEdit = new QLineEdit(sessionKey.isEmpty() ? tr("none") : sessionKey, this);
     lineEdit->setReadOnly(true);
     matrix()->addWidget(lineEdit, 1, 1);
+    connect(this, lastfmConfig::sessionChanged, lineEdit, &QLineEdit::setText);
     QPushButton* button = new QPushButton(tr("Authenticate"), this);
     button->setToolTip("Get session key from Last.fm");
     matrix()->addWidget(button, 2, 1);
@@ -209,7 +217,7 @@ void lastfmConfig::gotToken()
 
     reply = lastfm::ws::post(params);
     QObject::connect(reply, &QNetworkReply::finished,
-        [reply]()
+        [this, reply]()
         {
             lastfm::XmlQuery query;
             if (query.parse(reply))
@@ -224,7 +232,8 @@ void lastfmConfig::gotToken()
                 settings.setValue("Last.fm Settings/User Name", userName);
                 settings.setValue("Last.fm Settings/Session Key", sessionKey);
                 
-                // TODO update GUI
+                emit usernameChanged(userName);
+                emit sessionChanged(sessionKey);
             }
             else
             {
