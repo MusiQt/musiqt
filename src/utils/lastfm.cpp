@@ -60,7 +60,7 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     lastfm::ws::SessionKey      = sessionKey;
 
     connect(m_player, &player::stateChanged, this, &lastfmScrobbler::stateChanged);
-    //connect(m_player, &player::songEnded, this, &lastfmScrobbler::songEnded);
+    connect(m_player, &player::songEnded, &m_scrobbler, &lastfm::Audioscrobbler::submit);
 }
 
 lastfmScrobbler::~lastfmScrobbler()
@@ -81,9 +81,10 @@ void lastfmScrobbler::stateChanged()
         m_timer.stop();
         break;
     case state_t::STOP:
-        // TODO if past scrobblePoint do scrobble
         m_timer.stop();
         m_track.reset(nullptr);
+        // submit any pending scrobble
+        m_scrobbler.submit();
         break;
     default:
         break;
@@ -94,9 +95,6 @@ void lastfmScrobbler::nowPlaying()
 {
     if (lastfm::ws::SessionKey.isEmpty())
         return;
-
-    // submit any pending scrobble
-    m_scrobbler.submit();
 
     int songDuration = m_player->songDuration()/1000;
     // The track must be longer than 30 seconds.
@@ -131,7 +129,7 @@ void lastfmScrobbler::nowPlaying()
         // unpausing
         if (m_track.data() != nullptr)
         {
-            m_timer.setInterval(scrobblePoint - m_player->seconds());
+            m_timer.setInterval(scrobblePoint - m_player->seconds()*1000);
             m_timer.start();
         }
     }
@@ -149,14 +147,23 @@ void lastfmScrobbler::scrobble()
 lastfmConfig::lastfmConfig(QWidget* win) :
     configFrame(win)
 {
-    QLabel* label = new QLabel(tr("Session:"), this);
+    QSettings settings;
+    QString userName = settings.value("Last.fm Settings/User Name", QString()).toString();
+    QString sessionKey = settings.value("Last.fm Settings/Session Key", QString()).toString();
+
+    QLabel* label = new QLabel(tr("Username:"), this);
     matrix()->addWidget(label);
-    QLineEdit* lineEdit = new QLineEdit(tr("none/active"), this); // FIXME
+    QLineEdit* lineEdit = new QLineEdit(userName, this);
     lineEdit->setReadOnly(true);
     matrix()->addWidget(lineEdit, 0, 1);
+    label = new QLabel(tr("Session:"), this);
+    matrix()->addWidget(label);
+    lineEdit = new QLineEdit(sessionKey.isEmpty() ? tr("none") : tr("active"), this);
+    lineEdit->setReadOnly(true);
+    matrix()->addWidget(lineEdit, 1, 1);
     QPushButton* button = new QPushButton(tr("Authenticate"), this);
     button->setToolTip("Get session key from Last.fm");
-    matrix()->addWidget(button, 1, 1);
+    matrix()->addWidget(button, 2, 1);
     connect(button, &QPushButton::clicked, this, &lastfmConfig::auth);
 }
 
@@ -216,6 +223,8 @@ void lastfmConfig::gotToken()
                 QSettings settings;
                 settings.setValue("Last.fm Settings/User Name", userName);
                 settings.setValue("Last.fm Settings/Session Key", sessionKey);
+                
+                // TODO update GUI
             }
             else
             {
