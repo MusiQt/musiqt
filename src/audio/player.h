@@ -51,6 +51,7 @@ private:
 
 signals:
     void stateChanged();
+    void songChanged();
 
     void subtunechanged();
 

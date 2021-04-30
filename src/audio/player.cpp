@@ -101,6 +101,7 @@ bool player::tryPreload(const QString& song)
     if (!songPreloaded.compare(song))
     {
         m_input.reset(i);
+        emit songChanged();
         return true;
     }
     else

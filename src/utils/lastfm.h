@@ -43,7 +43,7 @@ public:
 
 private:
     void stateChanged();
-    void songLoaded(bool res);
+    void songChanged();
     void scrobble();
 
 private:

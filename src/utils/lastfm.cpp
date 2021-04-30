@@ -60,7 +60,7 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     lastfm::ws::SessionKey      = sessionKey;
 
     connect(m_player, &player::stateChanged, this, &lastfmScrobbler::stateChanged);
-    connect(m_player, &player::songLoaded, this, &lastfmScrobbler::songLoaded);
+    connect(m_player, &player::songChanged, this, &lastfmScrobbler::songChanged);
     connect(m_player, &player::songEnded, &m_scrobbler, &lastfm::Audioscrobbler::submit);
 }
 
@@ -91,10 +91,9 @@ void lastfmScrobbler::stateChanged()
     }
 }
 
-void lastfmScrobbler::songLoaded(bool res)
+void lastfmScrobbler::songChanged()
 {
-    if (res && (m_player->state() == state_t::PLAY))
-        nowPlaying();
+    nowPlaying();
 }
 
 void lastfmScrobbler::nowPlaying()
@@ -106,6 +105,8 @@ void lastfmScrobbler::nowPlaying()
     // The track must be longer than 30 seconds.
     if (songDuration < 30)
         return;
+
+    qDebug() << "lastfmScrobbler::nowPlaying";
 
     int scrobblePoint = m_player->songDuration()/2;
     // The track has been played for at least half its duration, or for 4 minutes
@@ -162,13 +163,13 @@ lastfmConfig::lastfmConfig(QWidget* win) :
     QLineEdit* lineEdit = new QLineEdit(userName, this);
     lineEdit->setReadOnly(true);
     matrix()->addWidget(lineEdit, 0, 1);
-    connect(this, lastfmConfig::usernameChanged, lineEdit, &QLineEdit::setText);
+    connect(this, &lastfmConfig::usernameChanged, lineEdit, &QLineEdit::setText);
     label = new QLabel(tr("Session:"), this);
     matrix()->addWidget(label);
     lineEdit = new QLineEdit(sessionKey.isEmpty() ? tr("none") : sessionKey, this);
     lineEdit->setReadOnly(true);
     matrix()->addWidget(lineEdit, 1, 1);
-    connect(this, lastfmConfig::sessionChanged, lineEdit, &QLineEdit::setText);
+    connect(this, &lastfmConfig::sessionChanged, lineEdit, &QLineEdit::setText);
     QPushButton* button = new QPushButton(tr("Authenticate"), this);
     button->setToolTip("Get session key from Last.fm");
     matrix()->addWidget(button, 2, 1);
