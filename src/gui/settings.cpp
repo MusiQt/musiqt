@@ -22,6 +22,9 @@
 #include "input/input.h"
 #include "input/inputFactory.h"
 #include "iconFactory.h"
+#ifdef HAVE_LASTFM
+#  include "utils/lastfm.h"
+#endif
 
 #include <QDebug>
 #include <QButtonGroup>
@@ -181,7 +184,36 @@ settingsWindow::settingsWindow(QWidget* win) :
     buttons->addWidget(button);
 
     audioLayout->addStretch();
+#ifdef HAVE_LASTFM
+    // Last.fm settings
+    QWidget* lastfmpane = new QWidget();
+    QVBoxLayout* lastfmLayout = new QVBoxLayout();
+    lastfmpane->setLayout(lastfmLayout);
+    lastfmLayout->addWidget(new QLabel(tr("Last.fm settings"), this));
 
+    {
+        QFrame* line = new QFrame();
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+        lastfmLayout->addWidget(line);
+    }
+
+    lastfmLayout->addWidget(new lastfmConfig(lastfmpane));
+    switcher->addWidget(lastfmpane);
+
+    button = new QToolButton(this);
+    button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    button->setIcon(GET_ICON(icon_lastfm));
+    button->setText(tr("Last.fm")); 
+    button->setToolTip(tr("Last.fm setting"));
+    button->setStatusTip("Last.fm setting");
+    button->setCheckable(true);
+    button->setSizePolicy(sizePol);
+    buttonGroup->addButton(button, section++);
+    buttons->addWidget(button);
+
+    lastfmLayout->addStretch();
+#endif
     // Backend settings
     QWidget* backendpane = new QWidget();
     QVBoxLayout* backendLayout = new QVBoxLayout();

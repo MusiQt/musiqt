@@ -37,6 +37,10 @@
 #  include "dbusHandler.h"
 #endif
 
+#ifdef HAVE_LASTFM
+#  include "lastfm.h"
+#endif
+
 #ifdef QT_STATICPLUGIN
 #include <QtPlugin>
 #  ifdef _WIN32
@@ -92,6 +96,7 @@ int main(int argc, char *argv[])
 
     app.setOrganizationName("DrFiemost");
     app.setApplicationName(PACKAGE_NAME);
+    app.setApplicationVersion(PACKAGE_VERSION);
 
 #ifdef ENABLE_NLS
     // Add translator
@@ -103,9 +108,15 @@ int main(int argc, char *argv[])
 #ifdef ENABLE_DBUS
     dbusHandler dbus(&p);
 #endif
+#ifdef HAVE_LASTFM
+    lastfmScrobbler scrobbler(&p);
+#endif
 
     mainWindow window(&p);
     QObject::connect(&app, &singleApp::sendMessage, &window, &mainWindow::onMessage);
+#ifdef HAVE_LASTFM
+    QObject::connect(&window, &mainWindow::setScrobbling, &scrobbler, &lastfmScrobbler::setScrobbling);
+#endif
 
     window.show();
     app.processEvents();

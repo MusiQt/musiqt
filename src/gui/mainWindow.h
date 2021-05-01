@@ -41,11 +41,16 @@ class QToolBar;
 
 class mainWindow : public QMainWindow
 {
+    Q_OBJECT
+
 public:
     mainWindow(player* p, QWidget *parent = 0);
     ~mainWindow();
 
     void init(const char* arg);
+
+signals:
+    void setScrobbling(bool scrobble);
 
 public:
     void onMessage(QString msg);

@@ -116,6 +116,9 @@ https://bitbucket.org/mpyne/game-music-emu/
 libbs2b 3.x
 http://bs2b.sourceforge.net/
 
+liblastfm 1.x
+https://github.com/lastfm/liblastfm/
+
 ffmpeg >= 4.0
 libavcodec >= 58
 libavformat >= 58.12

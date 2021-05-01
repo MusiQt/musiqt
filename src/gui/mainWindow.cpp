@@ -219,7 +219,19 @@ QToolBar *mainWindow::createSecondaryBar()
     connect(playlist, &QAction::triggered,
         [this, playlist]() { setPlayMode(playlist, !m_cFrame->getPlayMode()); }
     );
-
+#ifdef HAVE_LASTFM
+    QPixmap pixmapOn(icon_lastfm);
+    QPixmap pixmapOff(QPixmap::fromImage(pixmapOn.toImage().convertToFormat(QImage::Format_Grayscale8)));
+    QIcon icon;
+    icon.addPixmap(pixmapOn, QIcon::Normal, QIcon::On);
+    icon.addPixmap(pixmapOff, QIcon::Normal, QIcon::Off);
+    QAction *scrobble = new QAction(icon, tr("Scrobble"), this);
+    scrobble->setCheckable(true);
+    scrobble->setStatusTip(tr("Enable/disable scrobbling"));
+    const bool scrobbling = m_settings.value("Last.fm Settings/scrobbling", true).toBool();
+    scrobble->setChecked(scrobbling);
+    connect(scrobble, &QAction::triggered, this, &mainWindow::setScrobbling);
+#endif
     m_subtunes = new QLabel(this);
     m_subtunes->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     m_subtunes->setText("00/00");
@@ -258,6 +270,9 @@ QToolBar *mainWindow::createSecondaryBar()
     secondaryBar->addWidget(m_statusLed);
     secondaryBar->addWidget(songs);
     secondaryBar->addAction(playlist);
+#ifdef HAVE_LASTFM
+    secondaryBar->addAction(scrobble);
+#endif
     secondaryBar->addWidget(empty);
     secondaryBar->addWidget(volume);
 
