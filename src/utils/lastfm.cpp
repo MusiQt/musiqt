@@ -48,6 +48,7 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     m_player(p)
 {
     QSettings settings;
+    m_enable = settings.value("Last.fm Settings/scrobbling", true).toBool();
     QString userName = settings.value("Last.fm Settings/User Name", QString()).toString();
     QString sessionKey = settings.value("Last.fm Settings/Session Key", QString()).toString();
 
@@ -98,7 +99,7 @@ void lastfmScrobbler::songChanged()
 
 void lastfmScrobbler::nowPlaying()
 {
-    if (lastfm::ws::SessionKey.isEmpty())
+    if (!m_enable || lastfm::ws::SessionKey.isEmpty())
         return;
 
     int songDuration = m_player->songDuration()/1000;
@@ -147,6 +148,13 @@ void lastfmScrobbler::scrobble()
     qDebug() << "Caching scrobble";
     m_scrobbler.cache(*m_track);
     m_track.reset(nullptr);
+}
+
+void lastfmScrobbler::setScrobbling(bool scrobble)
+{
+    m_enable = scrobble;
+    QSettings settings;
+    settings.setValue("Last.fm Settings/scrobbling", scrobble);
 }
 
 /*****************************************************************/

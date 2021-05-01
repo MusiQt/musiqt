@@ -41,6 +41,8 @@ public:
 
     void nowPlaying();
 
+    void setScrobbling(bool scrobble);
+
 private:
     void stateChanged();
     void songChanged();
@@ -51,6 +53,7 @@ private:
     QScopedPointer<lastfm::Track> m_track;
     player *m_player;
     QTimer m_timer;
+    bool m_enable;
 };
 
 /*****************************************************************/
