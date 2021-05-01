@@ -182,6 +182,21 @@ lastfmConfig::lastfmConfig(QWidget* win) :
     button->setToolTip("Get session key from Last.fm");
     matrix()->addWidget(button, 2, 1);
     connect(button, &QPushButton::clicked, this, &lastfmConfig::auth);
+    button = new QPushButton(tr("Delete session"), this);
+    button->setToolTip("Delete current session key");
+    matrix()->addWidget(button, 3, 1);
+    connect(button, &QPushButton::clicked, this,
+        [this]()
+        {
+            if (QMessageBox::question(this, tr("Confirm"), 
+                    tr("Delete current active session?\nCannot be undone."))
+                == QMessageBox::Yes)
+            {
+                setSession(QString(), QString());
+                // TODO disable scrobbling
+            }
+        }
+    );
 }
 
 void lastfmConfig::auth()
@@ -233,16 +248,7 @@ void lastfmConfig::gotToken()
             {
                 QString userName = query["session"]["name"].text();
                 QString sessionKey = query["session"]["key"].text();
-                lastfm::ws::Username = userName;
-                lastfm::ws::SessionKey = sessionKey;
-                qDebug() << userName << " - " << sessionKey;
-
-                QSettings settings;
-                settings.setValue("Last.fm Settings/User Name", userName);
-                settings.setValue("Last.fm Settings/Session Key", sessionKey);
-                
-                emit usernameChanged(userName);
-                emit sessionChanged(sessionKey);
+                setSession(userName, sessionKey);
             }
             else
             {
@@ -250,4 +256,18 @@ void lastfmConfig::gotToken()
             }
         }
     );
+}
+
+void lastfmConfig::setSession(const QString &userName, const QString &sessionKey)
+{
+    lastfm::ws::Username = userName;
+    lastfm::ws::SessionKey = sessionKey;
+    qDebug() << userName << " - " << sessionKey;
+
+    QSettings settings;
+    settings.setValue("Last.fm Settings/User Name", userName);
+    settings.setValue("Last.fm Settings/Session Key", sessionKey);
+    
+    emit usernameChanged(userName);
+    emit sessionChanged(sessionKey);
 }

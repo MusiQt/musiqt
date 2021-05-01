@@ -72,6 +72,7 @@ private:
 private:
     void auth();
     void gotToken();
+    void setSession(const QString &userName, const QString &sessionKey);
 
 signals:
     void usernameChanged(const QString &text);
