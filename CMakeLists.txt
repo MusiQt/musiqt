@@ -205,8 +205,8 @@ if (Qt5DBus_FOUND)
             dbusHandler)
     target_sources(musiqt PRIVATE
         ${MPRIS_ADAPTOR_SRC}
-        src/dbusHandler.h
-        src/dbusHandler.cpp
+        src/utils/dbusHandler.h
+        src/utils/dbusHandler.cpp
     )
     target_link_libraries(musiqt Qt::DBus)
 endif()
