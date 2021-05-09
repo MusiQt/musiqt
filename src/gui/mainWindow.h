@@ -55,6 +55,8 @@ signals:
 public:
     void onMessage(QString msg);
 
+    void notify(const QString& title, const QString &text);
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 

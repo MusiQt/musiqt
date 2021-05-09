@@ -168,6 +168,11 @@ void mainWindow::onMessage(QString msg)
     m_player->loadAndPlay(QDir(msg).absolutePath());
 }
 
+void mainWindow::notify(const QString& title, const QString &text)
+{
+    m_trayIcon->showMessage(title, text);
+}
+
 QToolBar *mainWindow::createControlBar()
 {
     m_timeDisplay = new timeDisplay(this);

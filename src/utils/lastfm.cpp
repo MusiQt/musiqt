@@ -63,6 +63,11 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     connect(m_player, &player::stateChanged, this, &lastfmScrobbler::stateChanged);
     connect(m_player, &player::songChanged, this, &lastfmScrobbler::songChanged);
     connect(m_player, &player::songEnded, &m_scrobbler, &lastfm::Audioscrobbler::submit);
+
+    connect(&m_scrobbler, &lastfm::Audioscrobbler::scrobblesCached,
+        this, &lastfmScrobbler::onScrobblesCached);
+    connect(&m_scrobbler, &lastfm::Audioscrobbler::scrobblesSubmitted,
+        this, &lastfmScrobbler::onScrobblesSubmitted);
 }
 
 lastfmScrobbler::~lastfmScrobbler()
@@ -84,7 +89,7 @@ void lastfmScrobbler::stateChanged()
     case state_t::STOP:
         m_timer.stop();
         m_track.reset(nullptr);
-        // submit any pending scrobble
+        // submit any pending scrobblelastfmScrobbler
         m_scrobbler.submit();
         break;
     default:
@@ -127,7 +132,9 @@ void lastfmScrobbler::nowPlaying()
         track->stamp(); //sets track start time
         m_track.reset(track);
 
-        m_scrobbler.nowPlaying(*m_track);
+        QPointer<QNetworkReply> nowPlayingReply = m_track->updateNowPlaying();
+        connect(nowPlayingReply, &QNetworkReply::finished,
+            this, &lastfmScrobbler::onNowPlayingReturn);
 
         m_timer.setInterval(scrobblePoint);
         m_timer.start();
@@ -155,6 +162,64 @@ void lastfmScrobbler::setScrobbling(bool scrobble)
     m_enable = scrobble;
     QSettings settings;
     settings.setValue("Last.fm Settings/scrobbling", scrobble);
+}
+
+void lastfmScrobbler::onNowPlayingReturn()
+{
+    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
+    QString message;
+    lastfm::XmlQuery query;
+
+    if (query.parse(reply))
+    {
+        qDebug() << query;
+
+        if (query.attribute("status") == "ok")
+        {
+            lastfm::MutableTrack track = lastfm::MutableTrack(*m_track);
+            lastfm::XmlQuery trackXml(query["nowplaying"]);
+            if (trackXml["ignoredMessage"].attribute("code") == "0")
+            {
+                // corrections!
+                if (trackXml["track"].attribute("corrected") == "1"
+                    || trackXml["artist"].attribute("corrected") == "1"
+                    || trackXml["album"].attribute("corrected") == "1"
+                    || trackXml["albumArtist"].attribute("corrected") == "1")
+                {
+                    track.setCorrections(
+                        trackXml["track"].text(),
+                        trackXml["album"].text(),
+                        trackXml["artist"].text(),
+                        trackXml["albumArtist"].text());
+                }
+
+                message = m_track->toString(lastfm::Track::Corrected);
+            }
+            else
+            {
+                message = trackXml["ignoredMessage"].text();
+                track.setScrobbleStatus(lastfm::Track::Error);
+            }
+        }
+        else
+           message = query["error"].text();
+    }
+    else
+    {
+        message = query.parseError().message();
+    }
+
+    emit notify("Last.fm now playing", message);
+}
+
+void lastfmScrobbler::onScrobblesCached(const QList<lastfm::Track>& tracks)
+{
+    qDebug() << "onScrobblesCached";
+}
+
+void lastfmScrobbler::onScrobblesSubmitted(const QList<lastfm::Track>& tracks)
+{
+    qDebug() << "onScrobblesSubmitted";
 }
 
 /*****************************************************************/
@@ -201,7 +266,7 @@ lastfmConfig::lastfmConfig(QWidget* win) :
 
 void lastfmConfig::auth()
 {
-    // Fetch a request token
+    // Fetch a requelastfmScrobblerst token
     QMap<QString, QString> params;
     params["method"] = "auth.getToken";
     params["api_key"] = lastfm::ws::ApiKey;

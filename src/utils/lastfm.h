@@ -43,10 +43,17 @@ public:
 
     void setScrobbling(bool scrobble);
 
+signals:
+    void notify(const QString &title, const QString &text);
+
 private:
     void stateChanged();
     void songChanged();
     void scrobble();
+
+    void onScrobblesCached(const QList<lastfm::Track>& tracks);
+    void onScrobblesSubmitted(const QList<lastfm::Track>& tracks);
+    void onNowPlayingReturn();
 
 private:
     lastfm::Audioscrobbler m_scrobbler;

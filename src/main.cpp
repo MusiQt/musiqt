@@ -116,6 +116,7 @@ int main(int argc, char *argv[])
     QObject::connect(&app, &singleApp::sendMessage, &window, &mainWindow::onMessage);
 #ifdef HAVE_LASTFM
     QObject::connect(&window, &mainWindow::setScrobbling, &scrobbler, &lastfmScrobbler::setScrobbling);
+    QObject::connect(&scrobbler, &lastfmScrobbler::notify, &window, &mainWindow::notify);
 #endif
 
     window.show();
