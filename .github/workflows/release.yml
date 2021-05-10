@@ -44,13 +44,11 @@ jobs:
       run: echo ::set-output name=tagname::${GITHUB_REF#refs/tags/v}
     - name: build
       run: |
-        rm /mingw64/lib/*.dll.a
         mkdir build
         cd build
         cmake -G 'MSYS Makefiles' \
             -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_SHARED_LIBS=OFF \
-            -DCMAKE_EXE_LINKER_FLAGS="-static" \
+            -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++" \
             ..
         make VERBOSE=1
     - name: package
@@ -65,6 +63,21 @@ jobs:
         cp build/es.gmo ${PACKAGE_NAME}/locale/es/LC_MESSAGES/musiqt.mo
         mkdir -p ${PACKAGE_NAME}/locale/it/LC_MESSAGES
         cp build/it.gmo ${PACKAGE_NAME}/locale/it/LC_MESSAGES/musiqt.mo
+        cp  /mingw64/bin/libsndfile-1.dll \
+            /mingw64/bin/libmpg123-0.dll \
+            /mingw64/bin/libvorbis-0.dll \
+            /mingw64/bin/libvorbisfile-3.dll \
+            /mingw64/bin/libopusfile-0.dll \
+            /mingw64/bin/libgme.dll \
+            /mingw64/bin/libwavpack-1.dll \
+            /mingw64/bin/libmpcdec-6.dll \
+            /mingw64/bin/libsidplayfp-6.dll \
+            /mingw64/bin/libstilview-0.dll \
+            /mingw64/bin/libopenmpt-0.dll \
+            /mingw64/bin/liblastfm5-1.dll \
+            /mingw64/bin/libgettextlib-0-19-8-1.dll \
+            /mingw64/bin/libintl-8.dll \
+            ${PACKAGE_NAME}
         zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
     - uses: svenstaro/upload-release-action@v1-release
       with:
