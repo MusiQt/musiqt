@@ -597,9 +597,8 @@ msgid "Delete selected bookmark"
 msgstr "Rimuovi il segnalibro selezionato"
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:250
-#, fuzzy
 msgid "Delete session"
-msgstr "Rimuovi"
+msgstr "Cancella sessione"
 
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:179
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:164
@@ -873,14 +872,12 @@ msgid "Last.fm"
 msgstr ""
 
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:208
-#, fuzzy
 msgid "Last.fm setting"
-msgstr "Impostazioni del programma"
+msgstr "Impostazioni Last.fm"
 
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:192
-#, fuzzy
 msgid "Last.fm settings"
-msgstr "Impostazioni del programma"
+msgstr "Impostazioni Last.fm"
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:494
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:497
@@ -1285,9 +1282,8 @@ msgid "Select HVSC directory"
 msgstr "Seleziona la cartella HVSC"
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:240
-#, fuzzy
 msgid "Session:"
-msgstr "Versione"
+msgstr "Sessione"
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:176
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:177
@@ -1516,9 +1512,8 @@ msgid "URL"
 msgstr "URL"
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:234
-#, fuzzy
 msgid "Username:"
-msgstr "Rom Kernal:"
+msgstr "Nome utente:"
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:225
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:225
@@ -1766,9 +1761,8 @@ msgstr "traccia"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:27
 #: C:/msys64/home/minini/musiqt/src/audio/input/metaData.cpp:27
-#, fuzzy
 msgid "trackId"
-msgstr "traccia"
+msgstr "Id traccia"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:47
 #: C:/msys64/home/minini/musiqt/src/audio/input/metaData.cpp:47
