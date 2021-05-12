@@ -74,6 +74,9 @@ lastfmScrobbler::~lastfmScrobbler()
 {
     // submit any pending scrobble
     m_scrobbler.submit();
+
+    if (m_nowPlayingReply)
+        m_nowPlayingReply->abort();
 }
 
 void lastfmScrobbler::stateChanged()
@@ -132,8 +135,8 @@ void lastfmScrobbler::nowPlaying()
         track->stamp(); //sets track start time
         m_track.reset(track);
 
-        QPointer<QNetworkReply> nowPlayingReply = m_track->updateNowPlaying();
-        connect(nowPlayingReply, &QNetworkReply::finished,
+        m_nowPlayingReply = m_track->updateNowPlaying();
+        connect(m_nowPlayingReply, &QNetworkReply::finished,
             this, &lastfmScrobbler::onNowPlayingReturn);
 
         m_timer.setInterval(scrobblePoint);
@@ -166,11 +169,10 @@ void lastfmScrobbler::setScrobbling(bool scrobble)
 
 void lastfmScrobbler::onNowPlayingReturn()
 {
-    QNetworkReply* reply = static_cast<QNetworkReply*>(sender());
     QString message;
     lastfm::XmlQuery query;
 
-    if (query.parse(reply))
+    if (query.parse(m_nowPlayingReply))
     {
         qDebug() << query;
 
