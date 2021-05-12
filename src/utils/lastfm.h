@@ -21,7 +21,9 @@
 
 #include <lastfm5/Audioscrobbler.h>
 
+#include <QNetworkReply>
 #include <QObject>
+#include <QPointer>
 #include <QScopedPointer>
 #include <QString>
 #include <QTimer>
@@ -58,6 +60,7 @@ private:
 private:
     lastfm::Audioscrobbler m_scrobbler;
     QScopedPointer<lastfm::Track> m_track;
+    QPointer<QNetworkReply> m_nowPlayingReply;
     player *m_player;
     QTimer m_timer;
     bool m_enable;
