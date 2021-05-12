@@ -372,8 +372,8 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
         mpg123_close(m_handle);
         mpg123_delete(m_handle);
 
-        throw e;
-    }    
+        throw;
+    }
 }
 
 mpg123Backend::~mpg123Backend()
