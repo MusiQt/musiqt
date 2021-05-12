@@ -270,7 +270,6 @@ ffmpegBackend::ffmpegBackend(const QString& fileName) :
         openStream();
 
         m_audioStream = m_formatContext->streams[m_audioStreamIndex];
-        m_frame = dl_av_frame_alloc();
 
         switch(m_codecContext->sample_fmt)
         {
@@ -297,6 +296,8 @@ ffmpegBackend::ffmpegBackend(const QString& fileName) :
         default:
             throw loadError(QString("Unrecognized fomat %1").arg(m_codecContext->sample_fmt));
         }
+
+        m_frame = dl_av_frame_alloc();
 
         m_planar = dl_av_sample_fmt_is_planar(m_codecContext->sample_fmt);
 
