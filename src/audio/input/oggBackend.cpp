@@ -156,6 +156,7 @@ oggBackend::oggBackend(const QString& fileName) :
 oggBackend::~oggBackend()
 {
     ov_clear(m_vf);
+    delete m_vf;
 }
 
 bool oggBackend::seek(double pos)
