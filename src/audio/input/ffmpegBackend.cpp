@@ -318,7 +318,7 @@ ffmpegBackend::ffmpegBackend(const QString& fileName) :
         dl_avcodec_free_context(&m_codecContext);
         dl_avformat_close_input(&m_formatContext);
 
-        throw e;
+        throw;
     }
 }
 
