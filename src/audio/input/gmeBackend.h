@@ -33,14 +33,14 @@
 
 /*****************************************************************/
 
-typedef struct
+struct gmeConfig_t
 {
     int samplerate;
     bool equalizer;
     double treble_dB;
     double bass_freq;
     QString asmaPath;
-} gmeConfig_t;
+};
 
 /*****************************************************************/
 

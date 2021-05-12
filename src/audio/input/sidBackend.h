@@ -42,7 +42,7 @@
 
 /*****************************************************************/
 
-typedef struct
+struct sidConfig_t
 {
     QString engine;
     int samplerate;
@@ -63,7 +63,7 @@ typedef struct
     QString kernalPath;
     QString basicPath;
     QString chargenPath;
-} sidConfig_t;
+};
 
 /*****************************************************************/
 

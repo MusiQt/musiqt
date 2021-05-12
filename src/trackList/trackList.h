@@ -21,8 +21,8 @@
 
 #include <QStringList>
 
-typedef QString track_t;
-typedef QStringList tracks_t;
+using track_t = QString;
+using tracks_t = QStringList;
 
 /*****************************************************************/
 

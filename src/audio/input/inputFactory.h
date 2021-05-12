@@ -29,17 +29,17 @@ class inputBackend;
 
 class iFactory
 {
-    typedef input* (*inputFactory)(const QString& fileName);
-    typedef inputConfig* (*configFactory)();
-    typedef QStringList (*extFunc)();
+    using inputFactory = input*(*)(const QString& fileName);
+    using configFactory = inputConfig*(*)();
+    using extFunc = QStringList(*)();
 
-    typedef struct
+    struct inputs_t
     {
         const char* name;
         extFunc supportedExt;
         inputFactory factory;
         configFactory cFactory;
-    } inputs_t;
+    };
 
 private:
     template <class backend>

@@ -26,7 +26,7 @@
 
 /*****************************************************************/
 
-typedef struct
+struct openmptConfig_t
 {
     int channels;
     int samplerate;
@@ -34,7 +34,7 @@ typedef struct
     int masterGain;
     int stereoSeparation;
     int volumeRamping;
-} openmptConfig_t;
+};
 
 /*****************************************************************/
 

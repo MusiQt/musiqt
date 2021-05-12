@@ -74,7 +74,7 @@ protected:
 class metaDataImpl : public metaData
 {
 private:
-    typedef QHash<QString, QString> StringDict;
+    using StringDict = QHash<QString, QString>;
 private:
     static const char* mprisTags[LAST_ID];
 
