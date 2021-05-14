@@ -23,7 +23,7 @@ jobs:
           mingw-w64-x86_64-toolchain
           mingw-w64-x86_64-cmake
           mingw-w64-x86_64-gettext
-          mingw-w64-x86_64-qt5-static
+          mingw-w64-x86_64-qt5
           mingw-w64-x86_64-libsndfile
           mingw-w64-x86_64-mpg123
           mingw-w64-x86_64-libvorbis
@@ -48,7 +48,7 @@ jobs:
         cd build
         cmake -G 'MSYS Makefiles' \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++" \
+            -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
             ..
         make VERBOSE=1
     - name: package
@@ -63,27 +63,8 @@ jobs:
         cp build/es.gmo ${PACKAGE_NAME}/locale/es/LC_MESSAGES/musiqt.mo
         mkdir -p ${PACKAGE_NAME}/locale/it/LC_MESSAGES
         cp build/it.gmo ${PACKAGE_NAME}/locale/it/LC_MESSAGES/musiqt.mo
-        cp  /mingw64/bin/libsndfile-1.dll \
-            /mingw64/bin/libFLAC-8.dll \
-            /mingw64/bin/libmpg123-0.dll \
-            /mingw64/bin/libogg-0.dll \
-            /mingw64/bin/libvorbis-0.dll \
-            /mingw64/bin/libvorbisfile-3.dll \
-            /mingw64/bin/libopus-0.dll \
-            /mingw64/bin/libopusfile-0.dll \
-            /mingw64/bin/libgme.dll \
-            /mingw64/bin/libwavpack-1.dll \
-            /mingw64/bin/libmpcdec-6.dll \
-            /mingw64/bin/libsidplayfp-6.dll \
-            /mingw64/bin/libstilview-0.dll \
-            /mingw64/bin/libgcrypt-20.dll \
-            /mingw64/bin/libopenmpt-0.dll \
-            /mingw64/bin/liblastfm5-1.dll \
-            /mingw64/bin/libgettextlib-0-19-8-1.dll \
-            /mingw64/bin/libintl-8.dll \
-            /mingw64/bin/libiconv-2.dll \
-            /mingw64/bin/zlib1.dll \
-            ${PACKAGE_NAME}
+        ldd ${PACKAGE_NAME}/musiqt.exe |grep -v WINDOWS|awk '{ print $3 }' | while read file ; do cp "$file" ${PACKAGE_NAME} ; done
+        windeployqt.exe ${PACKAGE_NAME}/musiqt.exe --no-translations
         zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
     - uses: svenstaro/upload-release-action@v1-release
       with:
