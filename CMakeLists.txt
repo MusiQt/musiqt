@@ -145,6 +145,9 @@ IF(DEBUG)
 ELSE(DEBUG)
     ADD_DEFINITIONS(-DNDEBUG)
     ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
+    IF(MINGW)
+        target_link_libraries(musiqt -mwindows)
+    ENDIF(MINGW)
 ENDIF(DEBUG)
 
 #####################################################
