@@ -63,7 +63,8 @@ jobs:
         cp build/es.gmo ${PACKAGE_NAME}/locale/es/LC_MESSAGES/musiqt.mo
         mkdir -p ${PACKAGE_NAME}/locale/it/LC_MESSAGES
         cp build/it.gmo ${PACKAGE_NAME}/locale/it/LC_MESSAGES/musiqt.mo
-        ldd ${PACKAGE_NAME}/musiqt.exe |grep -v WINDOWS|awk '{ print $3 }' | while read file ; do cp "$file" ${PACKAGE_NAME} ; done
+        ldd ${PACKAGE_NAME}/musiqt.exe |grep -vi Windows|awk '{ print $3 }' | while read file ; do cp "$file" ${PACKAGE_NAME} ; done
+        strip ${PACKAGE_NAME}/*.dll
         windeployqt.exe ${PACKAGE_NAME}/musiqt.exe --no-translations
         zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
     - uses: svenstaro/upload-release-action@v1-release
