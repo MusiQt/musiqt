@@ -195,24 +195,26 @@ add_custom_target(update_pot
 find_package(Qt5 5.15 COMPONENTS Widgets Network Multimedia REQUIRED)
 target_link_libraries(musiqt Qt::Widgets Qt::Network Qt::Multimedia)
 
-find_package(Qt5 OPTIONAL_COMPONENTS DBus)
-if (Qt5DBus_FOUND)
-    SET(ENABLE_DBUS 1)
-    qt_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
-            src/org.mpris.MediaPlayer2.xml
-            dbusHandler.h
-            dbusHandler)
-    qt_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
-            src/org.mpris.MediaPlayer2.Player.xml
-            dbusHandler.h
-            dbusHandler)
-    target_sources(musiqt PRIVATE
-        ${MPRIS_ADAPTOR_SRC}
-        src/utils/dbusHandler.h
-        src/utils/dbusHandler.cpp
-    )
-    target_link_libraries(musiqt Qt::DBus)
-endif()
+if (UNIX)
+    find_package(Qt5 OPTIONAL_COMPONENTS DBus)
+    if (Qt5DBus_FOUND)
+        SET(ENABLE_DBUS 1)
+        qt_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
+                src/org.mpris.MediaPlayer2.xml
+                dbusHandler.h
+                dbusHandler)
+        qt_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
+                src/org.mpris.MediaPlayer2.Player.xml
+                dbusHandler.h
+                dbusHandler)
+        target_sources(musiqt PRIVATE
+            ${MPRIS_ADAPTOR_SRC}
+            src/utils/dbusHandler.h
+            src/utils/dbusHandler.cpp
+        )
+        target_link_libraries(musiqt Qt::DBus)
+    endif(Qt5DBus_FOUND)
+endif(UNIX)
 
 ##################################################################
 # Search for zlib
