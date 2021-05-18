@@ -812,9 +812,6 @@ void centralFrame::onCmdPlSave()
 
 void centralFrame::updateSongs()
 {
-    if ((m_player->state() != state_t::STOP) && !isPlaylistDirSelected())
-        return;
-
     const int tunes = m_proxyModel->rowCount();
     const int tune = 1 + m_playlist->currentIndex().row();
 
