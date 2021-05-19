@@ -174,7 +174,7 @@ settingsWindow::settingsWindow(QWidget* win) :
 
     button = new QToolButton(this);
     button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    button->setIcon(GET_ICON(icon_card));
+    button->setIcon(GET_ICON(icon_audiocard));
     button->setText(tr("Audio")); 
     button->setToolTip(tr("Audio setting"));
     button->setStatusTip("Audio setting");
