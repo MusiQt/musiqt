@@ -22,6 +22,7 @@
 static constexpr const char *icon_actioncancel        = ":/icons/action-cancel.gif";
 static constexpr const char *icon_applicationexit     = ":/icons/application-exit.gif";
 static constexpr const char *icon_audiocard           = ":/icons/audio-card.gif";
+static constexpr const char *icon_auth                = ":/icons/auth.gif";
 static constexpr const char *icon_backend             = ":/icons/backend.gif";
 static constexpr const char *icon_bookmark            = ":/icons/bookmark.gif";
 static constexpr const char *icon_currentplaylist     = ":/icons/current-playlist.gif";

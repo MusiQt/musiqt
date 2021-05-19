@@ -226,6 +226,8 @@ void lastfmScrobbler::onScrobblesSubmitted(const QList<lastfm::Track>& tracks)
 
 /*****************************************************************/
 
+#include "iconFactory.h"
+
 lastfmConfig::lastfmConfig(QWidget* win) :
     configFrame(win)
 {
@@ -245,13 +247,13 @@ lastfmConfig::lastfmConfig(QWidget* win) :
     lineEdit->setReadOnly(true);
     matrix()->addWidget(lineEdit, 1, 1);
     connect(this, &lastfmConfig::sessionChanged, lineEdit, &QLineEdit::setText);
-    QPushButton* button = new QPushButton(tr("Authenticate"), this);
+    QPushButton* button = new QPushButton(GET_ICON(icon_auth), tr("Authenticate"), this);
     button->setToolTip("Get session key from Last.fm");
     matrix()->addWidget(button, 2, 1);
     connect(button, &QPushButton::clicked, this, &lastfmConfig::auth);
-    button = new QPushButton(tr("Delete session"), this);
+    button = new QPushButton(GET_ICON(icon_editdelete), tr("Delete session"), this);
     button->setToolTip("Delete current session key");
-    matrix()->addWidget(button, 3, 1);
+    matrix()->addWidget(button, 1, 2);
     connect(button, &QPushButton::clicked, this,
         [this]()
         {
@@ -334,7 +336,7 @@ void lastfmConfig::setSession(const QString &userName, const QString &sessionKey
     QSettings settings;
     settings.setValue("Last.fm Settings/User Name", userName);
     settings.setValue("Last.fm Settings/Session Key", sessionKey);
-    
+
     emit usernameChanged(userName);
     emit sessionChanged(sessionKey);
 }
