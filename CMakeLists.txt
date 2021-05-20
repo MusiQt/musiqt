@@ -24,6 +24,7 @@ set(MUSIQT_SOURCES
     src/singleApp.h
     src/audio/audio.cpp
     src/audio/audio.h
+    src/audio/audioState.h
     src/audio/configFrame.cpp
     src/audio/configFrame.h
     src/audio/InputWrapper.cpp

@@ -18,7 +18,9 @@
 
 #include "player.h"
 
+#include "audio.h"
 #include "loader.h"
+#include "input/input.h"
 #include "input/inputFactory.h"
 
 #include <QDebug>
@@ -32,6 +34,8 @@ player::player() :
     connect(m_audio.data(), &audio::songEnded,   this, &player::songEnded);
     connect(m_audio.data(), &audio::preloadSong, this, &player::preloadSong);
 }
+
+player::~player() {}
 
 /*
  * Starts or resumes playback.
@@ -64,6 +68,10 @@ void player::pause()
     emit stateChanged();
 }
 
+state_t player::state() const { return m_audio->state(); }
+
+int player::seconds() const { return m_audio->getPosition()/1000; }
+
 void player::setPosition(double pos)
 {
     m_audio->seek(pos);
@@ -81,6 +89,8 @@ void player::setVolume(int vol)
     m_audio->setVolume(vol);
     emit volumeChanged();
 }
+
+int player::getVolume() const { return m_audio->getVolume(); }
 
 /*
  * Pauses playback.
@@ -150,6 +160,20 @@ void player::preload(const QString& filename)
     connect(fileLoader, &loader::finished, fileLoader, &loader::deleteLater);
     fileLoader->start();
 }
+
+const metaData* player::getMetaData() const { return m_input->getMetaData(); }
+
+bool player::seekable() const { return m_input->seekable(); }
+
+bool player::gapless() const { return m_input->gapless(); }
+
+unsigned int player::subtunes() const { return m_input->subtunes(); }
+
+unsigned int player::subtune() const { return m_input->subtune(); }
+
+QString player::loadedSong() const { return m_input->songLoaded(); }
+
+unsigned int player::songDuration() const { return m_input->songDuration(); }
 
 void player::preloaded(input* res)
 {

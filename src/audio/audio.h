@@ -19,6 +19,7 @@
 #ifndef AUDIO_OUTPUT_H
 #define AUDIO_OUTPUT_H
 
+#include "audioState.h"
 #include "inputTypes.h"
 
 #include <QSettings>
@@ -29,8 +30,6 @@ class InputWrapper;
 class qaudioBackend;
 
 /*****************************************************************/
-
-enum class state_t { STOP, PLAY, PAUSE };
 
 class audio : public QObject
 {
@@ -46,8 +45,8 @@ private:
     int m_volume;
 
 private:
-    audio(const audio&);
-    audio& operator=(const audio&);
+    audio(const audio&) = delete;
+    audio& operator=(const audio&) = delete;
 
 signals:
     void songEnded();
@@ -97,8 +96,8 @@ class audioConfig : public configFrame
 {
 private:
     audioConfig() {}
-    audioConfig(const audioConfig&);
-    audioConfig& operator=(const audioConfig&);
+    audioConfig(const audioConfig&) = delete;
+    audioConfig& operator=(const audioConfig&) = delete;
 
     void setCards();
 

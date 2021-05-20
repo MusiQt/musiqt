@@ -19,10 +19,14 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "audio.h"
-#include "input/input.h"
+#include "audioState.h"
+#include "metaData.h"
 
+#include <QObject>
 #include <QScopedPointer>
+
+class audio;
+class input;
 
 enum class dir_t
 {
@@ -42,8 +46,8 @@ private:
     QScopedPointer<audio> m_audio;
 
 private:
-    player(const player&);
-    player& operator=(const player&);
+    player(const player&) = delete;
+    player& operator=(const player&) = delete;
 
     void loaded(input* res);
 
@@ -65,7 +69,7 @@ signals:
 
 public:
     player();
-    ~player() {}
+    ~player();
 
     /// Start playback
     void play();
@@ -77,10 +81,10 @@ public:
     void stop();
 
     /// Get playback state
-    state_t state() const { return m_audio->state(); }
+    state_t state() const;
 
     /// Get current position in seconds
-    int seconds() const { return m_audio->getPosition()/1000; }
+    int seconds() const;
 
     /// Set current position [0,1]
     void setPosition(double pos);
@@ -92,34 +96,34 @@ public:
     void setVolume(int vol);
 
     /// Get volume
-    int getVolume() const { return m_audio->getVolume(); }
+    int getVolume() const;
 
     /// Check if gapless playback is supported
     bool preload(input* const i);
 
     /// Get song info
-    const metaData* getMetaData() const { return m_input->getMetaData(); }
+    const metaData* getMetaData() const;
 
     /// Seeking is supported?
-    bool seekable() const { return m_input->seekable(); }
+    bool seekable() const;
 
     /// Gapless plaback is supported?
-    bool gapless() const { return m_input->gapless(); }
+    bool gapless() const;
 
     /// Get number of subtunes
-    unsigned int subtunes() const { return m_input->subtunes(); }
+    unsigned int subtunes() const;
 
     /// Get current subtune
-    unsigned int subtune() const { return m_input->subtune(); }
+    unsigned int subtune() const;
 
     /// Change subtune
     void changeSubtune(dir_t dir);
 
     /// Get file name of the loaded song
-    QString loadedSong() const { return m_input->songLoaded(); }
+    QString loadedSong() const;
 
     /// Get song duration in milliseconds
-    unsigned int songDuration() const { return m_input->songDuration(); }
+    unsigned int songDuration() const;
 
     /// Try switching to preloaded song
     bool tryPreload(const QString& song);
