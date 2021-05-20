@@ -24,7 +24,7 @@
 
 #include <QHash>
 
-class metaDataImpl : public metaData
+class metaDataImpl final : public metaData
 {
 private:
     using StringDict = QHash<QString, QString>;
