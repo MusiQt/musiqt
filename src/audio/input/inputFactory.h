@@ -19,13 +19,12 @@
 #ifndef FACTORY_H
 #define FACTORY_H
 
-#include "input.h"
-
 #include <QList>
 
 #define IFACTORY iFactory::instance()
 
-class inputBackend;
+class input;
+class inputConfig;
 
 class iFactory
 {
@@ -46,12 +45,13 @@ private:
     void regBackend();
 
 private:
+    iFactory(const iFactory&) = delete;
+    iFactory& operator= (const iFactory&) = delete;
+
     QList<inputs_t> m_inputs;
 
 protected:
     iFactory();
-    iFactory(const iFactory&);
-    iFactory& operator= (const iFactory&);
     ~iFactory() {}
 
 public:

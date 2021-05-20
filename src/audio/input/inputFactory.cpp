@@ -22,6 +22,8 @@
 
 #include "inputFactory.h"
 
+#include "input.h"
+
 #ifdef HAVE_MPG123
 #  include "mpg123Backend.h"
 #endif

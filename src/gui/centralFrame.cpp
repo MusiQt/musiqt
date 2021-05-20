@@ -23,6 +23,7 @@
 #include "playlist.h"
 #include "playlistModel.h"
 #include "proxymodel.h"
+#include "input/input.h"
 #include "input/inputFactory.h"
 #include "settings.h"
 #include "trackListFactory.h"
