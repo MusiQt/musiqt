@@ -97,9 +97,6 @@ public:
     /// Remove all info
     void clearInfo() { m_infos.clear(); utils::delPtr(m_img); }
 
-    /// Find song info
-    QString findInfo(QString type) const { return m_infos.find(type).value(); }
-
     /// Get song info
     int moreInfo(const int i) const;
 
