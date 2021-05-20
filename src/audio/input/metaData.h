@@ -58,12 +58,12 @@ public:
 
 public:
     virtual int moreInfo(const int i) const =0;
-    virtual QString getKey(const unsigned int num) const =0;
+    virtual QString getKey(unsigned int num) const =0;
     virtual QString getKey(const mpris_t info) const =0;
     virtual QString getInfo(unsigned int num) const =0;
-    virtual QString getInfo(const char* info) const =0;
     virtual QString getInfo(const mpris_t info) const =0;
-    virtual QByteArray* getImage(void) const =0;
+    virtual QString getInfo(const char* info) const =0;
+    virtual QByteArray* getImage() const =0;
 
 protected:
     ~metaData() {}
@@ -75,6 +75,7 @@ class metaDataImpl : public metaData
 {
 private:
     using StringDict = QHash<QString, QString>;
+
 private:
     static const char* mprisTags[LAST_ID];
 
@@ -98,18 +99,18 @@ public:
     void clearInfo() { m_infos.clear(); utils::delPtr(m_img); }
 
     /// Get song info
-    int moreInfo(const int i) const;
+    int moreInfo(const int i) const override;
 
-    QString getKey(const unsigned int num) const { return m_infos.keys()[num]; }
-    QString getKey(const mpris_t info) const { return mprisTags[info]; }
-    QString getInfo(unsigned int num) const { return m_infos.values()[num]; }
-    QString getInfo(const char* info) const
+    QString getKey(unsigned int num) const override { return m_infos.keys()[num]; }
+    QString getKey(const mpris_t info) const override { return mprisTags[info]; }
+    QString getInfo(unsigned int num) const override { return m_infos.values()[num]; }
+    QString getInfo(const mpris_t info) const override { return getInfo(mprisTags[info]); }
+    QString getInfo(const char* info) const override
     {
         auto it = m_infos.find(info);
         return it != m_infos.end() ? it.value() : QString();
     }
-    QString getInfo(const mpris_t info) const { return getInfo(mprisTags[info]); }
-    QByteArray* getImage() const { return m_img; }
+    QByteArray* getImage() const override { return m_img; }
 };
 
 #endif
