@@ -18,7 +18,7 @@
 
 #include "infoLabel.h"
 
-#include "input/metaData.h"
+#include "metaData.h"
 
 #include <QFileInfo>
 

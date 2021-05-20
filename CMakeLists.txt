@@ -30,6 +30,7 @@ set(MUSIQT_SOURCES
     src/audio/InputWrapper.h
     src/audio/loader.cpp
     src/audio/loader.h
+    src/audio/metaData.h
     src/audio/player.cpp
     src/audio/player.h
     src/audio/converter/converter.h
@@ -46,8 +47,8 @@ set(MUSIQT_SOURCES
     src/audio/input/input.h
     src/audio/input/inputFactory.cpp
     src/audio/input/inputFactory.h
-    src/audio/input/metaData.cpp
-    src/audio/input/metaData.h
+    src/audio/input/metaDataImpl.cpp
+    src/audio/input/metaDataImpl.h
     src/audio/input/oggTag.cpp
     src/audio/input/oggTag.h
     src/audio/output/audioProcess.h

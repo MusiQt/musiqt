@@ -16,7 +16,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "metaData.h"
+#include "metaDataImpl.h"
 
 #include <QDebug>
 
@@ -81,4 +81,10 @@ int metaDataImpl::moreInfo(int i) const
     auto values = m_infos.values();
     i += 1;
     return (i < values.size()) ? i : -1;
+}
+
+QString metaDataImpl::getInfo(const char* info) const
+{
+    auto it = m_infos.find(info);
+    return it != m_infos.end() ? it.value() : QString();
 }

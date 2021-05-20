@@ -19,7 +19,7 @@
 #ifndef OGGTAG_H
 #define OGGTAG_H
 
-#include "metaData.h"
+#include "metaDataImpl.h"
 
 namespace oggTag
 {

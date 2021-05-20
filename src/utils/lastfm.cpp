@@ -19,7 +19,7 @@
 #include "lastfm.h"
 
 #include "player.h"
-#include "input/metaData.h"
+#include "metaData.h"
 #include "utils/xdg.h"
 
 #include <lastfm5/misc.h>

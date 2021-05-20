@@ -20,7 +20,7 @@
 #define INPUT_H
 
 #include "inputTypes.h"
-#include "metaData.h"
+#include "metaDataImpl.h"
 
 #include "iconFactory.h"
 

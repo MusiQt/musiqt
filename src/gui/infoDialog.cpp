@@ -20,7 +20,7 @@
 #include "settings.h"
 #include "iconFactory.h"
 #include "utils.h"
-#include "input/metaData.h"
+#include "metaData.h"
 
 #include <QApplication>
 #include <QBuffer>
