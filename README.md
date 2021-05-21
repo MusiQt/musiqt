@@ -1,7 +1,11 @@
-MusiQt - https://github.com/drfiemost/musiqt/
-Leandro Nini - drfiemost@users.sourceforge.net
+[![CI](https://github.com/drfiemost/musiqt/actions/workflows/build.yml/badge.svg)](https://github.com/drfiemost/musiqt/actions/workflows/build.yml)
+[![](https://img.shields.io/github/downloads/drfiemost/musiqt/latest/total.svg)](https://github.com/drfiemost/musiqt/releases/latest)
 
-####################################################################
+MusiQt - https://github.com/drfiemost/musiqt/
+
+Copyright (C) 2006-2021 Leandro Nini (drfiemost@users.sourceforge.net)
+
+********************************************************************
 
 MusiQt is a simple and cross-platform audio player
 
@@ -13,50 +17,50 @@ the whole playlist or only a single song.
 It is also possible to create custom playlist and save them for later use,
 just enter the edit mode and drag files from the dirlist view to the playlist.
 
-####################################################################
+********************************************************************
 
 Formats currently supported:
 
-* Openmpt
-mod, s3m, xm, it, 669, amf, ams, dbm, dmf, dsm, far, mdl, med, mtm, okt, ptm, stm, ult, umx, mt2, psm, mo3
-xmz, itz, mdz, s3z (if zlib is installed)
+__Openmpt__
+  - mod, s3m, xm, it, 669, amf, ams, dbm, dmf, dsm, far, mdl, med, mtm, okt, ptm, stm, ult, umx, mt2, psm, mo3
+  - xmz, itz, mdz, s3z (if zlib is installed)
 
-* Sidplayfp
-sid, mus, prg, p00 (includes songlength DB and STIL support, str and wds support for mus)
+__Sidplayfp__
+  - sid, mus, prg, p00 (includes songlength DB and STIL support, str and wds support for mus)
 
-* Ogg-Vorbis
-ogg, oga
+__Ogg-Vorbis__
+  - ogg, oga
 
-* Opus
-opus
+__Opus__
+  - opus
 
-* Sndfile
-wav, voc, au, aiff, aifc
-flac, caf (if libsndfile>=1.0.12)
-vox (if libsndfile>=1.0.2)
+__Sndfile__
+  - wav, voc, au, aiff, aifc
+  - flac, caf (if libsndfile>=1.0.12)
+  - vox (if libsndfile>=1.0.2)
 
-* Ffmpeg
-aac, wma, au, flac, mp2, mp3, m2a, mpc, ogg, rm, ra, ram, tta, voc, wav, wv, ape
+__Ffmpeg__
+  - aac, wma, au, flac, mp2, mp3, m2a, mpc, ogg, rm, ra, ram, tta, voc, wav, wv, ape
 (depends on ffmpeg version)
 
-* Gme
-ay, gbs, gym, hes, kss, nsfe, nsf, sap, spc, vgm
-sap (includes STIL support)
-vgz (if zlib is installed)
+__Gme__
+  - ay, gbs, gym, hes, kss, nsfe, nsf, sap, spc, vgm
+  - sap (includes STIL support)
+  - vgz (if zlib is installed)
 
-* Musepack
-mpc
+__Musepack__
+  - mpc
 
-* WavPack
-wv
+__WavPack__
+  - wv
 
-* Hively
-ahx, hvl
+__Hively__
+  - ahx, hvl
 
-* Mpg123
-mp3
+__Mpg123__
+  - mp3
 
-Note:
+*Note*:
 ffmpeg backend is enabled only when needed libraries are found
 at runtime, so you need to install them on your own.
 Beware that these libraries may contain patented code and support some
@@ -69,9 +73,9 @@ On Windows you have to manually put them under the System folder
 or in the same folder as musiqt binary.
 (avcodec-58.dll, avformat-58.dll and avutil-56.dll)
 
-####################################################################
+********************************************************************
 
-Required dependencies:
+*Required dependencies*:
 
 A compiler with c++17 support
 
@@ -79,7 +83,7 @@ Qt 5.15
 http://www.qt.io/
 
 
-Optional dependencies:
+*Optional dependencies*:
 
 libopenmpt >= 0.3
 http://lib.openmpt.org/libopenmpt/
@@ -120,9 +124,9 @@ liblastfm 1.x
 https://github.com/lastfm/liblastfm/
 
 ffmpeg >= 4.0
-libavcodec >= 58
-libavformat >= 58.12
-avutil >= 56
 http://www.ffmpeg.org/
+  - libavcodec >= 58
+  - libavformat >= 58.12
+  - avutil >= 56
 
-####################################################################
+********************************************************************
