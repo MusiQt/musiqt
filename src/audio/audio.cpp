@@ -20,8 +20,8 @@
 
 #include "settings.h"
 #include "InputWrapper.h"
+#include "inputFactory.h"
 #include "input/input.h"
-#include "input/inputFactory.h"
 #include "output/qaudioBackend.h"
 
 #include <QDebug>

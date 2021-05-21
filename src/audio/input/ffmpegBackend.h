@@ -31,7 +31,10 @@ extern "C" {
 #  endif
 #endif
 }
+
 #include "input.h"
+#include "inputConfig.h"
+
 #include "AutoDLL.h"
 
 #define MAX_AUDIO_FRAME_SIZE 192000 // 1 second of 48khz 32bit audio

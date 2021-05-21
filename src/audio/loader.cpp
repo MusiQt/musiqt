@@ -18,9 +18,9 @@
 
 #include "loader.h"
 
-#include "input/input.h"
-#include "input/inputFactory.h"
+#include "inputFactory.h"
 #include "settings.h"
+#include "input/input.h"
 
 void loader::run()
 {

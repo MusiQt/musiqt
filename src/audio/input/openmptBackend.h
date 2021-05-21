@@ -23,6 +23,7 @@
 #include <libopenmpt/libopenmpt.hpp>
 
 #include "input.h"
+#include "inputConfig.h"
 
 /*****************************************************************/
 

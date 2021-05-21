@@ -29,6 +29,11 @@ set(MUSIQT_SOURCES
     src/audio/configFrame.h
     src/audio/InputWrapper.cpp
     src/audio/InputWrapper.h
+    src/audio/inputConfig.cpp
+    src/audio/inputConfig.h
+    src/audio/inputTypes.h
+    src/audio/inputFactory.cpp
+    src/audio/inputFactory.h
     src/audio/loader.cpp
     src/audio/loader.h
     src/audio/metaData.h
@@ -43,11 +48,8 @@ set(MUSIQT_SOURCES
     src/audio/converter/converterFactory.h
     src/audio/converter/quantizer.cpp
     src/audio/converter/quantizer.h
-    src/audio/inputTypes.h
     src/audio/input/input.cpp
     src/audio/input/input.h
-    src/audio/input/inputFactory.cpp
-    src/audio/input/inputFactory.h
     src/audio/input/metaDataImpl.cpp
     src/audio/input/metaDataImpl.h
     src/audio/input/oggTag.cpp

@@ -20,6 +20,7 @@
 #define OPUS_BACKEND_H
 
 #include "input.h"
+#include "inputConfig.h"
 
 #include <opusfile.h>
 

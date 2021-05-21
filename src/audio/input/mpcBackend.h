@@ -34,6 +34,7 @@
 #endif
 
 #include "input.h"
+#include "inputConfig.h"
 
 #include <QFile>
 

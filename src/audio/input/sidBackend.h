@@ -30,6 +30,7 @@
 #include <sidplayfp/SidTuneInfo.h>
 
 #include "input.h"
+#include "inputConfig.h"
 
 #ifdef HAVE_STILVIEW
 #  include <stilview/stil.h>

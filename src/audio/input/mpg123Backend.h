@@ -22,6 +22,7 @@
 #include <mpg123.h>
 
 #include "input.h"
+#include "inputConfig.h"
 
 #include <QFile>
 

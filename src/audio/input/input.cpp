@@ -18,44 +18,6 @@
 
 #include "input.h"
 
-inputConfig::inputConfig(const char name[], const unsigned char iconType[], unsigned int iconLen) :
-    m_name(name)
-{
-    // Use default icon if not provided
-    if (iconType == nullptr)
-    {
-        m_icon = GET_ICON(icon_backend);
-    }
-    else
-    {
-        QPixmap pixmap;
-        if (pixmap.loadFromData(iconType, iconLen))
-            m_icon = QIcon(pixmap);
-    }
-}
-
-int inputConfig::load(const char* key, int defVal)
-{
-    return m_settings.value(section(key), defVal).toInt();
-}
-
-QString inputConfig::load(const char* key, QString defVal)
-{
-    return m_settings.value(section(key), defVal).toString();
-}
-
-void inputConfig::save(const char* key, int value)
-{
-    m_settings.setValue(section(key), value);
-}
-
-void inputConfig::save(const char* key, QString value)
-{
-    m_settings.setValue(section(key), value);
-}
-
-/*****************************************************************/
-
 void input::songLoaded(const QString& location)
 {
     if (!location.isEmpty())

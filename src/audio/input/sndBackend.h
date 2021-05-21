@@ -30,6 +30,7 @@
 #include <sndfile.h>
 
 #include "input.h"
+#include "inputConfig.h"
 
 /*****************************************************************/
 

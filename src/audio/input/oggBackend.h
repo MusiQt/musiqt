@@ -20,6 +20,7 @@
 #define OGG_H
 
 #include "input.h"
+#include "inputConfig.h"
 
 #include <vorbis/vorbisfile.h>
 

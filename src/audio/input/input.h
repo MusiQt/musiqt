@@ -22,65 +22,9 @@
 #include "inputTypes.h"
 #include "metaDataImpl.h"
 
-#include "iconFactory.h"
-
-#include <QIcon>
-#include <QSettings>
 #include <QString>
 
-class QWidget;
-
 #define gettext(x) x
-
-/**
- * base class for input config
- */
-class inputConfig
-{
-private:
-    const char *m_name;
-
-    QIcon m_icon;
-
-    QSettings m_settings;
-
-private:
-    inline QString section(const char* key) { return QString("%1 Settings/%2").arg(name()).arg(key); }
-
-protected:
-    const char* name() const { return m_name; }
-
-protected:
-    inputConfig(const char name[], const unsigned char iconType[]=nullptr, unsigned int iconLen=0);
-
-    /// Load int setting
-    int load(const char* key, int defVal);
-
-    /// Load string setting
-    QString load(const char* key, QString defVal);
-
-    /// Save int setting
-    void save(const char* key, int value);
-
-    /// Save string setting
-    void save(const char* key, QString value);
-
-public:
-    virtual ~inputConfig() {}
-
-    /// Open config dialog
-    virtual QWidget* config(QWidget* parent=nullptr) =0;
-
-    /// Get filetype icon
-    QIcon icon() const { return m_icon; }
-
-    /// Get Music directory
-    virtual const QString getMusicDir() const { return QString(); }
-
-    virtual void loadSettings() {}
-
-    virtual void saveSettings() {}
-};
 
 /**
  * base class for input backends

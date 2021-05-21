@@ -23,10 +23,11 @@
 #include "playlist.h"
 #include "playlistModel.h"
 #include "proxymodel.h"
-#include "input/input.h"
-#include "input/inputFactory.h"
+#include "inputConfig.h"
+#include "inputFactory.h"
 #include "settings.h"
 #include "trackListFactory.h"
+#include "utils.h"
 #include "xdg.h"
 
 #include <QApplication>

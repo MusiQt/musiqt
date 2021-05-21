@@ -22,40 +22,40 @@
 
 #include "inputFactory.h"
 
-#include "input.h"
+#include "input/input.h"
 
 #ifdef HAVE_MPG123
-#  include "mpg123Backend.h"
+#  include "input/mpg123Backend.h"
 #endif
 #ifdef HAVE_VORBIS
-#  include "oggBackend.h"
+#  include "input/oggBackend.h"
 #endif
 #ifdef HAVE_OPUS
-#  include "opusBackend.h"
+#  include "input/opusBackend.h"
 #endif
 #ifdef HAVE_OPENMPT
-#  include "openmptBackend.h"
+#  include "input/openmptBackend.h"
 #endif
 #ifdef HAVE_SIDPLAYFP
-#  include "sidBackend.h"
+#  include "input/sidBackend.h"
 #endif
 #ifdef HAVE_GME
-#  include "gmeBackend.h"
+#  include "input/gmeBackend.h"
 #endif
 #ifdef BUILD_HVL
-#  include "hvlBackend.h"
+#  include "input/hvlBackend.h"
 #endif
 #ifdef HAVE_WAVPACK
-#  include "wvBackend.h"
+#  include "input/wvBackend.h"
 #endif
 #ifdef HAVE_SNDFILE
-#  include "sndBackend.h"
+#  include "input/sndBackend.h"
 #endif
 #ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
-#  include "ffmpegBackend.h"
+#  include "input/ffmpegBackend.h"
 #endif
 #ifdef HAVE_LIBMPCDEC
-#  include "mpcBackend.h"
+#  include "input/mpcBackend.h"
 #endif
 
 #include <QDebug>

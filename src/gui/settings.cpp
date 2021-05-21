@@ -19,11 +19,12 @@
 #include "settings.h"
 
 #include "audio.h"
-#include "input/input.h"
-#include "input/inputFactory.h"
+#include "inputConfig.h"
+#include "inputFactory.h"
 #include "iconFactory.h"
+
 #ifdef HAVE_LASTFM
-#  include "utils/lastfm.h"
+#  include "lastfm.h"
 #endif
 
 #include <QDebug>

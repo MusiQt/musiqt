@@ -19,9 +19,9 @@
 #include "player.h"
 
 #include "audio.h"
+#include "inputFactory.h"
 #include "loader.h"
 #include "input/input.h"
-#include "input/inputFactory.h"
 
 #include <QDebug>
 
