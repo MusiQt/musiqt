@@ -50,9 +50,7 @@ InputWrapper::InputWrapper(input* song) :
 InputWrapper::~InputWrapper()
 {
     delete m_audioProcess;
-
-    if (m_audioConverter != nullptr)
-        delete m_audioConverter;
+    delete m_audioConverter;
 }
 
 void InputWrapper::enableBs2b()
