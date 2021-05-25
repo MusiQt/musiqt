@@ -29,7 +29,7 @@
 
 /*****************************************************************/
 
-class deviceLoader : public QObject, public QRunnable
+class deviceLoader : public QRunnable
 {
 public:
     void run() override;
