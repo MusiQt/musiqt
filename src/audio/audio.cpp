@@ -46,11 +46,11 @@ const char* sampleTypeString(sample_t sampleType)
 
 audio::audio() :
     m_iw(new InputWrapper(IFACTORY->get())),
+    m_audioOutput(new qaudioBackend()),
     m_state(state_t::STOP)
 {
     m_volume = m_settings.value("Audio Settings/volume", 50).toInt();
 
-    m_audioOutput = new qaudioBackend();
     connect(m_audioOutput, &qaudioBackend::songEnded, this, &audio::songEnded);
 }
 
