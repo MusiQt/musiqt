@@ -33,23 +33,29 @@ void deviceLoader::run()
 
 /*****************************************************************/
 
-QStringList devices;
+QList<QAudioDeviceInfo> devices;
 
 QStringList qaudioBackend::getDevices()
 {
     if (devices.empty())
     {
-        // Check devices
-        for (const QAudioDeviceInfo &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+        devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+        for (const QAudioDeviceInfo &deviceInfo: devices)
         {
-            devices.append(deviceInfo.deviceName().toUtf8().constData());
             qDebug() << "Device name: " << deviceInfo.deviceName();
             qDebug() << "SampleRates: " << deviceInfo.supportedSampleRates();
             qDebug() << "SampleSizes: " << deviceInfo.supportedSampleSizes();
         }
     }
 
-    return devices;
+    QStringList deviceNames;
+
+    for (const QAudioDeviceInfo &deviceInfo: devices)
+    {
+        deviceNames.append(deviceInfo.deviceName().toUtf8().constData());
+    }
+
+    return deviceNames;
 }
 
 qaudioBackend::qaudioBackend()
@@ -124,11 +130,9 @@ size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* d
     qFormat.setByteOrder(QAudioFormat::LittleEndian);
     qFormat.setSampleType(sampleType);
 
-    QList<QAudioDeviceInfo> list = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
-
-    if (!list[card].isFormatSupported(qFormat))
+    if (!devices[card].isFormatSupported(qFormat))
     {
-        qFormat = list[card].nearestFormat(qFormat);
+        qFormat = devices[card].nearestFormat(qFormat);
         outputFormat.sampleRate = qFormat.sampleRate();
         outputFormat.channels = qFormat.channelCount();
         if ((qFormat.sampleType() == QAudioFormat::UnSignedInt)
@@ -170,7 +174,7 @@ size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* d
     m_audioOutput->moveToThread(m_thread);
     m_thread->start();
 
-    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, list[card]), Q_ARG(QAudioFormat, qFormat));
+    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, devices[card]), Q_ARG(QAudioFormat, qFormat));
 
     QAudio::Error error;
     QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
