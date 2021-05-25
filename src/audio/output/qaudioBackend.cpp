@@ -233,13 +233,10 @@ void qaudioBackend::setVolume(int vol)
     if (m_audioOutput.isNull())
         return;
 
-#if QT_VERSION >= 0x050800
     qreal volume = QAudio::convertVolume(vol / qreal(100.0),
                                          QAudio::LogarithmicVolumeScale,
                                          QAudio::LinearVolumeScale);
-#else
-    qreal volume = qreal(vol/100.0f);
-#endif
+
     QMetaObject::invokeMethod(m_audioOutput, "setVolume", Q_ARG(qreal, volume));
 }
 
@@ -248,13 +245,7 @@ int qaudioBackend::getVolume()
     if (m_audioOutput.isNull())
         return 0;
 
-#if QT_VERSION >= 0x050800
     return QAudio::convertVolume(m_audioOutput->volume(),
                                  QAudio::LinearVolumeScale,
                                  QAudio::LogarithmicVolumeScale) * 100;
-#else
-    qreal volume;
-    QMetaObject::invokeMethod(m_audioOutput, "volume", Qt::BlockingQueuedConnection, Q_RETURN_ARG(qreal, volume));
-    return volume*100;
-#endif
 }
