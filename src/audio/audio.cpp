@@ -72,18 +72,6 @@ bool audio::play(input* i)
 
     i->rewind(); // TODO check return code
 
-    unsigned int selectedCard = 0;
-    QString cardName = SETTINGS->card();
-    const QStringList devices = qaudioBackend::getDevices();
-    for (int dev=0; dev<devices.size(); dev++)
-    {
-        if (!cardName.compare(devices[dev]))
-        {
-            selectedCard = dev;
-            break;
-        }
-    }
-
     audioFormat_t format;
     format.sampleRate = i->samplerate();
     format.channels = i->channels();
@@ -117,6 +105,8 @@ bool audio::play(input* i)
     connect(m_iw.data(), &InputWrapper::switchSong,  this, &audio::songEnded);
     connect(m_iw.data(), &InputWrapper::updateTime,  this, &audio::updateTime);
     connect(m_iw.data(), &InputWrapper::preloadSong, this, &audio::preloadSong);
+
+    int selectedCard = qaudioBackend::getDevices().indexOf(SETTINGS->card());
 
     audioFormat_t outputFormat;
     size_t bufferSize = m_audioOutput->open(selectedCard, format, m_iw.data(), outputFormat);

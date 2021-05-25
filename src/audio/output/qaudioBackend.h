@@ -64,7 +64,7 @@ public:
     static QStringList getDevices();
 
     /// Open
-    size_t open(unsigned int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat);
+    size_t open(int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat);
 
     /// Close
     void close();

@@ -88,7 +88,7 @@ void qaudioBackend::onStateChange(QAudio::State newState)
     }
 }
 
-size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat)
+size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat)
 {
     int sampleSize;
     QAudioFormat::SampleType sampleType;
@@ -128,9 +128,11 @@ size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* d
     qFormat.setByteOrder(QAudioFormat::LittleEndian);
     qFormat.setSampleType(sampleType);
 
-    if (!devices[card].isFormatSupported(qFormat))
+    QAudioDeviceInfo deviceInfo = card != -1 ? devices[card] : QAudioDeviceInfo::defaultInputDevice();
+
+    if (!deviceInfo.isFormatSupported(qFormat))
     {
-        qFormat = devices[card].nearestFormat(qFormat);
+        qFormat = deviceInfo.nearestFormat(qFormat);
         outputFormat.sampleRate = qFormat.sampleRate();
         outputFormat.channels = qFormat.channelCount();
         if ((qFormat.sampleType() == QAudioFormat::UnSignedInt)
@@ -172,7 +174,7 @@ size_t qaudioBackend::open(unsigned int card, audioFormat_t format, QIODevice* d
     m_audioOutput->moveToThread(m_thread);
     m_thread->start();
 
-    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, devices[card]), Q_ARG(QAudioFormat, qFormat));
+    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, deviceInfo), Q_ARG(QAudioFormat, qFormat));
 
     QAudio::Error error;
     QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
