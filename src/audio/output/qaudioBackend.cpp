@@ -58,15 +58,13 @@ QStringList qaudioBackend::getDevices()
     return deviceNames;
 }
 
-qaudioBackend::qaudioBackend()
+qaudioBackend::qaudioBackend() :
+    m_thread(new QThread())
 {
     // Preload available devices in a separate thread
     deviceLoader* loader = new deviceLoader();
     loader->setAutoDelete(true);
     QThreadPool::globalInstance()->start(loader);
-
-    // audio thread
-    m_thread = new QThread();
 }
 
 qaudioBackend::~qaudioBackend() { delete m_thread; }

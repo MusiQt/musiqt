@@ -46,6 +46,8 @@ class qaudioBackend : public QObject
 
 private:
     QPointer<AudioOutputWrapper> m_audioOutput;
+
+    // audio thread
     QThread *m_thread;
 
 signals:
