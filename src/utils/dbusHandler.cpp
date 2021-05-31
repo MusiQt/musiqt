@@ -188,7 +188,12 @@ QString dbusHandler::playbackStatus() const
     case state_t::PLAY:  return QString("Playing");
     case state_t::PAUSE: return QString("Paused");
     case state_t::STOP:  return QString("Stopped");
-    default: return QString();
+    default:
+#ifdef __GNUC__
+            __builtin_unreachable();
+#elif defined(_MSC_VER)
+            __assume(0);
+#endif
     }
 }
 
@@ -204,13 +209,10 @@ void dbusHandler::Pause() { m_player->pause(); }
 
 void dbusHandler::PlayPause()
 {
-    switch (m_player->state())
-    {
-    default:
-    case state_t::PLAY: [[fallthrough]];
-    case state_t::PAUSE: m_player->pause(); break;
-    case state_t::STOP:  m_player->play();  break;
-    }
+    if (m_player->state() == state_t::STOP)
+        m_player->play();
+    else
+        m_player->pause();
 }
 
 void dbusHandler::Stop() { m_player->stop(); }
