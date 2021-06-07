@@ -3,6 +3,8 @@
 
 MusiQt - https://github.com/drfiemost/musiqt/
 
+![splash](https://github.com/drfiemost/musiqt/wiki/images/splash.jpg)
+
 Copyright (C) 2006-2021 Leandro Nini (drfiemost@users.sourceforge.net)
 
 ********************************************************************
@@ -16,6 +18,14 @@ contained in the selected directory. Then you can select whether to play
 the whole playlist or only a single song.
 It is also possible to create custom playlist and save them for later use,
 just enter the edit mode and drag files from the dirlist view to the playlist.
+
+Compact view:
+
+![screenshot compact view](https://github.com/drfiemost/musiqt/wiki/images/screenshot_compact.jpg)
+
+Full view:
+
+![screenshot full view](https://github.com/drfiemost/musiqt/wiki/images/screenshot_full.jpg)
 
 ********************************************************************
 
