@@ -1,15 +1,14 @@
 [![CI](https://github.com/drfiemost/musiqt/actions/workflows/build.yml/badge.svg)](https://github.com/drfiemost/musiqt/actions/workflows/build.yml)
 [![](https://img.shields.io/github/downloads/drfiemost/musiqt/latest/total.svg)](https://github.com/drfiemost/musiqt/releases/latest)
 
-MusiQt - https://github.com/drfiemost/musiqt/
+MusiQt - https://github.com/drfiemost/musiqt/  
+Copyright (C) 2006-2021 Leandro Nini (drfiemost@users.sourceforge.net)
 
 ![splash](https://github.com/drfiemost/musiqt/wiki/images/splash.jpg)
 
-Copyright (C) 2006-2021 Leandro Nini (drfiemost@users.sourceforge.net)
-
 ********************************************************************
 
-MusiQt is a simple and cross-platform audio player
+MusiQt is a simple and cross-platform audio player.
 
 It features a dirlist view, where you can browse through your disk and
 bookmark directories in which you've stored your music, and a playlist
@@ -18,6 +17,7 @@ contained in the selected directory. Then you can select whether to play
 the whole playlist or only a single song.
 It is also possible to create custom playlist and save them for later use,
 just enter the edit mode and drag files from the dirlist view to the playlist.
+It supports MPRIS and Last.fm scrobbling.
 
 Compact view:
 
