@@ -19,10 +19,11 @@
 #ifndef TRACKLIST_H
 #define TRACKLIST_H
 
-#include <QStringList>
+#include <QList>
+#include <QString>
 
 using track_t = QString;
-using tracks_t = QStringList;
+using tracks_t = QList<track_t>;
 
 /*****************************************************************/
 
