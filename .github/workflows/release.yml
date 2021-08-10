@@ -55,7 +55,7 @@ jobs:
       run: |
         export PACKAGE_NAME=musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64
         mkdir ${PACKAGE_NAME}
-        cp README ${PACKAGE_NAME}
+        cp README.md ${PACKAGE_NAME}
         cp build/musiqt.exe ${PACKAGE_NAME}
         strip ${PACKAGE_NAME}/musiqt.exe
         upx ${PACKAGE_NAME}/musiqt.exe || true
