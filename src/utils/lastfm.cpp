@@ -105,7 +105,7 @@ void lastfmScrobbler::songChanged()
     nowPlaying();
 }
 
-void lastfmScrobbler::nowPlaying()
+void lastfmScrobbler::nowPlaying(bool force)
 {
     if (!m_enable || lastfm::ws::SessionKey.isEmpty())
         return;
@@ -123,7 +123,7 @@ void lastfmScrobbler::nowPlaying()
     if (scrobblePoint > limit)
             scrobblePoint = limit;
 
-    if (m_player->seconds() == 0)
+    if (force || (m_player->seconds() == 0))
     {
         // playback is starting
         const metaData* data = m_player->getMetaData();
@@ -165,6 +165,9 @@ void lastfmScrobbler::setScrobbling(bool scrobble)
     m_enable = scrobble;
     QSettings settings;
     settings.setValue("Last.fm Settings/scrobbling", scrobble);
+
+    if (m_player->state() == state_t::PLAY)
+        nowPlaying(true);
 }
 
 void lastfmScrobbler::onNowPlayingReturn()

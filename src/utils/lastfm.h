@@ -41,8 +41,6 @@ public:
     lastfmScrobbler(player* p, QObject* parent = nullptr);
     ~lastfmScrobbler();
 
-    void nowPlaying();
-
     void setScrobbling(bool scrobble);
 
 signals:
@@ -56,6 +54,8 @@ private:
     void onScrobblesCached(const QList<lastfm::Track>& tracks);
     void onScrobblesSubmitted(const QList<lastfm::Track>& tracks);
     void onNowPlayingReturn();
+
+    void nowPlaying(bool force=false);
 
 private:
     lastfm::Audioscrobbler m_scrobbler;
