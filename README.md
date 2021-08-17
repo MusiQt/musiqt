@@ -17,7 +17,7 @@ contained in the selected directory. Then you can select whether to play
 the whole playlist or only a single song.
 It is also possible to create custom playlist and save them for later use,
 just enter the edit mode and drag files from the dirlist view to the playlist.
-It supports MPRIS and Last.fm scrobbling.
+It supports gapless playback, MPRIS and Last.fm scrobbling.
 
 Compact view:
 
