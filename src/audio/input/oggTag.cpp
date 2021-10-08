@@ -21,7 +21,6 @@
 #include <QDebug>
 #include <QByteArray>
 #include <QString>
-#include <QTextCodec>
 
 bool isTag(const char* orig, const char* tagName)
 {
@@ -154,29 +153,11 @@ void oggTag::parseTags(char **ptr, metaDataImpl& data)
                 // FIXME - WTF! the image is UTF8 encoded!
                 const quint32 dataPos = 28+mimeLen+descLen+16;
                 quint32 dataLen = getNum(*ptr+dataPos);
-#if 1
                 QString imgData = QString::fromUtf8(*ptr+4+dataPos, dataLen);
                 for (auto i = imgData.constBegin(); i != imgData.constEnd(); ++i)
                 {
                     image.append(static_cast<char >((*i).unicode()));
                 }
-#else
-                QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-                QTextDecoder *decoder = new QTextDecoder(codec, QTextCodec::ConvertInvalidToNull);
-
-                for (int i = 0; i < dataLen; i++)
-                {
-                    QString imgData = decoder->toUnicode(*ptr+4+dataPos+i, 1);
-                    if (!imgData.isEmpty())
-                    {
-                        ushort unicode = imgData.front().unicode();
-                        if (unicode>255)
-                            qWarning() << "out of range: " << unicode;
-                        image.append(static_cast<char>(imgData.front().unicode()));
-                    }
-                }
-                delete decoder;
-#endif
             }
         }
         ++ptr;
