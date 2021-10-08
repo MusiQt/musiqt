@@ -265,8 +265,8 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 int st = info.indexOf('(');
                 if (st >= 0)
                 {
-                    QStringRef tmp = info.midRef(st, info.indexOf(')')-st);
-                    const unsigned int idx = tmp.string()->toInt();
+                    QStringView tmp = QStringView{info}.mid(st, info.indexOf(')')-st);
+                    const unsigned int idx = tmp.toInt();
                     if (idx < GENRES)
                         info = QString(genre[idx]);
                 }
