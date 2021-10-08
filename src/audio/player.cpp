@@ -105,7 +105,7 @@ bool player::tryPreload(const QString& song)
     if (songPreloaded.isEmpty())
         return false;
 
-    input* i = m_preload.take();
+    input* i = m_preload.release();
     m_preload.reset(IFACTORY->get());
 
     if (!songPreloaded.compare(song))
