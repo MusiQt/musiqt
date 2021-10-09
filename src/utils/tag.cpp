@@ -220,13 +220,13 @@ QString getID3v2Text(const char* buf, char encoding)
         tmp = QString::fromLatin1(buf);
         break;
     case 1:
-        tmp = QString::fromUtf16((const ushort *)buf);
+        tmp = QString::fromUtf16(reinterpret_cast<const char16_t*>(buf));
         break;
     case 2:
         {
             // Add big-endian BOM (0xfe 0xff)
             uint size = qstrlen(buf);
-            ushort* tempBuffer = new ushort[size + 1];
+            char16_t* tempBuffer = new char16_t[size + 1];
             unsigned char* bom = (unsigned char*)tempBuffer;
             bom[0] = 0xfe;
             bom[1] = 0xff;
@@ -274,7 +274,7 @@ QString getID3v2_2Text(const char* buf, char encoding)
         tmp = QString::fromLatin1(buf);
         break;
     case 1:
-        tmp = QString::fromUtf16(reinterpret_cast<const ushort*>(buf));
+        tmp = QString::fromUtf16(reinterpret_cast<const char16_t*>(buf));
         break;
     default:
         qWarning() << "Invalid string encoding " << encoding;
@@ -475,7 +475,7 @@ int tag::getID3v2Frame(char* buf, int ver)
         i++;
         QString description = (textEncoding == 0) ?
             QString::fromLatin1(data+i) :
-            QString::fromUtf16((const ushort *)(data+i));
+            QString::fromUtf16(reinterpret_cast<const char16_t*>(data+i));
         qDebug() << "Pic description: " << description;
 
         while (*(data+i))
@@ -520,7 +520,7 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
     version = (int)buf[3];
     if ((version < 2) || (version > 4))
     {
-        qWarning() << "ID3v2 tag version " << QString(version).left(2) << " not supported";
+        qWarning() << "ID3v2 tag version " << QString::number(version).left(2) << " not supported";
         return false;
     }
 
