@@ -190,9 +190,9 @@ QString dbusHandler::playbackStatus() const
     case state_t::STOP:  return QString("Stopped");
     default:
 #ifdef __GNUC__
-            __builtin_unreachable();
+        __builtin_unreachable();
 #elif defined(_MSC_VER)
-            __assume(0);
+        __assume(0);
 #endif
     }
 }
