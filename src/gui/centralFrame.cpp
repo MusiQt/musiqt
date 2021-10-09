@@ -30,6 +30,7 @@
 #include "utils.h"
 #include "xdg.h"
 
+#include <QActionGroup>
 #include <QApplication>
 #include <QButtonGroup>
 #include <QHBoxLayout>
