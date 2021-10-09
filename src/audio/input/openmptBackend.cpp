@@ -32,6 +32,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QRegularExpression>
 
 #include <algorithm>
 #include <string>
@@ -182,8 +183,8 @@ openmptBackend::openmptBackend(const QString& fileName) :
 #ifdef HAVE_LIBZ
     QString ext(EXTZ);
     ext.prepend(".*\\.(").append(")");
-    QRegExp rx(ext, Qt::CaseInsensitive);
-    if (rx.exactMatch(fileName))
+    QRegularExpression rx(QRegularExpression::anchoredPattern(ext), QRegularExpression::CaseInsensitiveOption);
+    if (rx.match(fileName).hasMatch())
     {
 #  ifdef _WIN32
         zlib_filefunc64_def ffunc;

@@ -42,6 +42,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QRegularExpression>
 #include <QSlider>
 #include <QStackedWidget>
 #include <QTimer>
@@ -99,7 +100,9 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
     m_proxyModel->sort(proxymodel::sortMode::Ascending);
     m_playlist->setModel(m_proxyModel);
 
-    m_proxyModel->setFilterRegExp(QRegExp(getFilter(), Qt::CaseInsensitive));
+    m_proxyModel->setFilterRegularExpression(QRegularExpression(
+        QRegularExpression::anchoredPattern(getFilter()),
+        QRegularExpression::CaseInsensitiveOption));
     m_proxyModel->setFilterRole(Qt::UserRole+1);
 
     selectionModel = m_playlist->selectionModel();
@@ -446,8 +449,8 @@ void centralFrame::setFile(const QString& file)
 
         if (!fName.isEmpty())
         {
-            QRegExp regexp = m_proxyModel->filterRegExp();
-            if (!regexp.exactMatch(fName))
+            QRegularExpression regexp = m_proxyModel->filterRegularExpression();
+            if (!regexp.match(fName).hasMatch())
             {
                 // file is not supported, ignore message
                 return;

@@ -58,6 +58,7 @@
 #  include "input/mpcBackend.h"
 #endif
 
+#include <QRegularExpression>
 #include <QDebug>
 
 class nullInput : public input
@@ -150,8 +151,8 @@ bool supports(const QStringList& ext, const QString& fileName)
     QString extPattern = ext.join("|");
     extPattern.prepend(".*\\.(").append(")");
 
-    QRegExp rx(extPattern, Qt::CaseInsensitive);
-    return rx.exactMatch(fileName);
+    QRegularExpression rx(QRegularExpression::anchoredPattern(extPattern), QRegularExpression::CaseInsensitiveOption);
+    return rx.match(fileName).hasMatch();
 }
 
 QStringList iFactory::getExtensions() const

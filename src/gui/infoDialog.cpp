@@ -36,7 +36,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QThreadPool>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStackedWidget>
 #include <QWidget>
 
@@ -245,7 +245,7 @@ void infoDialog::setInfo(const metaData* mtd)
 
             if (isComment)
             {
-                QRegExp url("(\\b(?:https?://|www\\.)\\S+\\b)");
+                QRegularExpression url("(\\b(?:https?://|www\\.)\\S+\\b)");
                 info.replace(url, "<a href=\"\\1\">\\1</a>");
                 textLabel->setOpenExternalLinks(true);
             }
