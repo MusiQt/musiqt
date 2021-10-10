@@ -28,8 +28,8 @@ class playlist final : public QListView
 
 private:
     playlist() {}
-    playlist(const playlist&);
-    playlist& operator=(const playlist&);
+    playlist(const playlist&) = delete;
+    playlist& operator=(const playlist&) = delete;
 
 public:
     playlist(QWidget * parent) :

@@ -25,8 +25,8 @@ class timeDisplay final : public QLCDNumber
 {
 private:
     timeDisplay() {}
-    timeDisplay(const timeDisplay&);
-    timeDisplay& operator=(const timeDisplay&);
+    timeDisplay(const timeDisplay&) = delete;
+    timeDisplay& operator=(const timeDisplay&) = delete;
 
 public:
     timeDisplay(QWidget* parent) :
@@ -54,8 +54,8 @@ class timeLabel final : public QLabel
 {
 private:
     timeLabel() {}
-    timeLabel(const timeLabel&);
-    timeLabel& operator=(const timeLabel&);
+    timeLabel(const timeLabel&) = delete;
+    timeLabel& operator=(const timeLabel&) = delete;
 
 public:
     timeLabel(QWidget* parent) :

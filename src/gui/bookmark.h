@@ -29,8 +29,8 @@ private:
 
 private:
     bookmark() {}
-    bookmark(const bookmark&);
-    bookmark& operator=(const bookmark&);
+    bookmark(const bookmark&) = delete;
+    bookmark& operator=(const bookmark&) = delete;
 
 public:
     bookmark(QWidget * parent) :

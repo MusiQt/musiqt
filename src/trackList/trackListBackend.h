@@ -31,8 +31,8 @@ protected:
 
 private:
     trackListBackend();
-    trackListBackend(const trackListBackend&);
-    trackListBackend& operator= (const trackListBackend&);
+    trackListBackend(const trackListBackend&) = delete;
+    trackListBackend& operator= (const trackListBackend&) = delete;
 
 protected:
     trackListBackend(const QString &path) : m_path(path) {}

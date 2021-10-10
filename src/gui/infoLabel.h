@@ -27,8 +27,8 @@ class infoLabel final : public QLabel
 {
 private:
     infoLabel() {}
-    infoLabel(const infoLabel&);
-    infoLabel &operator=(const infoLabel&);
+    infoLabel(const infoLabel&) = delete;
+    infoLabel &operator=(const infoLabel&) = delete;
 
 public:
     infoLabel(QWidget* p) :

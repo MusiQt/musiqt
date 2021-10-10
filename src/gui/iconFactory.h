@@ -33,8 +33,8 @@ private:
 
 protected:
     iconFactory() {}
-    iconFactory(const iconFactory&);
-    iconFactory& operator= (const iconFactory&);
+    iconFactory(const iconFactory&) = delete;
+    iconFactory& operator= (const iconFactory&) = delete;
     ~iconFactory() {}
 
 public:

@@ -27,8 +27,8 @@ private:
     QLibrary *m_handle;
 
 private:
-    AutoDLL(const AutoDLL&);
-    AutoDLL &operator=(const AutoDLL&);
+    AutoDLL(const AutoDLL&) = delete;
+    AutoDLL &operator=(const AutoDLL&) = delete;
 
 public:
     AutoDLL(const char* nm);

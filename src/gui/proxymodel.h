@@ -36,8 +36,8 @@ private:
 
 private:
     proxymodel() {}
-    proxymodel(const proxymodel&);
-    proxymodel& operator=(const proxymodel&);
+    proxymodel(const proxymodel&) = delete;
+    proxymodel& operator=(const proxymodel&) = delete;
 
 protected:
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override

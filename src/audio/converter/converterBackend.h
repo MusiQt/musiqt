@@ -30,8 +30,8 @@ protected:
 
 private:
     resamplerBackend();
-    resamplerBackend(const resamplerBackend&);
-    resamplerBackend& operator=(const resamplerBackend&);
+    resamplerBackend(const resamplerBackend&) = delete;
+    resamplerBackend& operator=(const resamplerBackend&) = delete;
 
 protected:
     resamplerBackend(unsigned int srIn, unsigned int srOut, size_t size,
@@ -53,8 +53,8 @@ class converterBackend : public converter
 {
 private:
     converterBackend();
-    converterBackend(const converterBackend&);
-    converterBackend& operator=(const converterBackend&);
+    converterBackend(const converterBackend&) = delete;
+    converterBackend& operator=(const converterBackend&) = delete;
 
 protected:
     converterBackend(size_t size, unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
