@@ -21,7 +21,7 @@
 
 #include <QLCDNumber>
 
-class timeDisplay : public QLCDNumber
+class timeDisplay final : public QLCDNumber
 {
 private:
     timeDisplay() {}
@@ -50,7 +50,7 @@ public:
 
 #include <QLabel>
 
-class timeLabel : public QLabel
+class timeLabel final : public QLabel
 {
 private:
     timeLabel() {}

@@ -24,7 +24,7 @@
 
 #include <algorithm>
 
-class proxymodel : public QSortFilterProxyModel
+class proxymodel final : public QSortFilterProxyModel
 {
 public:
     enum class sortMode { Ascending, Descending, Random };

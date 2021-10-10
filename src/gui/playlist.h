@@ -22,7 +22,7 @@
 #include <QListView>
 #include <QMouseEvent>
 
-class playlist : public QListView
+class playlist final : public QListView
 {
     Q_OBJECT
 

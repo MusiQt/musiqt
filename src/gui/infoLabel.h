@@ -23,7 +23,7 @@
 
 class metaData;
 
-class infoLabel : public QLabel
+class infoLabel final : public QLabel
 {
 private:
     infoLabel() {}
