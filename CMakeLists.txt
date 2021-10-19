@@ -196,12 +196,20 @@ add_custom_target(update_pot
 ##################################################################
 # Check for Qt
 
-find_package(Qt5 5.15 COMPONENTS Widgets Network Multimedia REQUIRED)
+find_package(Qt6 COMPONENTS Widgets Network Multimedia)
+if (NOT Qt6_FOUND)
+    find_package(Qt5 5.15 COMPONENTS Widgets Network Multimedia REQUIRED)
+endif()
+
 target_link_libraries(musiqt Qt::Widgets Qt::Network Qt::Multimedia)
 
 if (UNIX)
-    find_package(Qt5 OPTIONAL_COMPONENTS DBus)
-    if (Qt5DBus_FOUND)
+    if (Qt6_FOUND)
+        find_package(Qt6 OPTIONAL_COMPONENTS DBus)
+    else()
+        find_package(Qt5 OPTIONAL_COMPONENTS DBus)
+    endif()
+    if (Qt6DBus_FOUND OR Qt5DBus_FOUND)
         SET(ENABLE_DBUS 1)
         qt_add_dbus_adaptor(MPRIS_ADAPTOR_SRC
                 src/org.mpris.MediaPlayer2.xml
@@ -217,7 +225,7 @@ if (UNIX)
             src/utils/dbusHandler.cpp
         )
         target_link_libraries(musiqt Qt::DBus)
-    endif(Qt5DBus_FOUND)
+    endif()
 endif(UNIX)
 
 ##################################################################
@@ -465,18 +473,20 @@ endif(libbs2b_FOUND)
 ##################################################################
 # Check for liblastfm
 
-find_package(LASTFM)
-if(LASTFM_FOUND)
-    find_package(Qt5 OPTIONAL_COMPONENTS Xml)
-    if (Qt5Xml_FOUND)
-        SET(HAVE_LASTFM 1)
-        target_sources(musiqt PRIVATE
-            src/utils/lastfm.cpp
-            src/utils/lastfm.h
-        )
-        target_link_libraries(musiqt LASTFM::LASTFM Qt::Xml)
-    endif(Qt5Xml_FOUND)
-endif(LASTFM_FOUND)
+if (Qt5_FOUND)
+    find_package(LASTFM)
+    if(LASTFM_FOUND)
+        find_package(Qt5 OPTIONAL_COMPONENTS Xml)
+        if (Qt5Xml_FOUND)
+            SET(HAVE_LASTFM 1)
+            target_sources(musiqt PRIVATE
+                src/utils/lastfm.cpp
+                src/utils/lastfm.h
+            )
+            target_link_libraries(musiqt LASTFM::LASTFM Qt::Xml)
+        endif()
+    endif(LASTFM_FOUND)
+endif()
 
 ##################################################################
 
