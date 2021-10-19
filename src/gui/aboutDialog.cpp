@@ -99,7 +99,11 @@ aboutDialog::aboutDialog(QWidget *parent) :
         QFile file(":/resources/CREDITS");
         file.open(QFile::ReadOnly|QFile::Text);
         QTextStream ts(&file);
+#if QT_VERSION >= 0x060000
+        ts.setEncoding(QStringConverter::Utf8);
+#else
         ts.setCodec("UTF-8");
+#endif
         creditsLabel->setText(ts.readAll());
     }
     QScrollArea* creditsArea = new QScrollArea(this);

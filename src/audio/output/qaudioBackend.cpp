@@ -18,8 +18,15 @@
 
 #include "qaudioBackend.h"
 
-#include <QAudioDeviceInfo>
-#include <QAudioFormat>
+#include <QtGlobal>
+
+#if QT_VERSION >= 0x060000
+#  include <QAudioDevice>
+#  include <QMediaDevices>
+#else
+#  include <QAudioDeviceInfo>
+#  include <QAudioFormat>
+#endif
 #include <QList>
 #include <QDebug>
 #include <QThreadPool>
@@ -32,6 +39,36 @@ void deviceLoader::run()
 }
 
 /*****************************************************************/
+
+#if QT_VERSION >= 0x060000
+
+QList<QAudioDevice> devices;
+
+QStringList qaudioBackend::getDevices()
+{
+    if (devices.empty())
+    {
+        devices = QMediaDevices::audioOutputs();
+        for (const QAudioDevice &device: devices)
+        {
+            qDebug() << "Device id: " << device.id();
+            qDebug() << "Device name: " << device.description();
+            qDebug() << "SampleRate: " << device.minimumSampleRate() << " - " << device.maximumSampleRate();
+            qDebug() << "ChannelCount: " << device.minimumChannelCount() << " - "  << device.maximumChannelCount();
+        }
+    }
+
+    QStringList deviceNames;
+
+    for (const QAudioDevice &device: devices)
+    {
+        deviceNames.append(device.description());
+    }
+
+    return deviceNames;
+}
+
+#else
 
 QList<QAudioDeviceInfo> devices;
 
@@ -57,6 +94,8 @@ QStringList qaudioBackend::getDevices()
 
     return deviceNames;
 }
+
+#endif
 
 qaudioBackend::qaudioBackend() :
     m_thread(new QThread())
@@ -90,6 +129,28 @@ void qaudioBackend::onStateChange(QAudio::State newState)
 
 size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat)
 {
+#if QT_VERSION >= 0x060000
+    QAudioFormat::SampleFormat sampleFormat;
+
+    switch (format.sampleType)
+    {
+    case sample_t::U8:
+        sampleFormat = QAudioFormat::UInt8;
+        break;
+    case sample_t::S16:
+        sampleFormat = QAudioFormat::Int16;
+        break;
+    case sample_t::S32:
+        sampleFormat = QAudioFormat::Int32;
+        break;
+    case sample_t::SAMPLE_FLOAT:
+        sampleFormat = QAudioFormat::Float;
+        break;
+    default:
+        qWarning() << "Unexpected sample type";
+        return 0;
+    }
+#else
     int sampleSize;
     QAudioFormat::SampleType sampleType;
 
@@ -119,15 +180,29 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
         qWarning() << "Unexpected sample type";
         return 0;
     }
-
+#endif
     QAudioFormat qFormat;
     qFormat.setSampleRate(format.sampleRate);
     qFormat.setChannelCount(format.channels);
+#if QT_VERSION >= 0x060000
+    qFormat.setSampleFormat(sampleFormat);
+#else
     qFormat.setSampleSize(sampleSize);
+    qFormat.setSampleType(sampleType);
     qFormat.setCodec("audio/pcm");
     qFormat.setByteOrder(QAudioFormat::LittleEndian);
-    qFormat.setSampleType(sampleType);
+#endif
 
+#if QT_VERSION >= 0x060000
+    QAudioDevice deviceInfo = card != -1 ? devices[card] : QMediaDevices::defaultAudioOutput();
+    if (!deviceInfo.isFormatSupported(qFormat))
+    {
+        qWarning() << "Audio format not supported";
+        return 0;
+    }
+    else
+        outputFormat = format;
+#else
     QAudioDeviceInfo deviceInfo = card != -1 ? devices[card] : QAudioDeviceInfo::defaultInputDevice();
 
     if (!deviceInfo.isFormatSupported(qFormat))
@@ -168,13 +243,16 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     }
     else
         outputFormat = format;
-
+#endif
     m_audioOutput = new AudioOutputWrapper();
     
     m_audioOutput->moveToThread(m_thread);
     m_thread->start();
-
+#if QT_VERSION >= 0x060000
+    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDevice, deviceInfo), Q_ARG(QAudioFormat, qFormat));
+#else
     QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, deviceInfo), Q_ARG(QAudioFormat, qFormat));
+#endif
 
     QAudio::Error error;
     QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));

@@ -19,6 +19,49 @@
 #ifndef AUDIOOUTPUTWRAPPER_H
 #define AUDIOOUTPUTWRAPPER_H
 
+#include <QtGlobal>
+
+#if QT_VERSION >= 0x060000
+
+#include <QMediaDevices>
+#include <QAudioSink>
+
+class AudioOutputWrapper : public QObject
+{
+    Q_OBJECT
+
+private:
+    QAudioSink *m_audioOutput;
+
+public slots:
+    void init(QAudioDevice audioDevice, QAudioFormat format)
+    {
+        m_audioOutput = new QAudioSink(audioDevice, format, this);
+        connect(m_audioOutput, SIGNAL(stateChanged(QAudio::State)), this, SLOT(onStateChange(QAudio::State)));
+    }
+    QAudio::Error error() const { return m_audioOutput->error(); }
+    void suspend() { m_audioOutput->suspend(); }
+    void resume() { m_audioOutput->resume(); }
+    void start(QIODevice *device) { m_audioOutput->start(device); }
+    void stop() { m_audioOutput->stop(); }
+    qsizetype bufferSize() const { return m_audioOutput->bufferSize(); }
+    void setVolume(qreal volume) { m_audioOutput->setVolume(volume); }
+    qreal volume() const { return m_audioOutput->volume(); }
+
+    void onStateChange(QAudio::State state) { emit stateChanged(state); }
+
+signals:
+    void stateChanged(QAudio::State state);
+
+public:
+    AudioOutputWrapper() :
+        m_audioOutput(nullptr)
+    {}
+    ~AudioOutputWrapper() { delete m_audioOutput; }
+};
+
+#else
+
 #include <QAudioOutput>
 
     Q_DECLARE_METATYPE(QIODevice*)
@@ -26,7 +69,7 @@
 class AudioOutputWrapper : public QObject
 {
     Q_OBJECT
-    
+
 private:
     QAudioOutput *m_audioOutput;
 
@@ -56,5 +99,7 @@ public:
     {}
     ~AudioOutputWrapper() { delete m_audioOutput; }
 };
+
+#endif
 
 #endif
