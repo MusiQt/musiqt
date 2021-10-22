@@ -24,6 +24,7 @@
 #endif
 
 #include <gme/gme.h>
+#undef check // conflicts with Qt6
 
 #include "input.h"
 #include "inputConfig.h"
