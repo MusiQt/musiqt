@@ -26,6 +26,8 @@
 #include <QMediaDevices>
 #include <QAudioSink>
 
+    Q_DECLARE_METATYPE(QAudioDevice)
+
 class AudioOutputWrapper : public QObject
 {
     Q_OBJECT
