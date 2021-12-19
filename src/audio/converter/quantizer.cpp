@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2021 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,11 +46,11 @@ template quantizerFixed<short>::quantizerFixed(const unsigned int fract);
 template<typename O>
 inline int quantizerFixed<O>::get32(const int sample, const unsigned int channel)
 {
-    const unsigned int r1 = random(_random[channel][0])&_mask;
-    const unsigned int r2 = random(_random[channel][1])&_mask;
+    _random[channel][0] = random(_random[channel][0]);
+    _random[channel][1] = random(_random[channel][1]);
 
     // Dither
-    int output = sample + r1 + r2;
+    int output = sample + (_random[channel][0]&_mask) + (_random[channel][1]&_mask);
 
     // Clip
     if (output > _clip-1)
@@ -92,9 +92,11 @@ template quantizerFloat<short>::quantizerFloat();
 template<typename O>
 inline int quantizerFloat<O>::get32(const float sample, const unsigned int channel, const int max)
 {
-    // FIXME
-    const float r1 = (float)random(_random[channel][0])/(float)std::numeric_limits<unsigned int>::max();
-    const float r2 = (float)random(_random[channel][1])/(float)std::numeric_limits<unsigned int>::max();
+    _random[channel][0] = random(_random[channel][0]);
+    _random[channel][1] = random(_random[channel][1]);
+
+    const float r1 = (float)_random[channel][0]/(float)std::numeric_limits<unsigned int>::max();
+    const float r2 = (float)_random[channel][1]/(float)std::numeric_limits<unsigned int>::max();
 
     // Dither
     int output = (int)(sample*(float)max + r1 + r2);
