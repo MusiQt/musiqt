@@ -18,6 +18,7 @@
 
 #include "quantizer.h"
 
+#include <algorithm>
 #include <limits>
 
 // LCG
@@ -52,13 +53,7 @@ inline int quantizerFixed<O>::get32(const int sample, const unsigned int channel
     // Dither
     int output = sample + (_random[channel][0]&_mask) + (_random[channel][1]&_mask);
 
-    // Clip
-    if (output > _clip-1)
-        output = _clip-1;
-    else if (output < -_clip)
-        output = -_clip;
-
-    return output;
+    return std::clamp(output, -_clip, _clip-1);
 }
 
 template<>
@@ -101,13 +96,7 @@ inline int quantizerFloat<O>::get32(const float sample, const unsigned int chann
     // Dither
     int output = (int)(sample*(float)max + r1 + r2);
 
-    // Clip
-    if (output > max-1)
-        output = max-1;
-    else if (output < -max)
-        output = -max;
-
-    return output;
+    return std::clamp(output, -max, max-1);
 }
 
 template<>
