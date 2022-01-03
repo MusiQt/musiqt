@@ -27,8 +27,8 @@
 
 player::player() :
     m_input(IFACTORY->get()),
-    m_preload(IFACTORY->get()),
-    m_audio(new audio)
+    m_audio(new audio),
+    m_preload(IFACTORY->get())
 {
     connect(m_audio.data(), &audio::updateTime,  this, &player::updateTime);
     connect(m_audio.data(), &audio::songEnded,   this, &player::songEnded);
