@@ -11,6 +11,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
+        "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_compile_options("$<$<CONFIG:DEBUG>:-Wall;-Wextra;-pedantic>")
+ENDIF()
+
 # stupid cmake doesn't support CPPFLAGS
 # append it to cmake flags so the ffmpeg header can be found
 # even if installed in a non standard dir
