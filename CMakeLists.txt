@@ -140,19 +140,10 @@ INSTALL(FILES musiqt.png DESTINATION ${CMAKE_INSTALL_DATADIR}/icons)
 #####################################################
 # Check for debug build
 
-OPTION(DEBUG "Compile for debugging" OFF)
-IF(DEBUG)
-    ADD_DEFINITIONS(-DDEBUG)
-    IF(MINGW)
-        target_link_libraries(musiqt -mconsole)
-    ENDIF(MINGW)
-ELSE(DEBUG)
-    ADD_DEFINITIONS(-DNDEBUG)
-    ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
-    IF(MINGW)
-        target_link_libraries(musiqt -mwindows)
-    ENDIF(MINGW)
-ENDIF(DEBUG)
+add_compile_definitions("$<$<CONFIG:RELEASE>:QT_NO_DEBUG_OUTPUT>")
+IF(MINGW)
+    target_link_libraries(musiqt debug -mconsole optimized -mwindows)
+ENDIF(MINGW)
 
 #####################################################
 # Check for gettext
