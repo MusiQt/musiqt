@@ -122,19 +122,19 @@ set(PACKAGE_URL "${PROJECT_HOMEPAGE_URL}")
 set(PACKAGE_BUGREPORT "${PROJECT_HOMEPAGE_URL}/issues")
 set(top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}")
 
-ADD_DEFINITIONS(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
+add_compile_definitions(LOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 
 #####################################################
 
 add_executable(musiqt ${MUSIQT_SOURCES})
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_SOURCE_DIR}/src/audio)
-include_directories(${CMAKE_SOURCE_DIR}/src/gui)
-include_directories(${CMAKE_SOURCE_DIR}/src/trackList)
-include_directories(${CMAKE_SOURCE_DIR}/src/utils)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/audio)
+target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/gui)
+target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/trackList)
+target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/utils)
+target_include_directories(musiqt PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src)
+target_include_directories(musiqt PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 find_package(PkgConfig REQUIRED)
 
@@ -161,7 +161,7 @@ IF(NLS)
         file(GLOB PO_FILES ${CMAKE_SOURCE_DIR}/po/*.po)
         GETTEXT_CREATE_TRANSLATIONS(po/musiqt.pot ALL ${PO_FILES})
         find_package(Intl REQUIRED)
-        include_directories(${Intl_INCLUDE_DIRS})
+        target_include_directories(musiqt PRIVATE ${Intl_INCLUDE_DIRS})
         target_link_libraries(musiqt ${Intl_LIBRARIES})
         target_sources(musiqt PRIVATE
             src/gettext.h
@@ -221,7 +221,7 @@ endif(UNIX)
 
 pkg_check_modules(ZLIB IMPORTED_TARGET zlib>=1.0)
 IF(ZLIB_FOUND)
-    ADD_DEFINITIONS(-DNOUNCRYPT)
+    add_compile_definitions(NOUNCRYPT)
     SET(HAVE_LIBZ 1)
     target_sources(musiqt PRIVATE
         src/libs/unzip/ioapi.h
@@ -364,7 +364,7 @@ IF(FFMPEG)
     CHECK_INCLUDE_FILE(libavformat/avformat.h HAVE_AVFORMAT_H -D__STDC_CONSTANT_MACROS)
     if(HAVE_AVFORMAT_H)
         SET(HAVE_LIBAVFORMAT_AVFORMAT_H 1)
-        ADD_DEFINITIONS(-D__STDC_CONSTANT_MACROS)
+        add_compile_definitions(__STDC_CONSTANT_MACROS)
         target_sources(musiqt PRIVATE
             src/audio/input/ffmpegBackend.cpp
             src/audio/input/ffmpegBackend.h
@@ -479,4 +479,4 @@ endif(LASTFM_FOUND)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/resfile.rc.in ${CMAKE_CURRENT_BINARY_DIR}/src/resfile.rc @ONLY)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/config.h @ONLY)
 
-ADD_DEFINITIONS(-DHAVE_CONFIG_H)
+add_compile_definitions(HAVE_CONFIG_H)
