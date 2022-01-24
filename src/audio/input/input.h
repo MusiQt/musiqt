@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2022 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,9 @@
 
 #include <QString>
 
-#define gettext(x) x
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#endif
 
 /**
  * base class for input backends
