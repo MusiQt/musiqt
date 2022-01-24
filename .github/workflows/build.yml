@@ -17,8 +17,6 @@ jobs:
     - uses: jurplel/install-qt-action@v2
       with:
         version: ${{ matrix.qt-version }}
-    - name: fixpkg
-      run: for file in $(ls $Qt5_DIR/lib/pkgconfig/*); do sed -i "s|^prefix=.*|prefix=$Qt5_DIR|" $file; done;
     - name: install_deps
       run: sudo apt-get install cmake gettext libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libavcodec-dev libavformat-dev libbs2b-dev liblastfm5-dev
     - uses: actions/checkout@v2
@@ -26,5 +24,5 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake ..
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
         make
