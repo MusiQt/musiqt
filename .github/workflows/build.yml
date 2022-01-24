@@ -9,9 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        qt-version: [5.15.2, 6.2.2]
 
     steps:
     - uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{ matrix.qt-version }}
     - name: fixpkg
       run: for file in $(ls $Qt5_DIR/lib/pkgconfig/*); do sed -i "s|^prefix=.*|prefix=$Qt5_DIR|" $file; done;
     - name: install_deps
