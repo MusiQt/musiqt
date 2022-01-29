@@ -14,6 +14,8 @@ jobs:
         qt-version: [5.15.2, 6.2.0]
 
     steps:
+    - name: install_qt_deps
+      run: sudo apt-get install libgstreamer-plugins-base1.0-dev
     - uses: jurplel/install-qt-action@v2
       with:
         version: ${{ matrix.qt-version }}
