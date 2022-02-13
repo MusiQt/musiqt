@@ -24,8 +24,12 @@
 #endif
 
 extern "C" {
-#ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
+#ifdef HAVE_FFMPEG
+#  include <libavcodec/avcodec.h>
 #  include <libavformat/avformat.h>
+#  if LIBAVCODEC_VERSION_INT <= (58<<16)
+#    error LIBAVCODEC too old
+#  endif
 #  if LIBAVFORMAT_VERSION_INT <= (58<<16 | 12<<8)
 #    error LIBAVFORMAT too old
 #  endif

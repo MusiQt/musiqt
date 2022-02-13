@@ -369,15 +369,16 @@ ENDIF(WAVPACK)
 OPTION(FFMPEG "Build ffmpeg backend if available" ON)
 IF(FFMPEG)
     INCLUDE(CheckIncludeFile)
+    CHECK_INCLUDE_FILE(libavcodec/avcodec.h HAVE_AVCODEC_H)
     CHECK_INCLUDE_FILE(libavformat/avformat.h HAVE_AVFORMAT_H -D__STDC_CONSTANT_MACROS)
-    if(HAVE_AVFORMAT_H)
-        SET(HAVE_LIBAVFORMAT_AVFORMAT_H 1)
+    if(HAVE_AVCODEC_H AND HAVE_AVFORMAT_H)
+        SET(HAVE_FFMPEG 1)
         add_compile_definitions(__STDC_CONSTANT_MACROS)
         target_sources(musiqt PRIVATE
             src/audio/input/ffmpegBackend.cpp
             src/audio/input/ffmpegBackend.h
         )
-    endif(HAVE_AVFORMAT_H)
+    endif()
 ENDIF(FFMPEG)
 
 ##################################################################

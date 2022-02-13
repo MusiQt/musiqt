@@ -21,8 +21,8 @@
 /* Define if you have libgme (-lgme). */
 #cmakedefine  HAVE_GME
 
-/* Define if you have the <libavformat/avformat.h> header file. */
-#cmakedefine  HAVE_LIBAVFORMAT_AVFORMAT_H
+/* Define if you have ffmpeg. */
+#cmakedefine  HAVE_FFMPEG
 
 /* Define if you have the `mpcdec' library (-lmpcdec). */
 #cmakedefine  HAVE_LIBMPCDEC
