@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2021 Leandro Nini
+ *  Copyright (C) 2013-2022 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@
 #include <QScrollArea>
 
 #define AUTHOR  "Leandro Nini"
-#define YEAR    "2006-2021"
+#define YEAR    "2006-2022"
 
 #define gettext(x) x
 

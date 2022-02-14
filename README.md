@@ -2,7 +2,7 @@
 [![](https://img.shields.io/github/downloads/drfiemost/musiqt/latest/total.svg)](https://github.com/drfiemost/musiqt/releases/latest)
 
 MusiQt - https://github.com/drfiemost/musiqt/  
-Copyright (C) 2006-2021 Leandro Nini (drfiemost@users.sourceforge.net)
+Copyright (C) 2006-2022 Leandro Nini (drfiemost@users.sourceforge.net)
 
 ![splash](https://github.com/drfiemost/musiqt/wiki/images/splash.jpg)
 
