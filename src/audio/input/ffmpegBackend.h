@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2022 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ private:
 
     bool m_needData;
 
-    unsigned int m_decodeBufOffset;
+    size_t m_decodeBufOffset;
     unsigned char m_decodeBuf[MAX_AUDIO_FRAME_SIZE*2];
 
     static const AutoDLL avformatDll;
