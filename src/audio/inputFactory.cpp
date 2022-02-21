@@ -51,7 +51,7 @@
 #ifdef HAVE_SNDFILE
 #  include "input/sndBackend.h"
 #endif
-#ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
+#ifdef HAVE_FFMPEG
 #  include "input/ffmpegBackend.h"
 #endif
 #ifdef HAVE_LIBMPCDEC
@@ -135,7 +135,7 @@ iFactory::iFactory()
     regBackend<mpcBackend>();
 #endif
 
-#ifdef HAVE_LIBAVFORMAT_AVFORMAT_H
+#ifdef HAVE_FFMPEG
     if (ffmpegBackend::init())
         regBackend<ffmpegBackend>();
 #endif
