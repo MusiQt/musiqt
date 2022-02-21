@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2022 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -280,6 +280,11 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
 
     int bufSize;
     QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(int, bufSize));
+    if (bufSize <= 0) {
+        qWarning() << "Error getting buffer size: " << bufSize;
+        m_audioOutput->deleteLater();
+        return 0;
+    }
     return bufSize;
 }
 
