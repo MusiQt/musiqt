@@ -96,6 +96,7 @@ void lastfmScrobbler::stateChanged()
         m_scrobbler.submit();
         break;
     default:
+        Q_UNREACHABLE();
         break;
     }
 }
