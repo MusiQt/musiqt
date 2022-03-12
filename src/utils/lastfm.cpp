@@ -220,11 +220,13 @@ void lastfmScrobbler::onNowPlayingReturn()
 
 void lastfmScrobbler::onScrobblesCached(const QList<lastfm::Track>& tracks)
 {
+    Q_UNUSED(tracks);
     qDebug() << "onScrobblesCached";
 }
 
 void lastfmScrobbler::onScrobblesSubmitted(const QList<lastfm::Track>& tracks)
 {
+    Q_UNUSED(tracks);
     qDebug() << "onScrobblesSubmitted";
 }
 
