@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2022 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -83,8 +83,13 @@ private:
     mpc_reader m_mpcReader;
 
     MPC_SAMPLE_FORMAT m_buffer[MPC_DECODER_BUFFER_LENGTH];
+#ifdef MPCDEC_SV8
+    mpc_uint64_t m_bufIndex;
+    mpc_uint64_t m_bufLen;
+#else
     unsigned int m_bufIndex;
     unsigned int m_bufLen;
+#endif
 
     QFile m_file;
 
