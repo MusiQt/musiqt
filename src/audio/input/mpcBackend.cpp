@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2022 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -91,16 +91,18 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
                 return 0;
             }
 
-            m_bufLen = frame.samples*m_si.channels*sizeof(MPC_SAMPLE_FORMAT);
+            m_bufLen = static_cast<mpc_uint64_t>(frame.samples)*m_si.channels*sizeof(MPC_SAMPLE_FORMAT);
 #else
-            m_bufLen = mpc_decoder_decode(&m_decoder, m_buffer, 0, 0)*m_si.channels*sizeof(MPC_SAMPLE_FORMAT);
-            if (!m_bufLen)
-                break;
-            if (m_bufLen < 0)
+            int decoded = mpc_decoder_decode(&m_decoder, m_buffer, 0, 0);
+            if (decoded < 0)
             {
                 qWarning("Decoding error");
                 return 0;
             }
+
+            m_bufLen = decoded*m_si.channels*sizeof(MPC_SAMPLE_FORMAT);
+            if (!m_bufLen)
+                break;
 #endif
             m_bufIndex = 0;
         }
