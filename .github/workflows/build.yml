@@ -11,20 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        qt-version: [5.15.2, 6.2.0]
+        qt-version: [5.15.*, 6.3.*]
 
     steps:
     - name: install_qt_deps
       run: |
         sudo apt-get update
-        sudo apt-get install libgstreamer-plugins-base1.0-dev
-    - uses: jurplel/install-qt-action@v2
+        sudo apt-get install libgstreamer-gl1.0-0
+    - uses: jurplel/install-qt-action@v3
       with:
         version: ${{ matrix.qt-version }}
         modules: 'addons.qtmultimedia'
     - name: install_deps
       run: sudo apt-get install cmake gettext libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libavcodec-dev libavformat-dev libbs2b-dev liblastfm5-dev
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: build
       run: |
         mkdir build
