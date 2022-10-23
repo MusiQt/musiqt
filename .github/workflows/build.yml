@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        qt-version: [5.15.*, 6.3.*]
+        qt-version: [5.15.2, 6.3.2]
 
     steps:
     - name: install_qt_deps
       run: |
         sudo apt-get update
         sudo apt-get install libgstreamer-gl1.0-0
-    - uses: jurplel/install-qt-action@v3
+    - uses: jurplel/install-qt-action@v2
       with:
         version: ${{ matrix.qt-version }}
         modules: 'addons.qtmultimedia'
