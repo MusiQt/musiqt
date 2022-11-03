@@ -551,8 +551,8 @@ void centralFrame::onCmdSongLoaded(bool res)
     }
     else
     {
-        emit clearDisplay(QString());
-        // TODO show error in info bar
+        emit clearDisplay("<font color=red>Error loading song</font>");
+        // TODO show error detail in tooltip
 
         qWarning() << "Error loading song";
     }
