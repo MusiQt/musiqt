@@ -103,11 +103,11 @@ set(MUSIQT_SOURCES
     src/utils/xdg.cpp
     src/utils/xdg.h)
 
-if(MINGW)
+if(WIN32)
     list(APPEND MUSIQT_SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/src/resfile.rc
     )
-endif(MINGW)
+endif(WIN32)
 
 #####################################################
 
