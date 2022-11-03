@@ -41,7 +41,7 @@ constexpr int MAX_CHARS = 20;
 
 QString utils::shrink(const QString& string)
 {
-    return (string.count() > MAX_CHARS)
+    return (string.length() > MAX_CHARS)
         ? QString("...%1").arg(string.right(MAX_CHARS))
         : string;
 }
