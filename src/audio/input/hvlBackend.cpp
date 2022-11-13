@@ -93,7 +93,7 @@ extern const unsigned char iconHvl[1006] =
 
 #define EXT "ahx|hvl" // FIXME support as prefix (Amiga style) too
 
-#define CREDITS "HivelyTracker<br>Version 1.8<br>Dexter/Abyss, Xeron/IRIS, and Pieknyman"
+#define CREDITS "HivelyTracker<br>Version 1.9<br>Dexter/Abyss, Xeron/IRIS, and Pieknyman"
 #define LINK    "https://github.com/pete-gordon/hivelytracker"
 
 const char hvlBackend::name[] = "Hively";
