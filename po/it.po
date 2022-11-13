@@ -2,13 +2,13 @@
 # Copyright (C) 2010-2021
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Leandro Nini <drfiemost@users.sourceforge.net>, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2021.
+# Leandro Nini <drfiemost@users.sourceforge.net>, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 13:39+0200\n"
-"PO-Revision-Date: 2021-04-20 21:45+0200\n"
+"PO-Revision-Date: 2022-11-13 16:14+0100\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -351,11 +351,11 @@ msgstr "Impostazioni audio"
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:246
 msgid "Authenticate"
-msgstr ""
+msgstr "Autentica"
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:298
 msgid "Authorize app on Last.fm site before proceeding"
-msgstr ""
+msgstr "Autorizza il programma su Last.fm prima di procedere"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:809
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:799
@@ -515,7 +515,7 @@ msgstr "Modalità compatta"
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:256
 msgid "Confirm"
-msgstr ""
+msgstr "Conferma"
 
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:192
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:177
@@ -587,6 +587,8 @@ msgid ""
 "Delete current active session?\n"
 "Cannot be undone."
 msgstr ""
+"Cancellare la sessione attiva?\n"
+"Non può essere annullato"
 
 #: /mnt/devel/projects/musiqt/src/gui/bookmark.cpp:115
 #: C:/msys64/home/minini/musiqt/src/gui/bookmark.cpp:114
@@ -635,7 +637,7 @@ msgstr "Abilita replaygain"
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:235
 msgid "Enable/disable scrobbling"
-msgstr ""
+msgstr "Abilita/disabilita lo scrobbling"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:564
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:554
@@ -869,7 +871,7 @@ msgstr "Rom Kernal:"
 
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:207
 msgid "Last.fm"
-msgstr ""
+msgstr "Last.fm"
 
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:208
 msgid "Last.fm setting"
