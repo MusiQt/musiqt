@@ -278,8 +278,13 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     // suspend audio playback until initialization is done
     QMetaObject::invokeMethod(m_audioOutput, "suspend");
 
+#if QT_VERSION >= 0x060000
+    qsizetype bufSize;
+    QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(qsizetype, bufSize));
+#else
     int bufSize;
     QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(int, bufSize));
+#endif
     if (bufSize <= 0) {
         qWarning() << "Error getting buffer size: " << bufSize;
         m_audioOutput->deleteLater();
