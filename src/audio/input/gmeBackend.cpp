@@ -120,7 +120,9 @@ gmeBackend::gmeBackend(const QString& fileName) :
 
     if (m_config.equalizer())
     {
-        gme_equalizer_t eq = { m_config.treble_dB(), m_config.bass_freq() };
+        gme_equalizer_t eq;
+        eq.bass   = m_config.bass_freq();
+        eq.treble = m_config.treble_dB();
         gme_set_equalizer(m_emu, &eq);
     }
 
