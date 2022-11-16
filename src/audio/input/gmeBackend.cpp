@@ -67,10 +67,10 @@ size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 void gmeConfig::loadSettings()
 {
-    m_settings.samplerate = load("Samplerate", 44100);
+    m_settings.samplerate = load("Samplerate", 48000);
     m_settings.equalizer = load("Equalizer", false);
     m_settings.treble_dB = load("Treble dB", 0.0);
-    m_settings.bass_freq = load("Bass freq", 15);
+    m_settings.bass_freq = load("Bass freq", 90.0);
     m_settings.asmaPath = load("ASMA", QString());
 }
 
