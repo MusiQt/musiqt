@@ -92,7 +92,7 @@ void lastfmScrobbler::stateChanged()
     case state_t::STOP:
         m_timer.stop();
         m_track.reset(nullptr);
-        // submit any pending scrobblelastfmScrobbler
+        // submit any pending scrobble
         m_scrobbler.submit();
         break;
     default:
