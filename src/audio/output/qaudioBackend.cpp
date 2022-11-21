@@ -259,7 +259,7 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     if (error != QAudio::NoError)
     {
         qWarning() << "Error creating QAudioOutput";
-        m_audioOutput->deleteLater();
+        close();
         return 0;
     }
 
@@ -271,7 +271,7 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     if (m_audioOutput->error() != QAudio::NoError)
     {
         qWarning() << "Error starting QAudioOutput";
-        m_audioOutput->deleteLater();
+        close();
         return 0;
     }
 
@@ -287,7 +287,7 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
 #endif
     if (bufSize <= 0) {
         qWarning() << "Error getting buffer size: " << bufSize;
-        m_audioOutput->deleteLater();
+        close();
         return 0;
     }
     return bufSize;
