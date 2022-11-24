@@ -205,7 +205,9 @@ const char* getClockString(SidTuneInfo::clock_t clock)
 QStringList sidBackend::ext() { return QString(EXT).split("|"); }
 
 sidBackend::sidBackend(const QString& fileName) :
+#ifdef HAVE_STILVIEW
     m_stil(nullptr),
+#endif
     m_db(nullptr),
     m_newSonglengthDB(false),
     m_config(name, iconSid, 126)
@@ -242,6 +244,7 @@ sidBackend::sidBackend(const QString& fileName) :
 
     getInfo(m_tune->getInfo());
 
+#ifdef HAVE_STILVIEW
     if (m_stil != nullptr)
     {
         const char* fName = fileName.toUtf8().constData();
@@ -260,6 +263,7 @@ sidBackend::sidBackend(const QString& fileName) :
         }
         m_metaData.addInfo(metaData::COMMENT, comment);
     }
+#endif
 
     songLoaded(fileName);
 }
@@ -271,7 +275,9 @@ sidBackend::~sidBackend()
     delete m_tune;
 
     delete m_db;
+#ifdef HAVE_STILVIEW
     delete m_stil;
+#endif
 }
 
 void sidBackend::deleteEmu()
@@ -504,6 +510,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
     if (hvscPath.isEmpty())
         return;
 
+#ifdef HAVE_STILVIEW
     m_stil = new STIL(HVSC_STIL, HVSC_BUGLIST);
 
     if (!m_stil->setBaseDir(hvscPath.toLocal8Bit().constData()))
@@ -511,6 +518,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
         qWarning() << m_stil->getErrorStr();
         utils::delPtr(m_stil);
     }
+#endif
 
     m_db = new SidDatabase();
 
