@@ -161,7 +161,9 @@ private:
 
     SidTune *m_tune;
 
+#ifdef HAVE_STILVIEW
     STIL *m_stil;
+#endif
 
     SidDatabase *m_db;
     bool m_newSonglengthDB;
