@@ -105,7 +105,7 @@ set(MUSIQT_SOURCES
 
 if(WIN32)
     list(APPEND MUSIQT_SOURCES
-        ${CMAKE_CURRENT_BINARY_DIR}/src/resfile.rc
+        ${CMAKE_BINARY_DIR}/src/resfile.rc
     )
 endif(WIN32)
 
@@ -120,7 +120,7 @@ set(PACKAGE_STRING "${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
 set(PACKAGE_VERSION "${CMAKE_PROJECT_VERSION}")
 set(PACKAGE_URL "${PROJECT_HOMEPAGE_URL}")
 set(PACKAGE_BUGREPORT "${PROJECT_HOMEPAGE_URL}/issues")
-set(top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}")
+set(top_srcdir "${CMAKE_SOURCE_DIR}")
 
 add_compile_definitions(LOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 
@@ -133,8 +133,8 @@ target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/audio)
 target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/gui)
 target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/trackList)
 target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/utils)
-target_include_directories(musiqt PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src)
-target_include_directories(musiqt PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(musiqt PRIVATE ${CMAKE_BINARY_DIR}/src)
+target_include_directories(musiqt PRIVATE ${CMAKE_BINARY_DIR})
 
 find_package(PkgConfig REQUIRED)
 
@@ -487,7 +487,7 @@ endif()
 
 ##################################################################
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/resfile.rc.in ${CMAKE_CURRENT_BINARY_DIR}/src/resfile.rc @ONLY)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/config.h @ONLY)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/resfile.rc.in ${CMAKE_BINARY_DIR}/src/resfile.rc @ONLY)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h @ONLY)
 
 add_compile_definitions(HAVE_CONFIG_H)
