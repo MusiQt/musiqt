@@ -70,7 +70,11 @@ bool audio::play(input* i)
 
     qDebug() << "audio::play";
 
-    i->rewind(); // TODO check return code
+    if (!i->rewind())
+    {
+        qWarning() << "Error rewinding file";
+        return false;
+    }
 
     audioFormat_t format;
     format.sampleRate = i->samplerate();
