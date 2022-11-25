@@ -53,7 +53,7 @@ public:
 
     void enableBs2b();
 
-    bool setFormat(audioFormat_t format, int bufferSize);
+    bool setFormat(audioFormat_t format, size_t bufferSize);
 
     unsigned int getPosition() const { return m_milliSeconds; }
 

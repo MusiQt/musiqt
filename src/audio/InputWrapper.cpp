@@ -176,7 +176,7 @@ void InputWrapper::setPosition(double pos)
         m_milliSeconds = static_cast<unsigned int>(pos * m_currentSong->songDuration());
 }
 
-bool InputWrapper::setFormat(audioFormat_t format, int bufferSize)
+bool InputWrapper::setFormat(audioFormat_t format, size_t bufferSize)
 {
     unsigned int precision;
 
