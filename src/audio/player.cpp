@@ -37,31 +37,18 @@ player::player() :
 
 player::~player() {}
 
-/*
- * Starts or resumes playback.
- * If already playing, this has no effect.
- * If paused, playback resumes from the current position.
- */
 void player::play()
 {
     if (m_audio->play(m_input.data()))
         emit stateChanged();
 }
 
-/*
- * Stops playback.
- * If playback is already stopped, this has no effect.
- */
 void player::stop()
 {
     if (m_audio->stop())
         emit stateChanged();
 }
 
-/*
- * Pauses playback.
- * If playback is already paused, this has no effect.
- */
 void player::pause()
 {
     m_audio->pause();
@@ -91,13 +78,6 @@ void player::setVolume(int vol)
 }
 
 int player::getVolume() const { return m_audio->getVolume(); }
-
-/*
- * Pauses playback.
- * If playback is already paused, resumes playback.
- * If playback is stopped, starts playback.
- */
-// void player::playpause() TODO
 
 bool player::tryPreload(const QString& song)
 {

@@ -115,7 +115,10 @@ void dbusHandler::setPosition(qlonglong Position)
      m_player->setPosition(static_cast<double>(Position/1000)/m_player->songDuration());
 }
 
-// MediaPlayer2 properties
+/*********************************
+ * MediaPlayer2 properties
+ *********************************/
+
 bool dbusHandler::canQuit() const { return true; }
 bool dbusHandler::canRaise() const { return true; }
 bool dbusHandler::hasTrackList() const { return false; }
@@ -140,7 +143,10 @@ void dbusHandler::Raise()
 
 void dbusHandler::Quit() { QApplication::instance()->quit(); }
 
-// MediaPlayer2.Player properties
+/*********************************
+ * MediaPlayer2.Player properties
+ *********************************/
+
 bool dbusHandler::canGoNext() const { return false; }
 bool dbusHandler::canGoPrevious() const { return false; }
 bool dbusHandler::canPlay() const { return true; }
@@ -203,10 +209,28 @@ void dbusHandler::setRate([[maybe_unused]] double value) { /* ignore */ }
 double dbusHandler::volume() const { return m_player->getVolume() / 100.; }
 void dbusHandler::setVolume(double value) { m_player->setVolume(value*100.); }
 
-// MediaPlayer2.Player methods
+/*********************************
+ * MediaPlayer2.Player methods
+ *********************************/
+
+/*
+ * Starts or resumes playback.
+ * If already playing, this has no effect.
+ * If paused, playback resumes from the current position.
+ */
 void dbusHandler::Play() { m_player->play(); }
+
+/*
+ * Pauses playback.
+ * If playback is already paused, this has no effect.
+ */
 void dbusHandler::Pause() { m_player->pause(); }
 
+/*
+ * Play/Pauses playback.
+ * If playback is already paused, resumes playback.
+ * If playback is stopped, starts playback.
+ */
 void dbusHandler::PlayPause()
 {
     if (m_player->state() == state_t::STOP)
@@ -215,6 +239,10 @@ void dbusHandler::PlayPause()
         m_player->pause();
 }
 
+/*
+ * Stops playback.
+ * If playback is already stopped, this has no effect.
+ */
 void dbusHandler::Stop() { m_player->stop(); }
 
 void dbusHandler::Previous() { /* ignore */ }
