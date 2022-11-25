@@ -27,7 +27,7 @@ class converter
 {
 protected:
     const unsigned int channels;
-    const int frameRatio;
+    const unsigned int frameRatio;
 
     char *_buffer;
     size_t bufferSize;
@@ -47,7 +47,7 @@ public:
     virtual char* buffer() const =0;
 
     /// Get buffer size
-    virtual size_t bufSize(int size) const =0;
+    virtual size_t bufSize(size_t size) const =0;
 
     /// Do the conversion
     virtual size_t convert(const void* out, size_t len) =0;

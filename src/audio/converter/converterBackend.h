@@ -44,7 +44,7 @@ public:
     char* buffer() const override { return _buffer+_data; }
 
     /// Get buffer size
-    size_t bufSize(int size) const override { return (size*frameRatio)-_data; }
+    size_t bufSize(size_t size) const override { return (size*frameRatio)-_data; }
 };
 
 /******************************************************************************/
@@ -66,7 +66,7 @@ public:
     char* buffer() const override { return _buffer; }
 
     /// Get buffer size
-    size_t bufSize(int size) const override { return size*frameRatio; }
+    size_t bufSize(size_t size) const override { return size*frameRatio; }
 };
 
 #endif
