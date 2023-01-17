@@ -192,7 +192,10 @@ add_custom_target(update_pot
 ##################################################################
 # Check for Qt
 
-find_package(Qt6 COMPONENTS Widgets Network Multimedia)
+OPTION(QT6 "Enable building with Qt6 if found (experimental)" OFF)
+IF(QT6)
+    find_package(Qt6 COMPONENTS Widgets Network Multimedia)
+ENDIF(QT6)
 if (NOT Qt6_FOUND)
     find_package(Qt5 5.15 COMPONENTS Widgets Network Multimedia REQUIRED)
 endif()

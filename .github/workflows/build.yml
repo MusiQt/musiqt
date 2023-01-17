@@ -12,6 +12,9 @@ jobs:
     strategy:
       matrix:
         qt-version: [5.15.2, 6.3.2]
+        include:
+          - qt-version: 6.3.2
+            param: -DQT6=ON
 
     steps:
     - name: install_qt_deps
@@ -29,5 +32,5 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        cmake -DCMAKE_BUILD_TYPE=Debug ${{ matrix.param }} ..
         make
