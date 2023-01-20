@@ -41,7 +41,7 @@ jobs:
         ref: ${{ github.ref }}
     - name: Get the tag name
       id: get_tag_name
-      run: echo ::set-output name=tagname::${GITHUB_REF#refs/tags/v}
+      run: echo "tagname=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
     - name: build
       run: |
         mkdir build
@@ -67,7 +67,7 @@ jobs:
         strip ${PACKAGE_NAME}/*.dll
         windeployqt.exe ${PACKAGE_NAME}/musiqt.exe --no-translations
         zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
-    - uses: svenstaro/upload-release-action@v1-release
+    - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64.zip
