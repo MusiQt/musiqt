@@ -24,6 +24,8 @@
 
 #include <QDebug>
 
+#include <limits>
+
 //#define PROFILE
 
 #if defined(PROFILE)
@@ -43,6 +45,7 @@ InputWrapper::InputWrapper(input* song) :
     m_audioProcess(nullptr),
     m_audioConverter(nullptr),
     m_bytes(0),
+    m_bytePerMilliSec(std::numeric_limits<int>::max()),
     m_milliSeconds(0),
     m_maxPlayTime(song->maxPlayTime())
 {}
