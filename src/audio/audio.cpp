@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -106,7 +106,7 @@ bool audio::play(input* i)
 
     qDebug() << "Setting parameters " << format.sampleRate << ":" << format.channels << ":" << sampleTypeString(format.sampleType);
     m_iw.reset(new InputWrapper(i));
-    connect(m_iw.data(), &InputWrapper::switchSong,  this, &audio::songEnded);
+    connect(m_iw.data(), &InputWrapper::songFinished, this, &audio::songEnded);
     connect(m_iw.data(), &InputWrapper::updateTime,  this, &audio::updateTime);
     connect(m_iw.data(), &InputWrapper::preloadSong, this, &audio::preloadSong);
 
@@ -125,8 +125,6 @@ bool audio::play(input* i)
         m_audioOutput->close();
         return false;
     }
-
-    connect(m_iw.data(), &InputWrapper::songFinished, m_audioOutput, &qaudioBackend::songEnded);
 
     if (SETTINGS->bs2b() && (i->channels() == 2))
         m_iw->enableBs2b();

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2021 Leandro Nini
+ *  Copyright (C) 2020-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ qint64 InputWrapper::readData(char *data, qint64 maxSize)
             m_preloadedSong = nullptr;
             m_milliSeconds = 0;
             n = fillBuffer(data, maxSize);
-            emit switchSong();
+            emit songFinished();
         }
         else
         {

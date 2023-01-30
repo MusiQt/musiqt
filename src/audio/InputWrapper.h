@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020 Leandro Nini
+ *  Copyright (C) 2020-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ class InputWrapper : public QIODevice
 signals:
     void updateTime();
     void preloadSong();
-    void switchSong();
     void songFinished();
 
 private:
