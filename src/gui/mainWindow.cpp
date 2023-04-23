@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2021 Leandro Nini
+ *  Copyright (C) 2013-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -251,6 +251,7 @@ QToolBar *mainWindow::createSecondaryBar()
     m_statusLed = new QLabel(this);
     m_statusLed->setPixmap(QPixmap(ledRed));
     m_statusLed->setStatusTip(tr("Stopped"));
+    m_statusLed->setStyleSheet("QLabel {margin: 0 5;}");
 
     QWidget* empty = new QWidget(this);
     empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -273,6 +274,7 @@ QToolBar *mainWindow::createSecondaryBar()
     secondaryBar->addWidget(m_subtunes);
     secondaryBar->addAction(nexttune);
     secondaryBar->addWidget(m_statusLed);
+    
     secondaryBar->addWidget(songs);
     secondaryBar->addAction(playlist);
 #ifdef HAVE_LASTFM
