@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2021 Leandro Nini
+ *  Copyright (C) 2008-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -66,6 +66,7 @@ private:
 
     bool   m_subtunes;
     bool   m_bs2b;
+    bool   m_themeIcons;
     bool   m_replayGain;
     int    m_replayGainMode;
 
@@ -101,6 +102,9 @@ public:
 
     /// Bauer stereophonic-to-binaural DSP
     bool bs2b() const { return m_bs2b; }
+
+    /// System theme icons
+    bool themeIcons() const { return m_themeIcons; }
 
     /// Default bittdepth
     unsigned int bits() const { return m_bits; }

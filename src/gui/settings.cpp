@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2021 Leandro Nini
+ *  Copyright (C) 2008-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -100,6 +100,20 @@ settingsWindow::settingsWindow(QWidget* win) :
     );
     optionLayout->addWidget(cBox);
 #ifndef HAVE_BS2B
+    cBox->setDisabled(true);
+#endif
+
+    cBox = new QCheckBox(tr("&Use system icons"), this);
+    cBox->setToolTip(tr("Use icons from system theme (on next restart)"));
+    cBox->setCheckState(SETTINGS->m_themeIcons ? Qt::Checked : Qt::Unchecked);
+    connect(cBox, &QCheckBox::stateChanged,
+        [](int val)
+        {
+            SETTINGS->m_themeIcons = (val == Qt::Checked);
+        }
+    );
+    optionLayout->addWidget(cBox);
+#ifndef Q_OS_LINUX
     cBox->setDisabled(true);
 #endif
 
@@ -340,6 +354,7 @@ void settings::load(const QSettings& appSettings)
     m_replayGainMode = (!replayGainMode.compare("Track")) ? 1 : 0;
 
     m_bs2b=appSettings.value("General Settings/Bauer DSP", false).toBool();
+    m_themeIcons=appSettings.value("General Settings/Theme icons", false).toBool();
 }
 
 void settings::save(QSettings& appSettings)
@@ -351,4 +366,5 @@ void settings::save(QSettings& appSettings)
     appSettings.setValue("General Settings/Replaygain", m_replayGain);
     appSettings.setValue("General Settings/Replaygain mode", (m_replayGainMode == 0) ? "Album" : "Track");
     appSettings.setValue("General Settings/Bauer DSP", m_bs2b);
+    appSettings.setValue("General Settings/Theme icons", m_themeIcons);
 }
