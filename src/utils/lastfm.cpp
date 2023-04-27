@@ -254,11 +254,11 @@ lastfmConfig::lastfmConfig(QWidget* win) :
     matrix()->addWidget(lineEdit, 1, 1);
     connect(this, &lastfmConfig::sessionChanged, lineEdit, &QLineEdit::setText);
     QPushButton* button = new QPushButton(GET_ICON(icon_auth), tr("Authenticate"), this);
-    button->setToolTip("Get session key from Last.fm");
+    button->setToolTip(tr("Get session key from Last.fm"));
     matrix()->addWidget(button, 2, 1);
     connect(button, &QPushButton::clicked, this, &lastfmConfig::auth);
     button = new QPushButton(GET_ICON(icon_editdelete), tr("Delete session"), this);
-    button->setToolTip("Delete current session key");
+    button->setToolTip(tr("Delete current session key"));
     matrix()->addWidget(button, 1, 2);
     connect(button, &QPushButton::clicked, this,
         [this]()
