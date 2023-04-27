@@ -21,6 +21,7 @@
 
 #include "audioState.h"
 #include "inputTypes.h"
+#include "exceptions.h"
 
 #include <QSettings>
 #include <QScopedPointer>
@@ -34,6 +35,9 @@ class qaudioBackend;
 class audio : public QObject
 {
     Q_OBJECT
+
+public:
+    class audioError : public error { using error::error; };
 
 private:
     QScopedPointer<InputWrapper> m_iw;
@@ -50,7 +54,6 @@ private:
 
 signals:
     void songEnded();
-    //void outputError();
     void updateTime();
     void preloadSong();
 
@@ -59,6 +62,7 @@ public:
     ~audio();
 
     /// Start stream
+    /// @throws audioError
     bool play(input* i);
 
     /// Pause/unpause stream

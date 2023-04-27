@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 #include "inputTypes.h"
 #include "AudioOutputWrapper.h"
+#include "exceptions.h"
 
 #include <QAudio>
 #include <QPointer>
@@ -44,6 +45,9 @@ class qaudioBackend : public QObject
 {
     Q_OBJECT
 
+public:
+    class audioError : public error { using error::error; };
+
 private:
     QPointer<AudioOutputWrapper> m_audioOutput;
 
@@ -64,6 +68,7 @@ public:
     static QStringList getDevices();
 
     /// Open
+    /// @throws audioError
     size_t open(int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat);
 
     /// Close

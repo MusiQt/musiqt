@@ -69,6 +69,8 @@ signals:
     void volumeChanged();
     void positionChanged();
 
+    void audioError(const QString&);
+
 public:
     player();
     ~player();

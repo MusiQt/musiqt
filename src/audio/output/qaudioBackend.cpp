@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2022 Leandro Nini
+ *  Copyright (C) 2006-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -147,8 +147,7 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
         sampleFormat = QAudioFormat::Float;
         break;
     default:
-        qWarning() << "Unexpected sample type";
-        return 0;
+        throw audioError("Unexpected sample type");
     }
 #else
     int sampleSize;
@@ -177,8 +176,7 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
         sampleType = QAudioFormat::Float;
         break;
     default:
-        qWarning() << "Unexpected sample type";
-        return 0;
+        throw audioError("Unexpected sample type");
     }
 #endif
     QAudioFormat qFormat;
@@ -197,8 +195,7 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     QAudioDevice deviceInfo = card != -1 ? devices[card] : QMediaDevices::defaultAudioOutput();
     if (!deviceInfo.isFormatSupported(qFormat))
     {
-        qWarning() << "Audio format not supported";
-        return 0;
+        throw audioError("Audio format not supported");
     }
     else
         outputFormat = format;
@@ -237,8 +234,7 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
         }
         else
         {
-            qWarning() << "Audio format not supported";
-            return 0;
+            throw audioError("Audio format not supported");
         }
     }
     else
@@ -258,9 +254,8 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
     if (error != QAudio::NoError)
     {
-        qWarning() << "Error creating QAudioOutput";
         close();
-        return 0;
+        throw audioError("Error creating QAudioOutput");
     }
 
     connect(m_audioOutput, &AudioOutputWrapper::stateChanged, this, &qaudioBackend::onStateChange);
@@ -270,9 +265,8 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
 
     if (m_audioOutput->error() != QAudio::NoError)
     {
-        qWarning() << "Error starting QAudioOutput";
         close();
-        return 0;
+        throw audioError("Error starting QAudioOutput");
     }
 
     // suspend audio playback until initialization is done
@@ -286,9 +280,8 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(int, bufSize));
 #endif
     if (bufSize <= 0) {
-        qWarning() << "Error getting buffer size: " << bufSize;
         close();
-        return 0;
+        throw audioError(QString("Error getting buffer size: %1").arg(bufSize));
     }
     return bufSize;
 }

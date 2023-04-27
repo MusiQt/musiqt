@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2022 Leandro Nini
+ *  Copyright (C) 2006-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 #include "inputTypes.h"
 #include "metaDataImpl.h"
+#include "exceptions.h"
 
 #include <QString>
 
@@ -34,16 +35,7 @@
 class input
 {
 public:
-    class loadError {
-    private:
-        QString m_msg;
-    public:
-        loadError(const char* msg) :
-            m_msg(msg) {}
-        loadError(const QString& msg) :
-            m_msg(msg) {}
-        QString message() const { return m_msg; }
-    };
+    class loadError : public error { using error::error; };
 
 private:
     unsigned int m_time;

@@ -57,8 +57,9 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
     m_player(p),
     m_infoDialog(nullptr)
 {
-    connect(m_player, &player::subtunechanged,  this, &mainWindow::setDisplay);
-    connect(m_player, &player::stateChanged, this, &mainWindow::setPlayButton);
+    connect(m_player, &player::subtunechanged, this, &mainWindow::setDisplay);
+    connect(m_player, &player::stateChanged,   this, &mainWindow::setPlayButton);
+    connect(m_player, &player::audioError,     this, &mainWindow::showError);
 
     // Read settings
     SETTINGS->load(m_settings);
@@ -597,4 +598,10 @@ void mainWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_VolumeMute:            m_player->setVolume(0);                         event->accept(); break;
     default: QMainWindow::keyPressEvent(event); break;
     }
+}
+
+void mainWindow::showError(const QString& msg)
+{
+    m_trayIcon->showMessage(tr("Error!"), msg);
+    //statusBar()->showMessage(msg);
 }

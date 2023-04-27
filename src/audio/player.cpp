@@ -39,8 +39,16 @@ player::~player() {}
 
 void player::play()
 {
-    if (m_audio->play(m_input.data()))
-        emit stateChanged();
+    try
+    {
+        if (m_audio->play(m_input.data()))
+            emit stateChanged();
+    }
+    catch (audio::audioError const &e)
+    {
+        qWarning() << e.message(); // FIXME needed?
+        emit audioError(e.message());
+    }
 }
 
 void player::stop()

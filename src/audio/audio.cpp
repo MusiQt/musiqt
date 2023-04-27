@@ -72,8 +72,7 @@ bool audio::play(input* i)
 
     if (!i->rewind())
     {
-        qWarning() << "Error rewinding file";
-        return false;
+        throw audioError("Error rewinding file");
     }
 
     audioFormat_t format;
@@ -99,8 +98,7 @@ bool audio::play(input* i)
             format.sampleType = sample_t::S16;
             break;
         default:
-            qWarning() << "Unhandled sample type " << SETTINGS->bits();
-            return false;
+            throw audioError(QString("Unhandled sample type %1").arg(SETTINGS->bits()));
         }
     }
 
@@ -113,18 +111,23 @@ bool audio::play(input* i)
     int selectedCard = qaudioBackend::getDevices().indexOf(SETTINGS->card());
 
     audioFormat_t outputFormat;
-    size_t bufferSize = m_audioOutput->open(selectedCard, format, m_iw.data(), outputFormat);
-    if (!bufferSize)
-        return false;
+    size_t bufferSize;
+    try
+    {
+        bufferSize = m_audioOutput->open(selectedCard, format, m_iw.data(), outputFormat);
+    }
+    catch (qaudioBackend::audioError const &e)
+    {
+        throw audioError(e.message());
+    }
 
     qDebug() << "Output parameters " << outputFormat.sampleRate << ":" << outputFormat.channels << ":" << sampleTypeString(outputFormat.sampleType);
     qDebug() << "bufferSize: " << bufferSize << " bytes";
 
     if (!m_iw->setFormat(outputFormat, bufferSize))
     {
-        qWarning("Unsupported sample type");
         m_audioOutput->close();
-        return false;
+        throw audioError("Unsupported sample type");
     }
 
     if (SETTINGS->bs2b() && (i->channels() == 2))

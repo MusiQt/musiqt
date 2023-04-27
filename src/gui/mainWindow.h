@@ -71,6 +71,8 @@ private:
     void setDisplay();
     void clearDisplay(const QString& text);
 
+    void showError(const QString& msg);
+
     void createTrayIcon();
     void createActions();
     void setPlayMode(QAction *action, bool mode);

@@ -25,6 +25,8 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{CPPFLAGS}")
 set(MUSIQT_SOURCES
     src/resources.qrc
     src/main.cpp
+    src/exceptions.cpp
+    src/exceptions.h
     src/singleApp.cpp
     src/singleApp.h
     src/audio/audio.cpp
