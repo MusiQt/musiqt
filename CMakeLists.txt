@@ -175,21 +175,46 @@ IF(NLS)
     ENDIF(GETTEXT_FOUND)
 ENDIF(NLS)
 
-find_program(XGETTEXT_CMD xgettext)
-SET(POT_FILE ${CMAKE_SOURCE_DIR}/po/${PROJECT_NAME}.pot)
-file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
-add_custom_target(update_pot 
-    COMMAND ${XGETTEXT_CMD} -C -s -j
-        -d ${PROJECT_NAME}
-        -o ${POT_FILE}
-        --from-code=utf-8
-        --keyword=tr
-        --package-name=${PROJECT_NAME}
-        --package-version=${CMAKE_PROJECT_VERSION}
-        ${SRC_FILES}
-    DEPENDS ${SRC_FILES}
-    COMMENT "Extract translatable messages to ${POT_FILE}"
+add_custom_target(
+    update_pot
+    COMMENT "Updating translated messages"
 )
+
+# update the po file
+find_program(XGETTEXT_CMD xgettext)
+IF (XGETTEXT_CMD)
+    SET(POT_FILE ${CMAKE_SOURCE_DIR}/po/${PROJECT_NAME}.pot)
+    file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+    add_custom_command( 
+        TARGET update_pot
+        PRE_BUILD
+        COMMAND ${XGETTEXT_CMD} -C -s -j
+            -d ${PROJECT_NAME}
+            -o ${POT_FILE}
+            --from-code=utf-8
+            --keyword=tr
+            --package-name=${PROJECT_NAME}
+            --package-version=${CMAKE_PROJECT_VERSION}
+            ${SRC_FILES}
+        DEPENDS ${SRC_FILES}
+        COMMENT "Extracting translatable messages to ${POT_FILE}"
+    )
+ENDIF(XGETTEXT_CMD)
+
+# update the pot files
+IF(GETTEXT_MSGMERGE_EXECUTABLE)
+    file(GLOB_RECURSE PO_FILES ${PROJECT_SOURCE_DIR}/po/*.po)
+    foreach(PO_FILE IN ITEMS ${PO_FILES})
+        add_custom_command(
+            TARGET update_pot
+            POST_BUILD
+            COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} -q -U ${PO_FILE}
+                ${CMAKE_SOURCE_DIR}/po/${PROJECT_NAME}.pot
+            DEPENDS ${CMAKE_SOURCE_DIR}/po/${PROJECT_NAME}.pot
+            COMMENT "Updating translation ${PO_FILE}"
+        )
+    endforeach()
+ENDIF(GETTEXT_MSGMERGE_EXECUTABLE)
 
 ##################################################################
 # Check for Qt
