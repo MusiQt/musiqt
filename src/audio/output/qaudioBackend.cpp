@@ -288,7 +288,7 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
 
         return bufSize;
     }
-    catch (audioError)
+    catch (const audioError &)
     {
         close();
         throw;
