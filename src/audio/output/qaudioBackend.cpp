@@ -193,16 +193,20 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
 
 #if QT_VERSION >= 0x060000
     QAudioDevice deviceInfo = card != -1 ? devices[card] : QMediaDevices::defaultAudioOutput();
-    if (!deviceInfo.isFormatSupported(qFormat))
+    if (deviceInfo.isFormatSupported(qFormat))
     {
-        throw audioError("Audio format not supported");
+        outputFormat = format;
     }
     else
-        outputFormat = format;
+        throw audioError("Audio format not supported");
 #else
     QAudioDeviceInfo deviceInfo = card != -1 ? devices[card] : QAudioDeviceInfo::defaultInputDevice();
 
-    if (!deviceInfo.isFormatSupported(qFormat))
+    if (deviceInfo.isFormatSupported(qFormat))
+    {
+        outputFormat = format;
+    }
+    else
     {
         qFormat = deviceInfo.nearestFormat(qFormat);
         outputFormat.sampleRate = qFormat.sampleRate();
@@ -237,53 +241,58 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
             throw audioError("Audio format not supported");
         }
     }
-    else
-        outputFormat = format;
-#endif
-    m_audioOutput = new AudioOutputWrapper();
-    
-    m_audioOutput->moveToThread(m_thread);
-    m_thread->start();
-#if QT_VERSION >= 0x060000
-    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDevice, deviceInfo), Q_ARG(QAudioFormat, qFormat));
-#else
-    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, deviceInfo), Q_ARG(QAudioFormat, qFormat));
 #endif
 
-    QAudio::Error error;
-    QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
-    if (error != QAudio::NoError)
+    try
+    {
+        m_audioOutput = new AudioOutputWrapper();
+
+        m_audioOutput->moveToThread(m_thread);
+        m_thread->start();
+#if QT_VERSION >= 0x060000
+        QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDevice, deviceInfo), Q_ARG(QAudioFormat, qFormat));
+#else
+        QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, deviceInfo), Q_ARG(QAudioFormat, qFormat));
+#endif
+
+        QAudio::Error error;
+        QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
+        if (error != QAudio::NoError)
+        {
+            throw audioError("Error creating QAudioOutput");
+        }
+
+        connect(m_audioOutput, &AudioOutputWrapper::stateChanged, this, &qaudioBackend::onStateChange);
+
+        device->open(QIODevice::ReadOnly);
+        QMetaObject::invokeMethod(m_audioOutput, "start", Q_ARG(QIODevice*, device));
+
+        if (m_audioOutput->error() != QAudio::NoError)
+        {
+            throw audioError("Error starting QAudioOutput");
+        }
+
+        // suspend audio playback until initialization is done
+        QMetaObject::invokeMethod(m_audioOutput, "suspend");
+
+#if QT_VERSION >= 0x060000
+        qsizetype bufSize;
+        QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(qsizetype, bufSize));
+#else
+        int bufSize;
+        QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(int, bufSize));
+#endif
+        if (bufSize <= 0) {
+            throw audioError(QString("Error getting buffer size: %1").arg(bufSize));
+        }
+
+        return bufSize;
+    }
+    catch (audioError)
     {
         close();
-        throw audioError("Error creating QAudioOutput");
+        throw;
     }
-
-    connect(m_audioOutput, &AudioOutputWrapper::stateChanged, this, &qaudioBackend::onStateChange);
-
-    device->open(QIODevice::ReadOnly);
-    QMetaObject::invokeMethod(m_audioOutput, "start", Q_ARG(QIODevice*, device));
-
-    if (m_audioOutput->error() != QAudio::NoError)
-    {
-        close();
-        throw audioError("Error starting QAudioOutput");
-    }
-
-    // suspend audio playback until initialization is done
-    QMetaObject::invokeMethod(m_audioOutput, "suspend");
-
-#if QT_VERSION >= 0x060000
-    qsizetype bufSize;
-    QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(qsizetype, bufSize));
-#else
-    int bufSize;
-    QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(int, bufSize));
-#endif
-    if (bufSize <= 0) {
-        close();
-        throw audioError(QString("Error getting buffer size: %1").arg(bufSize));
-    }
-    return bufSize;
 }
 
 void qaudioBackend::close()
