@@ -203,7 +203,6 @@ bool InputWrapper::setFormat(audioFormat_t format, size_t bufferSize)
         break;
     default:
         m_audioProcess = nullptr;
-        qWarning("Unsupported sample type");
         return false;
     }
 

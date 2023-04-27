@@ -122,6 +122,7 @@ bool audio::play(input* i)
 
     if (!m_iw->setFormat(outputFormat, bufferSize))
     {
+        qWarning("Unsupported sample type");
         m_audioOutput->close();
         return false;
     }
