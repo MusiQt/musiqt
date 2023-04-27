@@ -49,7 +49,7 @@ audio::audio() :
     m_audioOutput(new qaudioBackend()),
     m_state(state_t::STOP)
 {
-    m_volume = m_settings.value("Audio Settings/volume", 50).toInt();
+    m_volume = m_settings.value(config::AUDIO_VOLUME, 50).toInt();
 
     connect(m_audioOutput, &qaudioBackend::songEnded, this, &audio::songEnded);
 }
@@ -58,7 +58,7 @@ audio::~audio()
 {
     stop();
 
-    m_settings.setValue("Audio Settings/volume", m_volume);
+    m_settings.setValue(config::AUDIO_VOLUME, m_volume);
 
     delete m_audioOutput;
 }

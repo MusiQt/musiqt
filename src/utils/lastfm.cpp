@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Leandro Nini
+ *  Copyright (C) 2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include "player.h"
 #include "metaData.h"
+#include "settings.h"
 #include "utils/xdg.h"
 
 #include <lastfm5/misc.h>
@@ -48,9 +49,9 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     m_player(p)
 {
     QSettings settings;
-    m_enable = settings.value("Last.fm Settings/scrobbling", true).toBool();
-    QString userName = settings.value("Last.fm Settings/User Name", QString()).toString();
-    QString sessionKey = settings.value("Last.fm Settings/Session Key", QString()).toString();
+    m_enable = settings.value(config::LASTFM_SCROBBLING, true).toBool();
+    QString userName = settings.value(config::LASTFM_USERNAME, QString()).toString();
+    QString sessionKey = settings.value(config::LASTFM_SESSIONKEY, QString()).toString();
 
     m_timer.setSingleShot(true);
     connect(&m_timer, &QTimer::timeout, this, &lastfmScrobbler::scrobble);
@@ -165,7 +166,7 @@ void lastfmScrobbler::setScrobbling(bool scrobble)
 {
     m_enable = scrobble;
     QSettings settings;
-    settings.setValue("Last.fm Settings/scrobbling", scrobble);
+    settings.setValue(config::LASTFM_SCROBBLING, scrobble);
 
     if (m_player->state() == state_t::PLAY)
         nowPlaying(true);
@@ -238,8 +239,8 @@ lastfmConfig::lastfmConfig(QWidget* win) :
     configFrame(win)
 {
     QSettings settings;
-    QString userName = settings.value("Last.fm Settings/User Name", QString()).toString();
-    QString sessionKey = settings.value("Last.fm Settings/Session Key", QString()).toString();
+    QString userName = settings.value(config::LASTFM_USERNAME, QString()).toString();
+    QString sessionKey = settings.value(config::LASTFM_SESSIONKEY, QString()).toString();
 
     QLabel* label = new QLabel(tr("Username:"), this);
     matrix()->addWidget(label);
@@ -340,8 +341,8 @@ void lastfmConfig::setSession(const QString &userName, const QString &sessionKey
     qDebug() << userName << " - " << sessionKey;
 
     QSettings settings;
-    settings.setValue("Last.fm Settings/User Name", userName);
-    settings.setValue("Last.fm Settings/Session Key", sessionKey);
+    settings.setValue(config::LASTFM_USERNAME, userName);
+    settings.setValue(config::LASTFM_SESSIONKEY, sessionKey);
 
     emit usernameChanged(userName);
     emit sessionChanged(sessionKey);

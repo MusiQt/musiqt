@@ -120,8 +120,8 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
 
     qApp->setStyleSheet("QMainWindow > QPushButton,QToolButton { margin:0; padding:0; }");
 
-    QPoint pos = m_settings.value("General Settings/pos").toPoint();
-    QSize size = m_settings.value("General Settings/size").toSize();
+    QPoint pos = m_settings.value(config::GENERAL_POS).toPoint();
+    QSize size = m_settings.value(config::GENERAL_SIZE).toSize();
 
     resize(size);
     move(pos);
@@ -134,12 +134,12 @@ mainWindow::~mainWindow()
 
     if (!centralWidget()->isHidden())
     {
-        m_settings.setValue("General Settings/size", size());
+        m_settings.setValue(config::GENERAL_SIZE, size());
     }
-    m_settings.setValue("General Settings/pos", pos());
-    m_settings.setValue("General Settings/playlist mode", m_cFrame->getPlayMode());
+    m_settings.setValue(config::GENERAL_POS, pos());
+    m_settings.setValue(config::GENERAL_PLMODE, m_cFrame->getPlayMode());
 
-    m_settings.setValue("General Settings/file", m_player->loadedSong());
+    m_settings.setValue(config::GENERAL_FILE, m_player->loadedSong());
 }
 
 void mainWindow::init(const char* arg)
@@ -160,7 +160,7 @@ void mainWindow::init(const char* arg)
     }
     else
     {
-        m_player->load(m_settings.value("General Settings/file").toString());
+        m_player->load(m_settings.value(config::GENERAL_FILE).toString());
     }
 }
 
@@ -220,7 +220,7 @@ QToolBar *mainWindow::createSecondaryBar()
     );
 
     QAction *playlist = new QAction(GET_ICON(icon_playlist), tr("Playlist"), this);
-    const bool playMode = m_settings.value("General Settings/playlist mode", true).toBool();
+    const bool playMode = m_settings.value(config::GENERAL_PLMODE, true).toBool();
     setPlayMode(playlist, playMode);
     connect(playlist, &QAction::triggered,
         [this, playlist]() { setPlayMode(playlist, !m_cFrame->getPlayMode()); }
@@ -234,7 +234,7 @@ QToolBar *mainWindow::createSecondaryBar()
     QAction *scrobble = new QAction(icon, tr("Scrobble"), this);
     scrobble->setCheckable(true);
     scrobble->setStatusTip(tr("Enable/disable scrobbling"));
-    const bool scrobbling = m_settings.value("Last.fm Settings/scrobbling", true).toBool();
+    const bool scrobbling = m_settings.value(config::LASTFM_SCROBBLING, true).toBool();
     scrobble->setChecked(scrobbling);
     connect(scrobble, &QAction::triggered, this, &mainWindow::setScrobbling);
 #endif

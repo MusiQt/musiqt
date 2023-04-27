@@ -27,6 +27,22 @@
 #include <QObject>
 #include <QLabel>
 
+namespace config
+{
+constexpr const char* GENERAL_POS       = "General Settings/pos";
+constexpr const char* GENERAL_SIZE      = "General Settings/size";
+constexpr const char* GENERAL_PLMODE    = "General Settings/playlist mode";
+constexpr const char* GENERAL_FILE      = "General Settings/file";
+
+constexpr const char* AUDIO_VOLUME      = "Audio Settings/volume";
+
+constexpr const char* LASTFM_USERNAME   = "Last.fm Settings/User Name";
+constexpr const char* LASTFM_SESSIONKEY = "Last.fm Settings/Session Key";
+constexpr const char* LASTFM_SCROBBLING = "Last.fm Settings/scrobbling";
+};
+
+/*****************************************************************/
+
 class inputConfig;
 
 class settingsWindow : public QDialog
