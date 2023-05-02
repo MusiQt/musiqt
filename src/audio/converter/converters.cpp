@@ -21,7 +21,7 @@
 template <typename I, typename O>
 size_t resampler<I, O>::convert(const void* buf, size_t len)
 {
-    I* const in = (I*)_buffer;
+    I* const in = (I*)m_buffer.data();
     O* const out = (O*)buf;
 
     size_t idx = 0;
@@ -34,7 +34,7 @@ size_t resampler<I, O>::convert(const void* buf, size_t len)
             const I val = in[idx+c];
             out[j+c] = _quantizer->get(val+(I)(((unsigned int)(in[idx+c+channels]-val)*error)>>16), c);
         }
-        error += _rate;
+        error += m_rate;
         while (error >= 0x10000)
         {
             error -= 0x10000;
@@ -42,10 +42,10 @@ size_t resampler<I, O>::convert(const void* buf, size_t len)
         }
     }
 
-    const size_t l = bufferSize/sizeof(I);
+    const size_t l = m_buffer.size()/sizeof(I);
     qDebug() << "resamplerDecimal idx: " << static_cast<int>(idx) << "; l: " << static_cast<int>(l);
 
-    _data = (l < idx) ? (l-idx)*sizeof(I) : 0;
+    m_dataPos = (l < idx) ? (l-idx)*sizeof(I) : 0;
     for (size_t j=idx; j<l; j+=channels)
     {
         for (unsigned int c=0; c<channels; c++)
@@ -68,7 +68,7 @@ template size_t resampler<float, float>::convert(const void* buf, const size_t l
 template <typename I, typename O>
 size_t converterDecimal<I, O>::convert(const void* buf, size_t len)
 {
-    I* const in = (I*)_buffer;
+    I* const in = (I*)m_buffer.data();
     O* const out = (O*)buf;
 
     const size_t samples = len/sizeof(I);

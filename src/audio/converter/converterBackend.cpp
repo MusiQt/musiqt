@@ -23,27 +23,24 @@
 resamplerBackend::resamplerBackend(unsigned int srIn, unsigned int srOut, size_t size,
         unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision) :
     converter(channels, inputPrecision, outputPrecision),
-    _data(0)
+    m_dataPos(0)
 {
     qDebug() << "Conversion ratio " << (float)(srIn/srOut);
 
-    _rate = (((unsigned int)srIn)<<16)/srOut;
-    qDebug() << "_rate " << _rate;
+    m_rate = (((unsigned int)srIn)<<16)/srOut;
+    qDebug() << "m_rate " << m_rate;
 
     size_t frames = size / (outputPrecision*channels);
-    unsigned long tmp = ((unsigned long)frames * (unsigned long)_rate);
+    unsigned long tmp = ((unsigned long)frames * (unsigned long)m_rate);
     if (tmp & 0xFFFFll)
         tmp += 0x10000ll;
 
-    bufferSize = (tmp>>16) * (inputPrecision*channels);
+    size_t bufferSize = (tmp>>16) * (inputPrecision*channels);
     qDebug() << "converter buffer size: " << bufferSize;
-    _buffer = new char[bufferSize];
+    m_buffer.reserve(bufferSize);
 }
 
-resamplerBackend::~resamplerBackend()
-{
-    delete [] _buffer;
-}
+resamplerBackend::~resamplerBackend() {}
 
 /******************************************************************************/
 
@@ -51,12 +48,9 @@ converterBackend::converterBackend(size_t size, unsigned int channels,
                                    unsigned int inputPrecision, unsigned int outputPrecision) :
     converter(channels, inputPrecision, outputPrecision)
 {
-    bufferSize = size * frameRatio;
+    size_t bufferSize = size * frameRatio;
     qDebug() << "converter buffer size: " << bufferSize;
-    _buffer = new char[bufferSize];
+    m_buffer.reserve(bufferSize);
 }
 
-converterBackend::~converterBackend()
-{
-    delete [] _buffer;
-}
+converterBackend::~converterBackend() {}

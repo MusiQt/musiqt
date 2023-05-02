@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2020 Leandro Nini
+ *  Copyright (C) 2009-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 #include <cstdlib>
 
+#include <QByteArray>
 #include <QDebug>
 
 class converter
@@ -29,8 +30,7 @@ protected:
     const unsigned int channels;
     const unsigned int frameRatio;
 
-    char *_buffer;
-    size_t bufferSize;
+    QByteArray m_buffer;
 
 protected:
     converter(unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision) :
@@ -44,7 +44,7 @@ public:
     virtual ~converter() {}
 
     /// Get pointer to buffer
-    virtual char* buffer() const =0;
+    virtual char* buffer() =0;
 
     /// Get buffer size
     virtual size_t bufSize(size_t size) const =0;

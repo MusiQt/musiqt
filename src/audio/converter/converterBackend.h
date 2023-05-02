@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2020 Leandro Nini
+ *  Copyright (C) 2009-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,9 +24,9 @@
 class resamplerBackend : public converter
 {
 protected:
-    unsigned int _rate;
+    unsigned int m_rate;
 
-    unsigned int _data;
+    unsigned int m_dataPos;
 
 private:
     resamplerBackend();
@@ -41,10 +41,10 @@ public:
     virtual ~resamplerBackend();
 
     /// Get pointer to buffer
-    char* buffer() const override { return _buffer+_data; }
+    char* buffer() override { return m_buffer.data()+m_dataPos; }
 
     /// Get buffer size
-    size_t bufSize(size_t size) const override { return (size*frameRatio)-_data; }
+    size_t bufSize(size_t size) const override { return (size*frameRatio)-m_dataPos; }
 };
 
 /******************************************************************************/
@@ -63,7 +63,7 @@ public:
     virtual ~converterBackend();
 
     /// Get pointer to buffer
-    char* buffer() const override { return _buffer; }
+    char* buffer() override { return m_buffer.data(); }
 
     /// Get buffer size
     size_t bufSize(size_t size) const override { return size*frameRatio; }
