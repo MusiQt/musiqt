@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2020 Leandro Nini
+ *  Copyright (C) 2009-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,17 +30,22 @@ resamplerBackend::resamplerBackend(unsigned int srIn, unsigned int srOut, size_t
     m_rate = (((unsigned int)srIn)<<16)/srOut;
     qDebug() << "m_rate " << m_rate;
 
-    size_t frames = size / (outputPrecision*channels);
+    setBufferSize(size, inputPrecision, outputPrecision);
+}
+
+resamplerBackend::~resamplerBackend() {}
+
+void resamplerBackend::setBufferSize(size_t size, unsigned int inputPrecision, unsigned int outputPrecision)
+{
+    size_t frames = size / (outputPrecision*m_channels);
     unsigned long tmp = ((unsigned long)frames * (unsigned long)m_rate);
     if (tmp & 0xFFFFll)
         tmp += 0x10000ll;
 
-    size_t bufferSize = (tmp>>16) * (inputPrecision*channels);
+    size_t bufferSize = (tmp>>16) * (inputPrecision*m_channels);
     qDebug() << "converter buffer size: " << bufferSize;
-    m_buffer.reserve(bufferSize);
+    m_buffer.resize(bufferSize);
 }
-
-resamplerBackend::~resamplerBackend() {}
 
 /******************************************************************************/
 
@@ -48,9 +53,14 @@ converterBackend::converterBackend(size_t size, unsigned int channels,
                                    unsigned int inputPrecision, unsigned int outputPrecision) :
     converter(channels, inputPrecision, outputPrecision)
 {
-    size_t bufferSize = size * frameRatio;
-    qDebug() << "converter buffer size: " << bufferSize;
-    m_buffer.reserve(bufferSize);
+    setBufferSize(size);
 }
 
 converterBackend::~converterBackend() {}
+
+void converterBackend::setBufferSize(size_t size)
+{
+    size_t bufferSize = size * m_frameRatio;
+    qDebug() << "converter buffer size: " << bufferSize;
+    m_buffer.resize(bufferSize);
+}

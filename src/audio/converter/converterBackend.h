@@ -37,6 +37,8 @@ protected:
     resamplerBackend(unsigned int srIn, unsigned int srOut, size_t size,
         unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
 
+    void setBufferSize(size_t size, unsigned int inputPrecision, unsigned int outputPrecision);
+
 public:
     virtual ~resamplerBackend();
 
@@ -44,7 +46,7 @@ public:
     char* buffer() override { return m_buffer.data()+m_dataPos; }
 
     /// Get buffer size
-    size_t bufSize(size_t size) const override { return (size*frameRatio)-m_dataPos; }
+    size_t bufSize(size_t size) const override { return (size*m_frameRatio)-m_dataPos; }
 };
 
 /******************************************************************************/
@@ -59,6 +61,8 @@ private:
 protected:
     converterBackend(size_t size, unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
 
+    void setBufferSize(size_t size);
+
 public:
     virtual ~converterBackend();
 
@@ -66,7 +70,7 @@ public:
     char* buffer() override { return m_buffer.data(); }
 
     /// Get buffer size
-    size_t bufSize(size_t size) const override { return size*frameRatio; }
+    size_t bufSize(size_t size) const override { return size*m_frameRatio; }
 };
 
 #endif

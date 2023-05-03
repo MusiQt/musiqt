@@ -27,18 +27,18 @@ size_t resampler<I, O>::convert(const void* buf, size_t len)
     size_t idx = 0;
     unsigned int error = 0;
     const size_t samples = len/sizeof(I);
-    for (size_t j=0; j<samples; j+=channels)
+    for (size_t j=0; j<samples; j+=m_channels)
     {
-        for (unsigned int c=0; c<channels; c++)
+        for (unsigned int c=0; c<m_channels; c++)
         {
             const I val = in[idx+c];
-            out[j+c] = _quantizer->get(val+(I)(((unsigned int)(in[idx+c+channels]-val)*error)>>16), c);
+            out[j+c] = _quantizer->get(val+(I)(((unsigned int)(in[idx+c+m_channels]-val)*error)>>16), c);
         }
         error += m_rate;
         while (error >= 0x10000)
         {
             error -= 0x10000;
-            idx += channels;
+            idx += m_channels;
         }
     }
 
@@ -46,9 +46,9 @@ size_t resampler<I, O>::convert(const void* buf, size_t len)
     qDebug() << "resamplerDecimal idx: " << static_cast<int>(idx) << "; l: " << static_cast<int>(l);
 
     m_dataPos = (l < idx) ? (l-idx)*sizeof(I) : 0;
-    for (size_t j=idx; j<l; j+=channels)
+    for (size_t j=idx; j<l; j+=m_channels)
     {
-        for (unsigned int c=0; c<channels; c++)
+        for (unsigned int c=0; c<m_channels; c++)
             in[c] = in[j+c];
     }
 
@@ -72,9 +72,9 @@ size_t converterDecimal<I, O>::convert(const void* buf, size_t len)
     O* const out = (O*)buf;
 
     const size_t samples = len/sizeof(I);
-    for (size_t j=0; j<samples; j+=channels)
+    for (size_t j=0; j<samples; j+=m_channels)
     {
-        for (unsigned int c=0; c<channels; c++)
+        for (unsigned int c=0; c<m_channels; c++)
         {
             out[j+c] = _quantizer->get(in[j+c], c);
         }

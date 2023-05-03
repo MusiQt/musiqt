@@ -27,17 +27,17 @@
 class converter
 {
 protected:
-    const unsigned int channels;
-    const unsigned int frameRatio;
+    const unsigned int m_channels;
+    const unsigned int m_frameRatio;
 
     QByteArray m_buffer;
 
 protected:
     converter(unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision) :
-        channels(channels),
-        frameRatio(inputPrecision/outputPrecision)
+        m_channels(channels),
+        m_frameRatio(inputPrecision/outputPrecision)
     {
-        qDebug() << "Frame ratio " << frameRatio;
+        qDebug() << "Frame ratio " << m_frameRatio;
     }
 
 public:
