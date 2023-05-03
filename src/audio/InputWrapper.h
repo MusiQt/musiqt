@@ -43,6 +43,11 @@ protected:
     qint64 readData(char *data, qint64 maxSize) override;
     qint64 writeData(const char *data, qint64 maxSize) override;
 
+#if QT_VERSION >= 0x060000
+    // hack for Qt6 :/
+    qint64 bytesAvailable() const override { return 16384 + QIODevice::bytesAvailable(); }
+#endif
+
 public:
     InputWrapper(input* song);
     ~InputWrapper();
