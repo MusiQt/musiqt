@@ -28,16 +28,19 @@ protected:
 
     unsigned int m_dataPos;
 
+    const unsigned int m_inputFrameSize;
+    const unsigned int m_outputFrameSize;
+
 private:
     resamplerBackend();
     resamplerBackend(const resamplerBackend&) = delete;
     resamplerBackend& operator=(const resamplerBackend&) = delete;
 
 protected:
-    resamplerBackend(unsigned int srIn, unsigned int srOut, size_t size,
+    resamplerBackend(unsigned int srIn, unsigned int srOut,
         unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
 
-    void setBufferSize(size_t size, unsigned int inputPrecision, unsigned int outputPrecision);
+    void setBufferSize(size_t size);
 
 public:
     virtual ~resamplerBackend();
@@ -46,7 +49,7 @@ public:
     char* buffer() override { return m_buffer.data()+m_dataPos; }
 
     /// Get buffer size
-    size_t bufSize(size_t size) const override { return (size*m_frameRatio)-m_dataPos; }
+    size_t bufSize(size_t size) override;
 };
 
 /******************************************************************************/
@@ -59,7 +62,7 @@ private:
     converterBackend& operator=(const converterBackend&) = delete;
 
 protected:
-    converterBackend(size_t size, unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
+    converterBackend(unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
 
     void setBufferSize(size_t size);
 
@@ -70,7 +73,7 @@ public:
     char* buffer() override { return m_buffer.data(); }
 
     /// Get buffer size
-    size_t bufSize(size_t size) const override { return size*m_frameRatio; }
+    size_t bufSize(size_t size) override;
 };
 
 #endif

@@ -28,12 +28,12 @@ class resampler : public resamplerBackend
     quantizer<I, O>* _quantizer;
 
 private:
-    void init(const unsigned int fract);
+    void init(unsigned int fract);
 
 public:
-    resampler(const unsigned int srIn, const unsigned int srOut, const size_t size,
-        const unsigned int channels, quantizer<I, O>* quantizer) :
-        resamplerBackend(srIn, srOut, size, channels, sizeof(I), sizeof(O)),
+    resampler(unsigned int srIn, unsigned int srOut,
+        unsigned int channels, quantizer<I, O>* quantizer) :
+        resamplerBackend(srIn, srOut, channels, sizeof(I), sizeof(O)),
         _quantizer(quantizer)
     {}
     ~resampler() { delete _quantizer; }
@@ -50,11 +50,11 @@ class converterDecimal : public converterBackend
     quantizer<I, O>* _quantizer;
 
 private:
-    void init(const unsigned int fract);
+    void init(unsigned int fract);
 
 public:
-    converterDecimal(const size_t size, const unsigned int channels, quantizer<I, O>* quantizer) :
-        converterBackend(size, channels, sizeof(I), sizeof(O)),
+    converterDecimal(unsigned int channels, quantizer<I, O>* quantizer) :
+        converterBackend(channels, sizeof(I), sizeof(O)),
         _quantizer(quantizer)
     {}
     ~converterDecimal() { delete _quantizer; }

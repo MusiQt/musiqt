@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2021 Leandro Nini
+ *  Copyright (C) 2009-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ public:
 
     /// Instantiate backend
     converter* get(audioFormat_t inFormat, audioFormat_t outFormat,
-        size_t size, unsigned int fract);
+        unsigned int fract);
 
 };
 

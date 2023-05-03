@@ -69,9 +69,8 @@ PROFILE_START
 
     if (m_audioConverter != nullptr)
     {
-        size_t size = m_currentSong->fillBuffer(
-            m_audioConverter->buffer(),
-            m_audioConverter->bufSize(maxSize));
+        size_t const bufSize = m_audioConverter->bufSize(maxSize);
+        size_t const size = m_currentSong->fillBuffer(m_audioConverter->buffer(), bufSize);
         n = m_audioConverter->convert(data, size);
     }
     else
@@ -179,7 +178,7 @@ void InputWrapper::setPosition(double pos)
         m_milliSeconds = static_cast<unsigned int>(pos * m_currentSong->songDuration());
 }
 
-bool InputWrapper::setFormat(audioFormat_t format, size_t bufferSize)
+bool InputWrapper::setFormat(audioFormat_t format)
 {
     unsigned int precision;
 
@@ -208,17 +207,13 @@ bool InputWrapper::setFormat(audioFormat_t format, size_t bufferSize)
 
     m_bytePerMilliSec = (format.sampleRate * format.channels * precision) / 1000;
 
-    // QIODevice has a fixed buffer of 16Kb
-    if (bufferSize < 16384)
-        bufferSize = 16384;
-
     audioFormat_t songFormat;
     songFormat.sampleRate = m_currentSong->samplerate();
     songFormat.channels = m_currentSong->channels();
     songFormat.sampleType = m_currentSong->precision();
 
     // Check if soundcard supports requested samplerate
-    m_audioConverter = CFACTORY->get(songFormat, format, bufferSize, m_currentSong->fract());
+    m_audioConverter = CFACTORY->get(songFormat, format, m_currentSong->fract());
 
     return true;
 }

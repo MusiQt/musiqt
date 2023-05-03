@@ -32,12 +32,18 @@ protected:
 
     QByteArray m_buffer;
 
+    size_t m_inputSize;
+
+    constexpr static int INIT_BUFFER_SIZE = 16384;
+
 protected:
     converter(unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision) :
         m_channels(channels),
-        m_frameRatio(inputPrecision/outputPrecision)
+        m_frameRatio(inputPrecision/outputPrecision),
+        m_inputSize(0)
     {
         qDebug() << "Frame ratio " << m_frameRatio;
+        m_buffer.reserve(INIT_BUFFER_SIZE);
     }
 
 public:
@@ -47,7 +53,7 @@ public:
     virtual char* buffer() =0;
 
     /// Get buffer size
-    virtual size_t bufSize(size_t size) const =0;
+    virtual size_t bufSize(size_t size) =0;
 
     /// Do the conversion
     virtual size_t convert(const void* out, size_t len) =0;

@@ -124,7 +124,7 @@ bool audio::play(input* i)
     qDebug() << "Output parameters " << outputFormat.sampleRate << ":" << outputFormat.channels << ":" << sampleTypeString(outputFormat.sampleType);
     qDebug() << "bufferSize: " << bufferSize << " bytes";
 
-    if (!m_iw->setFormat(outputFormat, bufferSize))
+    if (!m_iw->setFormat(outputFormat))
     {
         m_audioOutput->close();
         throw audioError("Unsupported sample type");
