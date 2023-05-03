@@ -117,9 +117,11 @@ void qaudioBackend::onStateChange(QAudio::State newState)
         emit songEnded();
         break;
     case QAudio::StoppedState:
-        if (m_audioOutput->error() != QAudio::NoError)
+        QAudio::Error error;
+        QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
+        if (error != QAudio::NoError)
         {
-            qWarning() << "Error " << m_audioOutput->error();
+            qWarning() << "Error " << error;
         }
         break;
     default:
@@ -127,7 +129,7 @@ void qaudioBackend::onStateChange(QAudio::State newState)
     }
 }
 
-size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat)
+audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
 {
 #if QT_VERSION >= 0x060000
     QAudioFormat::SampleFormat sampleFormat;
@@ -191,6 +193,8 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     qFormat.setByteOrder(QAudioFormat::LittleEndian);
 #endif
 
+    audioFormat_t outputFormat;
+
 #if QT_VERSION >= 0x060000
     QAudioDevice deviceInfo = card != -1 ? devices[card] : QMediaDevices::defaultAudioOutput();
     if (deviceInfo.isFormatSupported(qFormat))
@@ -243,64 +247,50 @@ size_t qaudioBackend::open(int card, audioFormat_t format, QIODevice* device, au
     }
 #endif
 
-    try
-    {
-        m_audioOutput = new AudioOutputWrapper();
+    m_audioOutput = new AudioOutputWrapper();
 
-        m_audioOutput->moveToThread(m_thread);
-        m_thread->start();
+    m_audioOutput->moveToThread(m_thread);
+    m_thread->start();
+
 #if QT_VERSION >= 0x060000
         QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDevice, deviceInfo), Q_ARG(QAudioFormat, qFormat));
 #else
         QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, deviceInfo), Q_ARG(QAudioFormat, qFormat));
 #endif
 
-        QAudio::Error error;
-        QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
-        if (error != QAudio::NoError)
-        {
-            throw audioError("Error creating QAudioOutput");
-        }
-
-        connect(m_audioOutput, &AudioOutputWrapper::stateChanged, this, &qaudioBackend::onStateChange);
-
-        device->open(QIODevice::ReadOnly);
-        QMetaObject::invokeMethod(m_audioOutput, "start", Q_ARG(QIODevice*, device));
-
-        if (m_audioOutput->error() != QAudio::NoError)
-        {
-            throw audioError("Error starting QAudioOutput");
-        }
-
-        // suspend audio playback until initialization is done
-        QMetaObject::invokeMethod(m_audioOutput, "suspend");
-
-#if QT_VERSION >= 0x060000
-        qsizetype bufSize;
-        QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(qsizetype, bufSize));
-#else
-        int bufSize;
-        QMetaObject::invokeMethod(m_audioOutput, "bufferSize", Qt::BlockingQueuedConnection, Q_RETURN_ARG(int, bufSize));
-#endif
-        if (bufSize <= 0) {
-            throw audioError(QString("Error getting buffer size: %1").arg(bufSize));
-        }
-
-        return bufSize;
-    }
-    catch (const audioError &)
+    QAudio::Error error;
+    QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
+    if (error != QAudio::NoError)
     {
         close();
-        throw;
+        throw audioError("Error initializating QAudioOutput");
+    }
+
+    connect(m_audioOutput, &AudioOutputWrapper::stateChanged, this, &qaudioBackend::onStateChange);
+
+    return outputFormat;
+}
+
+void qaudioBackend::start(QIODevice* device)
+{
+    device->open(QIODevice::ReadOnly);
+    QMetaObject::invokeMethod(m_audioOutput, "start", Q_ARG(QIODevice*, device));
+
+    QAudio::Error error;
+    QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
+    if (error != QAudio::NoError)
+    {
+        close();
+        throw audioError("Error starting QAudioOutput");
     }
 }
 
 void qaudioBackend::close()
 {
+    QMetaObject::invokeMethod(m_audioOutput, "deleteLater");
+
     m_thread->quit();
     m_thread->wait();
-
-    m_audioOutput->deleteLater();
 }
 
 void qaudioBackend::pause()
@@ -335,7 +325,9 @@ int qaudioBackend::getVolume()
     if (m_audioOutput.isNull())
         return 0;
 
-    return QAudio::convertVolume(m_audioOutput->volume(),
+    qreal volume;
+    QMetaObject::invokeMethod(m_audioOutput, "volume", Qt::BlockingQueuedConnection, Q_RETURN_ARG(qreal, volume));
+    return QAudio::convertVolume(volume,
                                  QAudio::LinearVolumeScale,
                                  QAudio::LogarithmicVolumeScale) * 100;
 }

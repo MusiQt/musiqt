@@ -102,41 +102,40 @@ bool audio::play(input* i)
         }
     }
 
-    qDebug() << "Setting parameters " << format.sampleRate << ":" << format.channels << ":" << sampleTypeString(format.sampleType);
+    qDebug() << "Setting parameters "
+        << format.sampleRate << ":" << format.channels << ":" << sampleTypeString(format.sampleType);
     m_iw.reset(new InputWrapper(i));
     connect(m_iw.data(), &InputWrapper::songFinished, this, &audio::songEnded);
     connect(m_iw.data(), &InputWrapper::updateTime,  this, &audio::updateTime);
     connect(m_iw.data(), &InputWrapper::preloadSong, this, &audio::preloadSong);
 
-    int selectedCard = qaudioBackend::getDevices().indexOf(SETTINGS->card());
+    int const selectedCard = qaudioBackend::getDevices().indexOf(SETTINGS->card());
 
-    audioFormat_t outputFormat;
-    size_t bufferSize;
     try
     {
-        bufferSize = m_audioOutput->open(selectedCard, format, m_iw.data(), outputFormat);
+        audioFormat_t outputFormat = m_audioOutput->init(selectedCard, format);
+
+        qDebug() << "Output parameters "
+            << outputFormat.sampleRate << ":" << outputFormat.channels << ":" << sampleTypeString(outputFormat.sampleType);
+
+        if (!m_iw->setFormat(outputFormat))
+        {
+            m_audioOutput->close();
+            throw audioError("Unsupported sample type");
+        }
+
+        if (SETTINGS->bs2b() && (i->channels() == 2))
+            m_iw->enableBs2b();
+
+        m_audioOutput->setVolume(m_volume);
+
+        // We're ready, start playback
+        m_audioOutput->start(m_iw.data());
     }
     catch (qaudioBackend::audioError const &e)
     {
         throw audioError(e.message());
     }
-
-    qDebug() << "Output parameters " << outputFormat.sampleRate << ":" << outputFormat.channels << ":" << sampleTypeString(outputFormat.sampleType);
-    qDebug() << "bufferSize: " << bufferSize << " bytes";
-
-    if (!m_iw->setFormat(outputFormat))
-    {
-        m_audioOutput->close();
-        throw audioError("Unsupported sample type");
-    }
-
-    if (SETTINGS->bs2b() && (i->channels() == 2))
-        m_iw->enableBs2b();
-
-    m_audioOutput->setVolume(m_volume);
-
-    // We're ready, resume playback
-    m_audioOutput->unpause();
 
     m_state = state_t::PLAY;
 

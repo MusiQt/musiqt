@@ -67,9 +67,13 @@ public:
 
     static QStringList getDevices();
 
-    /// Open
+    /// init audio
     /// @throws audioError
-    size_t open(int card, audioFormat_t format, QIODevice* device, audioFormat_t& outputFormat);
+    audioFormat_t init(int card, audioFormat_t format);
+
+    /// Start audio
+    /// @throws audioError
+    void start(QIODevice* device);
 
     /// Close
     void close();
