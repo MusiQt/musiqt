@@ -33,6 +33,7 @@ player::player() :
     connect(m_audio.data(), &audio::updateTime,  this, &player::updateTime);
     connect(m_audio.data(), &audio::songEnded,   this, &player::songEnded);
     connect(m_audio.data(), &audio::preloadSong, this, &player::preloadSong);
+    connect(m_audio.data(), &audio::audioError,  this, &player::audioError);
 }
 
 player::~player() {}
@@ -44,9 +45,8 @@ void player::play()
         if (m_audio->play(m_input.data()))
             emit stateChanged();
     }
-    catch (audio::audioError const &e)
+    catch (audio::initError const &e)
     {
-        qWarning() << e.message(); // FIXME needed?
         emit audioError(e.message());
     }
 }

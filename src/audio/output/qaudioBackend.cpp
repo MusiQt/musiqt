@@ -117,11 +117,30 @@ void qaudioBackend::onStateChange(QAudio::State newState)
         emit songEnded();
         break;
     case QAudio::StoppedState:
-        QAudio::Error error;
-        QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
-        if (error != QAudio::NoError)
+        if (m_thread->isRunning())
         {
-            qWarning() << "Error " << error;
+            QAudio::Error error;
+            QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
+            if (error != QAudio::NoError)
+            {
+                QString errorMsg;
+                switch (error)
+                {
+                case QAudio::IOError:
+                    errorMsg = "Error reading from audio device";
+                    break;
+                case QAudio::UnderrunError:
+                    errorMsg = "Underrun error";
+                    break;
+                case QAudio::FatalError:
+                    errorMsg = "Non-recoverable error";
+                    break;
+                default:
+                    break;
+                }
+                qDebug() << "errorMsg: " << errorMsg;
+                emit audioError(errorMsg);
+            }
         }
         break;
     default:
@@ -149,7 +168,7 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
         sampleFormat = QAudioFormat::Float;
         break;
     default:
-        throw audioError("Unexpected sample type");
+        throw initError("Unexpected sample type");
     }
 #else
     int sampleSize;
@@ -178,7 +197,7 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
         sampleType = QAudioFormat::Float;
         break;
     default:
-        throw audioError("Unexpected sample type");
+        throw initError("Unexpected sample type");
     }
 #endif
     QAudioFormat qFormat;
@@ -202,7 +221,7 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
         outputFormat = format;
     }
     else
-        throw audioError("Audio format not supported");
+        throw initError("Audio format not supported");
 #else
     QAudioDeviceInfo deviceInfo = card != -1 ? devices[card] : QAudioDeviceInfo::defaultInputDevice();
 
@@ -242,7 +261,7 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
         }
         else
         {
-            throw audioError("Audio format not supported");
+            throw initError("Audio format not supported");
         }
     }
 #endif
@@ -253,18 +272,10 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
     m_thread->start();
 
 #if QT_VERSION >= 0x060000
-        QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDevice, deviceInfo), Q_ARG(QAudioFormat, qFormat));
+    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDevice, deviceInfo), Q_ARG(QAudioFormat, qFormat));
 #else
-        QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, deviceInfo), Q_ARG(QAudioFormat, qFormat));
+    QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, deviceInfo), Q_ARG(QAudioFormat, qFormat));
 #endif
-
-    QAudio::Error error;
-    QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
-    if (error != QAudio::NoError)
-    {
-        close();
-        throw audioError("Error initializating QAudioOutput");
-    }
 
     connect(m_audioOutput, &AudioOutputWrapper::stateChanged, this, &qaudioBackend::onStateChange);
 
@@ -275,14 +286,6 @@ void qaudioBackend::start(QIODevice* device)
 {
     device->open(QIODevice::ReadOnly);
     QMetaObject::invokeMethod(m_audioOutput, "start", Q_ARG(QIODevice*, device));
-
-    QAudio::Error error;
-    QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
-    if (error != QAudio::NoError)
-    {
-        close();
-        throw audioError("Error starting QAudioOutput");
-    }
 }
 
 void qaudioBackend::close()
@@ -305,7 +308,7 @@ void qaudioBackend::unpause()
 
 void qaudioBackend::stop()
 {
-    QMetaObject::invokeMethod(m_audioOutput, "stop");
+    QMetaObject::invokeMethod(m_audioOutput, "stop", Qt::BlockingQueuedConnection);
 }
 
 void qaudioBackend::setVolume(int vol)

@@ -45,7 +45,7 @@ protected:
 
 #if QT_VERSION >= 0x060000
     // hack for Qt6 :/
-    qint64 bytesAvailable() const override { return 16384 + QIODevice::bytesAvailable(); }
+    qint64 bytesAvailable() const override { return !m_finished ? 16384 + QIODevice::bytesAvailable() : 0; }
 #endif
 
 public:
@@ -75,6 +75,8 @@ private:
     int m_bytes;
     int m_bytePerMilliSec;
     unsigned int m_milliSeconds;
+
+    bool m_finished;
 
     const unsigned int m_maxPlayTime;
 };

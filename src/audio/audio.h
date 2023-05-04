@@ -37,7 +37,7 @@ class audio : public QObject
     Q_OBJECT
 
 public:
-    class audioError : public error { using error::error; };
+    class initError : public error { using error::error; };
 
 private:
     QScopedPointer<InputWrapper> m_iw;
@@ -56,13 +56,14 @@ signals:
     void songEnded();
     void updateTime();
     void preloadSong();
+    void audioError(const QString&);
 
 public:
     audio();
     ~audio();
 
     /// Start stream
-    /// @throws audioError
+    /// @throws initError
     bool play(input* i);
 
     /// Pause/unpause stream

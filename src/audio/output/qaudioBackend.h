@@ -46,7 +46,7 @@ class qaudioBackend : public QObject
     Q_OBJECT
 
 public:
-    class audioError : public error { using error::error; };
+    class initError : public error { using error::error; };
 
 private:
     QPointer<AudioOutputWrapper> m_audioOutput;
@@ -56,6 +56,7 @@ private:
 
 signals:
     void songEnded();
+    void audioError(const QString&);
 
 private:
     void onStateChange(QAudio::State newState);
@@ -68,11 +69,10 @@ public:
     static QStringList getDevices();
 
     /// init audio
-    /// @throws audioError
+    /// @throws initError
     audioFormat_t init(int card, audioFormat_t format);
 
     /// Start audio
-    /// @throws audioError
     void start(QIODevice* device);
 
     /// Close

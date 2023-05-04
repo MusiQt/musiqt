@@ -51,7 +51,8 @@ audio::audio() :
 {
     m_volume = m_settings.value(config::AUDIO_VOLUME, 50).toInt();
 
-    connect(m_audioOutput, &qaudioBackend::songEnded, this, &audio::songEnded);
+    connect(m_audioOutput, &qaudioBackend::songEnded,  this, &audio::songEnded);
+    connect(m_audioOutput, &qaudioBackend::audioError, this, &audio::audioError);
 }
 
 audio::~audio()
@@ -72,7 +73,7 @@ bool audio::play(input* i)
 
     if (!i->rewind())
     {
-        throw audioError("Error rewinding file");
+        throw initError("Error rewinding file");
     }
 
     audioFormat_t format;
@@ -98,7 +99,7 @@ bool audio::play(input* i)
             format.sampleType = sample_t::S16;
             break;
         default:
-            throw audioError(QString("Unhandled sample type %1").arg(SETTINGS->bits()));
+            throw initError(QString("Unhandled sample type %1").arg(SETTINGS->bits()));
         }
     }
 
@@ -121,21 +122,21 @@ bool audio::play(input* i)
         if (!m_iw->setFormat(outputFormat))
         {
             m_audioOutput->close();
-            throw audioError("Unsupported sample type");
+            throw initError("Unsupported sample type");
         }
-
-        if (SETTINGS->bs2b() && (i->channels() == 2))
-            m_iw->enableBs2b();
-
-        m_audioOutput->setVolume(m_volume);
-
-        // We're ready, start playback
-        m_audioOutput->start(m_iw.data());
     }
-    catch (qaudioBackend::audioError const &e)
+    catch (qaudioBackend::initError const &e)
     {
-        throw audioError(e.message());
+        throw initError(e.message());
     }
+
+    if (SETTINGS->bs2b() && (i->channels() == 2))
+        m_iw->enableBs2b();
+
+    m_audioOutput->setVolume(m_volume);
+
+    // We're ready, start playback
+    m_audioOutput->start(m_iw.data());
 
     m_state = state_t::PLAY;
 
@@ -170,9 +171,9 @@ bool audio::stop()
 
     m_audioOutput->stop();
 
-    m_iw->close();
-
     m_audioOutput->close();
+
+    m_iw->close();
 
     m_state = state_t::STOP;
 
