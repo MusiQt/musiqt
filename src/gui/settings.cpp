@@ -135,12 +135,12 @@ settingsWindow::settingsWindow(QWidget* win) :
 
         QRadioButton* radio = new QRadioButton(tr("Album gain"), this);
         radio->setToolTip(tr("Preserve album dynamics"));
-        radio->setChecked(SETTINGS->m_replayGainMode==0);
+        radio->setChecked(SETTINGS->m_replayGainMode==settings::rg_t::Album);
         replayGainBox->layout()->addWidget(radio);
         radioGroup->addButton(radio, 0);
         radio = new QRadioButton(tr("Track gain"), this);
         radio->setToolTip(tr("All tracks equal loudness"));
-        radio->setChecked(SETTINGS->m_replayGainMode==1);
+        radio->setChecked(SETTINGS->m_replayGainMode==settings::rg_t::Track);
         replayGainBox->layout()->addWidget(radio);
         radioGroup->addButton(radio, 1);
         replayGainBox->addStretch(1);
@@ -149,7 +149,7 @@ settingsWindow::settingsWindow(QWidget* win) :
         connect(radioGroup, &QButtonGroup::idClicked,
             [](int val)
             {
-                SETTINGS->m_replayGainMode = val;
+                SETTINGS->m_replayGainMode = val == 0 ? settings::rg_t::Album : settings::rg_t::Track;
             }
         );
     }
@@ -351,7 +351,7 @@ void settings::load(const QSettings& appSettings)
     m_subtunes = appSettings.value("General Settings/play subtunes", false).toBool();
     m_replayGain = appSettings.value("General Settings/Replaygain", false).toBool();
     QString replayGainMode=appSettings.value("General Settings/Replaygain mode", "Album").toString();
-    m_replayGainMode = (!replayGainMode.compare("Track")) ? 1 : 0;
+    m_replayGainMode = (!replayGainMode.compare("Track")) ? settings::rg_t::Track : settings::rg_t::Album;
 
     m_bs2b=appSettings.value("General Settings/Bauer DSP", false).toBool();
     m_themeIcons=appSettings.value("General Settings/Theme icons", false).toBool();
@@ -364,7 +364,7 @@ void settings::save(QSettings& appSettings)
 
     appSettings.setValue("General Settings/play subtunes", m_subtunes);
     appSettings.setValue("General Settings/Replaygain", m_replayGain);
-    appSettings.setValue("General Settings/Replaygain mode", (m_replayGainMode == 0) ? "Album" : "Track");
+    appSettings.setValue("General Settings/Replaygain mode", (m_replayGainMode == settings::rg_t::Album) ? "Album" : "Track");
     appSettings.setValue("General Settings/Bauer DSP", m_bs2b);
     appSettings.setValue("General Settings/Theme icons", m_themeIcons);
 }

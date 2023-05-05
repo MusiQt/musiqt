@@ -76,15 +76,22 @@ class settings
     friend class settingsWindow;
     friend class audioConfig;
 
+public:
+    enum class rg_t
+    {
+        Album,
+        Track
+    };
+
 private:
-    QString m_card;
+    QString      m_card;
     unsigned int m_bits;
 
-    bool   m_subtunes;
-    bool   m_bs2b;
-    bool   m_themeIcons;
-    bool   m_replayGain;
-    int    m_replayGainMode;
+    bool         m_subtunes;
+    bool         m_bs2b;
+    bool         m_themeIcons;
+    bool         m_replayGain;
+    rg_t         m_replayGainMode;
 
 protected:
     settings() {}
@@ -114,7 +121,7 @@ public:
     bool replayGain() const { return m_replayGain; }
 
     /// Replay Gain Mode
-    int replayGainMode() const { return m_replayGainMode; }
+    rg_t replayGainMode() const { return m_replayGainMode; }
 
     /// Bauer stereophonic-to-binaural DSP
     bool bs2b() const { return m_bs2b; }

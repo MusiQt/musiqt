@@ -195,7 +195,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
 
         err = mpg123_param(m_handle, MPG123_RVA,
             SETTINGS->replayGain()
-                ? (SETTINGS->replayGainMode() == 0) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
+                ? (SETTINGS->replayGainMode() == settings::rg_t::Track) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
                 : MPG123_RVA_OFF,
             0.);
 

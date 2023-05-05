@@ -178,7 +178,7 @@ mpcBackend::mpcBackend(const QString& fileName) :
         const double referenceLevel = 89.0;
 #ifdef MPCDEC_SV8
         mpc_set_replay_level(m_demux, referenceLevel, MPC_TRUE,
-                (SETTINGS->replayGainMode() == 0) ? MPC_FALSE : MPC_TRUE,
+                (SETTINGS->replayGainMode() == settings::rg_t::Track) ? MPC_FALSE : MPC_TRUE,
                 MPC_TRUE);
 #else
         float peak = SETTINGS->replayGainMode() ? m_si.peak_album : m_si.peak_title;
