@@ -39,6 +39,10 @@
 #  define PROFILE_END
 #endif
 
+// Buffer length in milliseconds
+// TODO make configurable
+constexpr int BUFFER_LENGTH = 500;
+
 InputWrapper::InputWrapper(input* song) :
     m_currentSong(song),
     m_preloadedSong(nullptr),
@@ -55,6 +59,15 @@ InputWrapper::~InputWrapper()
 {
     delete m_audioProcess;
     delete m_audioConverter;
+}
+
+qint64 InputWrapper::bytesAvailable() const
+{
+    if (m_finished)
+        return 0;
+
+    const int bytes = BUFFER_LENGTH * m_bytePerMilliSec;
+    return bytes + QIODevice::bytesAvailable();
 }
 
 void InputWrapper::enableBs2b()
