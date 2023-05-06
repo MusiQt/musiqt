@@ -345,30 +345,30 @@ settings* SETTINGS
 
 void settings::load(const QSettings& appSettings)
 {
-    m_card = appSettings.value("Audio Settings/card").toString();
-    m_bits = appSettings.value("Audio Settings/bits", 16).toInt();
+    m_card = appSettings.value(config::AUDIO_CARD).toString();
+    m_bits = appSettings.value(config::AUDIO_BITS, 16).toInt();
 
     m_bufLen = appSettings.value(config::AUDIO_BUFFERLEN, 500).toUInt();
 
-    m_subtunes = appSettings.value("General Settings/play subtunes", false).toBool();
-    m_replayGain = appSettings.value("General Settings/Replaygain", false).toBool();
-    QString replayGainMode=appSettings.value("General Settings/Replaygain mode", "Album").toString();
-    m_replayGainMode = (!replayGainMode.compare("Track")) ? settings::rg_t::Track : settings::rg_t::Album;
+    m_subtunes = appSettings.value(config::GENERAL_SUBTUNES, false).toBool();
+    m_replayGain = appSettings.value(config::GENERAL_REPLAYGAIN, false).toBool();
+    QString replayGainMode=appSettings.value(config::GENERAL_RG_MODE, "Album").toString();
+    m_replayGainMode = (!replayGainMode.compare("Album")) ? settings::rg_t::Album : settings::rg_t::Track;
 
-    m_bs2b=appSettings.value("General Settings/Bauer DSP", false).toBool();
-    m_themeIcons=appSettings.value("General Settings/Theme icons", false).toBool();
+    m_bs2b=appSettings.value(config::GENERAL_BAUERDSP, false).toBool();
+    m_themeIcons=appSettings.value(config::GENERAL_ICONTHEME, false).toBool();
 }
 
 void settings::save(QSettings& appSettings)
 {
-    appSettings.setValue("Audio Settings/card", m_card);
-    appSettings.setValue("Audio Settings/bits", m_bits);
+    appSettings.setValue(config::AUDIO_CARD, m_card);
+    appSettings.setValue(config::AUDIO_BITS, m_bits);
 
     appSettings.setValue(config::AUDIO_BUFFERLEN, m_bufLen);
 
-    appSettings.setValue("General Settings/play subtunes", m_subtunes);
-    appSettings.setValue("General Settings/Replaygain", m_replayGain);
-    appSettings.setValue("General Settings/Replaygain mode", (m_replayGainMode == settings::rg_t::Album) ? "Album" : "Track");
-    appSettings.setValue("General Settings/Bauer DSP", m_bs2b);
-    appSettings.setValue("General Settings/Theme icons", m_themeIcons);
+    appSettings.setValue(config::GENERAL_SUBTUNES, m_subtunes);
+    appSettings.setValue(config::GENERAL_REPLAYGAIN, m_replayGain);
+    appSettings.setValue(config::GENERAL_RG_MODE, (m_replayGainMode == settings::rg_t::Album) ? "Album" : "Track");
+    appSettings.setValue(config::GENERAL_BAUERDSP, m_bs2b);
+    appSettings.setValue(config::GENERAL_ICONTHEME, m_themeIcons);
 }

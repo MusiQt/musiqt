@@ -29,17 +29,24 @@
 
 namespace config
 {
-constexpr const char* GENERAL_POS       = "General Settings/pos";
-constexpr const char* GENERAL_SIZE      = "General Settings/size";
-constexpr const char* GENERAL_PLMODE    = "General Settings/playlist mode";
-constexpr const char* GENERAL_FILE      = "General Settings/file";
+constexpr const char* GENERAL_SUBTUNES   = "General Settings/play subtunes";
+constexpr const char* GENERAL_REPLAYGAIN = "General Settings/Replaygain";
+constexpr const char* GENERAL_RG_MODE    = "General Settings/Replaygain mode";
+constexpr const char* GENERAL_BAUERDSP   = "General Settings/Bauer DSP";
+constexpr const char* GENERAL_ICONTHEME  = "General Settings/Theme icons";
+constexpr const char* GENERAL_POS        = "General Settings/pos";
+constexpr const char* GENERAL_SIZE       = "General Settings/size";
+constexpr const char* GENERAL_PLMODE     = "General Settings/playlist mode";
+constexpr const char* GENERAL_FILE       = "General Settings/file";
 
-constexpr const char* AUDIO_VOLUME      = "Audio Settings/volume";
-constexpr const char* AUDIO_BUFFERLEN   = "Audio Settings/buffer length";
+constexpr const char* AUDIO_CARD         = "Audio Settings/card";
+constexpr const char* AUDIO_BITS         = "Audio Settings/bits";
+constexpr const char* AUDIO_VOLUME       = "Audio Settings/volume";
+constexpr const char* AUDIO_BUFFERLEN    = "Audio Settings/buffer length";
 
-constexpr const char* LASTFM_USERNAME   = "Last.fm Settings/User Name";
-constexpr const char* LASTFM_SESSIONKEY = "Last.fm Settings/Session Key";
-constexpr const char* LASTFM_SCROBBLING = "Last.fm Settings/scrobbling";
+constexpr const char* LASTFM_USERNAME    = "Last.fm Settings/User Name";
+constexpr const char* LASTFM_SESSIONKEY  = "Last.fm Settings/Session Key";
+constexpr const char* LASTFM_SCROBBLING  = "Last.fm Settings/scrobbling";
 };
 
 /*****************************************************************/
