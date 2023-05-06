@@ -21,6 +21,7 @@
 #include "input/input.h"
 #include "output/audioProcess.h"
 #include "converter/converterFactory.h"
+#include "settings.h"
 
 #include <QDebug>
 
@@ -38,10 +39,6 @@
 #  define PROFILE_START
 #  define PROFILE_END
 #endif
-
-// Buffer length in milliseconds
-// TODO make configurable
-constexpr int BUFFER_LENGTH = 500;
 
 InputWrapper::InputWrapper(input* song) :
     m_currentSong(song),
@@ -66,7 +63,7 @@ qint64 InputWrapper::bytesAvailable() const
     if (m_finished)
         return 0;
 
-    const int bytes = BUFFER_LENGTH * m_bytePerMilliSec;
+    const int bytes = SETTINGS->bufLen() * m_bytePerMilliSec;
     return bytes + QIODevice::bytesAvailable();
 }
 

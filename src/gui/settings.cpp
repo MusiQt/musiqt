@@ -348,6 +348,8 @@ void settings::load(const QSettings& appSettings)
     m_card = appSettings.value("Audio Settings/card").toString();
     m_bits = appSettings.value("Audio Settings/bits", 16).toInt();
 
+    m_bufLen = appSettings.value(config::AUDIO_BUFFERLEN, 500).toUInt();
+
     m_subtunes = appSettings.value("General Settings/play subtunes", false).toBool();
     m_replayGain = appSettings.value("General Settings/Replaygain", false).toBool();
     QString replayGainMode=appSettings.value("General Settings/Replaygain mode", "Album").toString();
@@ -361,6 +363,8 @@ void settings::save(QSettings& appSettings)
 {
     appSettings.setValue("Audio Settings/card", m_card);
     appSettings.setValue("Audio Settings/bits", m_bits);
+
+    appSettings.setValue(config::AUDIO_BUFFERLEN, m_bufLen);
 
     appSettings.setValue("General Settings/play subtunes", m_subtunes);
     appSettings.setValue("General Settings/Replaygain", m_replayGain);

@@ -35,6 +35,7 @@ constexpr const char* GENERAL_PLMODE    = "General Settings/playlist mode";
 constexpr const char* GENERAL_FILE      = "General Settings/file";
 
 constexpr const char* AUDIO_VOLUME      = "Audio Settings/volume";
+constexpr const char* AUDIO_BUFFERLEN   = "Audio Settings/buffer length";
 
 constexpr const char* LASTFM_USERNAME   = "Last.fm Settings/User Name";
 constexpr const char* LASTFM_SESSIONKEY = "Last.fm Settings/Session Key";
@@ -86,6 +87,7 @@ public:
 private:
     QString      m_card;
     unsigned int m_bits;
+    unsigned int m_bufLen;
 
     bool         m_subtunes;
     bool         m_bs2b;
@@ -131,6 +133,9 @@ public:
 
     /// Default bittdepth
     unsigned int bits() const { return m_bits; }
+
+    /// Default buffer length
+    unsigned int bufLen() const { return m_bufLen; }
 };
 
 #endif

@@ -27,7 +27,9 @@
 #include <QDebug>
 #include <QLabel>
 #include <QComboBox>
+#include <QLineEdit>
 #include <QStringList>
+#include <QIntValidator>
 
 /*****************************************************************/
 
@@ -265,6 +267,23 @@ audioConfig::audioConfig(QWidget* win) :
             case 1:
                 SETTINGS->m_bits = 16;
                 break;
+            }
+        }
+    );
+
+    matrix()->addWidget(new QLabel(tr("Buffer length"), this));
+    QLineEdit *bufLen = new QLineEdit(this);
+    matrix()->addWidget(bufLen);
+    bufLen->setText(QString::number(SETTINGS->bufLen()));
+    bufLen->setValidator(new QIntValidator(5, 5000, this));
+
+    connect(bufLen, &QLineEdit::editingFinished,
+        [bufLen, this]() {
+            QString val = bufLen->text();
+            unsigned int bLen = val.toUInt();
+            if (bLen)
+            {
+                SETTINGS->m_bufLen = bLen;
             }
         }
     );
