@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2022 Leandro Nini
+ *  Copyright (C) 2006-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -130,15 +130,20 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
         int res = dl_avcodec_receive_frame(m_codecContext, m_frame);
         if (res == 0)
         {
-            int data_size = m_sampleSize * m_frame->nb_samples * m_codecContext->channels;
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 24, 100)
+            const int channels = m_codecContext->channels;
+#else
+            const int channels = m_codecContext->ch_layout.nb_channels;
+#endif
+            int data_size = m_sampleSize * m_frame->nb_samples * channels;
 
             unsigned char *out = m_decodeBuf + decodedSize;
-            if (m_planar && (m_codecContext->channels > 1))
+            if (m_planar && (channels > 1))
             {
                 // Interleave channels
                 for (int j=0, idx=0; j<m_frame->nb_samples; j++, idx+=m_sampleSize)
                 {
-                    for (int ch=0; ch<m_codecContext->channels; ch++)
+                    for (int ch=0; ch<channels; ch++)
                     {
                         memcpy(out, m_frame->data[ch]+idx, m_sampleSize);
                         out += m_sampleSize;

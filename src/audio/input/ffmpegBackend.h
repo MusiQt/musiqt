@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2022 Leandro Nini
+ *  Copyright (C) 2006-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -158,8 +158,11 @@ public:
     unsigned int samplerate() const override { return m_audioStream->codecpar->sample_rate; }
 
     /// Get channels
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 24, 100)
     unsigned int channels() const override { return m_audioStream->codecpar->channels; }
-
+#else
+    unsigned int channels() const override { return m_audioStream->codecpar->ch_layout.nb_channels; }
+#endif
     /// Get precision
     sample_t precision() const override { return m_precision; }
 
