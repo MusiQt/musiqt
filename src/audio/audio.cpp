@@ -271,7 +271,7 @@ audioConfig::audioConfig(QWidget* win) :
         }
     );
 
-    matrix()->addWidget(new QLabel(tr("Buffer length"), this));
+    matrix()->addWidget(new QLabel(tr("Buffer length (ms)"), this));
     QLineEdit *bufLen = new QLineEdit(this);
     matrix()->addWidget(bufLen);
     bufLen->setText(QString::number(SETTINGS->bufLen()));
