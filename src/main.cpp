@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2021 Leandro Nini
+ *  Copyright (C) 2013-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -53,40 +53,15 @@ Q_IMPORT_PLUGIN(QJpegPlugin)
 Q_IMPORT_PLUGIN(QTiffPlugin)
 #endif
 
-
-void messageOutput(QtMsgType type, [[maybe_unused]] const QMessageLogContext &context, const QString &msg)
-{
-    QByteArray timeMsg = QTime::currentTime().toString("hh:mm:ss.zzz").toLocal8Bit();
-    QByteArray localMsg = msg.toLocal8Bit();
-
-    switch (type)
-    {
-    case QtDebugMsg:
-        fprintf(stderr, "%s:D: %s\n", timeMsg.constData(), localMsg.constData());
-        break;
-    case QtInfoMsg:
-        fprintf(stderr, "%s:I: %s\n", timeMsg.constData(), localMsg.constData());
-        break;
-    case QtWarningMsg:
-        fprintf(stderr, "%s:W: %s\n", timeMsg.constData(), localMsg.constData());
-        break;
-    case QtCriticalMsg:
-        fprintf(stderr, "%s:C: %s\n", timeMsg.constData(), localMsg.constData());
-        break;
-    case QtFatalMsg:
-        fprintf(stderr, "%s:F: %s\n", timeMsg.constData(), localMsg.constData());
-        break;
-    }
-    fflush(stderr);
-}
-
 int main(int argc, char *argv[])
 {
     singleApp app(argc, argv);
     if (app.isRunning())
         return -1;
 
-    qInstallMessageHandler(messageOutput);
+    qSetMessagePattern("%{time hh:mm:ss.zzz}:"
+        "%{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}: "
+        "%{message}");
 
     QPixmap pixmap(":/resources/splash.png");
     QSplashScreen splash(pixmap, Qt::WindowStaysOnTopHint);
