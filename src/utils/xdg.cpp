@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011-2021 Leandro Nini
+ *  Copyright (C) 2011-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include <QDesktopServices>
 #include <QUrl>
+#include <QDebug>
 
 #include <QStandardPaths>
 
@@ -40,7 +41,9 @@ const QString xdg::getConfigDir()
 
 const QString xdg::getMusicDir()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    QStringList locations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+    // TODO return all music locations
+    return (!locations.isEmpty()) ? locations.first() : QString();
 }
 
 bool xdg::open(const QString& link)
