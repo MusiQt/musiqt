@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2021 Leandro Nini
+ *  Copyright (C) 2010-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ bool singleApp::isRunning()
     QDir().mkpath(runtimeDir);
 
     const QString lockFileName(QString("%1/.musiqt.lock").arg(runtimeDir));
-    qDebug() << lockFileName;
+    qDebug() << "Lock file: " << lockFileName;
 
     m_lockFile = new QLockFile(lockFileName);
     if (m_lockFile->tryLock())
