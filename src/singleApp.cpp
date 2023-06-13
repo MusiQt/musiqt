@@ -34,14 +34,15 @@ singleApp::singleApp(int & argc, char ** argv) :
 
 bool singleApp::isRunning()
 {
+    const QString runtimeDir = xdg::getRuntimeDir();
+    QDir().mkpath(runtimeDir);
+
 #ifdef _WIN32
     const QString fifoFileName(R"(\\.\pipe\musiqt.fifo)");
 #else
-    const QString fifoFileName(QString("%1/.musiqt.fifo").arg(xdg::getRuntimeDir()));
+    const QString fifoFileName(QString("%1/.musiqt.fifo").arg(runtimeDir));
 #endif
-
-    const QString runtimeDir = xdg::getRuntimeDir();
-    QDir().mkpath(runtimeDir);
+    qDebug() << "FIFO file: " << fifoFileName;
 
     const QString lockFileName(QString("%1/.musiqt.lock").arg(runtimeDir));
     qDebug() << "Lock file: " << lockFileName;
