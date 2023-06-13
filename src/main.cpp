@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 {
     singleApp app(argc, argv);
 
-    app.setOrganizationName("DrFiemost");
+    app.setOrganizationName("MusiQt");
     app.setApplicationName(PACKAGE_NAME);
     app.setApplicationVersion(PACKAGE_VERSION);
 
@@ -101,6 +101,19 @@ int main(int argc, char *argv[])
     QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, path);
     QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, path);
 #endif
+
+    // Migrate old settings, if any
+    QSettings oldSettings("DrFiemost", app.applicationName());
+    if (oldSettings.allKeys().size() > 0) {
+        qInfo() << "Migrating old settings";
+        QSettings newSettings;
+        for (QString key: oldSettings.allKeys()) {
+            newSettings.setValue(key, oldSettings.value(key));
+        }
+
+        // delete old settings
+        oldSettings.clear();
+    }
 
     // Init log
     QString stateDir = xdg::getStateDir();
