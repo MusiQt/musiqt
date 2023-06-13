@@ -22,6 +22,13 @@ ENDIF()
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} $ENV{CPPFLAGS}")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{CPPFLAGS}")
 
+IF(WIN32)
+    OPTION(PORTABLE "Enable Portable App" OFF)
+    IF(PORTABLE)
+        add_compile_definitions(MUSIQT_PORTABLE_APP)
+    ENDIF(PORTABLE)
+ENDIF(WIN32)
+
 set(MUSIQT_SOURCES
     src/resources.qrc
     src/main.cpp

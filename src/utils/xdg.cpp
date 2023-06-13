@@ -30,6 +30,10 @@
 #  include <windows.h>
 #  include <shlobj.h>
 
+#  ifdef MUSIQT_PORTABLE_APP
+#    include <QCoreApplication>
+#  endif
+
 #  ifdef UNICODE
 #    define TCHAR2QString(x) QString::fromWCharArray(x)
 #  else
@@ -49,23 +53,39 @@ const QString getWindowsDir(const int csidl)
 
 const QString xdg::getCacheDir()
 {
+#if defined _WIN32 && defined MUSIQT_PORTABLE_APP
+    return QCoreApplication::applicationDirPath();
+#else
     return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+#endif
 }
 
 const QString xdg::getRuntimeDir()
 {
+#if defined _WIN32 && defined MUSIQT_PORTABLE_APP
+    return QCoreApplication::applicationDirPath();
+#else
     return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+#endif
 }
 
 const QString xdg::getConfigDir()
 {
+#if defined _WIN32 && defined MUSIQT_PORTABLE_APP
+    return QCoreApplication::applicationDirPath();
+#else
     return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+#endif
 }
 
 const QString xdg::getStateDir()
 {
 #ifdef _WIN32
+#  if defined MUSIQT_PORTABLE_APP
+    return QCoreApplication::applicationDirPath();
+#  else
     return getWindowsDir(CSIDL_COMMON_APPDATA);
+#  endif
 #else
     QString xdgStateDir(qgetenv("XDG_STATE_HOME"));
     if (xdgStateDir.isEmpty())
