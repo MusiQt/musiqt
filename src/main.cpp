@@ -86,6 +86,22 @@ int main(int argc, char *argv[])
     if (app.isRunning())
         return -1;
 
+    // Show splash screen
+    QPixmap pixmap(":/resources/splash.png");
+    QSplashScreen splash(pixmap, Qt::WindowStaysOnTopHint);
+    splash.show();
+    splash.clearMessage(); // Splash doesn't show on Linux without this (???)
+    app.processEvents();
+
+#if defined _WIN32 && defined MUSIQT_PORTABLE_APP
+    // Setup portable app settings path
+    QSettings::setDefaultFormat(QSettings::IniFormat);
+    QString path = QCoreApplication::applicationDirPath();
+    qDebug() << "Settings path: " << path;
+    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, path);
+    QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, path);
+#endif
+
     // Init log
     QString stateDir = xdg::getStateDir();
     stateDir.append('/').append(app.organizationName());
@@ -105,22 +121,6 @@ int main(int argc, char *argv[])
         "%{message}");
 
     qInstallMessageHandler(messageOutput);
-
-    // Show splash screen
-    QPixmap pixmap(":/resources/splash.png");
-    QSplashScreen splash(pixmap, Qt::WindowStaysOnTopHint);
-    splash.show();
-    splash.clearMessage(); // Splash doesn't show on Linux without this (???)
-    app.processEvents();
-
-#if defined _WIN32 && defined MUSIQT_PORTABLE_APP
-    // Setup portable app settings path
-    QSettings::setDefaultFormat(QSettings::IniFormat);
-    QString path = QCoreApplication::applicationDirPath();
-    qDebug() << "Settings path: " << path;
-    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, path);
-    QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, path);
-#endif
 
 #ifdef ENABLE_NLS
     // Add translator
