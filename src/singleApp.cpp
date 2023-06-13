@@ -34,7 +34,8 @@ singleApp::singleApp(int & argc, char ** argv) :
 
 bool singleApp::isRunning()
 {
-    const QString runtimeDir = xdg::getRuntimeDir();
+    QString runtimeDir = xdg::getRuntimeDir();
+    runtimeDir.append('/').append(qApp->organizationName());
     QDir().mkpath(runtimeDir);
 
 #ifdef _WIN32

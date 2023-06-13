@@ -21,8 +21,31 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QDebug>
-
 #include <QStandardPaths>
+#ifndef _WIN32
+#  include <QDir>
+#endif
+
+#ifdef _WIN32
+#  include <windows.h>
+#  include <shlobj.h>
+
+#  ifdef UNICODE
+#    define TCHAR2QString(x) QString::fromWCharArray(x)
+#  else
+#    define TCHAR2QString(x) QString::fromLocal8Bit(x)
+#  endif
+
+const QString getWindowsDir(const int csidl)
+{
+    TCHAR szPath[MAX_PATH];
+
+    if (SHGetSpecialFolderPath(NULL, szPath, csidl, 1))
+        return TCHAR2QString(szPath);
+    else
+        return QString();
+}
+#endif
 
 const QString xdg::getCacheDir()
 {
@@ -37,6 +60,18 @@ const QString xdg::getRuntimeDir()
 const QString xdg::getConfigDir()
 {
     return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+}
+
+const QString xdg::getStateDir()
+{
+#ifdef _WIN32
+    return getWindowsDir(CSIDL_COMMON_APPDATA);
+#else
+    QString xdgStateDir(qgetenv("XDG_STATE_HOME"));
+    if (xdgStateDir.isEmpty())
+        xdgStateDir = QDir::homePath()+"/.local/state";
+    return QDir::cleanPath(xdgStateDir);
+#endif
 }
 
 const QString xdg::getMusicDir()

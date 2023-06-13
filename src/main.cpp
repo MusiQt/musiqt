@@ -20,10 +20,15 @@
 
 #include "mainWindow.h"
 #include "player.h"
+#include "xdg.h"
 
-#include <QLocale>
-#include <QTime>
 #include <QSplashScreen>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QMutex>
+
+#include <iostream>
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -53,6 +58,22 @@ Q_IMPORT_PLUGIN(QJpegPlugin)
 Q_IMPORT_PLUGIN(QTiffPlugin)
 #endif
 
+QMutex logMutex;
+QFile logFile;
+
+void messageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QString message = qFormatLogMessage(type, context, msg);
+
+    if (logFile.isOpen()) {
+        QMutexLocker lock(&logMutex);
+        logFile.write(message.toLocal8Bit().append('\n'));
+        logFile.flush();
+    } else {
+        std::cerr << message.toLocal8Bit().constData() << std::endl;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     singleApp app(argc, argv);
@@ -66,9 +87,24 @@ int main(int argc, char *argv[])
         return -1;
 
     // Init log
+    QString stateDir = xdg::getStateDir();
+    stateDir.append('/').append(app.organizationName());
+    QDir().mkpath(stateDir);
+
+    const QString logFileName(QString("%1/musiqt.log").arg(stateDir));
+    logFile.setFileName(logFileName);
+    if (!logFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+        std::cerr << "Cannot open log file, logging to stderr" << std::endl;
+    } else {
+        QFileInfo fInfo(logFile);
+        std::cout << "Logging to " << fInfo.absoluteFilePath().toLocal8Bit().constData() << std::endl;
+    }
+
     qSetMessagePattern("%{time hh:mm:ss.zzz}:"
         "%{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}: "
         "%{message}");
+
+    qInstallMessageHandler(messageOutput);
 
     // Show splash screen
     QPixmap pixmap(":/resources/splash.png");

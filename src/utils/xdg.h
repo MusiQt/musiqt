@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011-2019 Leandro Nini
+ *  Copyright (C) 2011-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,6 +38,10 @@ namespace xdg
     /// Get the base directory relative to which user specific configuration
     /// files should be stored
     const QString getConfigDir();
+
+    /// Get the base directory relative to which application state data
+    /// files should be stored
+    const QString getStateDir();
 
     /// Get the user music directory
     const QString getMusicDir();
