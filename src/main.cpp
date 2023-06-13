@@ -56,22 +56,26 @@ Q_IMPORT_PLUGIN(QTiffPlugin)
 int main(int argc, char *argv[])
 {
     singleApp app(argc, argv);
+
+    app.setOrganizationName("DrFiemost");
+    app.setApplicationName(PACKAGE_NAME);
+    app.setApplicationVersion(PACKAGE_VERSION);
+
+    // Check if another instance is already running
     if (app.isRunning())
         return -1;
 
+    // Init log
     qSetMessagePattern("%{time hh:mm:ss.zzz}:"
         "%{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}: "
         "%{message}");
 
+    // Show splash screen
     QPixmap pixmap(":/resources/splash.png");
     QSplashScreen splash(pixmap, Qt::WindowStaysOnTopHint);
     splash.show();
     splash.clearMessage(); // Splash doesn't show on Linux without this (???)
     app.processEvents();
-
-    app.setOrganizationName("DrFiemost");
-    app.setApplicationName(PACKAGE_NAME);
-    app.setApplicationVersion(PACKAGE_VERSION);
 
 #ifdef ENABLE_NLS
     // Add translator
@@ -87,6 +91,7 @@ int main(int argc, char *argv[])
     lastfmScrobbler scrobbler(&p);
 #endif
 
+    // Create GUI
     mainWindow window(&p);
     QObject::connect(&app, &singleApp::sendMessage, &window, &mainWindow::onMessage);
 #ifdef HAVE_LASTFM
