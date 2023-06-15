@@ -74,6 +74,24 @@ void messageOutput(QtMsgType type, const QMessageLogContext &context, const QStr
     }
 }
 
+void migrateSettings()
+{
+    // Migrate old settings, if needed
+    QSettings newSettings;
+    if (newSettings.allKeys().size() == 0) {
+        QSettings oldSettings("DrFiemost", qApp->applicationName());
+        if (oldSettings.allKeys().size() > 0) {
+            qInfo() << "Migrating old settings";
+            for (QString key: oldSettings.allKeys()) {
+                newSettings.setValue(key, oldSettings.value(key));
+            }
+
+            // delete old settings
+            oldSettings.clear();
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
     singleApp app(argc, argv);
@@ -102,18 +120,7 @@ int main(int argc, char *argv[])
     QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, path);
 #endif
 
-    // Migrate old settings, if any
-    QSettings oldSettings("DrFiemost", app.applicationName());
-    if (oldSettings.allKeys().size() > 0) {
-        qInfo() << "Migrating old settings";
-        QSettings newSettings;
-        for (QString key: oldSettings.allKeys()) {
-            newSettings.setValue(key, oldSettings.value(key));
-        }
-
-        // delete old settings
-        oldSettings.clear();
-    }
+    migrateSettings();
 
     // Init log
     QString stateDir = xdg::getStateDir();
