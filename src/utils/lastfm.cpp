@@ -23,10 +23,17 @@
 #include "settings.h"
 #include "utils/xdg.h"
 
-#include <lastfm5/misc.h>
-#include <lastfm5/ws.h>
-#include <lastfm5/Track.h>
-#include <lastfm5/XmlQuery.h>
+#ifdef INTERNAL_LIBLASTFM
+#  include "libs/liblastfm/misc.h"
+#  include "libs/liblastfm/ws.h"
+#  include "libs/liblastfm/Track.h"
+#  include "libs/liblastfm/XmlQuery.h"
+#else
+#  include <lastfm5/misc.h>
+#  include <lastfm5/ws.h>
+#  include <lastfm5/Track.h>
+#  include <lastfm5/XmlQuery.h>
+#endif
 
 #include <QLabel>
 #include <QLineEdit>

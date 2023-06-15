@@ -507,20 +507,91 @@ endif(libbs2b_FOUND)
 ##################################################################
 # Check for liblastfm
 
-if (Qt5_FOUND)
-    find_package(LASTFM)
-    if(LASTFM_FOUND)
-        find_package(Qt5 OPTIONAL_COMPONENTS Xml)
-        if (Qt5Xml_FOUND)
-            SET(HAVE_LASTFM 1)
-            target_sources(musiqt PRIVATE
-                src/utils/lastfm.cpp
-                src/utils/lastfm.h
-            )
-            target_link_libraries(musiqt LASTFM::LASTFM Qt::Xml)
+OPTION(LASTFM "Build lastfm support" ON)
+if(LASTFM)
+    if (Qt6_FOUND)
+        find_package(Qt6 OPTIONAL_COMPONENTS Network Xml)
+        if(Qt6Xml_FOUND AND Qt6Network_FOUND)
+            set(INTERNAL_LIBLASTFM 1)
         endif()
-    endif(LASTFM_FOUND)
-endif()
+    else(Qt6_FOUND)
+        find_package(LASTFM)
+        if(LASTFM_FOUND)
+            find_package(Qt5 OPTIONAL_COMPONENTS Xml)
+            if(Qt5Xml_FOUND)
+                SET(HAVE_LASTFM 1)
+                target_sources(musiqt PRIVATE
+                    src/utils/lastfm.cpp
+                )
+                target_link_libraries(musiqt LASTFM::LASTFM Qt::Xml)
+            endif(Qt5Xml_FOUND)
+        else(LASTFM_FOUND)
+            find_package(Qt5 OPTIONAL_COMPONENTS Network Xml)
+            if(Qt5Xml_FOUND AND Qt5Network_FOUND)
+                set(INTERNAL_LIBLASTFM 1)
+            endif()
+        endif(LASTFM_FOUND)
+    endif(Qt6_FOUND)
+
+    if (INTERNAL_LIBLASTFM)
+        SET(HAVE_LASTFM 1)
+        target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/libs/liblastfm)
+
+        target_sources(musiqt PRIVATE
+            src/libs/liblastfm/ws.cpp
+            src/libs/liblastfm/NetworkConnectionMonitor.cpp
+            src/libs/liblastfm/NetworkAccessManager.cpp
+            src/libs/liblastfm/InternetConnectionMonitor.cpp
+            src/libs/liblastfm/User.cpp
+            src/libs/liblastfm/Track.cpp
+            src/libs/liblastfm/Tag.cpp
+            src/libs/liblastfm/Mbid.cpp
+            src/libs/liblastfm/Artist.cpp
+            src/libs/liblastfm/Album.cpp
+            src/libs/liblastfm/ScrobbleCache.cpp
+            src/libs/liblastfm/ScrobblePoint.cpp
+            src/libs/liblastfm/Audioscrobbler.cpp
+            src/libs/liblastfm/XmlQuery.cpp
+            src/libs/liblastfm/Url.cpp
+            src/libs/liblastfm/UrlBuilder.cpp
+            src/libs/liblastfm/misc.cpp
+            src/libs/liblastfm/Auth.cpp
+            src/libs/liblastfm/Library.cpp
+            src/utils/lastfm.cpp
+        )
+
+        if(WIN32 AND NOT MINGW)
+            add_definitions("-D_ATL_DLL -D_CRT_SECURE_NO_WARNINGS")
+
+            target_sources(musiqt PRIVATE
+                src/libs/liblastfm/win/WNetworkConnectionMonitor_win.cpp
+                src/libs/liblastfm/win/WmiSink.cpp
+                src/libs/liblastfm/win/NdisEvents.cpp
+            )
+        endif()
+
+        if(APPLE)
+            target_sources(musiqt PRIVATE
+                src/libs/liblastfm/mac/MNetworkConnectionMonitor_mac.cpp
+            )
+
+            find_library(SYSTEMCONFIGURATION_LIBRARY SystemConfiguration)
+            find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+            target_link_libraries(musiqt
+                ${COREFOUNDATION_LIBRARY}
+                ${SYSTEMCONFIGURATION_LIBRARY}
+            )
+        endif()
+
+        if(UNIX AND NOT APPLE)
+            target_sources(musiqt PRIVATE
+                src/libs/liblastfm/linux/LNetworkConnectionMonitor_linux.cpp
+            )
+        endif()
+
+        target_link_libraries(musiqt Qt::Network Qt::Xml)
+    endif()
+endif(LASTFM)
 
 ##################################################################
 

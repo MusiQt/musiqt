@@ -19,7 +19,7 @@
 #ifndef LASTFM_H
 #define LASTFM_H
 
-#include <lastfm5/Audioscrobbler.h>
+#include <libs/liblastfm/Audioscrobbler.h>
 
 #include <QNetworkReply>
 #include <QObject>
