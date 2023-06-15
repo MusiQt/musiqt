@@ -29,7 +29,7 @@ jobs:
         sudo apt-get install libgstreamer-gl1.0-0
     - uses: jurplel/install-qt-action@v3
       with:
-        version: 6.3.*
+        version: 6.4.*
         modules: 'addons.qtmultimedia'
     - name: install_deps
       run: sudo apt-get install cmake gettext libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libstilview-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libavcodec-dev libavformat-dev libbs2b-dev liblastfm5-dev
