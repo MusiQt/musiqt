@@ -25,7 +25,7 @@
 #include "ws.h"
 
 #include <QDebug>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 
 using lastfm::Artist;
@@ -93,7 +93,7 @@ Artist::imageUrl( ImageSize size, bool square ) const
     if( !square ) return d->images.value( size );
 
     QUrl url = d->images.value( size );
-    QRegExp re( "/serve/(\\d*)s?/" );
+    QRegularExpression re( "/serve/(\\d*)s?/" );
     return QUrl( url.toString().replace( re, "/serve/\\1s/" ));
 }
 
@@ -219,7 +219,7 @@ Artist::getSimilar( QNetworkReply* r )
         {
             // convert floating percentage to int in range 0 to 10,000
             int const match = e["match"].text().toFloat() * 100;
-            artists.insertMulti( match, e["name"].text() );
+            artists.insert( match, e["name"].text() ); // FIXME values with the same key will be overwritten, switch to QMultiMap
         }
     }
     else

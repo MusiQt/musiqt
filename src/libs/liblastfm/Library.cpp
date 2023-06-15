@@ -149,7 +149,7 @@ lastfm::Library::removeScrobble( const lastfm::Track& track )
     map["method"] = "library.removeScrobble";
     map["artist"] = track.artist().name();
     map["track"] = track.title();
-    map["timestamp"] = QString::number( track.timestamp().toTime_t() );
+    map["timestamp"] = QString::number( track.timestamp().toMSecsSinceEpoch() / 1000 );
     return ws::post( map );
 }
 

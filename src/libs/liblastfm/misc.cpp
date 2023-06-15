@@ -56,19 +56,17 @@ QDir ensurePathExists( QDir dir )
 static QDir dataDotDot()
 {
 #ifdef WIN32
-    if ((QSysInfo::WindowsVersion & QSysInfo::WV_DOS_based) == 0)
-    {
-        // Use this for non-DOS-based Windowses
-        char path[MAX_PATH];
-        HRESULT h = SHGetFolderPathA( NULL, 
-                                      CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE,
-                                      NULL, 
-                                      0, 
-                                      path );
-        if (h == S_OK)
-            return QString::fromLocal8Bit( path );
-    }
-    return QDir::home();
+    // Use this for non-DOS-based Windowses
+    char path[MAX_PATH];
+    HRESULT h = SHGetFolderPathA( NULL, 
+                                  CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE,
+                                  NULL, 
+                                  0, 
+                                  path );
+    if (h == S_OK)
+        return QString::fromLocal8Bit( path );
+    else
+        return QDir::home();
 #elif defined(Q_OS_MAC)
     return ensurePathExists( QDir::home().filePath( "Library/Application Support" ) );
 #elif defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
@@ -168,51 +166,8 @@ lastfm::CFStringToUtf8( CFStringRef s )
 const char*
 lastfm::platform()
 {
-#ifdef Q_OS_WIN
-    switch (QSysInfo::WindowsVersion)
-    {
-        case QSysInfo::WV_32s:        return "Windows 3.1 with Win32s";
-        case QSysInfo::WV_95:         return "Windows 95";
-        case QSysInfo::WV_98:         return "Windows 98";
-        case QSysInfo::WV_Me:         return "Windows Me";
-        case QSysInfo::WV_DOS_based:  return "MS-DOS-based Windows";
-
-        case QSysInfo::WV_NT:         return "Windows NT";
-        case QSysInfo::WV_2000:       return "Windows 2000";
-        case QSysInfo::WV_XP:         return "Windows XP";
-        case QSysInfo::WV_2003:       return "Windows Server 2003";
-        case QSysInfo::WV_VISTA:      return "Windows Vista";
-        case QSysInfo::WV_WINDOWS7:   return "Windows 7";
-        case QSysInfo::WV_NT_based:   return "NT-based Windows";
-
-        case QSysInfo::WV_CE:         return "Windows CE";
-        case QSysInfo::WV_CENET:      return "Windows CE.NET";
-        case QSysInfo::WV_CE_based:   return "CE-based Windows";
-
-        default:                      return "Unknown";
-    }
-#elif defined Q_OS_MAC
-    switch (QSysInfo::MacintoshVersion)
-    {
-        case QSysInfo::MV_Unknown:    return "Unknown Mac";
-        case QSysInfo::MV_9:          return "Mac OS 9";
-        case QSysInfo::MV_10_0:       return "Mac OS X 10.0";
-        case QSysInfo::MV_10_1:       return "Mac OS X 10.1";
-        case QSysInfo::MV_10_2:       return "Mac OS X 10.2";
-        case QSysInfo::MV_10_3:       return "Mac OS X 10.3";
-        case QSysInfo::MV_10_4:       return "Mac OS X 10.4";
-        case QSysInfo::MV_10_5:       return "Mac OS X 10.5";
-        case QSysInfo::MV_10_6:       return "Mac OS X 10.6";
-        case QSysInfo::MV_10_7:       return "Mac OS X 10.7";
-        case QSysInfo::MV_10_8:       return "Mac OS X 10.8";
-
-        default:                      return "Unknown";
-    }
-#elif defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
-    return "UNIX X11";
-#else
-    return "Unknown";
-#endif
+    static QString platform = QSysInfo::prettyProductName();
+    return qPrintable(platform);
 }
 
 QString lastfm::

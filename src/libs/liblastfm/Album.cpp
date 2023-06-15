@@ -26,6 +26,7 @@
 #include <QFile>
 #include <QStringList>
 #include <QTimer>
+#include <QRegularExpression>
 
 using lastfm::Album;
 using lastfm::Artist;
@@ -84,7 +85,7 @@ Album::imageUrl( ImageSize size, bool square ) const
     if( !square ) return d->images.value( size );
 
     QUrl url = d->images.value( size );
-    QRegExp re( "/serve/(\\d*)s?/" );
+    QRegularExpression re( "/serve/(\\d*)s?/" );
     return QUrl( url.toString().replace( re, "/serve/\\1s/" ));
 }
 

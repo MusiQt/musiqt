@@ -127,12 +127,12 @@ Tag::list( QNetworkReply* r )
             // we toLower always as otherwise it is ugly mixed case, as first
             // ever tag decides case, and Last.fm is case insensitive about it 
             // anyway
-            tags.insertMulti( xq["count"].text().toInt(), xq["name"].text().toLower() );
+            tags.insert( xq["count"].text().toInt(), xq["name"].text().toLower() ); // FIXME values with the same key will be overwritten, switch to QMultiMap
     }
     else
     {
         qDebug() << lfm.parseError().message() << lfm.parseError().enumValue();
     }
 
-    return tags;
+    return QMap<int, QString>(tags);
 }
