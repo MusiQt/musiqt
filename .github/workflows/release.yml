@@ -67,10 +67,36 @@ jobs:
         strip ${PACKAGE_NAME}/*.dll
         windeployqt.exe ${PACKAGE_NAME}/musiqt.exe --no-translations
         zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
+    - name: build-portable
+      run: |
+        mkdir build-portable
+        cd build-portable
+        cmake -G 'MSYS Makefiles' \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DPORTABLE=ON \
+            -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
+            ..
+        make VERBOSE=1
+    - name: package-portable
+      run: |
+        export PACKAGE_NAME=musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64-portable
+        mkdir ${PACKAGE_NAME}
+        cp README.md ${PACKAGE_NAME}
+        cp build-portable/musiqt.exe ${PACKAGE_NAME}
+        strip ${PACKAGE_NAME}/musiqt.exe
+        upx ${PACKAGE_NAME}/musiqt.exe || true
+        for locale in {'es','it'}; do \
+            mkdir -p ${PACKAGE_NAME}/locale/$locale/LC_MESSAGES \
+            cp build-portable/$locale.gmo ${PACKAGE_NAME}/locale/$locale/LC_MESSAGES/musiqt.mo \
+        done
+        ldd ${PACKAGE_NAME}/musiqt.exe |grep -vi Windows|awk '{ print $3 }' | while read file ; do cp "$file" ${PACKAGE_NAME} ; done
+        strip ${PACKAGE_NAME}/*.dll
+        windeployqt.exe ${PACKAGE_NAME}/musiqt.exe --no-translations
+        zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64.zip
+        file: musiqt-${{ steps.get_tag_name.outputs.tagname }}-w64*.zip
         tag: ${{ github.ref }}
         file_glob: true
         overwrite: true
