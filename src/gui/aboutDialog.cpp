@@ -34,6 +34,9 @@
 #include <QTextStream>
 #include <QFile>
 #include <QScrollArea>
+#include <QApplication>
+
+#include "xdg.h"
 
 #define AUTHOR  "Leandro Nini"
 #define YEAR    "2006-2023"
@@ -120,10 +123,33 @@ aboutDialog::aboutDialog(QWidget *parent) :
         licenseLabel->setPlainText(ts.readAll());
     }
 
+    // Log view
+    QLabel *logLabel = new QLabel(this);
+    {
+        // FIXME this sucks
+        QString stateDir = xdg::getStateDir();
+        stateDir.append('/').append(qApp->organizationName());
+
+        const QString logFileName(QString("%1/musiqt.log").arg(stateDir));
+        QFile file(logFileName);
+        file.open(QFile::ReadOnly|QFile::Text);
+        QTextStream ts(&file);
+#if QT_VERSION >= 0x060000
+        ts.setEncoding(QStringConverter::Utf8);
+#else
+        ts.setCodec("UTF-8");
+#endif
+        logLabel->setText(ts.readAll());
+    }
+    QScrollArea* logArea = new QScrollArea(this);
+    logArea->setWidget(logLabel);
+
+    //
     QTabWidget *tabWidget = new QTabWidget(this);
     tabWidget->addTab(infoWidget, tr("&Info"));
     tabWidget->addTab(creditsArea, tr("C&redits"));
     tabWidget->addTab(licenseLabel, tr("&License"));
+    tabWidget->addTab(logArea, tr("Lo&g"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
     QPushButton *close = buttonBox->addButton(QDialogButtonBox::Close);
