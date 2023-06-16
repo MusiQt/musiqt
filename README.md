@@ -1,10 +1,10 @@
-[![CI](https://github.com/drfiemost/musiqt/actions/workflows/build.yml/badge.svg)](https://github.com/drfiemost/musiqt/actions/workflows/build.yml)
-[![](https://img.shields.io/github/downloads/drfiemost/musiqt/latest/total.svg)](https://github.com/drfiemost/musiqt/releases/latest)
+[![CI](https://github.com/MusiQt/musiqt/actions/workflows/build.yml/badge.svg)](https://github.com/MusiQt/musiqt/actions/workflows/build.yml)
+[![](https://img.shields.io/github/downloads/MusiQt/musiqt/latest/total.svg)](https://github.com/MusiQt/musiqt/releases/latest)
 
-MusiQt - https://github.com/drfiemost/musiqt/  
+MusiQt - https://github.com/MusiQt/musiqt/  
 Copyright (C) 2006-2023 Leandro Nini (drfiemost@users.sourceforge.net)
 
-![splash](https://github.com/drfiemost/musiqt/wiki/images/splash.jpg)
+![splash](https://github.com/MusiQt/musiqt/wiki/images/splash.jpg)
 
 ********************************************************************
 
@@ -21,11 +21,11 @@ It supports gapless playback, MPRIS and Last.fm scrobbling.
 
 Compact view:
 
-![screenshot compact view](https://github.com/drfiemost/musiqt/wiki/images/screenshot_compact.jpg)
+![screenshot compact view](https://github.com/MusiQt/musiqt/wiki/images/screenshot_compact.jpg)
 
 Full view:
 
-![screenshot full view](https://github.com/drfiemost/musiqt/wiki/images/screenshot_full.jpg)
+![screenshot full view](https://github.com/MusiQt/musiqt/wiki/images/screenshot_full.jpg)
 
 ********************************************************************
 
