@@ -140,3 +140,31 @@ http://www.ffmpeg.org/
   - avutil >= 56
 
 ********************************************************************
+
+*Build*:
+```
+git clone https://github.com/MusiQt/musiqt.git
+cd musiqt
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
+```
+The following build options are available:
+~~~
+-DQT6=ON :        enable building with Qt6 if found (experimental)
+-DPORTABLE=ON :   only for Windows, build a portable app
+-DNLS=OFF :       disable Native Language Support
+-DLASTFM=OFF :    disable Last.fm scrobbling
+
+-DSNDFILE=OFF :   disable Sndfile backend
+-DMPG123=OFF :    disable mpg123 backend
+-DVORBIS=OFF :    disable Ogg-Vorbis backend
+-DOPUS=OFF :      disable Opus backend
+-DGME=OFF :       disable Game Music Engine backend
+-DOPENMPT=OFF :   disable OpenMpt backend
+-DWAVPACK=OFF :   disable Wavpack backend
+-DSIDPLAYFP=OFF : disable sidplayfp backend
+-DHVL=OFF :       disable Hively backend
+-DMPC=OFF :       disable Musepack backend
+~~~
+********************************************************************
