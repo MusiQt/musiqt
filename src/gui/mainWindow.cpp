@@ -393,7 +393,7 @@ void mainWindow::onCompact()
     if (centralWidget()->isHidden())
     {
         act->setIcon(GET_ICON(icon_viewcompact));
-        act->setToolTip(tr("Compact"));
+        act->setToolTip(tr("UI mode"));
         act->setStatusTip(tr("Switch to compact view"));
 
         centralWidget()->show();
@@ -404,8 +404,8 @@ void mainWindow::onCompact()
     else
     {
         act->setIcon(GET_ICON(icon_viewfull));
-        act->setToolTip(tr("Full mode"));
-        act->setStatusTip(tr("Switch to full UI mode"));
+        act->setToolTip(tr("UI mode"));
+        act->setStatusTip(tr("Switch to full view"));
 
         if (isMaximized())
             return;
@@ -571,13 +571,13 @@ void mainWindow::setPlayMode(QAction *action, bool mode)
     m_cFrame->setPlayMode(mode);
     if (mode)
     {
-        action->setToolTip(tr("Song mode"));
+        action->setToolTip(tr("Play mode"));
         action->setStatusTip(tr("Switch to song mode"));
         action->setIcon(GET_ICON(icon_playlist));
     }
     else
     {
-        action->setToolTip(tr("Playlist mode"));
+        action->setToolTip(tr("Play mode"));
         action->setStatusTip(tr("Switch to playlist mode"));
         action->setIcon(GET_ICON(icon_song));
     }
