@@ -334,7 +334,7 @@ void mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void mainWindow::createActions()
 {
-    m_aboutAction = new QAction(GET_ICON(icon_logo16), tr("&About"), this);
+    m_aboutAction = new QAction(GET_ICON(icon_helpabout), tr("&About"), this);
     m_aboutAction->setToolTip(tr("About"));
     m_aboutAction->setStatusTip(tr("About"));
     connect(m_aboutAction, &QAction::triggered, this, &mainWindow::onAbout);
@@ -355,7 +355,7 @@ void mainWindow::createActions()
     m_stopAction->setToolTip(tr("Stop"));
     m_stopAction->setStatusTip(tr("Stop"));
 
-    m_infoAction = new QAction(GET_ICON(icon_helpabout), tr("&Info"), this);
+    m_infoAction = new QAction(GET_ICON(icon_documentproperties), tr("&Info"), this);
     m_infoAction->setToolTip(tr("Info"));
     m_infoAction->setStatusTip(tr("Song info"));
     connect(m_infoAction, &QAction::triggered, this, &mainWindow::onInfo);

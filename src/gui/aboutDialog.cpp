@@ -63,7 +63,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     infoLabel->setOpenExternalLinks(true);
 
     QLabel *iconAppLabel = new QLabel(this);
-    QPixmap iconAppLogo(":/icons/logo32.gif");
+    QPixmap iconAppLogo(":/icons/musiqt.png");
     iconAppLabel->setPixmap(iconAppLogo);
 
     QLabel* qtLabel = new QLabel(
@@ -155,12 +155,12 @@ aboutDialog::aboutDialog(QWidget *parent) :
     QPushButton *close = buttonBox->addButton(QDialogButtonBox::Close);
     connect(close, &QPushButton::clicked, this, &aboutDialog::close);
 
-    QLabel *iconLabel = new QLabel(this);
-    iconLabel->setPixmap(QPixmap(":/icons/drf.gif"));
+    //QLabel *iconLabel = new QLabel(this);
+    //iconLabel->setPixmap(QPixmap(":/icons/musiqt.png"));
     
     QWidget *bottomWidget = new QWidget(this);
     QHBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget);
-    bottomLayout->addWidget(iconLabel);
+    //bottomLayout->addWidget(iconLabel);
     bottomLayout->addWidget(buttonBox);
 
     QVBoxLayout *vbox = new QVBoxLayout(this);

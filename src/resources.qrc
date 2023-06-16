@@ -11,6 +11,7 @@
      <file>icons/dialog-cancel.gif</file>
      <file>icons/dialog-ok.gif</file>
      <file>icons/document-open.gif</file>
+     <file>icons/document-properties.gif</file>
      <file>icons/document-save.gif</file>
      <file>icons/edit-delete.gif</file>
      <file>icons/editlist.gif</file>
@@ -36,7 +37,7 @@
      <file>icons/view-compact.gif</file>
      <file>icons/view-full.gif</file>
      <file>icons/view-treelist.gif</file>
-     <file>icons/drf.gif</file>
+     <file>icons/musiqt.png</file>
      <file>icons/qt_icon32.png</file>
      <file>resources/cover_placeholder.png</file>
      <file>resources/splash.png</file>
