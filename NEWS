@@ -1,0 +1,234 @@
+* musiqt-3.0.0 - Jun xx, 2023
+Project moved to MusiQt organization
+Relicensed project under GPL v3
+Log is now written to a file if possible and displayed in the about dialog
+Allow building as Windows Portable App
+Use internal copy of liblastfm (Qt6 enabled) if needed
+Improved some tooltip strings
+
+
+
+* musiqt-2.0.0 - May 14, 2023
+Better error handling with GUI notifications
+Reworked and improved audio handling, now works with Qt6
+Added an option to use the system icon theme on Linux
+
+
+
+* musiqt-1.1.6 - Apr 26, 2023
+Cosmetic fixes
+
+
+
+* musiqt-1.1.5 - Nov 30, 2022
+Few minor fixes
+
+
+
+* musiqt-1.1.4 - Nov 5, 2022
+Sync hvl with upstream to fix a possible crash
+Show load error in info bar
+
+
+
+* musiqt-1.1.3 - Oct 23, 2022
+Fixed a possible arithmetic overflow in mpc decoder
+Fixed a couple of warnings
+
+
+
+* musiqt-1.1.2 - Feb 21, 2022
+re-enabled and fixed the ffmpeg backend
+
+
+
+* musiqt-1.1.1 - Feb 20, 2022
+Fixed build with ffmpeg-5
+
+
+
+* musiqt-1.1.0 - Feb 4, 2022
+Avoid usage of deprecated Qt classes
+Allow compiling with Qt6
+hvl: sync with upstream
+Minor fixes
+Minor build system improvements
+
+
+
+* musiqt-1.0.0 - Aug 10, 2021
+Still some rough edges left but good enough to mark the first major version:
+simplified and more robust audio device handling
+set lastfm nowplaying when enabling setting during playback
+
+
+
+* musiqt-0.9.3 - May 18, 2021
+GUI: update song count when changing dir while playing
+Add -mwindows flag for non debug builds on MinGW
+Enable MPRIS only on UNIX
+
+
+
+* musiqt-0.9.2 - May 16, 2021
+No changes, just forgot to update version.
+
+
+
+* musiqt-0.9.1 - May 13, 2021
+ogg: fix memory leak
+lastfm: fix crash when exiting while waiting for network response
+ffmpeg: prevent possible leak on loading error
+
+
+
+* musiqt-0.9.0 - May 11, 2021
+Added basic Last.fm scrobbling support
+Dropped support for older bs2b
+Ported the ffmpeg backend to new API
+Now requires a compiler with c++17 support
+
+
+
+* musiqt-0.8.1 - May 3, 2021
+ffmpeg: fix compound-literal warning
+Fix selecting new song from another dir while playing
+
+
+
+* musiqt-0.8.0 - Apr 26, 2021
+Refactored code for better separation between player logic and GUI
+Added MPRIS support
+Assorted fixes
+
+
+
+* musiqt-0.7.3 - Apr 19, 2021
+Fixed sending argument to other running instance
+
+
+
+* musiqt-0.7.2 - Apr 14, 2021
+Fixed handling file passed as argument and properly
+set version number which wasn't update in last release.
+
+
+
+* musiqt-0.7.1 - Apr 12, 2021
+Fixed removing item from playlist
+Replaced signal from playlist firing too often
+
+
+
+* musiqt-0.7.0 - Mar 30, 2021
+Big refactoring, code is now cleaner and more efficient.
+Also comes with some improvements and bugfixes.
+
+
+
+* musiqt-0.6.1 - Mar 22, 2021
+info dialog: select lyrics box if there's no comment
+wavpack: add support for embedded cover art
+
+
+
+* musiqt-0.6.0 - Mar 19, 2021
+More work on stabilization, plenty of bugs and rough edges ironed out.
+Better support for embedded cover art and lyrics and an improved info window.
+
+
+
+* musiqt-0.5.3 - Mar 14, 2021
+Fix possible crash due to incorrect buffer size
+Unload song on error
+openmpt: correctly load zipped modules with uppercase extension
+sid: check if file has been loaded without errors before proceeding
+gme: fix crash on loading error
+
+
+
+* musiqt-0.5.2 - Mar 12, 2021
+avoid crash in non seekable tunes
+correctly parse APE tags
+song time fixes
+ffmpeg: fix seeking
+sid: fix fallback to old songlength DB
+
+
+
+* musiqt-0.5.1 - Mar 9, 2021
+fixed openmpt playback
+fixed ffmpeg initialization
+added more backend icons
+Other minor fixes and improvements
+
+
+
+* musiqt-0.5.0 - Mar 8, 2021
+Implemented seeking for streamable media
+Lots of bugfixes and small improvements
+
+
+
+* musiqt-0.4.2 - Mar 1, 2021
+Fixed building without stilview
+Fixed debug build on MinGW
+
+
+
+* musiqt-0.4.1 - Feb 28, 2021
+Removed old autotools stuff
+Read lyrics from ogg files (UNSYNCEDLYRICS tag)
+Minor changes
+
+
+
+* musiqt-0.4.0 - Feb 27, 2021
+Switched to cmake, makes it easier to build static Windows binaries
+Dropped Qt4 support
+Backends are now transparently handled, all supported files are added to the playlist. Config dialog and home button have been revamped consequently.
+Various bugfixes
+
+
+
+* musiqt-0.3.1 - Feb 24, 2021
+Correctly update song num in compact mode
+SID: update rom edit field on change
+
+
+
+* musiqt-0.3.0 - Feb 1, 2021
+Mostly code refactoring and cleanup, fixed some bugs and maybe introduced others.
+In detail:
+removed the tta backend;
+dropped embedded copy of stilview;
+removed platform specific audio output backends;
+reworked the GUI code.
+
+
+
+* musiqt-0.2.1 - Jan 1, 2020
+Minor fixes
+
+
+
+* musiqt-0.2.0 - Dec 23, 2019
+Use qt5 facilities to retrieve system paths
+Link to mpg123 instead of dlopen, mp3 patents are expired by now
+Drop embedded gme copy
+
+
+
+* musiqt-0.1.2 - Dec 21, 2019
+Playlist save fixes
+
+
+
+* musiqt-0.1.1 - Sep 5, 2018
+A few build and internationalization fixes and a Windows binary release.
+
+
+
+* musiqt-0.1.0 - Aug 16, 2018
+First release of musiqt, a Qt port of Fox Audio Player.
+Includes bugfixes and new features, plus some new bugs too.
