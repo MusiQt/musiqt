@@ -21,7 +21,7 @@
 #include "player.h"
 #include "metaData.h"
 #include "settings.h"
-#include "utils/xdg.h"
+#include "xdg.h"
 
 #ifdef INTERNAL_LIBLASTFM
 #  include "libs/liblastfm/misc.h"
