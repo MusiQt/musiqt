@@ -20,10 +20,9 @@
 
 #include "mainWindow.h"
 #include "player.h"
-#include "xdg.h"
+#include "syspaths.h"
 
 #include <QSplashScreen>
-#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QMutex>
@@ -123,11 +122,7 @@ int main(int argc, char *argv[])
     migrateSettings();
 
     // Init log
-    QString stateDir = xdg::getStateDir();
-    stateDir.append('/').append(app.organizationName());
-    QDir().mkpath(stateDir);
-
-    const QString logFileName(QString("%1/musiqt.log").arg(stateDir));
+    const QString logFileName(QString("%1/musiqt.log").arg(syspaths::getStateDir()));
     logFile.setFileName(logFileName);
     if (!logFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
         std::cerr << "Cannot open log file, logging to stderr" << std::endl;

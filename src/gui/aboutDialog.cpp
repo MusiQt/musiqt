@@ -34,9 +34,8 @@
 #include <QTextStream>
 #include <QFile>
 #include <QScrollArea>
-#include <QApplication>
 
-#include "xdg.h"
+#include "syspaths.h"
 
 #define AUTHOR  "Leandro Nini"
 #define YEAR    "2006-2023"
@@ -127,11 +126,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     QTextEdit *logLabel = new QTextEdit();
     logLabel->setReadOnly(true);
     {
-        // FIXME this sucks
-        QString stateDir = xdg::getStateDir();
-        stateDir.append('/').append(qApp->organizationName());
-
-        const QString logFileName(QString("%1/musiqt.log").arg(stateDir));
+        const QString logFileName(QString("%1/musiqt.log").arg(syspaths::getStateDir()));
         QFile file(logFileName);
         file.open(QFile::ReadOnly|QFile::Text);
         QTextStream ts(&file);

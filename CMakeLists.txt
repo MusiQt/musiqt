@@ -107,6 +107,7 @@ set(MUSIQT_SOURCES
     src/utils/loadsym.h
     src/utils/utils.cpp
     src/utils/utils.h
+    src/utils/syspaths.cpp
     src/utils/tag.cpp
     src/utils/tag.h
     src/utils/xdg.cpp

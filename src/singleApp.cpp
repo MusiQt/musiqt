@@ -20,7 +20,7 @@
 
 #include "mainWindow.h"
 #include "utils.h"
-#include "xdg.h"
+#include "syspaths.h"
 
 #include <QDir>
 #include <QDebug>
@@ -34,9 +34,7 @@ singleApp::singleApp(int & argc, char ** argv) :
 
 bool singleApp::isRunning()
 {
-    QString runtimeDir = xdg::getRuntimeDir();
-    runtimeDir.append('/').append(qApp->organizationName());
-    QDir().mkpath(runtimeDir);
+    QString runtimeDir = syspaths::getRuntimeDir();
 
 #ifdef _WIN32
     const QString fifoFileName(R"(\\.\pipe\musiqt.fifo)");
