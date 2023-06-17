@@ -124,7 +124,8 @@ aboutDialog::aboutDialog(QWidget *parent) :
     }
 
     // Log view
-    QLabel *logLabel = new QLabel(this);
+    QTextEdit *logLabel = new QTextEdit();
+    logLabel->setReadOnly(true);
     {
         // FIXME this sucks
         QString stateDir = xdg::getStateDir();
@@ -134,22 +135,15 @@ aboutDialog::aboutDialog(QWidget *parent) :
         QFile file(logFileName);
         file.open(QFile::ReadOnly|QFile::Text);
         QTextStream ts(&file);
-#if QT_VERSION >= 0x060000
-        ts.setEncoding(QStringConverter::Utf8);
-#else
-        ts.setCodec("UTF-8");
-#endif
-        logLabel->setText(ts.readAll());
+        logLabel->setPlainText(ts.readAll());
     }
-    QScrollArea* logArea = new QScrollArea(this);
-    logArea->setWidget(logLabel);
 
     //
     QTabWidget *tabWidget = new QTabWidget(this);
     tabWidget->addTab(infoWidget, tr("&Info"));
     tabWidget->addTab(creditsArea, tr("C&redits"));
     tabWidget->addTab(licenseLabel, tr("&License"));
-    tabWidget->addTab(logArea, tr("Lo&g"));
+    tabWidget->addTab(logLabel, tr("Lo&g"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
     QPushButton *close = buttonBox->addButton(QDialogButtonBox::Close);
