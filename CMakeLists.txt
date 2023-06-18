@@ -280,6 +280,7 @@ IF(ZLIB_FOUND)
             src/libs/unzip/iowin32.h
             src/libs/unzip/iowin32.c
         )
+        set_source_files_properties(src/libs/unzip/iowin32.c PROPERTIES COMPILE_FLAGS "-Wno-unused-variable -Wno-unused-parameter")
     endif(MINGW)
     target_link_libraries(musiqt PkgConfig::ZLIB)
 ENDIF(ZLIB_FOUND)
@@ -467,6 +468,7 @@ if(HVL)
         src/audio/input/hvlBackend.h
         src/audio/input/hvlBackend.cpp
     )
+    set_source_files_properties(src/libs/hvl_replay/hvl_replay.c PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
 endif(HVL)
 
 ##################################################################
