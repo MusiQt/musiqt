@@ -58,7 +58,7 @@ private:
     void nowPlaying(bool force=false);
 
 private:
-    lastfm::Audioscrobbler m_scrobbler;
+    QPointer<lastfm::Audioscrobbler> m_scrobbler;
     QScopedPointer<lastfm::Track> m_track;
     QPointer<QNetworkReply> m_nowPlayingReply;
     player *m_player;

@@ -52,7 +52,6 @@ QString signature(QString method)
 
 lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     QObject(parent),
-    m_scrobbler("mqt"),
     m_player(p)
 {
     QSettings settings;
@@ -68,20 +67,22 @@ lastfmScrobbler::lastfmScrobbler(player* p, QObject* parent) :
     lastfm::ws::Username        = userName;
     lastfm::ws::SessionKey      = sessionKey;
 
+    m_scrobbler = new lastfm::Audioscrobbler("mqt");
+
     connect(m_player, &player::stateChanged, this, &lastfmScrobbler::stateChanged);
     connect(m_player, &player::songChanged, this, &lastfmScrobbler::songChanged);
-    connect(m_player, &player::songEnded, &m_scrobbler, &lastfm::Audioscrobbler::submit);
+    connect(m_player, &player::songEnded, m_scrobbler, &lastfm::Audioscrobbler::submit);
 
-    connect(&m_scrobbler, &lastfm::Audioscrobbler::scrobblesCached,
+    connect(m_scrobbler, &lastfm::Audioscrobbler::scrobblesCached,
         this, &lastfmScrobbler::onScrobblesCached);
-    connect(&m_scrobbler, &lastfm::Audioscrobbler::scrobblesSubmitted,
+    connect(m_scrobbler, &lastfm::Audioscrobbler::scrobblesSubmitted,
         this, &lastfmScrobbler::onScrobblesSubmitted);
 }
 
 lastfmScrobbler::~lastfmScrobbler()
 {
     // submit any pending scrobble
-    m_scrobbler.submit();
+    m_scrobbler->submit();
 
     if (m_nowPlayingReply)
         m_nowPlayingReply->abort();
@@ -101,7 +102,7 @@ void lastfmScrobbler::stateChanged()
         m_timer.stop();
         m_track.reset(nullptr);
         // submit any pending scrobble
-        m_scrobbler.submit();
+        m_scrobbler->submit();
         break;
     default:
         Q_UNREACHABLE();
@@ -165,7 +166,7 @@ void lastfmScrobbler::nowPlaying(bool force)
 void lastfmScrobbler::scrobble()
 {
     qDebug() << "Caching scrobble";
-    m_scrobbler.cache(*m_track);
+    m_scrobbler->cache(*m_track);
     m_track.reset(nullptr);
 }
 
