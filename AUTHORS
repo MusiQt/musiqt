@@ -4,10 +4,11 @@ drfiemost@users.sourceforge.net
 
 ####################################################################
 
-minizip-ng 1.2
+minizip 1.2.13.1
 Copyright (C) 1998-2010 Gilles Vollant
+Copyright (C) 2007-2008 Even Rouault
 Copyright (C) 2009-2010 Mathias Svensson
-https://github.com/zlib-ng/minizip-ng
+https://github.com/madler/zlib/
 
 ####################################################################
 
