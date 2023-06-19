@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: musiqt 2.0.0\n"
+"Project-Id-Version: musiqt 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-13 20:50+0200\n"
+"POT-Creation-Date: 2023-06-19 11:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,6 +129,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:358
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:124
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:358
+#: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:138
 msgid "&Info"
 msgstr ""
 
@@ -139,6 +140,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:122
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:126
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:126
+#: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:140
 msgid "&License"
 msgstr ""
 
@@ -279,6 +281,7 @@ msgstr ""
 
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:43
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:43
+#: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:45
 msgid ""
 "<b>%1</b><br><br>Version %2<br><br>Copyright %3 %4<br><br>Website: <a "
 "href=\"%5\">%5</a><br><br>Bugs: <a href=\"%6\">%6</a>"
@@ -315,6 +318,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:50
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:52
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:52
+#: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:54
 msgid "About %1"
 msgstr ""
 
@@ -423,12 +427,14 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:246
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:257
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:257
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:265
 msgid "Authenticate"
 msgstr ""
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:298
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:309
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:309
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:317
 msgid "Authorize app on Last.fm site before proceeding"
 msgstr ""
 
@@ -517,6 +523,7 @@ msgid "Bookmarks"
 msgstr ""
 
 #: /mnt/devel/projects/musiqt/src/audio/audio.cpp:274
+#: C:/msys64/home/minini/musiqt/src/audio/audio.cpp:274
 msgid "Buffer length (ms)"
 msgstr ""
 
@@ -527,6 +534,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:121
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:125
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:125
+#: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:139
 msgid "C&redits"
 msgstr ""
 
@@ -538,6 +546,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/audio.cpp:213
 #: C:/msys64/home/minini/musiqt/src/audio/audio.cpp:209
 #: /mnt/devel/projects/musiqt/src/audio/audio.cpp:211
+#: C:/msys64/home/minini/musiqt/src/audio/audio.cpp:211
 msgid "Card"
 msgstr ""
 
@@ -628,6 +637,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:256
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:267
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:267
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:275
 msgid "Confirm"
 msgstr ""
 
@@ -695,6 +705,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/audio.cpp:238
 #: C:/msys64/home/minini/musiqt/src/audio/audio.cpp:234
 #: /mnt/devel/projects/musiqt/src/audio/audio.cpp:236
+#: C:/msys64/home/minini/musiqt/src/audio/audio.cpp:236
 msgid "Default bitdepth"
 msgstr ""
 
@@ -707,6 +718,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:257
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:268
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:268
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:276
 msgid ""
 "Delete current active session?\n"
 "Cannot be undone."
@@ -714,6 +726,7 @@ msgstr ""
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:262
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:262
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:270
 msgid "Delete current session key"
 msgstr ""
 
@@ -728,6 +741,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:250
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:261
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:261
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:269
 msgid "Delete session"
 msgstr ""
 
@@ -973,6 +987,7 @@ msgstr ""
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:258
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:258
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:266
 msgid "Get session key from Last.fm"
 msgstr ""
 
@@ -1055,6 +1070,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:309
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:359
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:309
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:317
 msgid "Info"
 msgstr ""
 
@@ -1086,6 +1102,10 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:207
 #: /mnt/devel/projects/musiqt/src/gui/settings.cpp:207
 msgid "Last.fm settings"
+msgstr ""
+
+#: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:141
+msgid "Lo&g"
 msgstr ""
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:494
@@ -1188,6 +1208,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/mpcBackend.cpp:262
 #: /mnt/devel/projects/musiqt/src/audio/input/ffmpegBackend.cpp:424
 #: /mnt/devel/projects/musiqt/src/audio/input/mpcBackend.cpp:262
+#: C:/msys64/home/minini/musiqt/src/audio/input/ffmpegBackend.cpp:424
 msgid "No settings available"
 msgstr ""
 
@@ -1287,6 +1308,11 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:82
 #: /mnt/devel/projects/musiqt/src/gui/settings.cpp:82
 msgid "Play all subtunes"
+msgstr ""
+
+#: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:574
+#: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:580
+msgid "Play mode"
 msgstr ""
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:304
@@ -1576,6 +1602,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:240
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:251
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:251
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:259
 msgid "Session:"
 msgstr ""
 
@@ -1789,6 +1816,10 @@ msgstr ""
 msgid "Switch to full UI mode"
 msgstr ""
 
+#: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:408
+msgid "Switch to full view"
+msgstr ""
+
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:531
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:534
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:538
@@ -1837,6 +1868,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:83
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:46
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:46
+#: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:48
 msgid ""
 "This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt."
 "io/</a>"
@@ -1850,6 +1882,11 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:141
 #: /mnt/devel/projects/musiqt/src/gui/settings.cpp:141
 msgid "Track gain"
+msgstr ""
+
+#: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:396
+#: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:407
+msgid "UI mode"
 msgstr ""
 
 #: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:46
@@ -1867,6 +1904,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:234
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:245
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:245
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:253
 msgid "Username:"
 msgstr ""
 
@@ -1991,6 +2029,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:189
 #: /mnt/devel/projects/musiqt/src/audio/input/ffmpegBackend.cpp:312
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:189
+#: C:/msys64/home/minini/musiqt/src/audio/input/ffmpegBackend.cpp:312
 msgid "copyright"
 msgstr ""
 
@@ -2089,6 +2128,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:242
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:253
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:253
+#: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:261
 msgid "none"
 msgstr ""
 
