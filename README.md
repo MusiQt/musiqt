@@ -118,7 +118,7 @@ or
 libmpcs 0.1 (SV8)  
 http://www.musepack.com/
 
-WavPack 4.x  
+WavPack >= 4.x  
 http://www.wavpack.com/
 
 libmpg123 >= 1.6.x  

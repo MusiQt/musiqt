@@ -5,6 +5,7 @@ Log is now written to a file if possible and displayed in the about dialog
 Allow building as Windows Portable App
 Use internal copy of liblastfm (Qt6 enabled) if needed
 Improved some tooltip strings
+Sync hvl with upstream
 
 
 
