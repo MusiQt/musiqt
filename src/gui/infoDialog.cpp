@@ -261,7 +261,7 @@ void infoDialog::setInfo(const metaData* mtd)
     QByteArray *img = mtd->getImage();
     if (img != nullptr)
     {
-        QBuffer buffer(&img);
+        QBuffer buffer(img);
         if (buffer.open(QIODevice::ReadOnly))
         {
             QImageReader reader(&buffer);
