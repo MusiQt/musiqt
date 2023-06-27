@@ -9,6 +9,11 @@ Sync hvl with upstream
 
 
 
+* musiqt-2.0.1 - Jun 19, 2023
+Few minor fixes
+
+
+
 * musiqt-2.0.0 - May 14, 2023
 Better error handling with GUI notifications
 Reworked and improved audio handling, now works with Qt6
