@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -261,8 +261,7 @@ void infoDialog::setInfo(const metaData* mtd)
     QByteArray *img = mtd->getImage();
     if (img != nullptr)
     {
-        QByteArray ba(img->data(), img->size());
-        QBuffer buffer(&ba);
+        QBuffer buffer(&img);
         if (buffer.open(QIODevice::ReadOnly))
         {
             QImageReader reader(&buffer);
