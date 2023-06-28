@@ -36,15 +36,14 @@ translator::translator(QObject* parent) :
     QTranslator(parent) 
 {
     char* locale = setlocale(LC_ALL, "");
-    qDebug() << "locale: " << locale;
+    qInfo() << "locale:" << locale;
 #ifndef _WIN32
     const char* basedir = bindtextdomain(PACKAGE, LOCALEDIR);
 #else
     QString localedir = QString(QCoreApplication::applicationDirPath()).append("/locale");
-    qDebug() << "localedir: " << localedir;
     const char* basedir = bindtextdomain(PACKAGE, localedir.toLocal8Bit().constData());
 #endif
-    qDebug() << "basedir: " << basedir;
+    qInfo() << "locale dir:" << basedir;
 
     bind_textdomain_codeset(PACKAGE, "utf-8");
     textdomain(PACKAGE);

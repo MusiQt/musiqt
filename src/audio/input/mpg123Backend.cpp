@@ -121,10 +121,10 @@ bool mpg123Backend::init()
         const char** decoders = mpg123_supported_decoders();
         while (*decoders)
         {
-            qDebug() << "Decoder: " << *decoders;
             m_decoders << *decoders;
             ++decoders;
         }
+        qDebug() << "mpg123 available decoders:" << m_decoders;
 
         return true;
     }
@@ -148,7 +148,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
     }
 
     int err;
-    qDebug() << "Setting decoder: " << m_config.decoder();
+    qDebug() << "Setting mpg123 decoder: " << m_config.decoder();
     const char *decoder = QString::compare(m_config.decoder(), "auto")
         ? m_config.decoder().toLocal8Bit().constData()
         : nullptr;

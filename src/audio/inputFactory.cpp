@@ -81,8 +81,8 @@ iFactory* iFactory::instance()
 template <class backend>
 void iFactory::regBackend()
 {
-    qDebug() << "Adding input backend " << backend::name;
-    qDebug() << "Supported extensions: " << backend::ext();
+    qInfo() << "Adding input backend" << backend::name;
+    qInfo() << "Supported extensions:" << backend::ext();
     inputs_t temp;
 
     temp.name = backend::name;
@@ -177,7 +177,7 @@ input* iFactory::get(const QString& fileName)
     {
         if (supports(i.supportedExt(), fileName))
         {
-            qDebug() << "Trying input backend " << i.name;
+            qInfo() << "Trying input backend" << i.name;
             try
             {
                 std::unique_ptr<input> ib(i.factory(fileName));

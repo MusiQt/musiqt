@@ -51,10 +51,10 @@ QStringList qaudioBackend::getDevices()
         devices = QMediaDevices::audioOutputs();
         for (const QAudioDevice &device: devices)
         {
-            qDebug() << "Device id: " << device.id();
-            qDebug() << "Device name: " << device.description();
-            qDebug() << "SampleRate: " << device.minimumSampleRate() << " - " << device.maximumSampleRate();
-            qDebug() << "ChannelCount: " << device.minimumChannelCount() << " - "  << device.maximumChannelCount();
+            qInfo() << "Device id: " << device.id();
+            qInfo() << "Device name: " << device.description();
+            qInfo() << "SampleRate: " << device.minimumSampleRate() << " - " << device.maximumSampleRate();
+            qInfo() << "ChannelCount: " << device.minimumChannelCount() << " - "  << device.maximumChannelCount();
         }
     }
 

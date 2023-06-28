@@ -51,7 +51,6 @@
 #include <QWidgetAction>
 #include <QDebug>
 
-
 centralFrame::centralFrame(player* p, QWidget *parent) :
     QWidget(parent),
     m_player(p)
@@ -208,7 +207,7 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
         [this]()
         {
             double pos = static_cast<double>(m_slider->sliderPosition())/100.;
-            qDebug() << "seek: " << pos;
+            qDebug() << "seek:" << pos;
             m_player->setPosition(pos);
         }
     );
@@ -289,9 +288,9 @@ bool centralFrame::isPlaylistDirSelected()
 {
     QFileInfo fileInfo(m_player->loadedSong());
     QString playDir = fileInfo.absolutePath();
-    qDebug() << "playDir " << playDir;
+    qDebug() << "playDir" << playDir;
     QString currentDir = m_fsm->filePath(m_dirlist->currentIndex());
-    qDebug() << "currentDir " << currentDir;
+    qDebug() << "currentDir" << currentDir;
     return playDir==currentDir;
 }
 
@@ -321,10 +320,10 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
     if (curItem.isEmpty())
         return;
 
-    qDebug() << "Set dir " << curItem;
+    qDebug() << "Set dir" << curItem;
 
     const QString mPath = m_fsm->fileInfo(idx).absoluteFilePath();
-    qDebug() << "Full path: " << mPath;
+    qDebug() << "Full path:" << mPath;
 
     std::unique_ptr<trackList> tracklist(TFACTORY->get(mPath));
 
@@ -361,7 +360,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
     if (fileInfo.isFile())
     {
         // Select file, if not found and not playing select first item
-        qDebug() << "selecting file " << fileInfo.fileName();
+        qDebug() << "selecting file" << fileInfo.fileName();
         QModelIndex item = findItem(fileInfo);
         if (item.isValid())
         {
@@ -381,7 +380,7 @@ void centralFrame::onDirSelected(const QModelIndex& idx)
 void centralFrame::onHome(QAction* action)
 {
     QString musicDir = action->data().toString();
-    qDebug() << "go to music dir: " << musicDir;
+    qDebug() << "go to music dir:" << musicDir;
     setDir(musicDir);
 }
 
@@ -403,7 +402,7 @@ void centralFrame::onCmdCurrentDir()
 
 void centralFrame::setFile(const QString& file)
 {
-    qDebug() << "setFile " << file;
+    qDebug() << "setFile" << file;
 
     QModelIndex curItem = m_playlist->currentIndex();
 
@@ -563,7 +562,7 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     if (m_editMode->isChecked())
         return;
 
-    qDebug() << "onCmdSongSelected " << currentRow.row();
+    qDebug() << "onCmdSongSelected" << currentRow.row();
     if (!currentRow.isValid())
         return;
 
@@ -582,7 +581,7 @@ void centralFrame::onCmdSongSelected(const QModelIndex& currentRow)
     {
         emit clearDisplay(tr("Loading..."));
 
-        qDebug() << "Loading " << song;
+        qInfo() << "Loading" << song;
 
         QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -716,7 +715,7 @@ void centralFrame::onRgtClkPlayList(const QPoint& pos)
             GET_ICON(icon_listremove), tr("Remove item"), this,
             [this, itemRow]()
             {
-                qDebug() << "remove item " << itemRow;
+                qDebug() << "remove item" << itemRow;
                 m_proxyModel->removeRow(itemRow);
             }
         );
@@ -786,7 +785,7 @@ void centralFrame::onCmdPlEdit(bool checked)
         m_fsm->setNameFilters(TFACTORY->plExt());
         m_dirlist->setCurrentIndex(QModelIndex());
         QString dir = property("SelectedDir").toString();
-        qDebug() << "dir " << dir;
+        qDebug() << "dir" << dir;
         m_dirlist->setCurrentIndex(m_fsm->index(dir));
     }
 }
@@ -828,7 +827,7 @@ void centralFrame::updateSongs()
 
 void centralFrame::setDir(const QString& dir)
 {
-    qDebug() << "centralFrame::setDir: " << dir;
+    qDebug() << "centralFrame::setDir:" << dir;
     if (dir.isEmpty())
         return;
 
@@ -844,7 +843,7 @@ void centralFrame::setDir(const QString& dir)
         m_fsm, &QFileSystemModel::directoryLoaded,
         [connection, this](const QString &path)
         {
-            qDebug() << "dirLoaded: " << path;
+            qDebug() << "dirLoaded:" << path;
             if (path.compare(m_fsm->fileInfo(m_dirlist->currentIndex()).absolutePath()) == 0)
             {
                 qDebug() << "scrollTo" << path;
@@ -871,7 +870,7 @@ QString centralFrame::getFilter() const
 {
     QString filter(IFACTORY->getExtensions().join("|"));
     filter.prepend(".*\\.(").append(")$");
-    qDebug() << "filter: " << filter;
+    qDebug() << "filter:" << filter;
     return filter;
 }
 
@@ -882,6 +881,6 @@ QStringList centralFrame::getPattern() const
     {
         result << str.prepend("*.");
     }
-    qDebug() << "pattern: " << result;
+    qDebug() << "pattern:" << result;
     return result;
 }
