@@ -12,6 +12,9 @@
 /* Define to 1 if you have libsndfile>=1.0.21 on MinGW. */
 #cmakedefine  ENABLE_SNDFILE_WINDOWS_PROTOTYPES @ENABLE_SNDFILE_WINDOWS_PROTOTYPES@
 
+/* Define if using internal copy of lastfm. */
+#cmakedefine  INTERNAL_LIBLASTFM @INTERNAL_LIBLASTFM@
+
 /* Define if you have libbs2b (-lbs2b). */
 #cmakedefine  HAVE_BS2B
 
