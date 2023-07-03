@@ -23,8 +23,6 @@
      <file>icons/lastfm.gif</file>
      <file>icons/list-add.gif</file>
      <file>icons/list-remove.gif</file>
-     <file>icons/logo16.gif</file>
-     <file>icons/logo24.gif</file>
      <file>icons/logo32.gif</file>
      <file>icons/media-playback-pause.gif</file>
      <file>icons/media-playback-start.gif</file>  
@@ -39,6 +37,7 @@
      <file>icons/view-treelist.gif</file>
      <file>icons/musiqt.png</file>
      <file>icons/qt_icon32.png</file>
+     <file>icons/icon_tray.png</file>
      <file>resources/cover_placeholder.png</file>
      <file>resources/splash.png</file>
      <file>resources/CREDITS</file>

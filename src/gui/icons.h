@@ -41,8 +41,6 @@ static constexpr const char *icon_helpabout           = ":/icons/help-about.gif"
 static constexpr const char *icon_lastfm              = ":/icons/lastfm.gif";
 static constexpr const char *icon_listadd             = ":/icons/list-add.gif";
 static constexpr const char *icon_listremove          = ":/icons/list-remove.gif";
-static constexpr const char *icon_logo16              = ":/icons/logo16.gif";
-static constexpr const char *icon_logo24              = ":/icons/logo24.gif";
 static constexpr const char *icon_logo32              = ":/icons/logo32.gif";
 static constexpr const char *icon_mediaplaybackpause  = ":/icons/media-playback-pause.gif";
 static constexpr const char *icon_mediaplaybackstart  = ":/icons/media-playback-start.gif";
@@ -55,5 +53,6 @@ static constexpr const char *icon_song                = ":/icons/song.gif";
 static constexpr const char *icon_viewcompact         = ":/icons/view-compact.gif";
 static constexpr const char *icon_viewfull            = ":/icons/view-full.gif";
 static constexpr const char *icon_viewtreelist        = ":/icons/view-treelist.gif";
+static constexpr const char *icon_tray                = ":/icons/icon_tray.png";
 
 #endif

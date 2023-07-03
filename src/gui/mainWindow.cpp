@@ -113,7 +113,7 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
 
         connect(m_trayIcon, &QSystemTrayIcon::activated, this, &mainWindow::iconActivated);
 
-        m_trayIcon->setIcon(GET_ICON(icon_logo32));
+        m_trayIcon->setIcon(GET_ICON(icon_tray));
         m_trayIcon->setToolTip(PACKAGE_STRING);
         m_trayIcon->show();
     }
