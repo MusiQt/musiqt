@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        qt-version: [5.15.*, 6.4.*]
+        qt-version: [5.15.*, 6.*]
         include:
-          - qt-version: 6.4.*
+          - qt-version: 6.*
             param: -DQT6=ON
             addon: 'addons.qtmultimedia'
 

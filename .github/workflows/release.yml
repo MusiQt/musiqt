@@ -23,7 +23,9 @@ jobs:
           mingw-w64-x86_64-toolchain
           mingw-w64-x86_64-cmake
           mingw-w64-x86_64-gettext
-          mingw-w64-x86_64-qt5
+          mingw-w64-x86_64-qt6-base
+          mingw-w64-x86_64-qt6-shadertools
+          mingw-w64-x86_64-qt6-multimedia
           mingw-w64-x86_64-libsndfile
           mingw-w64-x86_64-mpg123
           mingw-w64-x86_64-libvorbis
@@ -48,6 +50,7 @@ jobs:
         cd build
         cmake -G 'MSYS Makefiles' \
             -DCMAKE_BUILD_TYPE=Release \
+            -DQT6=ON \
             -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
             ..
         make VERBOSE=1
@@ -73,6 +76,7 @@ jobs:
         cd build-portable
         cmake -G 'MSYS Makefiles' \
             -DCMAKE_BUILD_TYPE=Release \
+            -DQT6=ON \
             -DPORTABLE=ON \
             -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
             ..
