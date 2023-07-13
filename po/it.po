@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-13 20:01+0200\n"
-"PO-Revision-Date: 2023-05-13 20:53+0200\n"
+"PO-Revision-Date: 2023-07-13 20:05+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -1139,7 +1139,7 @@ msgstr "Impostazioni Last.fm"
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:141
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:141
 msgid "Lo&g"
-msgstr ""
+msgstr "Lo&g"
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:494
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:497
@@ -1350,9 +1350,8 @@ msgstr "Riproduci tutte le sottotracce"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:580
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:574
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:580
-#, fuzzy
 msgid "Play mode"
-msgstr "Modalità playlist"
+msgstr "Modalità di riproduzione"
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:304
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:304
@@ -1872,9 +1871,8 @@ msgstr "Passa alla modalità interfaccia completa"
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:408
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:408
-#, fuzzy
 msgid "Switch to full view"
-msgstr "Passa alla modalità interfaccia completa"
+msgstr "Passa alla visualizzazione completa"
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:531
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:534
@@ -1948,9 +1946,8 @@ msgstr "Traccia"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:407
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:396
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:407
-#, fuzzy
 msgid "UI mode"
-msgstr "Modello SID"
+msgstr "Modalità interfaccia"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:46
 #: C:/msys64/home/minini/musiqt/src/audio/input/metaData.cpp:46
