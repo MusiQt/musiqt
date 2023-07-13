@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-19 11:22+0200\n"
+"POT-Creation-Date: 2023-07-13 20:01+0200\n"
 "PO-Revision-Date: 2018-09-04 21:19+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -25,6 +25,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:243
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:249
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:249
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:248
 msgid " music location"
 msgstr ""
 
@@ -131,6 +132,7 @@ msgstr "&Contato"
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:124
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:358
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:138
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:138
 msgid "&Info"
 msgstr "&Info"
 
@@ -142,6 +144,7 @@ msgstr "&Info"
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:126
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:126
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:140
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:140
 msgid "&License"
 msgstr "&Licencia"
 
@@ -283,6 +286,7 @@ msgstr "Modelo tercer SID"
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:43
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:43
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:45
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:45
 msgid ""
 "<b>%1</b><br><br>Version %2<br><br>Copyright %3 %4<br><br>Website: <a "
 "href=\"%5\">%5</a><br><br>Bugs: <a href=\"%6\">%6</a>"
@@ -320,6 +324,7 @@ msgstr "Acerca de"
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:52
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:52
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:54
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:54
 msgid "About %1"
 msgstr "Acerca de %1"
 
@@ -331,6 +336,7 @@ msgstr "Acerca de %1"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:686
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:693
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:693
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:692
 msgid "Add directory to the bookmarks"
 msgstr "Anade el directorio a los marcadores."
 
@@ -342,6 +348,7 @@ msgstr "Anade el directorio a los marcadores."
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:675
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:682
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:682
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:681
 msgid "Add song to the playlist"
 msgstr "Añade la canción a la lista de reproducción."
 
@@ -353,6 +360,7 @@ msgstr "Añade la canción a la lista de reproducción."
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:680
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:687
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:687
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:686
 msgid "Add to bookmarks"
 msgstr "&Añadir a marcadores"
 
@@ -364,6 +372,7 @@ msgstr "&Añadir a marcadores"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:669
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:676
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:676
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:675
 msgid "Add to playlist"
 msgstr "&Añadir a la lista de reproducción"
 
@@ -429,6 +438,7 @@ msgstr "Configuración Audio"
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:257
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:257
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:265
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:265
 msgid "Authenticate"
 msgstr ""
 
@@ -436,6 +446,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:309
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:309
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:317
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:317
 msgid "Authorize app on Last.fm site before proceeding"
 msgstr ""
 
@@ -520,6 +531,7 @@ msgstr "Bits"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:133
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:139
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:139
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:138
 msgid "Bookmarks"
 msgstr "&Marcadores"
 
@@ -536,6 +548,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:125
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:125
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:139
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:139
 msgid "C&redits"
 msgstr "C&reditos"
 
@@ -640,6 +653,7 @@ msgstr "Modo compacto"
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:267
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:267
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:275
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:275
 msgid "Confirm"
 msgstr ""
 
@@ -650,6 +664,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:161
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:167
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:167
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:166
 msgid "Current playlist"
 msgstr "Lista de reproducción actual"
 
@@ -725,6 +740,7 @@ msgstr "Borrar"
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:268
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:268
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:276
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:276
 msgid ""
 "Delete current active session?\n"
 "Cannot be undone."
@@ -733,6 +749,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:262
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:262
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:270
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:270
 #, fuzzy
 msgid "Delete current session key"
 msgstr "Borrar"
@@ -749,6 +766,7 @@ msgstr "Borrar marcador seleccionado"
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:261
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:261
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:269
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:269
 #, fuzzy
 msgid "Delete session"
 msgstr "Borrar"
@@ -760,6 +778,7 @@ msgstr "Borrar"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:148
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:154
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:154
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:153
 msgid "Edit"
 msgstr "Editar"
 
@@ -770,6 +789,7 @@ msgstr "Editar"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:149
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:155
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:155
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:154
 msgid "Edit playlist"
 msgstr "Editar la lista de reproducción"
 
@@ -829,6 +849,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:810
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:817
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:817
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:816
 msgid "Error"
 msgstr "Error"
 
@@ -840,6 +861,7 @@ msgstr "Error"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:810
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:817
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:817
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:816
 msgid "Error saving playlist"
 msgstr "Error guardando la lista de reproducción"
 
@@ -998,6 +1020,7 @@ msgstr "Configuración general"
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:258
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:258
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:266
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:266
 msgid "Get session key from Last.fm"
 msgstr ""
 
@@ -1067,6 +1090,7 @@ msgstr "Ruta HVSC:"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:174
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:173
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:174
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:172
 msgid "Home"
 msgstr "Inicio"
 
@@ -1081,6 +1105,7 @@ msgstr "Inicio"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:359
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:309
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:317
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:317
 msgid "Info"
 msgstr "&Info"
 
@@ -1117,6 +1142,7 @@ msgid "Last.fm settings"
 msgstr "Configuración del programa"
 
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:141
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:141
 msgid "Lo&g"
 msgstr ""
 
@@ -1128,6 +1154,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:576
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:583
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:583
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:582
 msgid "Loading..."
 msgstr "Cargando..."
 
@@ -1179,6 +1206,7 @@ msgstr "Siguiente"
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:320
 #: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:322
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:322
+#: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:321
 msgid "No info"
 msgstr "Sin información"
 
@@ -1248,6 +1276,7 @@ msgstr "Precedente"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:834
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:838
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:838
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:837
 msgid "Path %1 does not exist"
 msgstr ""
 
@@ -1325,6 +1354,8 @@ msgstr "Reproducir todos los subtonos"
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:574
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:580
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:574
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:580
 #, fuzzy
 msgid "Play mode"
 msgstr "Modo lista de reproducción"
@@ -1363,6 +1394,7 @@ msgstr "Reproduciendo"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:222
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:133
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:222
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:132
 msgid "Playlist"
 msgstr "Lista de reproducción"
 
@@ -1435,6 +1467,7 @@ msgstr "valoración"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:709
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:716
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:716
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:715
 msgid "Remove item"
 msgstr "Eliminar elemento"
 
@@ -1446,6 +1479,7 @@ msgstr "Eliminar elemento"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:716
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:723
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:723
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:722
 msgid "Remove selected item from playlist"
 msgstr "Eliminar el elemento seleccionado de la lista de reproducción"
 
@@ -1477,6 +1511,7 @@ msgstr "Remuestreo"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:162
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:168
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:168
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:167
 msgid "Return to current playlist"
 msgstr "Volver a la lista de reproducción actual"
 
@@ -1534,6 +1569,7 @@ msgstr "Método de muestreo"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:155
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:161
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:161
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:160
 msgid "Save"
 msgstr "Guardar"
 
@@ -1552,6 +1588,8 @@ msgstr "Guardar"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:801
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:162
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:801
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:161
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:800
 msgid "Save playlist"
 msgstr "Guardar lista de reproducción"
 
@@ -1618,6 +1656,7 @@ msgstr "Selecciona directorio HVSC"
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:251
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:251
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:259
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:259
 #, fuzzy
 msgid "Session:"
 msgstr "Versión"
@@ -1651,6 +1690,7 @@ msgstr "Configuración"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:740
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:747
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:747
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:746
 msgid "Shuffle"
 msgstr "Aleatorio"
 
@@ -1701,6 +1741,8 @@ msgstr "Canción"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:729
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:727
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:729
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:726
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:728
 msgid "Sort ascending"
 msgstr "Ordenación ascendente"
 
@@ -1720,6 +1762,8 @@ msgstr "Ordenación ascendente"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:739
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:737
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:739
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:736
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:738
 msgid "Sort descending"
 msgstr "Ordenación descendente"
 
@@ -1731,6 +1775,7 @@ msgstr "Ordenación descendente"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:742
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:749
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:749
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:748
 msgid "Sort randomly"
 msgstr "Ordenación aleatoria"
 
@@ -1742,6 +1787,7 @@ msgstr "Ordenación aleatoria"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:756
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:763
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:763
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:762
 msgid "Sorting"
 msgstr "Ordenación"
 
@@ -1833,6 +1879,7 @@ msgid "Switch to full UI mode"
 msgstr "Cambiar a modo completo"
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:408
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:408
 #, fuzzy
 msgid "Switch to full view"
 msgstr "Cambiar a modo completo"
@@ -1866,6 +1913,7 @@ msgstr "Cambiar a modo canción"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:229
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:235
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:235
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:234
 msgid "System music location"
 msgstr ""
 
@@ -1886,6 +1934,7 @@ msgstr "Posición tercer SID"
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:46
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:46
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:48
+#: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:48
 msgid ""
 "This program uses Qt version %1<br><br><a href=\"http://qt.io/\">http://qt."
 "io/</a>"
@@ -1903,6 +1952,8 @@ msgstr ""
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:396
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:407
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:396
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:407
 #, fuzzy
 msgid "UI mode"
 msgstr "Modelo SID"
@@ -1923,6 +1974,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:245
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:245
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:253
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:253
 #, fuzzy
 msgid "Username:"
 msgstr "Rom Kernal:"
@@ -1974,6 +2026,7 @@ msgstr "Volumen"
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:393
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1064
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:838
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:837
 msgid "Warning"
 msgstr "Advertencia"
 
@@ -2151,6 +2204,7 @@ msgstr "tiempo"
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:253
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:253
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:261
+#: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:261
 msgid "none"
 msgstr ""
 
