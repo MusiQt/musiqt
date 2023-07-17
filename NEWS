@@ -1,4 +1,4 @@
-* musiqt-3.0.0 - Jun xx, 2023
+* musiqt-3.0.0 - Jul 17, 2023
 Project moved to MusiQt organization
 Relicensed project under GPL v3
 Log is now written to a file if possible and displayed in the about dialog
