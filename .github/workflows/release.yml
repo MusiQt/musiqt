@@ -4,6 +4,9 @@ on:
   release:
      types: [published]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -68,7 +71,7 @@ jobs:
         cp build/it.gmo ${PACKAGE_NAME}/locale/it/LC_MESSAGES/musiqt.mo
         ldd ${PACKAGE_NAME}/musiqt.exe |grep -vi Windows|awk '{ print $3 }' | while read file ; do cp "$file" ${PACKAGE_NAME} ; done
         strip ${PACKAGE_NAME}/*.dll
-        windeployqt.exe ${PACKAGE_NAME}/musiqt.exe --no-translations
+        windeployqt6.exe --no-translations ${PACKAGE_NAME}/musiqt.exe
         zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
     - name: build-portable
       run: |
@@ -89,13 +92,13 @@ jobs:
         cp build-portable/musiqt.exe ${PACKAGE_NAME}
         strip ${PACKAGE_NAME}/musiqt.exe
         upx ${PACKAGE_NAME}/musiqt.exe || true
-        for locale in {'es','it'}; do \
-            mkdir -p ${PACKAGE_NAME}/locale/$locale/LC_MESSAGES \
-            cp build-portable/$locale.gmo ${PACKAGE_NAME}/locale/$locale/LC_MESSAGES/musiqt.mo \
+        for locale in {'es','it'}; do
+            mkdir -p ${PACKAGE_NAME}/locale/${locale}/LC_MESSAGES
+            cp build-portable/${locale}.gmo ${PACKAGE_NAME}/locale/${locale}/LC_MESSAGES/musiqt.mo
         done
         ldd ${PACKAGE_NAME}/musiqt.exe |grep -vi Windows|awk '{ print $3 }' | while read file ; do cp "$file" ${PACKAGE_NAME} ; done
         strip ${PACKAGE_NAME}/*.dll
-        windeployqt.exe ${PACKAGE_NAME}/musiqt.exe --no-translations
+        windeployqt6.exe --no-translations ${PACKAGE_NAME}/musiqt.exe
         zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/*
     - uses: svenstaro/upload-release-action@v2
       with:
