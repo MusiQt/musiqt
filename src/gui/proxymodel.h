@@ -83,11 +83,7 @@ public:
             std::random_shuffle(m_randomOrder.begin(), m_randomOrder.end());
             break;
         default:
-#ifdef __GNUC__
-            __builtin_unreachable();
-#elif defined(_MSC_VER)
-            __assume(0);
-#endif
+            Q_UNREACHABLE();
         }
 
         QSortFilterProxyModel::sort(0, order);

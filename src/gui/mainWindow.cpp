@@ -511,11 +511,7 @@ void mainWindow::setPlayButton()
             label = tr("Paused");
             break;
         default:
-#ifdef __GNUC__
-            __builtin_unreachable();
-#elif defined(_MSC_VER)
-            __assume(0);
-#endif
+            Q_UNREACHABLE();
         }
 
         m_trayStatus->setIcon(QPixmap(icon));
