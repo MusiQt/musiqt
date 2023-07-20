@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2021 Leandro Nini
+ *  Copyright (C) 2013-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -228,13 +228,16 @@ void centralFrame::createHomeMenu()
 
     QActionGroup *homeGroup = new QActionGroup(menu);
 
-    QString musicDir = xdg::getMusicDir();
-    if (!musicDir.isEmpty())
+    QStringList musicDirs = xdg::getMusicDirs();
+    if (!musicDirs.isEmpty())
     {
-        QAction *action = menu->addAction(tr("System music location"));
-        action->setData(musicDir);
-        action->setStatusTip(musicDir);
-        homeGroup->addAction(action);
+        for (QString musicDir: musicDirs)
+        {
+            QAction *action = menu->addAction(tr("System music location"));
+            action->setData(musicDir);
+            action->setStatusTip(musicDir);
+            homeGroup->addAction(action);
+        }
     }
 
     for (int i=0; i<IFACTORY->num(); i++)

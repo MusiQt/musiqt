@@ -94,11 +94,9 @@ const QString xdg::getStateDir()
 #endif
 }
 
-const QString xdg::getMusicDir()
+const QStringList xdg::getMusicDirs()
 {
-    QStringList locations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-    // TODO return all music locations
-    return (!locations.isEmpty()) ? locations.first() : QString();
+    return QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
 }
 
 bool xdg::open(const QString& link)

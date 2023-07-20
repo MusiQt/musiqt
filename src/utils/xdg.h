@@ -43,8 +43,8 @@ namespace xdg
     /// files should be stored
     const QString getStateDir();
 
-    /// Get the user music directory
-    const QString getMusicDir();
+    /// Get the user music directories
+    const QStringList getMusicDirs();
 
     /// Open a file or URL in the user's preferred application
     bool open(const QString& link);
