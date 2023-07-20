@@ -27,7 +27,7 @@
 class error
 {
 private:
-    QString m_msg;
+    const QString m_msg;
 
 public:
     explicit error(const char* msg) :
