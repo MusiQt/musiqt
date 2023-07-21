@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2021 Leandro Nini
+ *  Copyright (C) 2009-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -321,7 +321,11 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 {
                     mpg123_text *entry = &id3v2->comment_list[i];
                     if ((entry->description.fill == 0) || (entry->description.p[0] == 0))
-                        info = QString::fromUtf8(entry->text.p).trimmed(); // FIXME append
+                    {
+                        if (!info.isEmpty())
+                            info.append("\n");
+                        info.append(QString::fromUtf8(entry->text.p).trimmed());
+                    }
                 }
             }
 
