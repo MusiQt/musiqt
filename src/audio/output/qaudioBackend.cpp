@@ -51,10 +51,10 @@ QStringList qaudioBackend::getDevices()
         devices = QMediaDevices::audioOutputs();
         for (const QAudioDevice &device: devices)
         {
-            qInfo() << "Device id: " << device.id();
-            qInfo() << "Device name: " << device.description();
-            qInfo() << "SampleRate: " << device.minimumSampleRate() << " - " << device.maximumSampleRate();
-            qInfo() << "ChannelCount: " << device.minimumChannelCount() << " - "  << device.maximumChannelCount();
+            qInfo() << "Device id:" << device.id();
+            qInfo() << "Device name:" << device.description();
+            qInfo() << "SampleRate:" << device.minimumSampleRate() << "-" << device.maximumSampleRate();
+            qInfo() << "ChannelCount:" << device.minimumChannelCount() << "-"  << device.maximumChannelCount();
         }
     }
 
@@ -79,9 +79,9 @@ QStringList qaudioBackend::getDevices()
         devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
         for (const QAudioDeviceInfo &deviceInfo: devices)
         {
-            qDebug() << "Device name: " << deviceInfo.deviceName();
-            qDebug() << "SampleRates: " << deviceInfo.supportedSampleRates();
-            qDebug() << "SampleSizes: " << deviceInfo.supportedSampleSizes();
+            qDebug() << "Device name:" << deviceInfo.deviceName();
+            qDebug() << "SampleRates:" << deviceInfo.supportedSampleRates();
+            qDebug() << "SampleSizes:" << deviceInfo.supportedSampleSizes();
         }
     }
 
