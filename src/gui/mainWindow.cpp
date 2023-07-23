@@ -34,7 +34,6 @@
 
 #include <QStatusBar>
 #include <QAction>
-#include <QDir>
 #include <QToolButton>
 #include <QFileInfo>
 #include <QLayout>
@@ -43,6 +42,7 @@
 #include <QToolBar>
 #include <QKeyEvent>
 #include <QSignalBlocker>
+#include <QDebug>
 
 #ifdef _WIN32
 #  include <windows.h>
@@ -166,7 +166,21 @@ void mainWindow::init(const char* arg)
 
 void mainWindow::onMessage(QString msg)
 {
-    m_player->loadAndPlay(QDir(msg).absolutePath());
+    qInfo() << "Received message:" << msg;
+    QFileInfo fileInfo(msg);
+    if (fileInfo.isDir())
+    {
+        m_cFrame->setDir(fileInfo.absoluteFilePath());
+        return;
+    }
+
+    if (fileInfo.isFile())
+    {
+        m_player->loadAndPlay(fileInfo.absoluteFilePath());
+        return;
+    }
+
+    qWarning() << "File not found";
 }
 
 void mainWindow::notify(const QString& title, const QString &text)

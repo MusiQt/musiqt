@@ -52,6 +52,8 @@ public:
 
     void init();
 
+    void setDir(const QString& index);
+
 signals:
     void setDisplay();
     void clearDisplay(const QString&);
@@ -83,7 +85,6 @@ private:
 
     void createHomeMenu();
     void onCmdChangeSong(dir_t);
-    void setDir(const QString& index);
     QString getFilter() const;
     QStringList getPattern() const;
     void changeState();
