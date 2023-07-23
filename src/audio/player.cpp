@@ -179,9 +179,9 @@ void player::preloaded(input* res)
     }
 }
 
-void player::loadAndPlay(const QString& filename)
+void player::playOnLoad()
 {
-    // Start playing once loaded
+    // Start playing once a song is loaded
     QMetaObject::Connection * const connection = new QMetaObject::Connection;
     *connection = connect(this, &player::songLoaded,
         [this, connection] (bool res)
@@ -191,8 +191,6 @@ void player::loadAndPlay(const QString& filename)
             QObject::disconnect(*connection);
             delete connection;
         });
-
-    load(filename);
 }
 
 void player::changeSubtune(dir_t dir)

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Leandro Nini
+ *  Copyright (C) 2021-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -267,7 +267,8 @@ void dbusHandler::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position
 void dbusHandler::OpenUri(const QString &Uri)
 {
     QUrl file(Uri);
-    m_player->loadAndPlay(file.toLocalFile());
+    m_player->playOnLoad();
+    m_player->load(file.toLocalFile());
 }
 
 void dbusHandler::stateChanged()

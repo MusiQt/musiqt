@@ -135,8 +135,8 @@ public:
     /// Load song
     void load(const QString& filename);
 
-    /// Load song and start playback
-    void loadAndPlay(const QString& filename);
+    /// Start playback once song is loaded
+    void playOnLoad();
 
     /// Unload song
     void unload() { loaded(nullptr); }

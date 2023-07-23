@@ -170,13 +170,15 @@ void mainWindow::onMessage(QString msg)
     QFileInfo fileInfo(msg);
     if (fileInfo.isDir())
     {
+        m_player->playOnLoad();
         m_cFrame->setDir(fileInfo.absoluteFilePath());
         return;
     }
 
     if (fileInfo.isFile())
     {
-        m_player->loadAndPlay(fileInfo.absoluteFilePath());
+        m_player->playOnLoad();
+        m_player->load(fileInfo.absoluteFilePath());
         return;
     }
 
