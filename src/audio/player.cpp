@@ -182,15 +182,12 @@ void player::preloaded(input* res)
 void player::playOnLoad()
 {
     // Start playing once a song is loaded
-    QMetaObject::Connection * const connection = new QMetaObject::Connection;
-    *connection = connect(this, &player::songLoaded,
-        [this, connection] (bool res)
-        {
-            if (res) play();
-
-            QObject::disconnect(*connection);
-            delete connection;
-        });
+#if QT_VERSION >= 0x060000 
+    connect(this, &player::songLoaded, this, [=] (bool res) { if (res) play(); }, Qt::SingleShotConnection);
+#else
+    QObject* ctx = new QObject();
+    connect(this, &player::songLoaded, ctx, [=] (bool res) { if (res) play(); ctx->deleteLater(); });
+#endif
 }
 
 void player::changeSubtune(dir_t dir)
