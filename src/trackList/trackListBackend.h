@@ -27,7 +27,7 @@
 class trackListBackend : public trackList
 {
 protected:
-    QString m_path;
+    const QString m_path;
 
 private:
     trackListBackend();
