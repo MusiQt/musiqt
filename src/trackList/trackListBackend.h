@@ -38,7 +38,7 @@ private:
 protected:
     trackListBackend(const QString &path) : m_path(path) {}
 
-    void writeLine(QTextStream& outputStream, QString line)
+    static void writeLine(QTextStream& outputStream, QString line)
     {
         outputStream << line << '\n';
     }
