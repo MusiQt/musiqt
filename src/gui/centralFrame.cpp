@@ -402,52 +402,22 @@ void centralFrame::onCmdCurrentDir()
     QModelIndex item = findItem(fileInfo);
     m_playlist->setCurrentIndex(item);
 }
-/*
-void centralFrame::setFile(const QString& file)
+
+bool centralFrame::canPlay(const QFileInfo& file)
 {
-    qDebug() << "setFile" << file;
-
-    QModelIndex curItem = m_playlist->currentIndex();
-
-    QFileInfo fileInfo(file);
-    // Check if requested file/directory exists
-    if (!fileInfo.exists())
-    {
-        //if (!curItem.isValid())
-        //    onHome();
-        return;
-    }
-
-    QModelIndex item = findItem(fileInfo);
+    QModelIndex item = findItem(file);
 
     const bool selected = item.isValid() ? m_playlist->selectionModel()->isSelected(item) : false;
 
     // Check if requested song is already playing
     if ((m_player->state() != state_t::STOP) && selected)
-        return;
-
-    QString currentDir = m_fsm->filePath(m_dirlist->currentIndex());
-    const bool dirSelected = currentDir == fileInfo.dir().absolutePath();
-
-    if (fileInfo.isDir() || (TFACTORY->plExt().indexOf(fileInfo.suffix().toLower()) >= 0))
     {
-        if (dirSelected)
-        {
-            return;
-        }
-        else
-        {
-            m_dirlist->setProperty("UserData", QVariant(QString()));
-            setDir(file);
-            m_playMode = true; // TODO sync GUI
-        }
-
-        m_player->play();
-        return;
+        qWarning() << "Song is already playing";
+        return false;
     }
 
     {
-        const QString fName = fileInfo.fileName();
+        const QString fName = file.fileName();
 
         if (!fName.isEmpty())
         {
@@ -455,28 +425,15 @@ void centralFrame::setFile(const QString& file)
             if (!regexp.match(fName).hasMatch())
             {
                 // file is not supported, ignore message
-                return;
+                qWarning() << "Unsupported file";
+                return false;
             }
         }
     }
 
-    if (dirSelected)
-    {
-        if (item.isValid())
-        {
-            if (item != curItem)
-            {
-                m_playlist->setCurrentIndex(item);
-            }
-        }
-    }
-    else
-    {
-        m_dirlist->setProperty("UserData", QVariant(file));
-        setDir(fileInfo.dir().absolutePath());
-    }
+    return true;
 }
-*/
+
 void centralFrame::onCmdPlayPauseSong()
 {
     if (m_player->state() != state_t::STOP)

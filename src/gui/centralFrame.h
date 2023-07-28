@@ -54,6 +54,8 @@ public:
 
     void setDir(const QString& index);
 
+    bool canPlay(const QFileInfo& file);
+
 signals:
     void setDisplay();
     void clearDisplay(const QString&);
@@ -88,8 +90,6 @@ private:
     QString getFilter() const;
     QStringList getPattern() const;
     void changeState();
-
-    //void setFile(const QString& file);
 
     // Is the song currently loaded from the selected directory?
     bool isPlaylistDirSelected();

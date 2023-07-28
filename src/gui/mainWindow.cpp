@@ -179,10 +179,13 @@ void mainWindow::onMessage(QString msg)
 
     if (fileInfo.isFile())
     {
-        m_player->playOnLoad();
-        m_player->load(fileInfo.absoluteFilePath());
-        setPlayMode(false);
-        return;
+        if (m_cFrame->canPlay(fileInfo))
+        {
+            m_player->playOnLoad();
+            m_player->load(fileInfo.absoluteFilePath());
+            setPlayMode(false);
+            return;
+        }
     }
 
     qWarning() << "File not found";
