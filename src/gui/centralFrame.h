@@ -89,7 +89,7 @@ private:
     QStringList getPattern() const;
     void changeState();
 
-    void setFile(const QString& file);
+    //void setFile(const QString& file);
 
     // Is the song currently loaded from the selected directory?
     bool isPlaylistDirSelected();

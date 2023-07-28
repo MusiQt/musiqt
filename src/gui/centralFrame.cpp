@@ -402,7 +402,7 @@ void centralFrame::onCmdCurrentDir()
     QModelIndex item = findItem(fileInfo);
     m_playlist->setCurrentIndex(item);
 }
-
+/*
 void centralFrame::setFile(const QString& file)
 {
     qDebug() << "setFile" << file;
@@ -476,7 +476,7 @@ void centralFrame::setFile(const QString& file)
         setDir(fileInfo.dir().absolutePath());
     }
 }
-
+*/
 void centralFrame::onCmdPlayPauseSong()
 {
     if (m_player->state() != state_t::STOP)
