@@ -75,7 +75,7 @@ private:
 
     void createTrayIcon();
     void createActions();
-    void setPlayMode(QAction *action, bool mode);
+    void setPlayMode(bool mode);
 
     QToolBar *createControlBar();
     QToolBar *createSecondaryBar();
@@ -102,6 +102,8 @@ private:
     QAction *m_stopAction;
     QAction *m_infoAction;
     QAction *m_quitAction;
+
+    QAction *m_playlist;
 
     QSize m_windowSize;
 

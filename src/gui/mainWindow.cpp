@@ -172,6 +172,7 @@ void mainWindow::onMessage(QString msg)
     {
         m_player->playOnLoad();
         m_cFrame->setDir(fileInfo.absoluteFilePath());
+        setPlayMode(true);
         return;
     }
 
@@ -179,6 +180,7 @@ void mainWindow::onMessage(QString msg)
     {
         m_player->playOnLoad();
         m_player->load(fileInfo.absoluteFilePath());
+        setPlayMode(false);
         return;
     }
 
@@ -235,11 +237,11 @@ QToolBar *mainWindow::createSecondaryBar()
         [this]() { m_player->changeSubtune(dir_t::ID_NEXT); }
     );
 
-    QAction *playlist = new QAction(GET_ICON(icon_playlist), tr("Playlist"), this);
+    m_playlist = new QAction(GET_ICON(icon_playlist), tr("Playlist"), this);
     const bool playMode = m_settings.value(config::GENERAL_PLMODE, true).toBool();
-    setPlayMode(playlist, playMode);
-    connect(playlist, &QAction::triggered,
-        [this, playlist]() { setPlayMode(playlist, !m_cFrame->getPlayMode()); }
+    setPlayMode(playMode);
+    connect(m_playlist, &QAction::triggered,
+        [this]() { setPlayMode(!m_cFrame->getPlayMode()); }
     );
 #ifdef HAVE_LASTFM
     QPixmap pixmapOn(icon_lastfm);
@@ -293,7 +295,7 @@ QToolBar *mainWindow::createSecondaryBar()
     secondaryBar->addWidget(m_statusLed);
     
     secondaryBar->addWidget(songs);
-    secondaryBar->addAction(playlist);
+    secondaryBar->addAction(m_playlist);
 #ifdef HAVE_LASTFM
     secondaryBar->addAction(scrobble);
 #endif
@@ -578,20 +580,20 @@ void mainWindow::clearDisplay(const QString& text)
         m_infoDialog->setInfo(m_player->getMetaData());
 }
 
-void mainWindow::setPlayMode(QAction *action, bool mode)
+void mainWindow::setPlayMode(bool mode)
 {
     m_cFrame->setPlayMode(mode);
     if (mode)
     {
-        action->setToolTip(tr("Play mode"));
-        action->setStatusTip(tr("Switch to song mode"));
-        action->setIcon(GET_ICON(icon_playlist));
+        m_playlist->setToolTip(tr("Play mode"));
+        m_playlist->setStatusTip(tr("Switch to song mode"));
+        m_playlist->setIcon(GET_ICON(icon_playlist));
     }
     else
     {
-        action->setToolTip(tr("Play mode"));
-        action->setStatusTip(tr("Switch to playlist mode"));
-        action->setIcon(GET_ICON(icon_song));
+        m_playlist->setToolTip(tr("Play mode"));
+        m_playlist->setStatusTip(tr("Switch to playlist mode"));
+        m_playlist->setIcon(GET_ICON(icon_song));
     }
 }
 
