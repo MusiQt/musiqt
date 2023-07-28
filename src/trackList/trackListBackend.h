@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2021 Leandro Nini
+ *  Copyright (C) 2009-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include "trackList.h"
 
 #include <QFile>
+#include <QFileInfo>
 #include <QTextStream>
 
 class trackListBackend : public trackList
@@ -40,6 +41,16 @@ protected:
     void writeLine(QTextStream& outputStream, QString line)
     {
         outputStream << line << '\n';
+    }
+
+    QString getAbsolutePath(const QString &file)
+    {
+        QFileInfo fileInfo(file);
+        if (fileInfo.isAbsolute())
+            return file;
+
+        fileInfo.setFile(m_path);
+        return fileInfo.absolutePath().append("/").append(file);
     }
 
 public:

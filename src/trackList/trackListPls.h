@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2021 Leandro Nini
+ *  Copyright (C) 2009-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,7 +40,8 @@ public:
         for (int i=1; i<=items; i++)
         {
             QString section = QString("playlist/File%1").arg(i);
-            const QString file = pls.value(section).toString();
+            const QString file = getAbsolutePath(pls.value(section).toString());
+            qDebug() << "File:" << file;
             tracks.append(file);
         }
 
@@ -62,7 +63,7 @@ public:
 
         for (int i=0; i<tracks.size(); i++)
         {
-            qDebug() << "File: " << tracks.at(i);
+            qDebug() << "File:" << tracks.at(i);
             tmp = QString("File%1=%2").arg(i+1).arg(tracks.at(i));
             writeLine(outputStream, tmp);
         }

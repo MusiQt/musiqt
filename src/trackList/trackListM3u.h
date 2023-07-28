@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2021 Leandro Nini
+ *  Copyright (C) 2009-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -47,7 +47,9 @@ public:
                 int i = 1;
                 while (i<n && isprint(buffer[i])) i++;
                 buffer[i] = '\0';
-                tracks.append(QString(buffer));
+                const QString file = getAbsolutePath(QString(buffer));
+                qDebug() << "File:" << file;
+                tracks.append(file);
             }
         }
 
