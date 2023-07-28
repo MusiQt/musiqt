@@ -31,6 +31,7 @@
 #include "timeDisplay.h"
 #include "centralFrame.h"
 #include "player.h"
+#include "trackListFactory.h"
 
 #include <QStatusBar>
 #include <QAction>
@@ -168,7 +169,7 @@ void mainWindow::onMessage(QString msg)
 {
     qInfo() << "Received message:" << msg;
     QFileInfo fileInfo(msg);
-    if (fileInfo.isDir())
+    if (fileInfo.isDir() || (TFACTORY->plExt().contains("*."+fileInfo.suffix().toLower())))
     {
         m_player->playOnLoad();
         m_cFrame->setDir(fileInfo.absoluteFilePath());
