@@ -1,3 +1,12 @@
+* musiqt-3.0.1 - Jul 30, 2023
+Support for multiple music locations
+mpg123: allow multiple comments from id3v2 tags
+restored support for passing a directory to command line
+Handle relative paths in playlists
+Support playlists on message handling
+
+
+
 * musiqt-3.0.0 - Jul 17, 2023
 Project moved to MusiQt organization
 Relicensed project under GPL v3
