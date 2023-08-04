@@ -78,7 +78,7 @@ public:
     /// Start playback
     void play();
 
-    /// Pause playback
+    /// Pause/unpause playback
     void pause();
 
     /// Stop playback

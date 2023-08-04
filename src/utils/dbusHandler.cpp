@@ -220,7 +220,11 @@ void dbusHandler::Play() { m_player->play(); }
  * Pauses playback.
  * If playback is already paused, this has no effect.
  */
-void dbusHandler::Pause() { m_player->pause(); }
+void dbusHandler::Pause()
+{
+    if (m_player->state() == state_t::PLAY)
+        m_player->pause();
+}
 
 /*
  * Play/Pauses playback.
