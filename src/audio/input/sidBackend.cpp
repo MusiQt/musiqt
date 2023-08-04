@@ -429,7 +429,7 @@ bool sidBackend::loadTune(int num)
 #else
         char md5[SidTune::MD5_LENGTH+1];
         m_tune->createMD5(md5);
-        qDebug() << "Tune md5: " << md5;
+        qDebug() << "Tune md5:" << md5;
         songLength = m_db->length(md5, m_tune->getInfo()->currentSong()) * 1000;
 #endif
         setDuration((songLength < 0) ? 0 : songLength);
@@ -523,7 +523,7 @@ void sidBackend::openHvsc(const QString& hvscPath)
     m_db = new SidDatabase();
 
     QString slDbPath(QString("%1%2DOCUMENTS%2Songlengths").arg(hvscPath, QDir::separator()));
-    qDebug() << "SL DB path: " << slDbPath;
+    qDebug() << "SL DB path:" << slDbPath;
     if (m_db->open(QString(slDbPath).append(".md5").toUtf8().constData()))
     {
         m_newSonglengthDB = true;

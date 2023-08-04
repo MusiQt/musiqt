@@ -42,7 +42,7 @@ protected:
         m_frameRatio(inputPrecision/outputPrecision),
         m_inputSize(0)
     {
-        qDebug() << "Frame ratio " << m_frameRatio;
+        qDebug() << "Frame ratio" << m_frameRatio;
         m_buffer.reserve(INIT_BUFFER_SIZE);
     }
 

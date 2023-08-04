@@ -41,10 +41,10 @@ bool singleApp::isRunning()
 #else
     const QString fifoFileName(QString("%1/.musiqt.fifo").arg(runtimeDir));
 #endif
-    qDebug() << "FIFO file: " << fifoFileName;
+    qDebug() << "FIFO file:" << fifoFileName;
 
     const QString lockFileName(QString("%1/.musiqt.lock").arg(runtimeDir));
-    qDebug() << "Lock file: " << lockFileName;
+    qDebug() << "Lock file:" << lockFileName;
 
     m_lockFile = new QLockFile(lockFileName);
     if (m_lockFile->tryLock())
@@ -84,7 +84,7 @@ bool singleApp::isRunning()
                 out.setVersion(QDataStream::Qt_4_0);
                 out << path;
                 qint64 res = socket.write(block);
-                qDebug() << "res: " << res;
+                qDebug() << "res:" << res;
                 socket.flush();
                 socket.waitForBytesWritten();
                 socket.disconnectFromServer();
@@ -124,12 +124,12 @@ void singleApp::acceptMessage()
 
     if (socket->waitForReadyRead())
     {
-        qDebug() << "data: " << socket->bytesAvailable();
+        qDebug() << "data:" << socket->bytesAvailable();
         QDataStream in(socket);
         in.setVersion(QDataStream::Qt_4_0);
         QString message;
         in >> message;
-        qDebug() << "msg: " << message;
+        qDebug() << "msg:" << message;
 
         if (!message.isEmpty())
             emit sendMessage(message);

@@ -206,7 +206,7 @@ openmptBackend::openmptBackend(const QString& fileName) :
         }
 
         fName = tempFile(fileName);
-        qDebug() << "temp file: " << fName;
+        qDebug() << "temp file:" << fName;
         QFile modFile(fName);
         modFile.open(QIODevice::WriteOnly);
         unzOpenCurrentFile(modZip);
@@ -231,7 +231,7 @@ openmptBackend::openmptBackend(const QString& fileName) :
 
     if (tmpFile)
     {
-        qDebug() << "Deleting temp file: " << fName;
+        qDebug() << "Deleting temp file:" << fName;
         QFile::remove(fName);
     }
 

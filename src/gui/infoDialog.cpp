@@ -204,8 +204,8 @@ void infoDialog::setInfo(const metaData* mtd)
             }
         }
 
-        qDebug() << "Rows: " << rows;
-        qDebug() << "Cols: " << cols;
+        qDebug() << "Rows:" << rows;
+        qDebug() << "Cols:" << cols;
 
         const bool isComment = !key.compare(mtd->getKey(metaData::COMMENT));
 
@@ -288,7 +288,7 @@ void infoDialog::setInfo(const metaData* mtd)
         {
             QString file = QFileInfo(folder, files[0]).canonicalFilePath();
 
-            qDebug() << "Trying to load album art: " << file;
+            qDebug() << "Trying to load album art:" << file;
             imageLoader* loader = new imageLoader(file);
             loader->setAutoDelete(true);
             connect(loader, &imageLoader::loaded,

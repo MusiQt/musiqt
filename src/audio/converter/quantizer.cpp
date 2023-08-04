@@ -35,7 +35,7 @@ quantizerFixed<O>::quantizerFixed(const unsigned int fract)
     _random[1][0] = 268268;
     _random[1][1] = 7628932;
 
-    qDebug() << "quantizerFixed " << static_cast<int>(sizeof(O)) << " bytes";
+    qDebug() << "quantizerFixed" << static_cast<int>(sizeof(O)) << "bytes";
     _scalebits = fract+1-(sizeof(O)<<3);
     _mask = (1L<<_scalebits)-1;
     _clip = (1L<<fract);

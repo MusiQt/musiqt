@@ -112,7 +112,7 @@ gmeBackend::gmeBackend(const QString& fileName) :
     gme_type_t fileType;
     checkRetCode(gme_identify_file(fileName.toUtf8().constData(), &fileType));
 
-    qDebug() << "System " << gme_type_system(fileType);
+    qDebug() << "System" << gme_type_system(fileType);
 
     m_emu = gme_new_emu(fileType, m_config.samplerate());
     if (m_emu == nullptr)

@@ -107,7 +107,7 @@ public:
             QString url(urlItem.toLocalFile());
             if (QFileInfo(url).isFile())
             {
-                qDebug() << "adding url " << url;
+                qDebug() << "adding url" << url;
                 setData(index(beginRow, 0), url);
                 beginRow++;
             }

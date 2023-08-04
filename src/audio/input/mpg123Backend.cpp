@@ -148,7 +148,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
     }
 
     int err;
-    qDebug() << "Setting mpg123 decoder: " << m_config.decoder();
+    qDebug() << "Setting mpg123 decoder:" << m_config.decoder();
     const char *decoder = QString::compare(m_config.decoder(), "auto")
         ? m_config.decoder().toLocal8Bit().constData()
         : nullptr;
@@ -221,7 +221,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             {
                 info = QString();
             }
-            qDebug() << "TITLE: " << info;
+            qDebug() << "TITLE:" << info;
             m_metaData.addInfo(metaData::TITLE, info);
 
             if (id3v2 && id3v2->artist)
@@ -238,7 +238,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             {
                 info = QString();
             }
-            qDebug() << "ARTIST: " << info;
+            qDebug() << "ARTIST:" << info;
             m_metaData.addInfo(metaData::ARTIST, info);
 
             if (id3v2 && id3v2->album)
@@ -255,12 +255,12 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             {
                 info = QString();
             }
-            qDebug() << "ALBUM: " << info;
+            qDebug() << "ALBUM:" << info;
             m_metaData.addInfo(metaData::ALBUM, info);
 
             if (id3v2 && id3v2->genre)
             {
-                qDebug() << "genre id3v2: " << id3v2->genre->p;
+                qDebug() << "genre id3v2:" << id3v2->genre->p;
                 info = QString::fromUtf8(id3v2->genre->p);
                 int st = info.indexOf('(');
                 if (st >= 0)
@@ -274,13 +274,13 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             else if (id3v1 && (id3v1->genre < GENRES))
             {
                 info = genre[id3v1->genre];
-            qDebug() << "genre id3v1: " << id3v1->genre;
+            qDebug() << "genre id3v1:" << id3v1->genre;
             }
             else
             {
                 info = QString();
             }
-            qDebug() << "GENRE: " << info;
+            qDebug() << "GENRE:" << info;
             m_metaData.addInfo(metaData::GENRE, info);
 
             if (id3v2 && id3v2->year)
@@ -300,7 +300,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             {
                 info = QString();
             }
-            qDebug() << "YEAR: " << info;
+            qDebug() << "YEAR:" << info;
             m_metaData.addInfo(metaData::CONTENT_CREATED, info);
 
             if (id3v1 && (id3v1->comment[28] == 0))
@@ -311,7 +311,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             {
                 info = QString();
             }
-            qDebug() << "TRACK: " << info;
+            qDebug() << "TRACK:" << info;
             m_metaData.addInfo(metaData::TRACK_NUMBER, info);
 
             info = QString();
@@ -338,7 +338,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
 
             if (!info.isEmpty())
             {
-                qDebug() << "COMMENT: " << info;
+                qDebug() << "COMMENT:" << info;
                 m_metaData.addInfo(metaData::COMMENT, info);
             }
 
@@ -353,7 +353,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 }
                 if (!info.isEmpty())
                 {
-                    qDebug() << "LYRICS: " << info;
+                    qDebug() << "LYRICS:" << info;
                     m_metaData.addInfo(metaData::AS_TEXT, info);
                 }
             }
@@ -362,9 +362,9 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             {
                 mpg123_picture picture = id3v2->picture[0];
                 QString mime(picture.mime_type.p);
-                qDebug() << "mime: " << mime;
+                qDebug() << "mime:" << mime;
                 QString desc(picture.description.p);
-                qDebug() << "description: " << desc;
+                qDebug() << "description:" << desc;
                 m_metaData.addInfo(new QByteArray((char*)picture.data, picture.size));
             }
         }

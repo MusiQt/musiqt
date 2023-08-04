@@ -43,7 +43,7 @@ size_t resampler<I, O>::convert(const void* buf, size_t len)
     }
 
     const size_t l = m_buffer.size()/sizeof(I);
-    qDebug() << "resamplerDecimal idx: " << static_cast<int>(idx) << "; l: " << static_cast<int>(l);
+    qDebug().nospace() << "resamplerDecimal idx: " << static_cast<int>(idx) << ", l: " << static_cast<int>(l);
 
     m_dataPos = (l < idx) ? (l-idx)*sizeof(I) : 0;
     for (size_t j=idx; j<l; j+=m_channels)

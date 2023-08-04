@@ -64,7 +64,7 @@ public:
             //val = cdtext_get(PTI_TITLE, cdtext);
             //long start=track_get_start(track);
             //long length=track_get_length(track);
-            qDebug() << "File: " << fileName;
+            qDebug() << "File:" << fileName;
             tracks->append(FXPath::absolute(FXPath::directory(m_path), fileName));
         }
 

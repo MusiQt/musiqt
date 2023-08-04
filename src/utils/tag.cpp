@@ -293,7 +293,7 @@ QString getID3v2_2TextWithDesc(const char* data)
     char textEncoding = data[0];
     int i = 4;
     QString description = getID3v2_2Text(data+i, textEncoding);
-    qDebug() << "Short description: " << description;
+    qDebug() << "Short description:" << description;
     i += description.length() * ((textEncoding == 1) ? 2 : 1);
     return getID3v2_2Text(data+i, textEncoding);
 }
@@ -303,7 +303,7 @@ int tag::getID3v2_2Frame(char* buf)
     const int size = ((unsigned int)((unsigned char)buf[3])<<16)
         | ((unsigned int)((unsigned char)buf[4])<<8)
         | ((unsigned int)((unsigned char)buf[5]));
-    qDebug() << "ID3v2 Frame: " << QString(buf).left(3) << " size: " << size;
+    qDebug() << "ID3v2 Frame:" << QString(buf).left(3) << " size: " << size;
 
     // Frame ID      $xx xx xx  (three characters)
     // Size      3 * %0xxxxxxx
@@ -312,50 +312,50 @@ int tag::getID3v2_2Frame(char* buf)
     if (isFrame(buf, "TT2"))
     {
         m_title = getID3v2_2Text(data+1, data[0]);
-        qDebug() << "ID3v2 title: " << m_title;
+        qDebug() << "ID3v2 title:" << m_title;
     }
     else if (isFrame(buf, "TP1"))
     {
         m_artist = getID3v2_2Text(data+1, data[0]);
-        qDebug() << "ID3v2 artist: " << m_artist;
+        qDebug() << "ID3v2 artist:" << m_artist;
     }
     else if (isFrame(buf, "TAL"))
     {
         m_album = getID3v2_2Text(data+1, data[0]);
-        qDebug() << "ID3v2 album: " << m_album;
+        qDebug() << "ID3v2 album:" << m_album;
     }
     else if (isFrame(buf, "TRK"))
     {
         QString t = getID3v2_2Text(data+1, data[0]);
         m_track = t.left(t.indexOf('/'));
-        qDebug() << "ID3v2 track: " << m_track;
+        qDebug() << "ID3v2 track:" << m_track;
     }
     else if (isFrame(buf, "TYE"))
     {
         m_year = getID3v2_2Text(data+1, data[0]);
-        qDebug() << "ID3v2 year: " << m_year;
+        qDebug() << "ID3v2 year:" << m_year;
     }
     else if (isFrame(buf, "TPB"))
     {
         m_publisher.append(getID3v2_2Text(data+1, data[0])); // ???
-        qDebug() << "ID3v2 publisher: " << m_publisher;
+        qDebug() << "ID3v2 publisher:" << m_publisher;
     }
     else if (isFrame(buf, "TCO"))
     {
         QString g = getID3v2_2Text(data+1, data[0]);
         QString n = g.mid(g.indexOf('('), g.indexOf(')'));
         m_genre = (g.indexOf('(')>=0) ? QString(::genre[n.toInt()]) : g;
-        qDebug() << "ID3v2 genre: " << m_genre;
+        qDebug() << "ID3v2 genre:" << m_genre;
     }
     else if (isFrame(buf, "COM"))
     {
         m_comment = getID3v2_2TextWithDesc(data);
-        qDebug() << "ID3v2 comment: " << m_comment;
+        qDebug() << "ID3v2 comment:" << m_comment;
     }
     else if (isFrame(buf, "ULT"))
     {
         m_lyrics = getID3v2_2TextWithDesc(data);
-        qDebug() << "ID3v2 lyrics: " << m_lyrics;
+        qDebug() << "ID3v2 lyrics:" << m_lyrics;
     }
     else if (isFrame(buf, "PIC"))
     {
@@ -366,12 +366,12 @@ int tag::getID3v2_2Frame(char* buf)
         // Picture data       <binary data>
         char textEncoding = data[0];
         char type = data[4];
-        qDebug() << "Pic type: " << type;
+        qDebug() << "Pic type:" << type;
         int i = 5;
         QString description = getID3v2_2Text(data+i, textEncoding);
-        qDebug() << "Pic description: " << description;
+        qDebug() << "Pic description:" << description;
         i += description.length() * ((textEncoding == 1) ? 2 : 1);
-        qDebug() << "imgOffset: " << i;
+        qDebug() << "imgOffset:" << i;
         m_img = new QByteArray(data+i, size-i);
     }
     else
@@ -383,7 +383,7 @@ int tag::getID3v2_2Frame(char* buf)
 int tag::getID3v2Frame(char* buf, int ver)
 {
     const int size = getFrameSize(buf+4, (ver == 4));
-    qDebug() << "ID3v2 Frame: " << QString(buf).left(4) << " size: " << size;
+    qDebug() << "ID3v2 Frame:" << QString(buf).left(4) << " size: " << size;
 
     // Frame ID      $xx xx xx xx  (four characters)
     // Size      4 * %0xxxxxxx
@@ -415,49 +415,49 @@ int tag::getID3v2Frame(char* buf, int ver)
     if (isFrame(buf, "TIT2"))
     {
         m_title = getID3v2Text(data+1, data[0]);
-        qDebug() << "ID3v2 title: " << m_title;
+        qDebug() << "ID3v2 title:" << m_title;
     }
     else if (isFrame(buf, "TPE1"))
     {
         m_artist = getID3v2Text(data+1, data[0]);
-        qDebug() << "ID3v2 artist: " << m_artist;
+        qDebug() << "ID3v2 artist:" << m_artist;
     }
     else if (isFrame(buf, "TALB"))
     {
         m_album = getID3v2Text(data+1, data[0]);
-        qDebug() << "ID3v2 album: " << m_album;
+        qDebug() << "ID3v2 album:" << m_album;
     }
     else if (isFrame(buf, "TRCK"))
     {
         m_track = (getID3v2Text(data+1, data[0]));
-        qDebug() << "ID3v2 track: " << m_track;
+        qDebug() << "ID3v2 track:" << m_track;
     }
     else if (isFrame(buf, "TYER"))
     {
         m_year = getID3v2Text(data+1, data[0]);
-        qDebug() << "ID3v2 year: " << m_year;
+        qDebug() << "ID3v2 year:" << m_year;
     }
     else if (isFrame(buf, "TPUB"))
     {
         m_publisher = getID3v2Text(data+1, data[0]);
-        qDebug() << "ID3v2 publisher: " << m_publisher;
+        qDebug() << "ID3v2 publisher:" << m_publisher;
     }
     else if (isFrame(buf, "TCON"))
     {
         QString g = getID3v2Text(data+1, data[0]);
         QString n = g.mid(g.indexOf('('), g.indexOf(')'));
         m_genre = (g.indexOf('(') >= 0) ? QString(::genre[n.toInt()]) : g;
-        qDebug() << "ID3v2 genre: " << m_genre;
+        qDebug() << "ID3v2 genre:" << m_genre;
     }
     else if (isFrame(buf, "COMM"))
     {
         m_comment = getID3v2TextWithDesc(data);
-        qDebug() << "ID3v2 comment: " << m_comment;
+        qDebug() << "ID3v2 comment:" << m_comment;
     }
     else if (isFrame(buf, "USLT"))
     {
         m_lyrics = getID3v2TextWithDesc(data);
-        qDebug() << "ID3v2 lyrics: " << m_lyrics;
+        qDebug() << "ID3v2 lyrics:" << m_lyrics;
     }
     else if (isFrame(buf, "APIC"))
     {
@@ -468,26 +468,26 @@ int tag::getID3v2Frame(char* buf, int ver)
         // Picture data       <binary data>
         char textEncoding = data[0];
         QString mime = QString(data+1);
-        qDebug() << "ID3v2 pic mime: " << mime;
+        qDebug() << "ID3v2 pic mime:" << mime;
         int i = mime.length() + 2;
         const char type = data[i];
-        qDebug() << "Pic type: " << type;
+        qDebug() << "Pic type:" << type;
         i++;
         QString description = (textEncoding == 0) ?
             QString::fromLatin1(data+i) :
             QString::fromUtf16(reinterpret_cast<const char16_t*>(data+i));
-        qDebug() << "Pic description: " << description;
+        qDebug() << "Pic description:" << description;
 
         while (*(data+i))
             i++;
         if (textEncoding == 1)
             i++;
-        qDebug() << "imgOffset: " << i;
+        qDebug() << "imgOffset:" << i;
 
         m_img = new QByteArray(data+i, size-i);
     }
     else
-        qDebug() << "Unhandled frame " << QString(buf).left(4);
+        qDebug() << "Unhandled frame" << QString(buf).left(4);
 
     return size;
 }
@@ -511,7 +511,7 @@ bool tag::checkID3v2(char* buf, bool header)
     if (!isFrame(buf, header ? "ID3" : "3DI"))
         return false;
 
-    qDebug() << "ID3v2 tag found at the " << (header ? "beginning" : "end") << " of file";
+    qDebug() << "ID3v2 tag found at the" << (header ? "beginning" : "end") << "of file";
     return true;
 }
 
@@ -520,7 +520,7 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
     version = (int)buf[3];
     if ((version < 2) || (version > 4))
     {
-        qWarning() << "ID3v2 tag version " << QString::number(version).left(2) << " not supported";
+        qWarning() << "ID3v2 tag version" << QString::number(version).left(2) << "not supported";
         return false;
     }
 
@@ -537,7 +537,7 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
     qDebug() << "ID3v2 tag size: " << tagSize;
 
     const bool unsynch = flags & 0x80;
-    qDebug() << "ID3v2 unsynch: " << unsynch;
+    qDebug() << "ID3v2 unsynch:" << unsynch;
     if (unsynch)
         return false;
 
@@ -563,7 +563,7 @@ bool tag::getAPEItem(const char* orig, QString* dest, const char* tagName, int t
         return false;
 
     *dest = QString::fromUtf8(orig+tagNameLen, tagLen);
-    qDebug() << tagName << ": " << *dest;
+    qDebug().nospace() << tagName << ": " << *dest;
     return true;
 }
 
@@ -596,9 +596,9 @@ int tag::parseAPETag(const char* buf)
             // <cover data> binary
             const char* img = ptr + tagNameLength;
             QString desc = QString(img);
-            qDebug() << "Pic description: " << desc;
+            qDebug() << "Pic description:" << desc;
             const int imgOffset = desc.length() + 1;
-            qDebug() << "imgOffset: " << imgOffset;
+            qDebug() << "imgOffset:" << imgOffset;
             m_img = new QByteArray(img+imgOffset, itemSize-imgOffset);
         }
     }
@@ -614,12 +614,12 @@ bool tag::checkAPE(char* buf, int& itemsSize, int& tagSize)
     qDebug() << "APE tag found";
 
     const int version = getLE32(buf+8);
-    qDebug() << "APE tag version: " << version;
+    qDebug() << "APE tag version:" << version;
 
     tagSize = getLE32(buf+12);
-    qDebug() << "APE tag size: " << tagSize;
+    qDebug() << "APE tag size:" << tagSize;
 
-    qDebug() << "APE tag items: " << getLE32(buf+16);
+    qDebug() << "APE tag items:" << getLE32(buf+16);
 
     itemsSize = tagSize - APE_HEADER_SIZE;
 

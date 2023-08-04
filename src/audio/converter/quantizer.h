@@ -40,7 +40,7 @@ private:
     quantizerVoid(const quantizerVoid&);
     quantizerVoid& operator=(const quantizerVoid&);
 public:
-    quantizerVoid() { qDebug() << "quantizerVoid " <<  static_cast<int>(sizeof(T)) << " bytes"; };
+    quantizerVoid() { qDebug() << "quantizerVoid" <<  static_cast<int>(sizeof(T)) << "bytes"; };
     virtual ~quantizerVoid() {}
 
     /// Get dithered sample

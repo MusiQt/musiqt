@@ -105,7 +105,7 @@ bool audio::play(input* i)
         }
     }
 
-    qDebug() << "Setting parameters "
+    qDebug() << "Setting parameters"
         << format.sampleRate << ":" << format.channels << ":" << sampleTypeString(format.sampleType);
     m_iw.reset(new InputWrapper(i));
     connect(m_iw.data(), &InputWrapper::songFinished, this, &audio::songEnded);
@@ -118,7 +118,7 @@ bool audio::play(input* i)
     {
         audioFormat_t outputFormat = m_audioOutput->init(selectedCard, format);
 
-        qDebug() << "Output parameters "
+        qDebug() << "Output parameters"
             << outputFormat.sampleRate << ":" << outputFormat.channels << ":" << sampleTypeString(outputFormat.sampleType);
 
         if (!m_iw->setFormat(outputFormat))

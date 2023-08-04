@@ -97,7 +97,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
             if (dl_av_read_frame(m_formatContext, &m_packet) < 0)
             {
                 // AVERROR_EOF
-                qDebug() << "Last frame: " << static_cast<int>(decodedSize);
+                qDebug() << "Last frame:" << static_cast<int>(decodedSize);
                 memcpy(buffer, m_decodeBuf, decodedSize);
                 m_decodeBufOffset = 0;
                 return decodedSize;
@@ -246,7 +246,7 @@ bool ffmpegBackend::init()
     if (dl_av_find_input_format("wv"))
         m_ext << "wv";
 
-    qDebug() << "Ffmpeg extensions supported: " << m_ext;
+    qDebug() << "Ffmpeg extensions supported:" << m_ext;
     return true;
 }
 

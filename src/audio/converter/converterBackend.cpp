@@ -45,7 +45,7 @@ void resamplerBackend::setBufferSize(size_t size)
         tmp += 0x10000ll;
 
     size_t const bufferSize = (tmp>>16) * m_inputFrameSize;
-    qDebug() << "resampler buffer size: " << bufferSize;
+    qDebug() << "resampler buffer size:" << bufferSize;
     m_buffer.resize(bufferSize);
 }
 
@@ -71,7 +71,7 @@ void converterBackend::setBufferSize(size_t size)
     m_inputSize = size;
 
     size_t const bufferSize = size * m_frameRatio;
-    qDebug() << "converter buffer size: " << bufferSize;
+    qDebug() << "converter buffer size:" << bufferSize;
     m_buffer.resize(bufferSize);
 }
 

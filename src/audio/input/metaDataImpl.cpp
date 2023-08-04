@@ -52,7 +52,7 @@ void metaDataImpl::addInfo(QString type, QString info)
 {
     if (!info.isEmpty())
     {
-        qDebug() << "adding metadata: " << type << ", value: "<< info;
+        qDebug().nospace() << "adding metadata: " << type << ", value: " << info;
 
         m_infos.insert(type, info.trimmed());
     }

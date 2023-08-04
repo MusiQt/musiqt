@@ -78,13 +78,13 @@ void readBlockPicture(const QByteArray &data, QByteArray& image, QString& mime)
 {
     const char* ptr = data.constData();
     quint32 picType = getNum(ptr);
-    qDebug() << "picType: " << picType;
+    qDebug() << "picType:" << picType;
     quint32 mimeLen = getNum(ptr+4);
     mime = QString(QByteArray::fromRawData(ptr+8, mimeLen));
-    qDebug() << "mime: " << mime;
+    qDebug() << "mime:" << mime;
     quint32 descLen = getNum(ptr+8+mimeLen);
     QString desc = QString(QByteArray::fromRawData(ptr+8+mimeLen, descLen));
-    qDebug() << "desc: " << desc;
+    qDebug() << "desc:" << desc;
 
     const quint32 dataPos = 8+mimeLen+4+descLen+16;
     quint32 dataLen = getNum(ptr+dataPos);
@@ -142,13 +142,13 @@ void oggTag::parseTags(char **ptr, metaDataImpl& data)
             {
                 // like METADATA_BLOCK_PICTURE but not encoded
                 quint32 picType = getNum(*ptr+16);
-                qDebug() << "picType: " << picType;
+                qDebug() << "picType:" << picType;
                 quint32 mimeLen = getNum(*ptr+20);
                 mime = QString(QByteArray::fromRawData(*ptr+24, mimeLen));
-                qDebug() << "mime: " << mime;
+                qDebug() << "mime:" << mime;
                 quint32 descLen = getNum(*ptr+24+mimeLen);
                 QString desc = QString(QByteArray::fromRawData(*ptr+28+mimeLen, descLen));
-                qDebug() << "desc: " << desc;
+                qDebug() << "desc:" << desc;
 
                 // FIXME - WTF! the image is UTF8 encoded!
                 const quint32 dataPos = 28+mimeLen+descLen+16;
