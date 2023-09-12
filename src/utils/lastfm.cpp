@@ -289,7 +289,7 @@ void lastfmConfig::auth()
     QMap<QString, QString> params;
     params["method"] = "auth.getToken";
     params["api_key"] = lastfm::ws::ApiKey;
-    params["api_sig "] = signature("auth.getToken");
+    params["api_sig"] = signature("auth.getToken");
 
     QNetworkReply* reply = lastfm::ws::post(params);
     QObject::connect(reply, &QNetworkReply::finished, this, &lastfmConfig::gotToken);
@@ -321,7 +321,7 @@ void lastfmConfig::gotToken()
     params["method"] = "auth.getSession";
     params["api_key"] = lastfm::ws::ApiKey;
     params["token"] = token;
-    params["api_sig "] = signature("auth.getSession");
+    params["api_sig"] = signature("auth.getSession");
 
     reply = lastfm::ws::post(params);
     QObject::connect(reply, &QNetworkReply::finished,
