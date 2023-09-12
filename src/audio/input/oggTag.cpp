@@ -130,16 +130,21 @@ void oggTag::parseTags(char **ptr, metaDataImpl& data)
             {
                 readBlockPicture(QByteArray::fromBase64(*ptr+23), image, mime);
             }
+            // COVERART and COVERARTMIME are unofficial and deprecated
             else if (isTag(*ptr, "COVERARTMIME"))
             {
+                qWarning() << "Deprecated COVERARTMIME tag";
                 mime = QString(*ptr+13);
             }
             else if (isTag(*ptr, "COVERART"))
             {
+                qWarning() << "Deprecated COVERART tag";
                 image = QByteArray::fromBase64(*ptr+9);
             }
-            else if (isTag(*ptr, "BINARY_COVERART"))
+            else if (isTag(*ptr, "BINARY_COVERART")) // Undocumented
             {
+                qWarning() << "Undocumented and unsupported BINARY_COVERART tag";
+#if 0
                 // like METADATA_BLOCK_PICTURE but not encoded
                 quint32 picType = getNum(*ptr+16);
                 qDebug() << "picType:" << picType;
@@ -150,14 +155,13 @@ void oggTag::parseTags(char **ptr, metaDataImpl& data)
                 QString desc = QString(QByteArray::fromRawData(*ptr+28+mimeLen, descLen));
                 qDebug() << "desc:" << desc;
 
-                // FIXME - WTF! the image is UTF8 encoded!
+                // FIXME - WTF! the image is UTF8 encoded?!
                 const quint32 dataPos = 28+mimeLen+descLen+16;
                 quint32 dataLen = getNum(*ptr+dataPos);
-                QString imgData = QString::fromUtf8(*ptr+4+dataPos, dataLen);
-                for (auto i = imgData.constBegin(); i != imgData.constEnd(); ++i)
-                {
-                    image.append(static_cast<char >((*i).unicode()));
-                }
+                qDebug() << "dataLen:" << dataLen;
+                QString imgData = QString::fromUtf8(*ptr+dataPos+4, dataLen);
+                image.append(imgData.toLatin1());
+#endif
             }
         }
         ++ptr;
