@@ -50,7 +50,7 @@
 #define ftello64 ftell
 #define fseeko64 fseek
 #else
-#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__HAIKU__) || defined(MINIZIP_FOPEN_NO_64)
 #define fopen64 fopen
 #define ftello64 ftello
 #define fseeko64 fseeko
@@ -82,7 +82,7 @@
 #include "mz64conf.h"
 #endif
 
-/* a type choosen by DEFINE */
+/* a type chosen by DEFINE */
 #ifdef HAVE_64BIT_INT_CUSTOM
 typedef  64BIT_INT_CUSTOM_TYPE ZPOS64_T;
 #else
