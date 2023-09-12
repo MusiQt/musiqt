@@ -211,6 +211,7 @@ void infoDialog::setInfo(const metaData* mtd)
 
         if (isComment && ((rows>1) || (cols>80)))
         {
+            // Comment with more than one row, or very long
             m_comment->setPlainText(info);
             m_commentButton->setEnabled(true);
             m_commentButton->click();
@@ -218,6 +219,7 @@ void infoDialog::setInfo(const metaData* mtd)
         }
         else if (!key.compare(mtd->getKey(metaData::AS_TEXT)))
         {
+            // lyrics
             m_lyrics->setPlainText(info);
             m_lyricsButton->setEnabled(true);
             if (!showExtraBox)
@@ -226,6 +228,7 @@ void infoDialog::setInfo(const metaData* mtd)
         }
         else
         {
+            // shot comments or other
             QLabel *lbl = new QLabel(QString("<i>%1</i>:").arg(key), m_matrix);
             gLayout->addWidget(lbl, j, 0);
             QPalette palette = lbl->palette();
@@ -243,6 +246,7 @@ void infoDialog::setInfo(const metaData* mtd)
                 info = info.left(75).append("[...]");
             }
 
+            // check for URLs in comments
             if (isComment)
             {
                 QRegularExpression url("(\\b(?:https?://|www\\.)\\S+\\b)");
