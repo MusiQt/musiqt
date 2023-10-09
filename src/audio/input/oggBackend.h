@@ -87,6 +87,8 @@ private:
     unsigned int m_samplerate;
     unsigned int m_channels;
 
+    bool m_seekable;
+
     oggConfig m_config;
 
 private:
@@ -113,7 +115,7 @@ public:
     static QStringList ext();
 
     /// Seek support
-    bool seekable() const override { return true; }
+    bool seekable() const override { return m_seekable; }
 
     /// Seek specified position
     bool seek(double pos) override;

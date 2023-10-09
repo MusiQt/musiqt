@@ -144,6 +144,8 @@ oggBackend::oggBackend(const QString& fileName) :
     m_samplerate = m_vi->rate;
     m_channels = m_vi->channels;
 
+    m_seekable = ov_seekable(ovFile.get()) != 0;
+
     setDuration(static_cast<unsigned int>(ov_time_total(ovFile.get(), -1)*1000.));
 
     char **ptr = ov_comment(ovFile.get(), -1)->user_comments;
