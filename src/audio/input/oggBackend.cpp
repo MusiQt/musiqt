@@ -97,7 +97,7 @@ size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize)
         int current_section;
         read = ov_read(m_vf, (char*)buffer+n, bufferSize-n, 0,
                 (m_config.precision() == sample_t::S16) ? 2 : 1,
-                (m_config.precision() != sample_t::U8), &current_section);
+                (m_config.precision() != sample_t::U8) ? 1 : 0, &current_section);
         n += read;
     } while (read && (n < bufferSize));
 
