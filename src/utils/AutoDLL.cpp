@@ -20,6 +20,8 @@
 
 #include "utils.h"
 
+#include <QDebug>
+
 AutoDLL::AutoDLL(const char* nm) :
     m_handle(nullptr)
 {
@@ -27,7 +29,10 @@ AutoDLL::AutoDLL(const char* nm) :
     {
         m_handle = new QLibrary(nm);
         if (!m_handle->load())
+        {
+            qWarning() << m_handle->errorString();
             utils::delPtr(m_handle);
+        }
     }
 }
 
