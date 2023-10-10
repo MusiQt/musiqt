@@ -11,10 +11,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
         "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options("$<$<CONFIG:DEBUG>:-Wall;-Wextra;-pedantic>")
-ENDIF()
+endif()
 
 # stupid cmake doesn't support CPPFLAGS
 # append it to cmake flags so the ffmpeg header can be found
@@ -22,12 +22,12 @@ ENDIF()
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} $ENV{CPPFLAGS}")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{CPPFLAGS}")
 
-IF(WIN32)
+if(WIN32)
     OPTION(PORTABLE "Enable Portable App" OFF)
-    IF(PORTABLE)
+    if(PORTABLE)
         add_compile_definitions(MUSIQT_PORTABLE_APP)
-    ENDIF(PORTABLE)
-ENDIF(WIN32)
+    endif()
+endif()
 
 #####################################################
 
@@ -129,7 +129,7 @@ if(WIN32)
     target_sources(musiqt PRIVATE
         ${CMAKE_BINARY_DIR}/src/resfile.rc
     )
-endif(WIN32)
+endif()
 
 #####################################################
 
@@ -158,17 +158,17 @@ INSTALL(FILES musiqt.png DESTINATION ${CMAKE_INSTALL_DATADIR}/icons)
 # Check for debug build
 
 add_compile_definitions("$<$<CONFIG:RELEASE>:QT_NO_DEBUG_OUTPUT>")
-IF(MINGW)
+if(MINGW)
     target_link_libraries(musiqt debug -mconsole optimized -mwindows)
-ENDIF(MINGW)
+endif()
 
 #####################################################
 # Check for gettext
 
 OPTION(NLS "Enable Native Language Support" ON)
-IF(NLS)
+if(NLS)
     find_package(Gettext)
-    IF(GETTEXT_FOUND)
+    if(GETTEXT_FOUND)
         SET(ENABLE_NLS 1)
         file(GLOB PO_FILES ${CMAKE_SOURCE_DIR}/po/*.po)
         GETTEXT_CREATE_TRANSLATIONS(po/musiqt.pot ALL ${PO_FILES})
@@ -180,10 +180,10 @@ IF(NLS)
             src/translator.cpp
             src/translator.h
         )
-    ELSE(GETTEXT_FOUND)
+    else()
         MESSAGE(STATUS "gettext not found, NLS disabled")
-    ENDIF(GETTEXT_FOUND)
-ENDIF(NLS)
+    endif()
+endif()
 
 add_custom_target(
     update_pot
@@ -209,10 +209,10 @@ IF (XGETTEXT_CMD)
         DEPENDS ${SRC_FILES}
         COMMENT "Extracting translatable messages to ${POT_FILE}"
     )
-ENDIF(XGETTEXT_CMD)
+endif()
 
 # update the pot files
-IF(GETTEXT_MSGMERGE_EXECUTABLE)
+if(GETTEXT_MSGMERGE_EXECUTABLE)
     file(GLOB_RECURSE PO_FILES ${PROJECT_SOURCE_DIR}/po/*.po)
     foreach(PO_FILE IN ITEMS ${PO_FILES})
         add_custom_command(
@@ -224,15 +224,15 @@ IF(GETTEXT_MSGMERGE_EXECUTABLE)
             COMMENT "Updating translation ${PO_FILE}"
         )
     endforeach()
-ENDIF(GETTEXT_MSGMERGE_EXECUTABLE)
+endif()
 
 ##################################################################
 # Check for Qt
 
 OPTION(QT6 "Enable building with Qt6 if found (experimental)" OFF)
-IF(QT6)
+if(QT6)
     find_package(Qt6 COMPONENTS Widgets Network Multimedia)
-ENDIF(QT6)
+endif()
 if (NOT Qt6_FOUND)
     find_package(Qt5 5.15 COMPONENTS Widgets Network Multimedia REQUIRED)
 endif()
@@ -262,13 +262,13 @@ if (UNIX)
         )
         target_link_libraries(musiqt Qt::DBus)
     endif()
-endif(UNIX)
+endif()
 
 ##################################################################
 # Search for zlib
 
 pkg_check_modules(ZLIB IMPORTED_TARGET zlib>=1.0)
-IF(ZLIB_FOUND)
+if(ZLIB_FOUND)
     add_compile_definitions(NOUNCRYPT)
     SET(HAVE_LIBZ 1)
     target_sources(musiqt PRIVATE
@@ -283,15 +283,15 @@ IF(ZLIB_FOUND)
             src/libs/unzip/iowin32.c
         )
         set_source_files_properties(src/libs/unzip/iowin32.c PROPERTIES COMPILE_FLAGS "-Wno-unused-variable -Wno-unused-parameter")
-    endif(MINGW)
+    endif()
     target_link_libraries(musiqt PkgConfig::ZLIB)
-ENDIF(ZLIB_FOUND)
+endif()
 
 ##################################################################
 # Search for libsndfile
 
 OPTION(SNDFILE "Build sndfile backend if available" ON)
-IF(SNDFILE)
+if(SNDFILE)
     #find_package(SndFile 1.0)
     pkg_check_modules(sndfile IMPORTED_TARGET sndfile>=1.0)
     if(sndfile_FOUND)
@@ -305,14 +305,14 @@ IF(SNDFILE)
         if(MINGW AND ${sndfile_VERSION} VERSION_GREATER_EQUAL "1.0.21")
             SET(ENABLE_SNDFILE_WINDOWS_PROTOTYPES 1)
         endif()
-    endif(sndfile_FOUND)
-ENDIF(SNDFILE)
+    endif()
+endif()
 
 ##################################################################
 # Search for libmpg123
 
 OPTION(MPG123 "Build mpg123 backend if available" ON)
-IF(MPG123)
+if(MPG123)
     pkg_check_modules(libmpg123 IMPORTED_TARGET libmpg123>=1.6)
     if(libmpg123_FOUND)
         SET(HAVE_MPG123 1)
@@ -321,14 +321,14 @@ IF(MPG123)
             src/audio/input/mpg123Backend.h
         )
         target_link_libraries(musiqt PkgConfig::libmpg123)
-    endif(libmpg123_FOUND)
-ENDIF(MPG123)
+    endif()
+endif()
 
 ##################################################################
 # Search for vorbisfile
 
 OPTION(VORBIS "Build ogg-vorbis backend if available" ON)
-IF(VORBIS)
+if(VORBIS)
     pkg_check_modules(vorbisfile IMPORTED_TARGET vorbisfile>=1.1)
     if(vorbisfile_FOUND)
         SET(HAVE_VORBIS 1)
@@ -338,13 +338,13 @@ IF(VORBIS)
         )
         target_link_libraries(musiqt PkgConfig::vorbisfile)
     endif(vorbisfile_FOUND)
-ENDIF(VORBIS)
+endif(VORBIS)
 
 ##################################################################
 # Search for opusfile
 
 OPTION(OPUS "Build opus backend if available" ON)
-IF(OPUS)
+if(OPUS)
     pkg_check_modules(opusfile IMPORTED_TARGET opusfile>=0.7)
     if(opusfile_FOUND)
         SET(HAVE_OPUS 1)
@@ -353,14 +353,14 @@ IF(OPUS)
             src/audio/input/opusBackend.h
         )
         target_link_libraries(musiqt PkgConfig::opusfile)
-    endif(opusfile_FOUND)
-ENDIF(OPUS)
+    endif()
+endif()
 
 ##################################################################
 # Search for Game Music Engine
 
 OPTION(GME "Build Game Music Engine backend if available" ON)
-IF(GME)
+if(GME)
     pkg_check_modules(libgme IMPORTED_TARGET libgme>=0.6)
     if(libgme_FOUND)
         SET(HAVE_GME 1)
@@ -369,14 +369,14 @@ IF(GME)
             src/audio/input/gmeBackend.h
         )
         target_link_libraries(musiqt PkgConfig::libgme)
-    endif(libgme_FOUND)
-ENDIF(GME)
+    endif()
+endif()
 
 ##################################################################
 # Search for libopenmpt
 
 OPTION(OPENMPT "Build openmpt backend if available" ON)
-IF(OPENMPT)
+if(OPENMPT)
     pkg_check_modules(libopenmpt IMPORTED_TARGET libopenmpt>=0.3)
     if(libopenmpt_FOUND)
         SET(HAVE_OPENMPT 1)
@@ -385,14 +385,14 @@ IF(OPENMPT)
             src/audio/input/openmptBackend.h
         )
         target_link_libraries(musiqt PkgConfig::libopenmpt)
-    endif(libopenmpt_FOUND)
-ENDIF(OPENMPT)
+    endif()
+endif()
 
 ##################################################################
 # Search for wavpack
 
 OPTION(WAVPACK "Build wavpack backend if available" ON)
-IF(WAVPACK)
+if(WAVPACK)
     pkg_check_modules(wavpack IMPORTED_TARGET wavpack>=4)
     if(wavpack_FOUND)
         SET(HAVE_WAVPACK 1)
@@ -401,14 +401,14 @@ IF(WAVPACK)
             src/audio/input/wvBackend.h
         )
         target_link_libraries(musiqt PkgConfig::wavpack)
-    endif(wavpack_FOUND)
-ENDIF(WAVPACK)
+    endif()
+endif()
 
 ##################################################################
 # Search for ffmpeg
 
 OPTION(FFMPEG "Build ffmpeg backend if available" ON)
-IF(FFMPEG)
+if(FFMPEG)
     INCLUDE(CheckIncludeFile)
     CHECK_INCLUDE_FILE(libavcodec/avcodec.h HAVE_AVCODEC_H)
     CHECK_INCLUDE_FILE(libavformat/avformat.h HAVE_AVFORMAT_H -D__STDC_CONSTANT_MACROS)
@@ -420,13 +420,13 @@ IF(FFMPEG)
             src/audio/input/ffmpegBackend.h
         )
     endif()
-ENDIF(FFMPEG)
+endif()
 
 ##################################################################
 # Search for libsidplayfp
 
 OPTION(SIDPLAYFP "Build sidplayfp backend if available" ON)
-IF(SIDPLAYFP)
+if(SIDPLAYFP)
     pkg_check_modules(libsidplayfp IMPORTED_TARGET libsidplayfp>=1.0)
     if(libsidplayfp_FOUND)
         SET(HAVE_SIDPLAYFP 1)
@@ -442,8 +442,8 @@ IF(SIDPLAYFP)
         CHECK_INCLUDE_FILE_CXX(sidplayfp/builders/resid.h HAVE_SIDPLAYFP_BUILDERS_RESID_H)
         CHECK_INCLUDE_FILE_CXX(sidplayfp/builders/hardsid.h HAVE_SIDPLAYFP_BUILDERS_HARDSID_H)
         CHECK_INCLUDE_FILE_CXX(sidplayfp/builders/exsid.h HAVE_SIDPLAYFP_BUILDERS_EXSID_H)
-    endif(libsidplayfp_FOUND)
-ENDIF(SIDPLAYFP)
+    endif()
+endif()
 
 ##################################################################
 # Check if we need STIL support
@@ -453,7 +453,7 @@ if(libsidplayfp_FOUND OR libgme_FOUND)
     if(libstilview_FOUND)
         SET(HAVE_STILVIEW 1)
         target_link_libraries(musiqt PkgConfig::libstilview)
-    endif(libstilview_FOUND)
+    endif()
 endif()
 
 ##################################################################
@@ -471,25 +471,25 @@ if(HVL)
         src/audio/input/hvlBackend.cpp
     )
     set_source_files_properties(src/libs/hvl_replay/hvl_replay.c PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
-endif(HVL)
+endif()
 
 ##################################################################
 # Search for libmpc
 
 OPTION(MPC "Build mpc backend if available" ON)
-IF(MPC)
+if(MPC)
     INCLUDE(CheckLibraryExists)
     CHECK_INCLUDE_FILE(mpc/mpcdec.h HAVE_MPC_MPCDEC_H)
     if(HAVE_MPC_MPCDEC_H)
         set(CMAKE_REQUIRED_LIBRARIES -lm) # ???
         CHECK_LIBRARY_EXISTS(mpcdec mpc_demux_init "" HAVE_LIBMPCDEC)
         set(MPCDEC_SV8 1)
-    else(HAVE_MPC_MPCDEC_H)
+    else()
         CHECK_INCLUDE_FILE(mpcdec/mpcdec.h HAVE_MPCDEC_MPCDEC_H)
         if(HAVE_MPCDEC_MPCDEC_H)
             CHECK_LIBRARY_EXISTS(mpcdec mpc_decoder_initialize "" HAVE_LIBMPCDEC)
-        endif(HAVE_MPCDEC_MPCDEC_H)
-    endif(HAVE_MPC_MPCDEC_H)
+        endif()
+    endif()
 
     if(HAVE_LIBMPCDEC)
         target_sources(musiqt PRIVATE
@@ -497,8 +497,8 @@ IF(MPC)
             src/audio/input/mpcBackend.h
         )
         target_link_libraries(musiqt mpcdec)
-    endif(HAVE_LIBMPCDEC)
-ENDIF(MPC)
+    endif()
+endif()
 
 ##################################################################
 # Search for bs2b
@@ -519,7 +519,7 @@ if(LASTFM)
         if(Qt6Xml_FOUND AND Qt6Network_FOUND)
             set(INTERNAL_LIBLASTFM 1)
         endif()
-    else(Qt6_FOUND)
+    else()
         find_package(LASTFM)
         if(LASTFM_FOUND)
             find_package(Qt5 OPTIONAL_COMPONENTS Xml)
@@ -529,14 +529,14 @@ if(LASTFM)
                     src/utils/lastfm.cpp
                 )
                 target_link_libraries(musiqt LASTFM::LASTFM Qt::Xml)
-            endif(Qt5Xml_FOUND)
-        else(LASTFM_FOUND)
+            endif()
+        else()
             find_package(Qt5 OPTIONAL_COMPONENTS Network Xml)
             if(Qt5Xml_FOUND AND Qt5Network_FOUND)
                 set(INTERNAL_LIBLASTFM 1)
             endif()
-        endif(LASTFM_FOUND)
-    endif(Qt6_FOUND)
+        endif()
+    endif()
 
     if (INTERNAL_LIBLASTFM)
         SET(HAVE_LASTFM 1)
@@ -596,7 +596,7 @@ if(LASTFM)
 
         target_link_libraries(musiqt Qt::Network Qt::Xml)
     endif()
-endif(LASTFM)
+endif()
 
 ##################################################################
 
