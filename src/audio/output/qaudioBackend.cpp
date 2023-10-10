@@ -108,6 +108,17 @@ qaudioBackend::qaudioBackend() :
 
 qaudioBackend::~qaudioBackend() { delete m_thread; }
 
+const char* getErrorString(QAudio::Error error)
+{
+    switch (error)
+    {
+    case QAudio::IOError:       return "Error reading from audio device";
+    case QAudio::UnderrunError: return "Underrun error";
+    case QAudio::FatalError:    return "Non-recoverable error";
+    default:                    return "Unknown error";
+    }
+}
+
 void qaudioBackend::onStateChange(QAudio::State newState)
 {
     qDebug() << "onStateChange: " << newState;
@@ -123,21 +134,7 @@ void qaudioBackend::onStateChange(QAudio::State newState)
             QMetaObject::invokeMethod(m_audioOutput, "error", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QAudio::Error, error));
             if (error != QAudio::NoError)
             {
-                QString errorMsg;
-                switch (error)
-                {
-                case QAudio::IOError:
-                    errorMsg = "Error reading from audio device";
-                    break;
-                case QAudio::UnderrunError:
-                    errorMsg = "Underrun error";
-                    break;
-                case QAudio::FatalError:
-                    errorMsg = "Non-recoverable error";
-                    break;
-                default:
-                    break;
-                }
+                QString errorMsg = getErrorString(error);
                 qDebug() << "errorMsg: " << errorMsg;
                 emit audioError(errorMsg);
             }
