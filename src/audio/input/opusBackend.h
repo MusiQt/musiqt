@@ -68,6 +68,8 @@ private:
 
     opusConfig m_config;
 
+    bool m_seekable;
+
 private:
     static OpusFileCallbacks opus_callbacks;
 
@@ -92,7 +94,7 @@ public:
     static QStringList ext();
 
     /// Seek support
-    bool seekable() const override { return true; }
+    bool seekable() const override { return m_seekable; }
 
     /// Seek specified position
     bool seek(double pos) override;

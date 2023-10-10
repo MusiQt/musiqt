@@ -149,6 +149,8 @@ opusBackend::opusBackend(const QString& fileName) :
         throw loadError(QString("Error code: %1").arg(error));
     }
 
+    m_seekable = op_seekable(m_of) != 0;
+
     setDuration(static_cast<unsigned int>(op_pcm_total(m_of, -1)/48));
 
     char **ptr = op_tags(m_of, -1)->user_comments;
