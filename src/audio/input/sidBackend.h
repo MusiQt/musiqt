@@ -209,7 +209,7 @@ public:
     unsigned int subtune() const override { return m_tune->getInfo()->currentSong(); }
 
     /// Change subtune
-    bool subtune(const unsigned int i) override;
+    bool subtune(unsigned int i) override;
 
     /// Get samplerate
     unsigned int samplerate() const override { return m_config.samplerate(); }

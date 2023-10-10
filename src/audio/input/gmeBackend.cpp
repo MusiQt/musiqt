@@ -230,7 +230,7 @@ bool gmeBackend::rewind()
     return true;
 }
 
-bool gmeBackend::subtune(const unsigned int i)
+bool gmeBackend::subtune(unsigned int i)
 {
     if ((i > 0) && (i <= (unsigned int)gme_track_count(m_emu)))
     {

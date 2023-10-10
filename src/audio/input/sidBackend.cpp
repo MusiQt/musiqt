@@ -403,7 +403,7 @@ bool sidBackend::rewind()
     return true;
 }
 
-bool sidBackend::subtune(const unsigned int i)
+bool sidBackend::subtune(unsigned int i)
 {
     if (i <= m_tune->getInfo()->songs())
     {
