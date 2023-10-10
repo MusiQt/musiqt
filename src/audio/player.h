@@ -55,6 +55,8 @@ private:
 
     void preloaded(input* res);
 
+    void onError(const QString& error);
+
 signals:
     void stateChanged();
     void songChanged();

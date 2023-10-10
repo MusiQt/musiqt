@@ -33,10 +33,16 @@ player::player() :
     connect(m_audio.data(), &audio::updateTime,  this, &player::updateTime);
     connect(m_audio.data(), &audio::songEnded,   this, &player::songEnded);
     connect(m_audio.data(), &audio::preloadSong, this, &player::preloadSong);
-    connect(m_audio.data(), &audio::audioError,  this, &player::audioError);
+    connect(m_audio.data(), &audio::audioError,  this, &player::onError);
 }
 
 player::~player() {}
+
+void player::onError(const QString& error)
+{
+    stop();
+    emit audioError(error);
+}
 
 void player::play()
 {
