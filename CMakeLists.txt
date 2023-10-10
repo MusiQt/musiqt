@@ -396,6 +396,8 @@ if(WAVPACK)
     pkg_check_modules(wavpack IMPORTED_TARGET wavpack>=4)
     if(wavpack_FOUND)
         SET(HAVE_WAVPACK 1)
+        string(REGEX REPLACE "\\..*$" "" WP_MAJOR_VERSION ${wavpack_VERSION})
+        SET(WAVPACK_VERSION ${WP_MAJOR_VERSION})
         target_sources(musiqt PRIVATE
             src/audio/input/wvBackend.cpp
             src/audio/input/wvBackend.h

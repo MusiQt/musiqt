@@ -72,6 +72,9 @@
 /* Define if you have wavpack (-lwavpack). */
 #cmakedefine  HAVE_WAVPACK
 
+/* wavpack version */
+#cmakedefine  WAVPACK_VERSION @WAVPACK_VERSION@
+
 /* Name of package */
 #cmakedefine  PACKAGE "@PACKAGE@"
 

@@ -16,6 +16,10 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #include "wvBackend.h"
 
 #include "settings.h"
@@ -215,17 +219,36 @@ void wvBackend::getApeTag(const char* tag, metaData::mpris_t meta)
 
 bool wvBackend::seek(double pos)
 {
-    uint32_t samples = WavpackGetNumSamples(m_wvContext);
 
-    if (samples == (uint32_t)-1)
+#if WAVPACK_VERSION >= 5
+    int64_t samples = WavpackGetNumSamples64(m_wvContext);
+    if (samples == -1)
+    {
+        qWarning() << "Error getting number of samples:" << WavpackGetErrorMessage(m_wvContext);
         return false;
+    }
+
+    int64_t sample = samples * pos;
+    if (!WavpackSeekSample64(m_wvContext, sample))
+    {
+        qWarning() << "Error seeking:" << WavpackGetErrorMessage(m_wvContext);
+        return false;
+    }
+#else
+    uint32_t samples = WavpackGetNumSamples(m_wvContext);
+    if (samples == (uint32_t)-1)
+    {
+        qWarning() << "Error getting number of samples:" << WavpackGetErrorMessage(m_wvContext);
+        return false;
+    }
 
     uint32_t sample = samples * pos;
     if (!WavpackSeekSample(m_wvContext, sample))
     {
+        qWarning() << "Error seeking:" << WavpackGetErrorMessage(m_wvContext);
         return false;
     }
-
+#endif
     m_bufOffset = 0;
     m_bufSize = 0;
 
