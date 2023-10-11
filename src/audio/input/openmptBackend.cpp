@@ -199,41 +199,59 @@ openmptBackend::openmptBackend(const QString& fileName) :
 #  else
         unzFile modZip = unzOpen64(fileName.toUtf8().constData());
 #  endif // _WIN32
-        if (unzGoToFirstFile(modZip) != UNZ_OK)
+        try
+        {
+            if (unzGoToFirstFile(modZip) != UNZ_OK)
+                throw loadError("Unzip error");
+
+            fName = tempFile(fileName);
+            qDebug() << "temp file:" << fName;
+
+            QFile modFile(fName);
+            if (!modFile.open(QIODevice::WriteOnly))
+                throw loadError(modFile.errorString());
+
+            unzOpenCurrentFile(modZip);
+            int n;
+            char buffer[4096];
+            do {
+                n = unzReadCurrentFile(modZip, buffer, 4096);
+            } while (modFile.write(buffer, n));
+            unzCloseCurrentFile(modZip);
+            tmpFile = true;
+                
+        }
+        catch (const loadError& e)
         {
             unzClose(modZip);
-            throw loadError("Unzip error");
+
+            throw;
         }
 
-        fName = tempFile(fileName);
-        qDebug() << "temp file:" << fName;
-        QFile modFile(fName);
-        modFile.open(QIODevice::WriteOnly);
-        unzOpenCurrentFile(modZip);
-        int n;
-        char buffer[4096];
-        do {
-            n = unzReadCurrentFile(modZip, buffer, 4096);
-        } while (modFile.write(buffer, n));
-        unzCloseCurrentFile(modZip);
         unzClose(modZip);
-        tmpFile = true;
     }
 #endif // HAVE_LIBZ
 
     if (!tmpFile)
         fName = fileName;
 
+    QByteArray data;
+    
     QFile f(fName);
-    f.open(QIODevice::ReadOnly);
-    QByteArray data = f.read(f.size());
-    f.close();
+    if (f.open(QIODevice::ReadOnly))
+    {
+        QByteArray data = f.read(f.size());
+        f.close();
+    }
 
     if (tmpFile)
     {
         qDebug() << "Deleting temp file:" << fName;
         QFile::remove(fName);
     }
+
+    if (data.isEmpty())
+        throw loadError(f.errorString());
 
     try
     {
