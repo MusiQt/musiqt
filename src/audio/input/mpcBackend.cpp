@@ -236,8 +236,7 @@ mpc_int32_t mpcBackend::read_func(DATAPARM, void *ptr, mpc_int32_t size)
 
 mpc_bool_t mpcBackend::seek_func(DATAPARM, mpc_int32_t offset)
 {
-    ((QFile*)DATAFILE)->seek(offset);
-    return true;
+    return ((QFile*)DATAFILE)->seek(offset);
 }
 
 mpc_int32_t mpcBackend::tell_func(DATAPARM)

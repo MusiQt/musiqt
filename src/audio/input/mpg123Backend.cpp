@@ -207,6 +207,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
         {
             QString info;
 
+            // Title
             if (id3v2 && id3v2->title)
             {
                 info = QString::fromUtf8(id3v2->title->p);
@@ -224,6 +225,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             qDebug() << "TITLE:" << info;
             m_metaData.addInfo(metaData::TITLE, info);
 
+            // Artist
             if (id3v2 && id3v2->artist)
             {
                 info = QString::fromUtf8(id3v2->artist->p);
@@ -241,6 +243,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             qDebug() << "ARTIST:" << info;
             m_metaData.addInfo(metaData::ARTIST, info);
 
+            // Album
             if (id3v2 && id3v2->album)
             {
                 info = QString::fromUtf8(id3v2->album->p);
@@ -258,10 +261,12 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             qDebug() << "ALBUM:" << info;
             m_metaData.addInfo(metaData::ALBUM, info);
 
+            // Genre
             if (id3v2 && id3v2->genre)
             {
                 qDebug() << "genre id3v2:" << id3v2->genre->p;
                 info = QString::fromUtf8(id3v2->genre->p);
+                // handle indexed genre
                 int st = info.indexOf('(');
                 if (st >= 0)
                 {
@@ -280,15 +285,16 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             {
                 info = QString();
             }
+            // TODO support multiple genres
+            // RX    Remix
+            // CR    Cover
             qDebug() << "GENRE:" << info;
             m_metaData.addInfo(metaData::GENRE, info);
 
+            // Year
             if (id3v2 && id3v2->year)
             {
                 info = QString::fromUtf8(id3v2->year->p);
-                // TODO support multiple genres
-                // RX    Remix
-                // CR    Cover
             }
             else if (id3v1)
             {
@@ -303,6 +309,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             qDebug() << "YEAR:" << info;
             m_metaData.addInfo(metaData::CONTENT_CREATED, info);
 
+            // Track number
             if (id3v1 && (id3v1->comment[28] == 0))
             {
                 info = QString::number(id3v1->comment[29]);
@@ -314,6 +321,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             qDebug() << "TRACK:" << info;
             m_metaData.addInfo(metaData::TRACK_NUMBER, info);
 
+            // Comment
             info = QString();
             if (id3v2)
             {
@@ -323,7 +331,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                     if ((entry->description.fill == 0) || (entry->description.p[0] == 0))
                     {
                         if (!info.isEmpty())
-                            info.append("\n");
+                            info.append('\n');
                         info.append(QString::fromUtf8(entry->text.p).trimmed());
                     }
                 }
@@ -342,6 +350,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 m_metaData.addInfo(metaData::COMMENT, info);
             }
 
+            // Lyrics
             if (id3v2)
             {
                 info = QString();
@@ -358,6 +367,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
                 }
             }
 
+            // Cover art
             if (id3v2 && id3v2->pictures)
             {
                 mpg123_picture picture = id3v2->picture[0];

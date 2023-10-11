@@ -79,7 +79,7 @@ void metaDataImpl::addInfo(const mpris_t type, unsigned int info)
 int metaDataImpl::moreInfo(int i) const
 {
     auto values = m_infos.values();
-    i += 1;
+    i++;
     return (i < values.size()) ? i : -1;
 }
 

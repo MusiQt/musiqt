@@ -169,7 +169,7 @@ hvlBackend::hvlBackend(const QString& fileName) :
     hvl_InitSubsong(m_tune, 0);
 
     m_metaData.addInfo(metaData::TITLE, (char*)m_tune->ht_Name);
-    QString comment = QString();
+    QString comment;
     for (unsigned int i=0; i<m_tune->ht_InstrumentNr; i++)
         comment.append(QString("%1\n").arg(m_tune->ht_Instruments[i].ins_Name));
 
@@ -190,12 +190,12 @@ hvlBackend::~hvlBackend()
 
 bool hvlBackend::rewind()
 {
-    return hvl_InitSubsong(m_tune, m_tune->ht_SongNum);
+    return hvl_InitSubsong(m_tune, m_tune->ht_SongNum) == HVL_TRUE;
 }
 
 bool hvlBackend::subtune(const unsigned int i)
 {
-    return hvl_InitSubsong(m_tune, i);
+    return hvl_InitSubsong(m_tune, i) == HVL_TRUE;
 }
 
 /*****************************************************************/

@@ -59,7 +59,7 @@ size_t gmeBackend::fillBuffer(void* buffer, const size_t bufferSize)
     if (gme_track_ended(m_emu))
         return 0;
 
-    gme_play(m_emu, (bufferSize>>1), (short*)buffer);
+    gme_play(m_emu, (bufferSize/2), (short*)buffer);
     return bufferSize;
 }
 
@@ -275,8 +275,6 @@ void gmeBackend::openAsma(const QString& asmaPath)
 gmeConfigFrame::gmeConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)
 {
-    int val;
-
     matrix()->addWidget(new QLabel(tr("Samplerate"), this), 0, 0);
     QComboBox *freqBox = new QComboBox(this);
     matrix()->addWidget(freqBox, 0, 1);
@@ -286,6 +284,8 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
         freqBox->addItems(items);
         freqBox->setMaxVisibleItems(items.size());
     }
+
+    int val;
     switch (GMESETTINGS.samplerate)
     {
     case 11025:
