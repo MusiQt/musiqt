@@ -245,6 +245,8 @@ bool gmeBackend::subtune(unsigned int i)
         getInfo();
         return true;
     }
+
+    qWarning() << "Invalid subtune" << i;
     return false;
 }
 

@@ -412,6 +412,8 @@ bool sidBackend::subtune(unsigned int i)
 
         qWarning() << m_sidplayfp->error();
     }
+
+    qWarning() << "Invalid subtune" << i;
     return false;
 }
 

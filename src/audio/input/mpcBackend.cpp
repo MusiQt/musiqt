@@ -87,7 +87,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
                     break;
             if (err != MPC_STATUS_OK)
             {
-                qWarning("Decoding error");
+                qWarning() << "Decoding error:" << err;
                 return 0;
             }
 
@@ -96,7 +96,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
             int decoded = mpc_decoder_decode(&m_decoder, m_buffer, 0, 0);
             if (decoded < 0)
             {
-                qWarning("Decoding error");
+                qWarning() << "Decoding error:" << decoded;
                 return 0;
             }
 
@@ -146,7 +146,8 @@ mpcBackend::mpcBackend(const QString& fileName) :
     m_metaData.addInfo(metaData::COMMENT, tagPtr.comment());
     m_metaData.addInfo(tagPtr.image());
 
-    m_file.seek(0);
+    if (!m_file.seek(0))
+        throw loadError(m_file.errorString());
 
 #ifdef MPCDEC_SV8
     m_demux = mpc_demux_init(&m_mpcReader);
@@ -187,7 +188,7 @@ mpcBackend::mpcBackend(const QString& fileName) :
         peak = peak == 0. ? 1. : (1<<15) / pow(10, peak/(20*256));
         gain = gain == 0. ? 1. : pow(10, (referenceLevel-gain/256)/20);
 
-        qDebug() << "peak: " << peak << " - gain: " << gain;
+        qDebug() << "peak:" << peak << "- gain:" << gain;
 
         if (peak < gain)
             gain = peak;

@@ -274,7 +274,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             else if (id3v1 && (id3v1->genre < GENRES))
             {
                 info = genre[id3v1->genre];
-            qDebug() << "genre id3v1:" << id3v1->genre;
+                qDebug() << "genre id3v1:" << id3v1->genre;
             }
             else
             {
@@ -390,7 +390,10 @@ bool mpg123Backend::seek(double pos)
 {
     off_t frames = mpg123_length(m_handle);
     if (frames < 0)
+    {
+        qWarning() << "Error getting file length:" << frames;
         return false;
+    }
 
     off_t offset = frames * pos;
     if (mpg123_seek(m_handle, offset, SEEK_SET) < 0)

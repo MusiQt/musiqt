@@ -120,7 +120,7 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
         read = op_read_stereo(m_of, (opus_int16*)buffer+n/2, (bufferSize-n)/2);
         if (read < 0)
         {
-            qWarning() << "Decoding error: " << read;
+            qWarning() << "Decoding error:" << read;
             return 0;
         }
         n += read*4;
@@ -169,11 +169,18 @@ bool opusBackend::seek(double pos)
     ogg_int64_t length = op_pcm_total(m_of, -1);
 
     if (length < 0)
+    {
+        qWarning() << "Error getting file length:" << length;
         return false;
+    }
 
     ogg_int64_t offset = length * pos;
-    if (op_pcm_seek(m_of, offset) < 0)
+    int res = op_pcm_seek(m_of, offset) < 0;
+    if (res)
+    {
+        qWarning() << "Error seeking:" << res;
         return false;
+    }
 
     return true;
 }

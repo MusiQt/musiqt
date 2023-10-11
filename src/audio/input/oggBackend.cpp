@@ -166,11 +166,18 @@ bool oggBackend::seek(double pos)
     ogg_int64_t length = ov_pcm_total(m_vf, -1);
 
     if (length < 0)
+    {
+        qWarning() << "Error getting file length:" << length;
         return false;
+    }
 
     ogg_int64_t offset = length * pos;
-    if (ov_pcm_seek(m_vf, offset) != 0)
+    int res = ov_pcm_seek(m_vf, offset);
+    if (res != 0)
+    {
+        qWarning() << "Error seeking:" << res;
         return false;
+    }
 
     return true;
 }
