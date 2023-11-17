@@ -54,7 +54,7 @@ jobs:
         cmake -G 'MSYS Makefiles' \
             -DCMAKE_BUILD_TYPE=Release \
             -DQT6=ON \
-            -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
+            -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++" \
             ..
         cmake --build .
     - name: package
