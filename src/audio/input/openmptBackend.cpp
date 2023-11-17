@@ -240,7 +240,7 @@ openmptBackend::openmptBackend(const QString& fileName) :
     QFile f(fName);
     if (f.open(QIODevice::ReadOnly))
     {
-        QByteArray data = f.read(f.size());
+        data = f.read(f.size());
         f.close();
     }
 
