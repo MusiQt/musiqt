@@ -1,3 +1,14 @@
+* musiqt-3.0.2 - Nov 17, 2023
+mpris: fixed pause behavior, if playback is already paused do nothing
+updated minizip from zlib 1.3
+ogg/opus: check if file is actually seekable
+added warnings for deprecated ogg tags COVERART and COVERARTMIME
+dropped support for undocumented ogg tag BINARY_COVERART
+wavpack: use 64 bit seek functions if wavpack >= 5.x
+improved error checking and logging
+
+
+
 * musiqt-3.0.1 - Jul 30, 2023
 Support for multiple music locations
 mpg123: allow multiple comments from id3v2 tags
