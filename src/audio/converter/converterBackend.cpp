@@ -51,7 +51,8 @@ void resamplerBackend::setBufferSize(size_t size)
 
 size_t resamplerBackend::bufSize(size_t size)
 {
-    if (size > m_inputSize) {
+    if (size > m_inputSize)
+    {
         setBufferSize(size);
     }
     return (size*m_frameRatio)-m_dataPos;
@@ -77,7 +78,8 @@ void converterBackend::setBufferSize(size_t size)
 
 size_t converterBackend::bufSize(size_t size)
 {
-    if (size > m_inputSize) {
+    if (size > m_inputSize)
+    {
         setBufferSize(size);
     }
     return size*m_frameRatio;
