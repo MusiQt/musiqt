@@ -161,9 +161,9 @@ void openmptConfig::saveSettings()
 bool openmptBackend::init()
 {
     std::vector<std::string> ext = openmpt::get_supported_extensions();
-    for(std::vector<std::string>::iterator it=ext.begin(); it!=ext.end(); ++it)
+    for(auto & it : ext)
     {
-        m_ext << (*it).c_str();
+        m_ext << it.c_str();
     }
 
     //_ext.append(",(mod).*");
@@ -219,7 +219,6 @@ openmptBackend::openmptBackend(const QString& fileName) :
             } while (modFile.write(buffer, n));
             unzCloseCurrentFile(modZip);
             tmpFile = true;
-                
         }
         catch (const loadError& e)
         {
@@ -236,7 +235,7 @@ openmptBackend::openmptBackend(const QString& fileName) :
         fName = fileName;
 
     QByteArray data;
-    
+
     QFile f(fName);
     if (f.open(QIODevice::ReadOnly))
     {
@@ -268,14 +267,14 @@ openmptBackend::openmptBackend(const QString& fileName) :
     m_module->set_render_param(openmpt::module::RENDER_VOLUMERAMPING_STRENGTH, m_config.volumeRamping());
 
     std::vector<std::string> metadata = m_module->get_metadata_keys();
-    for(std::vector<std::string>::iterator it=metadata.begin(); it!=metadata.end(); ++it)
+    for(auto & it : metadata)
     {
-        qDebug() << (*it).c_str();
-        if ((*it).compare("title") == 0)
+        qDebug() << it.c_str();
+        if (it.compare("title") == 0)
             m_metaData.addInfo(metaData::TITLE, m_module->get_metadata("title").c_str());
-        else if ((*it).compare("artist") == 0)
+        else if (it.compare("artist") == 0)
             m_metaData.addInfo(metaData::ARTIST, m_module->get_metadata("artist").c_str());
-        else if ((*it).compare("message") == 0)
+        else if (it.compare("message") == 0)
             m_metaData.addInfo(metaData::COMMENT, m_module->get_metadata("message").c_str());
     }
 
