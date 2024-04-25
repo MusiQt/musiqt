@@ -41,7 +41,7 @@ public:
         setContextMenuPolicy(Qt::DefaultContextMenu);
         //setSortingEnabled(true);
     }
-    virtual ~bookmark() {}
+    ~bookmark() override {}
 
     /// Add bookmark
     void add(const QString& dirName);

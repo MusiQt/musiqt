@@ -30,7 +30,7 @@ private:
 
 public:
     translator(QObject* parent=nullptr);
-    virtual ~translator();
+    ~translator() override;
 
     QString translate(const char* context, const char* sourceText, const char* disambiguation=Q_NULLPTR, int n=-1) const override;
 };

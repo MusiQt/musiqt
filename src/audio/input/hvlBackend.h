@@ -48,7 +48,7 @@ private:
 
 public:
     hvlConfigFrame(QWidget* win);
-    virtual ~hvlConfigFrame() {}
+    ~hvlConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -98,7 +98,7 @@ private:
     hvlBackend(const QString& fileName);
 
 public:
-    ~hvlBackend();
+    ~hvlBackend() override;
 
     static const char name[];
 

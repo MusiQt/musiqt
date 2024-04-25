@@ -39,7 +39,7 @@ class lastfmScrobbler : public QObject
 
 public:
     lastfmScrobbler(player* p, QObject* parent = nullptr);
-    ~lastfmScrobbler();
+    ~lastfmScrobbler() override;
 
     void setScrobbling(bool scrobble);
 
@@ -90,7 +90,7 @@ signals:
 
 public:
     lastfmConfig(QWidget* win);
-    virtual ~lastfmConfig() {}
+    ~lastfmConfig() override {}
 };
 
 #endif

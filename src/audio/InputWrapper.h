@@ -47,7 +47,7 @@ protected:
 
 public:
     InputWrapper(input* song);
-    ~InputWrapper();
+    ~InputWrapper() override;
 
     bool tryPreload(input* newSong);
     void unload();

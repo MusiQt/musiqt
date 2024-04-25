@@ -43,7 +43,7 @@ class centralFrame : public QWidget
 
 public:
     centralFrame(player* p, QWidget *parent = 0);
-    ~centralFrame();
+    ~centralFrame() override;
 
     void onSettingsChanged();
 

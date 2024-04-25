@@ -54,13 +54,13 @@ protected:
     }
 
 public:
-    virtual ~trackListBackend() {}
+    ~trackListBackend() override {}
 
     /// Load playlist
-    virtual tracks_t load() override { return tracks_t(); }
+    tracks_t load() override { return tracks_t(); }
 
     /// Save playlist
-    virtual bool save(const tracks_t&) override { return false; }
+    bool save(const tracks_t&) override { return false; }
 };
 
 #endif

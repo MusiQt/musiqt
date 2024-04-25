@@ -64,7 +64,7 @@ private:
 public:
     qaudioBackend();
 
-    virtual ~qaudioBackend();
+    ~qaudioBackend() override;
 
     static QStringList getDevices();
 

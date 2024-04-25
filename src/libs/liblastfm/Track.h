@@ -116,7 +116,7 @@ public:
     Track();
     explicit Track( const QDomElement& );
     Track( const Track& that );
-    ~Track();
+    ~Track() override;
 
     Track clone() const;
 
@@ -160,7 +160,7 @@ public:
     uint fingerprintId() const;
     bool isLoved() const;
     LoveStatus loveStatus() const;
-    QUrl imageUrl( ImageSize size, bool square ) const;
+    QUrl imageUrl( ImageSize size, bool square ) const override;
 
     QString durationString() const;
     static QString durationString( int seconds );
@@ -170,11 +170,11 @@ public:
     QString scrobbleErrorText() const;
 
     /** default separator is an en-dash */
-    QString toString() const;
+    QString toString() const override;
     QString toString( Corrections corrections ) const;
     QString toString( const QChar& separator, Corrections corrections = Original ) const;
     /** the standard representation of this object as an XML node */
-    QDomElement toDomElement( class QDomDocument& ) const;
+    QDomElement toDomElement( class QDomDocument& ) const override;
 
     TrackContext context() const;
 
@@ -230,7 +230,7 @@ public:
     static QNetworkReply* scrobble(const QList<lastfm::Track>& tracks);
 
     /** the url for this track's page at last.fm */
-    QUrl www() const;
+    QUrl www() const override;
 
 protected:
     QExplicitlySharedDataPointer<TrackData> d;

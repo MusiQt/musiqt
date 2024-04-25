@@ -39,7 +39,7 @@ private:
 
 public:
     wvConfigFrame(QWidget* win);
-    virtual ~wvConfigFrame() {}
+    ~wvConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -79,7 +79,7 @@ private:
     wvBackend(const QString& fileName);
 
 public:
-    ~wvBackend();
+    ~wvBackend() override;
 
     static const char name[];
 

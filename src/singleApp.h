@@ -44,7 +44,7 @@ signals:
 
 public:
     singleApp(int & argc, char ** argv);
-    virtual ~singleApp();
+    ~singleApp() override;
 
     bool isRunning();
 };

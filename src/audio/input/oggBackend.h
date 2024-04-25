@@ -46,7 +46,7 @@ private:
 
 public:
     oggConfigFrame(QWidget* win);
-    virtual ~oggConfigFrame() {}
+    ~oggConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -103,7 +103,7 @@ private:
     oggBackend(const QString& fileName);
 
 public:
-    ~oggBackend();
+    ~oggBackend() override;
 
     static const char name[];
 
@@ -130,7 +130,7 @@ public:
     sample_t precision() const override { return m_config.precision(); }
 
     /// Callback function
-    size_t fillBuffer(void* buffer, const size_t bufferSize);
+    size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Gapless support
     bool gapless() const override { return true; };

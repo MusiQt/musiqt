@@ -99,7 +99,7 @@ public:
     AudioOutputWrapper() :
         m_audioOutput(nullptr)
     {}
-    ~AudioOutputWrapper() { delete m_audioOutput; }
+    ~AudioOutputWrapper() override { delete m_audioOutput; }
 };
 
 #endif

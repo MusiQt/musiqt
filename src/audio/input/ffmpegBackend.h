@@ -56,7 +56,7 @@ private:
 
 public:
     ffmpegConfigFrame(QWidget* win);
-    virtual ~ffmpegConfigFrame() {}
+    ~ffmpegConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -135,7 +135,7 @@ private:
     QString getMetadata(const char* type);
 
 public:
-    ~ffmpegBackend();
+    ~ffmpegBackend() override;
 
     static const char name[];
 

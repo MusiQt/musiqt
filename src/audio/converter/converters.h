@@ -36,7 +36,7 @@ public:
         resamplerBackend(srIn, srOut, channels, sizeof(I), sizeof(O)),
         _quantizer(quantizer)
     {}
-    ~resampler() { delete _quantizer; }
+    ~resampler() override { delete _quantizer; }
 
     /// Do the conversion
     size_t convert(const void* buf, size_t len) override;
@@ -57,7 +57,7 @@ public:
         converterBackend(channels, sizeof(I), sizeof(O)),
         _quantizer(quantizer)
     {}
-    ~converterDecimal() { delete _quantizer; }
+    ~converterDecimal() override { delete _quantizer; }
 
     /// Do the conversion
     size_t convert(const void* buf, size_t len) override;

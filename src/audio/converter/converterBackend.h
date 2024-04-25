@@ -43,7 +43,7 @@ protected:
     void setBufferSize(size_t size);
 
 public:
-    virtual ~resamplerBackend();
+    ~resamplerBackend() override;
 
     /// Get pointer to buffer
     char* buffer() override { return m_buffer.data()+m_dataPos; }
@@ -67,7 +67,7 @@ protected:
     void setBufferSize(size_t size);
 
 public:
-    virtual ~converterBackend();
+    ~converterBackend() override;
 
     /// Get pointer to buffer
     char* buffer() override { return m_buffer.data(); }

@@ -70,7 +70,7 @@ protected:
 
 public:
     settingsWindow(QWidget* win);
-    virtual ~settingsWindow() {}
+    ~settingsWindow() override {}
 };
 
 /*****************************************************************/

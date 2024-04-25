@@ -47,7 +47,7 @@ private:
 
 public:
     mpg123ConfigFrame(QWidget* win);
-    virtual ~mpg123ConfigFrame() {}
+    ~mpg123ConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -102,7 +102,7 @@ private:
     mpg123Backend(const QString& fileName);
 
 public:
-    ~mpg123Backend();
+    ~mpg123Backend() override;
 
     static const char name[];
 
@@ -131,7 +131,7 @@ public:
     sample_t precision() const override { return sample_t::S16; }
 
     /// Callback function
-    size_t fillBuffer(void* buffer, const size_t bufferSize);
+    size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Gapless support
     bool gapless() const override { return true; };

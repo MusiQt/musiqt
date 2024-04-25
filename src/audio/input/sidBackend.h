@@ -84,7 +84,7 @@ private:
 
 public:
     sidConfigFrame(QWidget* win);
-    virtual ~sidConfigFrame() {}
+    ~sidConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -188,7 +188,7 @@ private:
     void loadWDS(const QString& musFileName, const char* ext);
 
 public:
-    ~sidBackend();
+    ~sidBackend() override;
 
     static const char name[];
 

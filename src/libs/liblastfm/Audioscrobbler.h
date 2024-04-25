@@ -41,7 +41,7 @@ namespace lastfm
           * QCoreApplication::setApplicationName for this to work, also you will 
           * need to have set all the keys in the Ws namespace in WsKeys.h */
         Audioscrobbler( const QString& clientId );
-        ~Audioscrobbler();
+        ~Audioscrobbler() override;
 
     signals:
         void scrobblesCached( const QList<lastfm::Track>& tracks );

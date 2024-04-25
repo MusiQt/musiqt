@@ -31,7 +31,7 @@ private:
     const QString m_fileName;
 
 protected:
-    void run();
+    void run() override;
 
 signals:
     void loaded(input* res);

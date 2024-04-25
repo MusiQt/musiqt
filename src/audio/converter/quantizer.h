@@ -41,7 +41,7 @@ private:
     quantizerVoid& operator=(const quantizerVoid&);
 public:
     quantizerVoid() { qDebug() << "quantizerVoid" <<  static_cast<int>(sizeof(T)) << "bytes"; };
-    virtual ~quantizerVoid() {}
+    ~quantizerVoid() override {}
 
     /// Get dithered sample
     inline T get(const T sample, [[maybe_unused]] const unsigned int channel) override { return sample; }
@@ -67,7 +67,7 @@ private:
 
 public:
     quantizerFixed(const unsigned int fract);
-    virtual ~quantizerFixed() {}
+    ~quantizerFixed() override {}
 
     /// Get dithered sample
     O get(const int sample, const unsigned int channel) override;
@@ -89,7 +89,7 @@ private:
 
 public:
     quantizerFloat();
-    virtual ~quantizerFloat() {}
+    ~quantizerFloat() override {}
 
     /// Get dithered sample
     O get(const float sample, const unsigned int channel) override;

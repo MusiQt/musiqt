@@ -45,7 +45,7 @@ private:
 
 public:
     sndConfigFrame(QWidget* win);
-    virtual ~sndConfigFrame() {}
+    ~sndConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -77,7 +77,7 @@ private:
     sndBackend(const QString& fileName);
 
 public:
-    ~sndBackend();
+    ~sndBackend() override;
 
     static const char name[];
 

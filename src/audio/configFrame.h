@@ -44,7 +44,7 @@ protected:
 
 public:
     configFrame(QWidget* p, const char* credits=nullptr, const char* link=nullptr);
-    virtual ~configFrame() {}
+    ~configFrame() override {}
 };
 
 #endif

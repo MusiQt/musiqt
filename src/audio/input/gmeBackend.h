@@ -59,7 +59,7 @@ private:
 
 public:
     gmeConfigFrame(QWidget* win);
-    virtual ~gmeConfigFrame() {}
+    ~gmeConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -123,7 +123,7 @@ private:
     void checkRetCode(const char* error);
 
 public:
-    ~gmeBackend();
+    ~gmeBackend() override;
 
     static const char name[];
 

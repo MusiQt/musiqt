@@ -79,12 +79,12 @@ public:
 
 class audioProcess8 : public audioProcess
 {
-    void init(int sampleRate)
+    void init(int sampleRate) override
     {
         initBs2b(sampleRate);
     }
 
-    void process(void* buffer, size_t size)
+    void process(void* buffer, size_t size) override
     {
 #ifdef HAVE_BS2B
         if (m_bs2bdp)
@@ -100,12 +100,12 @@ class audioProcess8 : public audioProcess
 
 class audioProcess16 : public audioProcess
 {
-    void init(int sampleRate)
+    void init(int sampleRate) override
     {
         initBs2b(sampleRate);
     }
 
-    void process(void* buffer, size_t size)
+    void process(void* buffer, size_t size) override
     {
 #if (Q_BYTE_ORDER == Q_BIG_ENDIAN)
         {
@@ -133,12 +133,12 @@ class audioProcess16 : public audioProcess
 
 class audioProcess32 : public audioProcess
 {
-    void init(int sampleRate)
+    void init(int sampleRate) override
     {
         initBs2b(sampleRate);
     }
 
-    void process(void* buffer, size_t size)
+    void process(void* buffer, size_t size) override
     {
 #if (Q_BYTE_ORDER == Q_BIG_ENDIAN)
         {
@@ -166,12 +166,12 @@ class audioProcess32 : public audioProcess
 
 class audioProcessFloat : public audioProcess
 {
-    void init(int sampleRate)
+    void init(int sampleRate) override
     {
         initBs2b(sampleRate);
     }
 
-    void process(void* buffer, size_t size)
+    void process(void* buffer, size_t size) override
     {
 #ifdef HAVE_BS2B
         if (m_bs2bdp)

@@ -70,7 +70,7 @@ private:
 
 public:
     infoDialog(QWidget*);
-    virtual ~infoDialog();
+    ~infoDialog() override;
 
     void setInfo(const metaData*);
 };

@@ -60,7 +60,7 @@ signals:
 
 public:
     audio();
-    ~audio();
+    ~audio() override;
 
     /// Start stream
     /// @throws initError
@@ -108,7 +108,7 @@ private:
 
 public:
     audioConfig(QWidget* win);
-    virtual ~audioConfig() {}
+    ~audioConfig() override {}
 };
 
 #endif

@@ -51,7 +51,7 @@ private:
 
 public:
     mpcConfigFrame(QWidget* win);
-    virtual ~mpcConfigFrame() {}
+    ~mpcConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -106,7 +106,7 @@ private:
     mpcBackend(const QString& fileName);
 
 public:
-    ~mpcBackend();
+    ~mpcBackend() override;
 
     static const char name[];
 

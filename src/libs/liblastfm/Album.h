@@ -34,11 +34,11 @@ namespace lastfm
         explicit Album( Mbid mbid );
         Album( Artist artist, QString title );
         Album( const Album& album );
-        ~Album();
+        ~Album() override;
 
-        QDomElement toDomElement( QDomDocument& ) const;
+        QDomElement toDomElement( QDomDocument& ) const override;
 
-        virtual QUrl imageUrl( ImageSize size, bool square = false ) const;
+        QUrl imageUrl( ImageSize size, bool square = false ) const override;
         void setImageUrl( ImageSize size, const QString& url );
 
         void setArtist( const QString& artist );
@@ -47,7 +47,7 @@ namespace lastfm
         bool operator!=( const Album& that ) const;
         Album& operator=( const Album& that );
     
-        QString toString() const;
+        QString toString() const override;
         operator QString() const;
         QString title() const;
         Artist artist() const;
@@ -68,7 +68,7 @@ namespace lastfm
         QNetworkReply* addTags( const QStringList& ) const;
     
         /** the Last.fm website url for this album */
-        QUrl www() const;
+        QUrl www() const override;
 
     private:
         QExplicitlySharedDataPointer<class AlbumPrivate> d;

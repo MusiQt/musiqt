@@ -45,7 +45,7 @@ class mainWindow : public QMainWindow
 
 public:
     mainWindow(player* p, QWidget *parent = 0);
-    ~mainWindow();
+    ~mainWindow() override;
 
     void init(const char* arg);
 

@@ -75,7 +75,7 @@ signals:
 
 public:
     player();
-    ~player();
+    ~player() override;
 
     /// Start playback
     void play();

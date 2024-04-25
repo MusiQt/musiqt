@@ -39,7 +39,7 @@ private:
 
 public:
     opusConfigFrame(QWidget* win);
-    virtual ~opusConfigFrame() {}
+    ~opusConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -82,7 +82,7 @@ private:
     opusBackend(const QString& fileName);
 
 public:
-    ~opusBackend();
+    ~opusBackend() override;
 
     static const char name[];
 
@@ -109,7 +109,7 @@ public:
     sample_t precision() const override { return sample_t::S16; }
 
     /// Callback function
-    size_t fillBuffer(void* buffer, const size_t bufferSize);
+    size_t fillBuffer(void* buffer, const size_t bufferSize) override;
 
     /// Gapless support
     bool gapless() const override { return true; };

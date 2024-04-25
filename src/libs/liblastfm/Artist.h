@@ -36,19 +36,19 @@ namespace lastfm
 
     public:
         Artist();
-        ~Artist();
+        ~Artist() override;
         Artist( const QString& name );
         Artist( const class XmlQuery& xml );
         Artist( const Artist& artist );
 
         /** will be QUrl() unless you got this back from a getInfo or something call */
-        QUrl imageUrl( ImageSize size = LargeImage, bool square = false ) const;
+        QUrl imageUrl( ImageSize size = LargeImage, bool square = false ) const override;
         void setImageUrl( ImageSize size, const QString& url );
 
         bool isNull() const;
 
         /** the url for this artist's page at www.last.fm */
-        QUrl www() const;
+        QUrl www() const override;
 
         Artist& operator=( const Artist& that );
         bool operator==( const Artist& that ) const;
@@ -57,7 +57,7 @@ namespace lastfm
 
         operator QString() const;
 
-        QString toString() const;
+        QString toString() const override;
 
         QString name() const;
         void setName( const QString& name );
@@ -65,7 +65,7 @@ namespace lastfm
         QString biographySummary() const;
         QString biography() const;
 
-        QDomElement toDomElement( QDomDocument& ) const;
+        QDomElement toDomElement( QDomDocument& ) const override;
 
         QNetworkReply* share( const QStringList& recipients, const QString& message = "", bool isPublic = true ) const;
 

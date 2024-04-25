@@ -55,7 +55,7 @@ private:
 
 public:
     openmptConfigFrame(QWidget* win);
-    virtual ~openmptConfigFrame() {}
+    ~openmptConfigFrame() override {}
 };
 
 /*****************************************************************/
@@ -116,7 +116,7 @@ private:
     }
 
 public:
-    ~openmptBackend();
+    ~openmptBackend() override;
 
     static const char name[];
 
