@@ -54,12 +54,12 @@ class gmeConfigFrame : public configFrame
 {
 private:
     gmeConfigFrame() {}
-    gmeConfigFrame(const gmeConfigFrame&);
-    gmeConfigFrame& operator=(const gmeConfigFrame&);
+    gmeConfigFrame(const gmeConfigFrame&) = delete;
+    gmeConfigFrame& operator=(const gmeConfigFrame&) = delete;
 
 public:
     gmeConfigFrame(QWidget* win);
-    ~gmeConfigFrame() override {}
+    ~gmeConfigFrame() override = default;
 };
 
 /*****************************************************************/

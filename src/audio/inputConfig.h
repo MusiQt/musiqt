@@ -61,7 +61,7 @@ protected:
     void save(const char* key, QString value);
 
 public:
-    virtual ~inputConfig() {}
+    virtual ~inputConfig() = default;
 
     /// Open config dialog
     virtual QWidget* config(QWidget* parent=nullptr) =0;

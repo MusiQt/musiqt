@@ -53,7 +53,7 @@ protected:
     void setDuration(unsigned int newTime) { m_time = newTime; }
 
 public:
-    virtual ~input() {}
+    virtual ~input() = default;
 
     /// Get song info
     const metaData* getMetaData() const { return &m_metaData; }

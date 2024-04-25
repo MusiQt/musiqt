@@ -30,7 +30,7 @@ protected:
     cFactory() {}
     cFactory(const cFactory&);
     cFactory& operator= (const cFactory&);
-    ~cFactory() {}
+    ~cFactory() = default;
 
 public:
     /// Get singleton instance

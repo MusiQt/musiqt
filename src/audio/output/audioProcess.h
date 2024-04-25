@@ -57,7 +57,7 @@ public:
 #endif
     {}
 
-    virtual ~audioProcess() {}
+    virtual ~audioProcess() = default;
 
     virtual void init(int sampleRate) =0;
 

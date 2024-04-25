@@ -65,7 +65,7 @@ public:
     virtual QByteArray* getImage() const =0;
 
 protected:
-    ~metaData() {}
+    ~metaData() = default;
 };
 
 #endif

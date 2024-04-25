@@ -52,7 +52,7 @@ private:
 
 protected:
     iFactory();
-    ~iFactory() {}
+    ~iFactory() = default;
 
 public:
     /// Get singleton instance

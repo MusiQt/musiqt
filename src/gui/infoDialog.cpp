@@ -139,7 +139,7 @@ infoDialog::infoDialog(QWidget* w) :
     layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
-infoDialog::~infoDialog() {}
+infoDialog::~infoDialog() = default;
 
 void infoDialog::setInfo(const metaData* mtd)
 {

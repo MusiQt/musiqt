@@ -25,7 +25,7 @@ template <typename I, typename O>
 class quantizer
 {
 public:
-    virtual ~quantizer() {}
+    virtual ~quantizer() = default;
 
     /// Get dithered sample
     virtual O get(const I sample, const unsigned int channel) =0;
@@ -37,11 +37,11 @@ template <typename T>
 class quantizerVoid final : public quantizer<T, T>
 {
 private:
-    quantizerVoid(const quantizerVoid&);
-    quantizerVoid& operator=(const quantizerVoid&);
+    quantizerVoid(const quantizerVoid&) = delete;
+    quantizerVoid& operator=(const quantizerVoid&) = delete;
 public:
     quantizerVoid() { qDebug() << "quantizerVoid" <<  static_cast<int>(sizeof(T)) << "bytes"; };
-    ~quantizerVoid() override {}
+    ~quantizerVoid() override = default;
 
     /// Get dithered sample
     inline T get(const T sample, [[maybe_unused]] const unsigned int channel) override { return sample; }
@@ -67,7 +67,7 @@ private:
 
 public:
     quantizerFixed(const unsigned int fract);
-    ~quantizerFixed() override {}
+    ~quantizerFixed() override = default;
 
     /// Get dithered sample
     O get(const int sample, const unsigned int channel) override;
@@ -89,7 +89,7 @@ private:
 
 public:
     quantizerFloat();
-    ~quantizerFloat() override {}
+    ~quantizerFloat() override = default;
 
     /// Get dithered sample
     O get(const float sample, const unsigned int channel) override;

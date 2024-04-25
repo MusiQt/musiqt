@@ -51,12 +51,12 @@ class ffmpegConfigFrame : public configFrame
 {
 private:
     ffmpegConfigFrame() {}
-    ffmpegConfigFrame(const ffmpegConfigFrame&);
-    ffmpegConfigFrame& operator=(const ffmpegConfigFrame&);
+    ffmpegConfigFrame(const ffmpegConfigFrame&) = delete;
+    ffmpegConfigFrame& operator=(const ffmpegConfigFrame&) = delete;
 
 public:
     ffmpegConfigFrame(QWidget* win);
-    ~ffmpegConfigFrame() override {}
+    ~ffmpegConfigFrame() override = default;
 };
 
 /*****************************************************************/

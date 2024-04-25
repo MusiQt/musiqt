@@ -49,7 +49,7 @@ translator::translator(QObject* parent) :
     textdomain(PACKAGE);
 }
 
-translator::~translator() {}
+translator::~translator() = default;
 
 QString translator::translate([[maybe_unused]] const char* context, const char* sourceText,
     [[maybe_unused]] const char* disambiguation, [[maybe_unused]] int n) const

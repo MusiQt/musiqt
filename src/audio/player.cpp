@@ -36,7 +36,7 @@ player::player() :
     connect(m_audio.data(), &audio::audioError,  this, &player::onError);
 }
 
-player::~player() {}
+player::~player() = default;
 
 void player::onError(const QString& error)
 {

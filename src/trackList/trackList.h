@@ -30,7 +30,7 @@ using tracks_t = QList<track_t>;
 class trackList
 {
 public:
-    virtual ~trackList() {}
+    virtual ~trackList() = default;
 
     /// Load playlist
     virtual tracks_t load() =0;

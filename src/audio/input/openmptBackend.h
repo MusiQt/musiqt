@@ -50,12 +50,12 @@ class openmptConfigFrame : public configFrame
 {
 private:
     openmptConfigFrame() {}
-    openmptConfigFrame(const openmptConfigFrame&);
-    openmptConfigFrame& operator=(const openmptConfigFrame&);
+    openmptConfigFrame(const openmptConfigFrame&) = delete;
+    openmptConfigFrame& operator=(const openmptConfigFrame&) = delete;
 
 public:
     openmptConfigFrame(QWidget* win);
-    ~openmptConfigFrame() override {}
+    ~openmptConfigFrame() override = default;
 };
 
 /*****************************************************************/

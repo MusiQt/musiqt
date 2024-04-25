@@ -62,15 +62,15 @@ private:
 
 private:
     settingsWindow() {}
-    settingsWindow(const settingsWindow&);
-    settingsWindow& operator=(const settingsWindow&);
+    settingsWindow(const settingsWindow&) = delete;
+    settingsWindow& operator=(const settingsWindow&) = delete;
 
 protected:
     bool event(QEvent *e) override;
 
 public:
     settingsWindow(QWidget* win);
-    ~settingsWindow() override {}
+    ~settingsWindow() override = default;
 };
 
 /*****************************************************************/
@@ -106,7 +106,7 @@ protected:
     settings() {}
     settings(const settings&);
     settings& operator= (const settings&);
-    ~settings() {}
+    ~settings() = default;
 
 public:
     /// Get singleton instance

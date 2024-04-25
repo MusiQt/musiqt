@@ -48,7 +48,7 @@ private:
 
 public:
     hvlConfigFrame(QWidget* win);
-    ~hvlConfigFrame() override {}
+    ~hvlConfigFrame() override = default;
 };
 
 /*****************************************************************/

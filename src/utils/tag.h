@@ -88,7 +88,7 @@ public:
 
 public:
     tag(QFile* file);
-    ~tag() {}
+    ~tag() = default;
 
     /// Get offset from beginning
     int offsBegin() const { return m_offsBegin; }

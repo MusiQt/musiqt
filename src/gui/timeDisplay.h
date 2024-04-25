@@ -36,7 +36,7 @@ public:
         setSegmentStyle(QLCDNumber::Flat);
         setFrameStyle(QFrame::Panel|QFrame::Sunken);
     }
-    ~timeDisplay() override {}
+    ~timeDisplay() override = default;
 
     void reset() { display("--:--"); }
 
@@ -63,7 +63,7 @@ public:
     {
         setFrameStyle(QFrame::Panel|QFrame::Sunken);
     }
-    ~timeLabel() override {}
+    ~timeLabel() override = default;
 
     void reset() { setText("--:--"); }
 

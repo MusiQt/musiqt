@@ -35,7 +35,7 @@ protected:
     iconFactory() {}
     iconFactory(const iconFactory&) = delete;
     iconFactory& operator= (const iconFactory&) = delete;
-    ~iconFactory() {}
+    ~iconFactory() = default;
 
 public:
     /// Get singleton instance

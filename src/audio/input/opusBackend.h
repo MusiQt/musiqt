@@ -34,12 +34,12 @@ class opusConfigFrame : public configFrame
 {
 private:
     opusConfigFrame() {}
-    opusConfigFrame(const opusConfigFrame&);
-    opusConfigFrame& operator=(const opusConfigFrame&);
+    opusConfigFrame(const opusConfigFrame&) = delete;
+    opusConfigFrame& operator=(const opusConfigFrame&) = delete;
 
 public:
     opusConfigFrame(QWidget* win);
-    ~opusConfigFrame() override {}
+    ~opusConfigFrame() override = default;
 };
 
 /*****************************************************************/

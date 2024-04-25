@@ -33,7 +33,7 @@ resamplerBackend::resamplerBackend(unsigned int srIn, unsigned int srOut,
     qDebug() << "m_rate " << m_rate;
 }
 
-resamplerBackend::~resamplerBackend() {}
+resamplerBackend::~resamplerBackend() = default;
 
 void resamplerBackend::setBufferSize(size_t size)
 {
@@ -65,7 +65,7 @@ converterBackend::converterBackend(unsigned int channels,
     converter(channels, inputPrecision, outputPrecision)
 {}
 
-converterBackend::~converterBackend() {}
+converterBackend::~converterBackend() = default;
 
 void converterBackend::setBufferSize(size_t size)
 {

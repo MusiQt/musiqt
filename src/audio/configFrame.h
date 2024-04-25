@@ -32,8 +32,8 @@ private:
     QVBoxLayout *m_extraBottom;
 
 private:
-    configFrame(const configFrame&);
-    configFrame& operator=(const configFrame&);
+    configFrame(const configFrame&) = delete;
+    configFrame& operator=(const configFrame&) = delete;
 
 protected:
     configFrame() {}
@@ -44,7 +44,7 @@ protected:
 
 public:
     configFrame(QWidget* p, const char* credits=nullptr, const char* link=nullptr);
-    ~configFrame() override {}
+    ~configFrame() override = default;
 };
 
 #endif

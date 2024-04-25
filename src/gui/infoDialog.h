@@ -63,8 +63,8 @@ private:
 
 private:
     infoDialog() {}
-    infoDialog(const infoDialog&);
-    infoDialog& operator=(const infoDialog&);
+    infoDialog(const infoDialog&) = delete;
+    infoDialog& operator=(const infoDialog&) = delete;
 
     void setDefaultImage() const;
 

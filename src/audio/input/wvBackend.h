@@ -34,12 +34,12 @@ class wvConfigFrame : public configFrame
 {
 private:
     wvConfigFrame() {}
-    wvConfigFrame(const wvConfigFrame&);
-    wvConfigFrame& operator=(const wvConfigFrame&);
+    wvConfigFrame(const wvConfigFrame&) = delete;
+    wvConfigFrame& operator=(const wvConfigFrame&) = delete;
 
 public:
     wvConfigFrame(QWidget* win);
-    ~wvConfigFrame() override {}
+    ~wvConfigFrame() override = default;
 };
 
 /*****************************************************************/

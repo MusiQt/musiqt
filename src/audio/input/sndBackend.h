@@ -40,12 +40,12 @@ class sndConfigFrame : public configFrame
 {
 private:
     sndConfigFrame() {}
-    sndConfigFrame(const sndConfigFrame&);
-    sndConfigFrame& operator=(const sndConfigFrame&);
+    sndConfigFrame(const sndConfigFrame&) = delete;
+    sndConfigFrame& operator=(const sndConfigFrame&) = delete;
 
 public:
     sndConfigFrame(QWidget* win);
-    ~sndConfigFrame() override {}
+    ~sndConfigFrame() override = default;
 };
 
 /*****************************************************************/

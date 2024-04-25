@@ -46,12 +46,12 @@ class mpcConfigFrame : public configFrame
 {
 private:
     mpcConfigFrame() {}
-    mpcConfigFrame(const mpcConfigFrame&);
-    mpcConfigFrame& operator=(const mpcConfigFrame&);
+    mpcConfigFrame(const mpcConfigFrame&) = delete;
+    mpcConfigFrame& operator=(const mpcConfigFrame&) = delete;
 
 public:
     mpcConfigFrame(QWidget* win);
-    ~mpcConfigFrame() override {}
+    ~mpcConfigFrame() override = default;
 };
 
 /*****************************************************************/

@@ -47,7 +47,7 @@ protected:
     }
 
 public:
-    virtual ~converter() {}
+    virtual ~converter() = default;
 
     /// Get pointer to buffer
     virtual char* buffer() =0;

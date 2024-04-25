@@ -90,7 +90,7 @@ signals:
 
 public:
     lastfmConfig(QWidget* win);
-    ~lastfmConfig() override {}
+    ~lastfmConfig() override = default;
 };
 
 #endif

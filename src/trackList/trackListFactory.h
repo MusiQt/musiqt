@@ -37,7 +37,7 @@ protected:
     tFactory() {}
     tFactory(const tFactory&);
     tFactory& operator= (const tFactory&);
-    ~tFactory() {}
+    ~tFactory() = default;
 
 public:
     /// Get singleton instance

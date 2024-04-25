@@ -42,12 +42,12 @@ class mpg123ConfigFrame : public configFrame
 {
 private:
     mpg123ConfigFrame() {}
-    mpg123ConfigFrame(const mpg123ConfigFrame&);
-    mpg123ConfigFrame& operator=(const mpg123ConfigFrame&);
+    mpg123ConfigFrame(const mpg123ConfigFrame&) = delete;
+    mpg123ConfigFrame& operator=(const mpg123ConfigFrame&) = delete;
 
 public:
     mpg123ConfigFrame(QWidget* win);
-    ~mpg123ConfigFrame() override {}
+    ~mpg123ConfigFrame() override = default;
 };
 
 /*****************************************************************/

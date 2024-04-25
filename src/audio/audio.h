@@ -108,7 +108,7 @@ private:
 
 public:
     audioConfig(QWidget* win);
-    ~audioConfig() override {}
+    ~audioConfig() override = default;
 };
 
 #endif

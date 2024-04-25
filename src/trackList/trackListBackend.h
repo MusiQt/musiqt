@@ -31,7 +31,7 @@ protected:
     const QString m_path;
 
 private:
-    trackListBackend();
+    trackListBackend() = delete;
     trackListBackend(const trackListBackend&) = delete;
     trackListBackend& operator= (const trackListBackend&) = delete;
 
@@ -54,7 +54,7 @@ protected:
     }
 
 public:
-    ~trackListBackend() override {}
+    ~trackListBackend() override = default;
 
     /// Load playlist
     tracks_t load() override { return tracks_t(); }

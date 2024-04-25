@@ -32,7 +32,7 @@ protected:
     const unsigned int m_outputFrameSize;
 
 private:
-    resamplerBackend();
+    resamplerBackend() = delete;
     resamplerBackend(const resamplerBackend&) = delete;
     resamplerBackend& operator=(const resamplerBackend&) = delete;
 
@@ -57,7 +57,7 @@ public:
 class converterBackend : public converter
 {
 private:
-    converterBackend();
+    converterBackend() = delete;
     converterBackend(const converterBackend&) = delete;
     converterBackend& operator=(const converterBackend&) = delete;
 

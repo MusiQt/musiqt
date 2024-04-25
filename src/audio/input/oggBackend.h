@@ -41,12 +41,12 @@ class oggConfigFrame : public configFrame
 {
 private:
     oggConfigFrame() {}
-    oggConfigFrame(const oggConfigFrame&);
-    oggConfigFrame& operator=(const oggConfigFrame&);
+    oggConfigFrame(const oggConfigFrame&) = delete;
+    oggConfigFrame& operator=(const oggConfigFrame&) = delete;
 
 public:
     oggConfigFrame(QWidget* win);
-    ~oggConfigFrame() override {}
+    ~oggConfigFrame() override = default;
 };
 
 /*****************************************************************/
