@@ -249,8 +249,8 @@ void infoDialog::setInfo(const metaData* mtd)
             // check for URLs in comments
             if (isComment)
             {
-                QRegularExpression url("(\\b(?:https?://|www\\.)\\S+\\b)");
-                info.replace(url, "<a href=\"\\1\">\\1</a>");
+                QRegularExpression url(R"((\b(?:https?://|www\.)\S+\b))");
+                info.replace(url, R"(<a href="\1">\1</a>)");
                 textLabel->setOpenExternalLinks(true);
             }
 
