@@ -23,7 +23,7 @@
 #include "translator.h"
 
 #include "gettext.h"
-#include <locale.h>
+#include <clocale>
 
 #include <QDebug>
 #include <QCoreApplication>

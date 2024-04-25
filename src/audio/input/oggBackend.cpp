@@ -23,7 +23,7 @@
 #include "settings.h"
 #include "utils.h"
 
-#include <string.h>
+#include <cstring>
 
 #include <QDebug>
 #include <QComboBox>
