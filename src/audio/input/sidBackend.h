@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2024 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,13 +31,10 @@
 
 #include "input.h"
 #include "inputConfig.h"
+#include "sidlib_features.h"
 
 #ifdef HAVE_STILVIEW
 #  include <stilview/stil.h>
-#endif
-
-#if (LIBSIDPLAYFP_VERSION_MAJ > 1) || (LIBSIDPLAYFP_VERSION_MAJ == 1 && LIBSIDPLAYFP_VERSION_MIN > 7)
-#  define ENABLE_3SID
 #endif
 
 
@@ -53,11 +50,16 @@ struct sidConfig_t
     int bias;
     int filter6581Curve;
     int filter8580Curve;
+    double filter6581Range;
+#ifdef FEAT_CW_STRENGTH
+    SidConfig::sid_cw_t cwStrength;
+#endif
     SidConfig::c64_model_t c64Model;
     bool forceC64Model;
     SidConfig::sid_model_t sidModel;
     bool forceSidModel;
     bool filter;
+    bool digiboost;
     QString hvscPath;
     int secondSidAddress;
     int thirdSidAddress;
@@ -125,6 +127,10 @@ public:
 
     int filter8580Curve() const { return m_settings.filter8580Curve; }
 
+    int filter6581Range() const { return m_settings.filter6581Range; }
+#ifdef FEAT_CW_STRENGTH
+    SidConfig::sid_cw_t cwStrength() const { return m_settings.cwStrength; }
+#endif
     SidConfig::c64_model_t c64Model() const { return m_settings.c64Model; }
 
     bool forceC64Model() const { return m_settings.forceC64Model; }
@@ -134,6 +140,8 @@ public:
     bool forceSidModel() const { return m_settings.forceSidModel; }
 
     bool filter() const { return m_settings.filter; }
+
+    bool digiboost() const { return m_settings.digiboost; }
 
     QString hvscPath() const { return m_settings.hvscPath; }
 
