@@ -151,7 +151,7 @@ cmake --build .
 ```
 The following build options are available:
 ~~~
--DQT6=ON :        enable building with Qt6 if found (experimental)
+-DQT6=ON :        enable building with Qt6 if found
 -DPORTABLE=ON :   only for Windows, build a portable app
 -DNLS=OFF :       disable Native Language Support
 -DLASTFM=OFF :    disable Last.fm scrobbling
