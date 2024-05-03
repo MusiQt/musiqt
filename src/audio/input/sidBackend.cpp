@@ -509,7 +509,7 @@ void sidBackend::getInfo(const SidTuneInfo* tuneInfo) noexcept
     m_metaData.addInfo(gettext("speed"), m_sidplayfp->info().speedString());
     m_metaData.addInfo(gettext("file format"), tuneInfo->formatString());
     m_metaData.addInfo(gettext("song clock"), getClockString(tuneInfo->clockSpeed()));
-#ifdef FEAT_THIRD_SID
+#ifdef FEAT_NEW_TUNEINFO_API
     m_metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel(0)));
     if (tuneInfo->sidChips() > 1)
     {
