@@ -1,3 +1,8 @@
+* musiqt-3.1.0 - xxx xx, 2024
+sid: added more settings for new lib versions
+
+
+
 * musiqt-3.0.2 - Nov 17, 2023
 mpris: fixed pause behavior, if playback is already paused do nothing
 updated minizip from zlib 1.3
