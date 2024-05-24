@@ -229,7 +229,7 @@ endif()
 ##################################################################
 # Check for Qt
 
-OPTION(QT6 "Enable building with Qt6 if found (experimental)" OFF)
+OPTION(QT6 "Enable building with Qt6 if found" ON)
 if(QT6)
     find_package(Qt6 COMPONENTS Widgets Network Multimedia)
 endif()
