@@ -435,6 +435,7 @@ if(SIDPLAYFP)
         target_sources(musiqt PRIVATE
             src/audio/input/sidBackend.cpp
             src/audio/input/sidBackend.h
+            src/audio/input/sidlib_features.h
         )
         target_link_libraries(musiqt PkgConfig::libsidplayfp)
 

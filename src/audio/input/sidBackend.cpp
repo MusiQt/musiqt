@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2024 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ extern const unsigned char iconSid[126] =
 // HVSC path to BUGlist.
 #define HVSC_BUGLIST "/DOCUMENTS/BUGlist.txt"
 
-#define CREDITS "Sidplayfp<br>Copyright \u00A9 Simon White, Antti Lankila, Leandro Nini"
+#define CREDITS "Sidplayfp<br>Copyright \u00A9 Simon White, Dag Lem, Antti Lankila, Leandro Nini"
 #define LINK    "https://github.com/libsidplayfp/libsidplayfp/"
 
 const char sidBackend::name[] = "Sidplayfp";
@@ -110,19 +110,28 @@ size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
 
 void sidConfig::loadSettings()
 {
-    m_settings.samplerate = load("Frequency", 44100);
+    m_settings.samplerate = load("Frequency", 48000);
     m_settings.channels = load("Channels", 1);
     m_settings.samplingMethod = (SidConfig::sampling_method_t)load("Sampling method", SidConfig::INTERPOLATE);
     m_settings.fastSampling = load("Fast sampling", false);
     m_settings.bias = load("DAC Bias", 0);
     m_settings.filter6581Curve = load("Filter 6581 Curve", 500);
+#ifdef FEAT_NEW_8580_FILTER
+    m_settings.filter8580Curve = load("Filter 8580 Curve", 500);
+#else
     m_settings.filter8580Curve = load("Filter 8580 Curve", 12500);
+#endif
+    m_settings.filter6581Range = load("Filter 6581 Range", 0.5);
+#ifdef FEAT_CW_STRENGTH
+    m_settings.cwStrength = (SidConfig::sid_cw_t)load("Combined waveforms strength", SidConfig::AVERAGE);
+#endif
     m_settings.c64Model = (SidConfig::c64_model_t)load("C64 Model", SidConfig::PAL);
     m_settings.sidModel = (SidConfig::sid_model_t)load("SID model", SidConfig::MOS6581);
     m_settings.forceC64Model = load("Force C64 Model", false);
     m_settings.forceSidModel = load("Force SID Model", false);
     m_settings.engine = load("Engine", engines[0]);
     m_settings.filter = load("Filter", true);
+    m_settings.digiboost = load("Digiboost", false);
     m_settings.hvscPath = load("HVSC", QString());
     m_settings.secondSidAddress = load("Second SID address", 0);
     m_settings.thirdSidAddress = load("Third SID address", 0);
@@ -140,12 +149,17 @@ void sidConfig::saveSettings()
     save("DAC Bias", m_settings.bias);
     save("Filter 6581 Curve", m_settings.filter6581Curve);
     save("Filter 8580 Curve", m_settings.filter8580Curve);
+    save("Filter 6581 Range", m_settings.filter6581Range);
+#ifdef FEAT_CW_STRENGTH
+    save("Combined waveforms strength", m_settings.cwStrength);
+#endif
     save("C64 Model", m_settings.c64Model);
     save("SID model", m_settings.sidModel);
     save("Force C64 Model", m_settings.forceC64Model);
     save("Force SID Model", m_settings.forceSidModel);
     save("Engine", m_settings.engine);
     save("Filter", m_settings.filter);
+    save("Digiboost", m_settings.digiboost);
     save("HVSC", m_settings.hvscPath);
     save("Second SID address", m_settings.secondSidAddress);
     save("Third SID address", m_settings.thirdSidAddress);
@@ -312,7 +326,17 @@ void sidBackend::createEmu()
 
         tmpResid->filter(m_config.filter());
         tmpResid->filter6581Curve((double)m_config.filter6581Curve()/1000.);
+#ifdef FEAT_NEW_8580_FILTER
+        tmpResid->filter8580Curve((double)m_config.filter8580Curve()/1000.);
+#else
         tmpResid->filter8580Curve((double)m_config.filter8580Curve());
+#endif
+#ifdef FEAT_FILTER_RANGE
+        tmpResid->filter6581Range((double)m_config.filter6581Range()/1000.);
+#endif
+#ifdef FEAT_CW_STRENGTH
+        tmpResid->combinedWaveformsStrength(m_config.cwStrength());
+#endif
 
         emuSid = (sidbuilder*)tmpResid;
     }
@@ -365,8 +389,11 @@ void sidBackend::createEmu()
     cfg.playback = (m_config.channels() == 2) ? SidConfig::STEREO : SidConfig::MONO;
     cfg.frequency = m_config.samplerate();
     cfg.secondSidAddress = m_config.secondSidAddress();
-#ifdef ENABLE_3SID
+#ifdef FEAT_THIRD_SID
     cfg.thirdSidAddress = m_config.thirdSidAddress();
+#endif
+#ifdef FEAT_DIGIBOOST
+    cfg.digiBoost = m_config.digiboost();
 #endif
     cfg.sidEmulation = emuSid;
     cfg.samplingMethod = m_config.samplingMethod();
@@ -426,7 +453,7 @@ bool sidBackend::loadTune(int num)
     if (m_db != nullptr)
     {
         int_least32_t songLength;
-#if LIBSIDPLAYFP_VERSION_MAJ > 1
+#ifdef FEAT_NEW_SONLEGTH_DB
         songLength = m_newSonglengthDB ? m_db->lengthMs(*m_tune) : (m_db->length(*m_tune) * 1000);
 #else
         char md5[SidTune::MD5_LENGTH+1];
@@ -482,7 +509,7 @@ void sidBackend::getInfo(const SidTuneInfo* tuneInfo) noexcept
     m_metaData.addInfo(gettext("speed"), m_sidplayfp->info().speedString());
     m_metaData.addInfo(gettext("file format"), tuneInfo->formatString());
     m_metaData.addInfo(gettext("song clock"), getClockString(tuneInfo->clockSpeed()));
-#ifdef ENABLE_3SID
+#ifdef FEAT_NEW_TUNEINFO_API
     m_metaData.addInfo(gettext("SID model"), getModelString(tuneInfo->sidModel(0)));
     if (tuneInfo->sidChips() > 1)
     {
@@ -841,7 +868,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
             SIDSETTINGS.thirdSidAddress = sidAddresses[val];
         }
     );
-#ifndef ENABLE_3SID
+#ifndef FEAT_THIRD_SID
     sidAddress->setDisabled(true);
 #endif
 
@@ -872,6 +899,15 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
             SIDSETTINGS.filter = val;
         }
     );
+    cBox = new QCheckBox(tr("Digiboost"));
+    cBox->setChecked(SIDSETTINGS.digiboost);
+    cBox->setToolTip("Digiboost hack for 8580 samples");
+    vert->addWidget(cBox);
+    connect(cBox, &QCheckBox::toggled,
+        [](bool val) {
+            SIDSETTINGS.digiboost = val;
+        }
+    );
 
     QVBoxLayout *biasFrame = new QVBoxLayout();
     vert->addLayout(biasFrame);
@@ -895,6 +931,16 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
             tf->setNum(val);
         }
     );
+
+    {
+        QFrame* line = new QFrame();
+        line->setFrameShape(QFrame::VLine);
+        line->setFrameShadow(QFrame::Sunken);
+        extraLeft()->addWidget(line);
+    }
+
+    vert = new QVBoxLayout();
+    extraLeft()->addLayout(vert);
 
     QVBoxLayout *filterCurveFrame = new QVBoxLayout();
     vert->addLayout(filterCurveFrame);
@@ -922,7 +968,11 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     );
 
     knob = new QDial(this);
+#ifdef FEAT_NEW_8580_FILTER
+    knob->setRange(0, 1000);
+#else
     knob->setRange(8000, 16000);
+#endif
     knob->setValue(SIDSETTINGS.filter8580Curve);
     mat->addWidget(knob, 1, 1, 1, 1, Qt::AlignCenter);
     tf = new QLabel(this);
@@ -938,6 +988,91 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
         }
     );
 
+    QVBoxLayout *filterRangeFrame = new QVBoxLayout();
+    vert->addLayout(filterRangeFrame);
+    filterRangeFrame->addWidget(new QLabel(tr("Filter range for reSIDfp"), this));
+    mat = new QGridLayout();
+    filterRangeFrame->addLayout(mat);
+    mat->addWidget(new QLabel("6581", this), 0, 0, 1, 1, Qt::AlignCenter);
+    mat->addWidget(new QLabel("8580", this), 0, 1, 1, 1, Qt::AlignCenter);
+
+    knob = new QDial(this);
+    knob->setRange(0, 1000);
+    knob->setValue(SIDSETTINGS.filter6581Range);
+    mat->addWidget(knob, 1, 0, 1, 1, Qt::AlignCenter);
+    tf = new QLabel(this);
+    tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
+    tf->setAlignment(Qt::AlignCenter);
+    tf->setNum(SIDSETTINGS.filter6581Range);
+    mat->addWidget(tf, 2, 0);
+    knob->setMaximumSize(tf->height(), tf->height());
+    connect(knob, &QDial::valueChanged,
+        [tf](int val) {
+            SIDSETTINGS.filter6581Range = val/1000.;
+            tf->setNum(val/1000.);
+        }
+    );
+#ifndef FEAT_FILTER_RANGE
+    knob->setDisabled(true);
+#endif
+
+    knob = new QDial(this);
+    knob->setRange(0, 1000);
+    mat->addWidget(knob, 1, 1, 1, 1, Qt::AlignCenter);
+    tf = new QLabel(this);
+    tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
+    tf->setAlignment(Qt::AlignCenter);
+    tf->setNum(0);
+    mat->addWidget(tf, 2, 1);
+    knob->setMaximumSize(tf->height(), tf->height());
+
+    knob->setDisabled(true);
+
+    QVBoxLayout *cwsFrame = new QVBoxLayout();
+    vert->addLayout(cwsFrame);
+    cwsFrame->addWidget(new QLabel(tr("Combined waveforms strength"), this));
+    QComboBox *cwsBox = new QComboBox(this);
+    cwsFrame->addWidget(cwsBox);
+    {
+        QStringList items;
+        items << "WEAK" << "AVERAGE" << "STRONG";
+        cwsBox->addItems(items);
+        cwsBox->setMaxVisibleItems(items.size());
+    }
+#ifdef FEAT_CW_STRENGTH
+    switch (SIDSETTINGS.cwStrength)
+    {
+    default:
+    case SidConfig::WEAK:
+        val = 0;
+        break;
+    case SidConfig::AVERAGE:
+        val = 1;
+        break;
+    case SidConfig::STRONG:
+        val = 2;
+        break;
+    }
+    cwsBox->setCurrentIndex(val);
+    connect(cwsBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [](int val) {
+            switch (val)
+            {
+            case 0:
+                SIDSETTINGS.cwStrength = SidConfig::WEAK;
+                break;
+            case 1:
+                SIDSETTINGS.cwStrength = SidConfig::AVERAGE;
+                break;
+            case 2:
+                SIDSETTINGS.cwStrength = SidConfig::STRONG;
+                break;
+            }
+        }
+    );
+#else
+    cwsBox->setDisabled(true);
+#endif
     QGridLayout *frame = new QGridLayout();
     extraBottom()->addLayout(frame);
 
