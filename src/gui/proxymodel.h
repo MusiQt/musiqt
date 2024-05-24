@@ -23,6 +23,7 @@
 #include <QWidget>
 
 #include <algorithm>
+#include <random>
 
 class proxymodel final : public QSortFilterProxyModel
 {
@@ -80,7 +81,7 @@ public:
             order = Qt::AscendingOrder;
             m_randomOrder.resize(sourceModel()->rowCount());
             std::iota(m_randomOrder.begin(), m_randomOrder.end(), 0);
-            std::random_shuffle(m_randomOrder.begin(), m_randomOrder.end());
+            std::shuffle(m_randomOrder.begin(), m_randomOrder.end(), std::random_device());
             break;
         default:
             Q_UNREACHABLE();
