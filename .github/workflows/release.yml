@@ -18,29 +18,30 @@ jobs:
     - uses: msys2/setup-msys2@v2
       with:
         update: true
+        msystem: clang64
         install: >-
           git
           zip
           upx
           base-devel
-          mingw-w64-x86_64-toolchain
-          mingw-w64-x86_64-cmake
-          mingw-w64-x86_64-gettext
-          mingw-w64-x86_64-qt6-base
-          mingw-w64-x86_64-qt6-shadertools
-          mingw-w64-x86_64-qt6-multimedia
-          mingw-w64-x86_64-libsndfile
-          mingw-w64-x86_64-mpg123
-          mingw-w64-x86_64-libvorbis
-          mingw-w64-x86_64-opusfile
-          mingw-w64-x86_64-libgme
-          mingw-w64-x86_64-libmpcdec
-          mingw-w64-x86_64-wavpack
-          mingw-w64-x86_64-ffmpeg
-          mingw-w64-x86_64-libbs2b
-          mingw-w64-x86_64-libsidplayfp
+          mingw-w64-clang-x86_64-toolchain
+          mingw-w64-clang-x86_64-cmake
+          mingw-w64-clang-x86_64-gettext
+          mingw-w64-clang-x86_64-qt6-base
+          mingw-w64-clang-x86_64-qt6-shadertools
+          mingw-w64-clang-x86_64-qt6-multimedia
+          mingw-w64-clang-x86_64-libsndfile
+          mingw-w64-clang-x86_64-mpg123
+          mingw-w64-clang-x86_64-libvorbis
+          mingw-w64-clang-x86_64-opusfile
+          mingw-w64-clang-x86_64-libgme
+          mingw-w64-clang-x86_64-libmpcdec
+          mingw-w64-clang-x86_64-wavpack
+          mingw-w64-clang-x86_64-ffmpeg
+          mingw-w64-clang-x86_64-libbs2b
+          mingw-w64-clang-x86_64-libsidplayfp
           mingw-w64-clang-x86_64-libopenmpt
-          mingw-w64-x86_64-liblastfm
+          mingw-w64-clang-x86_64-liblastfm
     - uses: actions/checkout@v3
       with:
         ref: ${{ github.ref }}
