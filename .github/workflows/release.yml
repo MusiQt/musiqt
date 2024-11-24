@@ -42,7 +42,7 @@ jobs:
           mingw-w64-clang-x86_64-libsidplayfp
           mingw-w64-clang-x86_64-libopenmpt
           mingw-w64-clang-x86_64-liblastfm
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
     - name: Get the tag name
