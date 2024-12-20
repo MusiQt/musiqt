@@ -2,15 +2,15 @@
 # Copyright (C) 2010-2021
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Leandro Nini <drfiemost@users.sourceforge.net>, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2021, 2022, 2023.
+# Leandro Nini <drfiemost@users.sourceforge.net>, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2021, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-20 11:35+0100\n"
-"PO-Revision-Date: 2023-07-13 20:05+0200\n"
+"PO-Revision-Date: 2024-12-20 11:45+0100\n"
 "Last-Translator: Dr. Fiemost\n"
-"Language-Team: Italian <kde-i18n-it@kde.org>\n"
+"Language-Team: Italian <>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -654,7 +654,7 @@ msgstr "Cancella i segnalibri"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1033
 msgid "Combined waveforms strength"
-msgstr ""
+msgstr "Ampiezza delle forme d'onda combinate"
 
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:97
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:100
@@ -812,11 +812,11 @@ msgstr "Cancella sessione"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:902
 msgid "Digiboost"
-msgstr ""
+msgstr "Digiboost"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:904
 msgid "Digiboost hack for 8580 samples"
-msgstr ""
+msgstr "Applica Digiboost per i suoni campionati sull'8580"
 
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:179
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:164
@@ -841,9 +841,8 @@ msgid "Edit playlist"
 msgstr "Modifica la playlist"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:895
-#, fuzzy
 msgid "Emulate SID filter"
-msgstr "Filtro\tEmula il filtro SID"
+msgstr "Emula il filtro SID"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:315
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:310
@@ -884,7 +883,7 @@ msgstr "Abilita/disabilita lo scrobbling"
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:642
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:671
 msgid "Engine"
-msgstr "Motore"
+msgstr "Emulazione"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:313
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:308
@@ -972,9 +971,8 @@ msgid "Fast scan"
 msgstr "Scan veloce"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:886
-#, fuzzy
 msgid "Faster but inaccurate sampling"
-msgstr "Campionamento Veloce\tPiù veloce ma meno accurato"
+msgstr "Campionamento più veloce ma meno accurato"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:720
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:710
@@ -987,7 +985,7 @@ msgstr "Campionamento Veloce\tPiù veloce ma meno accurato"
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:864
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:893
 msgid "Filter"
-msgstr "Filtro:"
+msgstr "Filtro"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:748
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:738
@@ -1003,9 +1001,8 @@ msgid "Filter curves for reSIDfp"
 msgstr "Curva dei filtri per reSIDfp"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:993
-#, fuzzy
 msgid "Filter range for reSIDfp"
-msgstr "Curva dei filtri per reSIDfp"
+msgstr "Range dei filtri per reSIDfp"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:639
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:629
@@ -1705,12 +1702,14 @@ msgid "Save playlist"
 msgstr "Salva la playlist"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/mpg123Backend.cpp:476
-#, fuzzy
 msgid ""
 "Scan only few frame of file,\n"
 "time detection may be inaccurate\n"
 "and pictures are not parsed"
-msgstr "Scan veloce\tEffettua una scansione veloce ma inaccurata"
+msgstr ""
+"Scansione parziale del file,\n"
+"la durata del brano potrebbe non essere accurata\n"
+"e le immagini non vengono lette"
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:233
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:234
@@ -1764,14 +1763,12 @@ msgid "Select ASMA directory"
 msgstr "Seleziona la cartella ASMA"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1140
-#, fuzzy
 msgid "Select BASIC Rom file"
-msgstr "Seleziona il file della rom %1"
+msgstr "Seleziona il file della rom BASIC"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1158
-#, fuzzy
 msgid "Select Chargen Rom file"
-msgstr "&Sfoglia\tSeleziona il file della rom caratteri"
+msgstr "Seleziona il file della rom caratteri"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:937
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:927
@@ -1788,9 +1785,8 @@ msgid "Select HVSC directory"
 msgstr "Seleziona la cartella HVSC"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1122
-#, fuzzy
 msgid "Select Kernal Rom file"
-msgstr "&Sfoglia\tSeleziona il file della rom Kernal"
+msgstr "Seleziona il file della rom Kernal"
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:240
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:251
@@ -1798,7 +1794,7 @@ msgstr "&Sfoglia\tSeleziona il file della rom Kernal"
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:259
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:259
 msgid "Session:"
-msgstr "Sessione"
+msgstr "Sessione:"
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:176
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:177
