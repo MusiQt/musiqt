@@ -883,7 +883,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     extraLeft()->addLayout(vert);
     cBox = new QCheckBox(tr("Fast sampling"));
     cBox->setChecked(SIDSETTINGS.fastSampling);
-    cBox->setToolTip("Faster but inaccurate sampling");
+    cBox->setToolTip(tr("Faster but inaccurate sampling"));
     vert->addWidget(cBox);
     connect(cBox, &QCheckBox::toggled,
         [](bool val) {
@@ -892,7 +892,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     );
     cBox = new QCheckBox(tr("Filter"));
     cBox->setChecked(SIDSETTINGS.filter);
-    cBox->setToolTip("Emulate SID filter");
+    cBox->setToolTip(tr("Emulate SID filter"));
     vert->addWidget(cBox);
     connect(cBox, &QCheckBox::toggled,
         [](bool val) {
@@ -901,7 +901,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     );
     cBox = new QCheckBox(tr("Digiboost"));
     cBox->setChecked(SIDSETTINGS.digiboost);
-    cBox->setToolTip("Digiboost hack for 8580 samples");
+    cBox->setToolTip(tr("Digiboost hack for 8580 samples"));
     vert->addWidget(cBox);
     connect(cBox, &QCheckBox::toggled,
         [](bool val) {
@@ -1093,7 +1093,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
         }
     );
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
-    button->setToolTip("Select HVSC directory");
+    button->setToolTip(tr("Select HVSC directory"));
     frame->addWidget(button, 0, 2);
     connect(button, &QPushButton::clicked,
         [hvscPath, this]() {
@@ -1119,7 +1119,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     );
     frame->addWidget(kernalRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
-    button->setToolTip("Select Kernal Rom file");
+    button->setToolTip(tr("Select Kernal Rom file"));
     frame->addWidget(button);
     group->addButton(button, ID_KERNAL);
 
@@ -1137,7 +1137,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     );
     frame->addWidget(basicRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
-    button->setToolTip("Select BASIC Rom file");
+    button->setToolTip(tr("Select BASIC Rom file"));
     frame->addWidget(button);
     group->addButton(button, ID_BASIC);
 
@@ -1155,7 +1155,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     );
     frame->addWidget(chargenRomPath);
     button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
-    button->setToolTip("Select Chargen Rom file");
+    button->setToolTip(tr("Select Chargen Rom file"));
     frame->addWidget(button);
     group->addButton(button, ID_CHARGEN);
 

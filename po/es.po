@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-13 20:01+0200\n"
+"POT-Creation-Date: 2024-12-20 11:35+0100\n"
 "PO-Revision-Date: 2018-09-04 21:19+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -26,6 +26,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:249
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:249
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:248
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:251
 msgid " music location"
 msgstr ""
 
@@ -36,6 +37,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:334
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:337
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:337
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:359
 msgid "&About"
 msgstr "Acerca de"
 
@@ -91,6 +93,11 @@ msgstr "Filtro Bauer estéreo a binaural DSP"
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:984
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1002
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1020
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:403
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1095
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1121
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1139
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1157
 msgid "&Browse"
 msgstr ""
 
@@ -133,6 +140,7 @@ msgstr "&Contato"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:358
 #: C:/msys64/home/minini/musiqt/src/gui/aboutDialog.cpp:138
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:138
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:380
 msgid "&Info"
 msgstr "&Info"
 
@@ -155,6 +163,7 @@ msgstr "&Licencia"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:343
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:346
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:346
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:368
 msgid "&Next"
 msgstr "Siguiente"
 
@@ -175,6 +184,7 @@ msgstr "&Aceptar"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:347
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:350
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:350
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:372
 msgid "&Play"
 msgstr "Reproducir"
 
@@ -199,6 +209,7 @@ msgstr "&Qt"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:360
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:363
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:363
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:385
 msgid "&Quit"
 msgstr ""
 
@@ -209,6 +220,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:351
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:354
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:354
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:376
 msgid "&Stop"
 msgstr "Detener"
 
@@ -235,6 +247,8 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:502
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:488
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:502
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:517
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:531
 msgid "2nd SID address"
 msgstr "Posición segundo SID"
 
@@ -256,6 +270,8 @@ msgstr "Posición segundo SID"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:501
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:487
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:501
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:516
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:530
 msgid "2nd SID model"
 msgstr "Modelo segundo SID"
 
@@ -268,6 +284,7 @@ msgstr "Modelo segundo SID"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:487
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:493
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:493
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:522
 msgid "3rd SID address"
 msgstr "Posición tercer SID"
 
@@ -280,6 +297,7 @@ msgstr "Posición tercer SID"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:486
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:492
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:492
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:521
 msgid "3rd SID model"
 msgstr "Modelo tercer SID"
 
@@ -299,6 +317,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:382
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:382
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:384
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:386
 msgid "ASMA path:"
 msgstr "Ruta ASMA:"
 
@@ -315,6 +334,8 @@ msgstr "Ruta ASMA:"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:339
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:338
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:339
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:360
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:361
 msgid "About"
 msgstr "Acerca de"
 
@@ -337,6 +358,7 @@ msgstr "Acerca de %1"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:693
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:693
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:692
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:652
 msgid "Add directory to the bookmarks"
 msgstr "Anade el directorio a los marcadores."
 
@@ -349,6 +371,7 @@ msgstr "Anade el directorio a los marcadores."
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:682
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:682
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:681
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:641
 msgid "Add song to the playlist"
 msgstr "Añade la canción a la lista de reproducción."
 
@@ -361,6 +384,7 @@ msgstr "Añade la canción a la lista de reproducción."
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:687
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:687
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:686
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:646
 msgid "Add to bookmarks"
 msgstr "&Añadir a marcadores"
 
@@ -373,6 +397,7 @@ msgstr "&Añadir a marcadores"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:676
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:676
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:675
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:635
 msgid "Add to playlist"
 msgstr "&Añadir a la lista de reproducción"
 
@@ -459,6 +484,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:981
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:989
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:989
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1126
 msgid "BASIC Rom:"
 msgstr "Rom BASIC:"
 
@@ -521,6 +547,7 @@ msgstr "Filtro Bauer estéreo a binaural DSP"
 #: C:/msys64/home/minini/musiqt/src/audio/input/oggBackend.cpp:219
 #: C:/msys64/home/minini/musiqt/src/audio/input/oggBackend.cpp:220
 #: /mnt/devel/projects/musiqt/src/audio/input/oggBackend.cpp:220
+#: /mnt/devel/projects/musiqt/src/audio/input/oggBackend.cpp:229
 msgid "Bits"
 msgstr "Bits"
 
@@ -581,6 +608,8 @@ msgstr "Tarjeta"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:626
 #: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:341
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:626
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:358
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:655
 msgid "Channels"
 msgstr "Canales"
 
@@ -593,6 +622,7 @@ msgstr "Canales"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:999
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:1007
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1007
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1144
 msgid "Chargen Rom:"
 msgstr "Rom caracteres:"
 
@@ -620,6 +650,10 @@ msgstr "Limpiar marcadores"
 msgid "Clear bookmarks"
 msgstr "Limpiar marcadores"
 
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1033
+msgid "Combined waveforms strength"
+msgstr ""
+
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:97
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:100
 #: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:100
@@ -646,6 +680,8 @@ msgstr "Comentario"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:189
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:190
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:396
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:211
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:212
 msgid "Compact"
 msgstr "Modo compacto"
 
@@ -677,6 +713,7 @@ msgstr "Lista de reproducción actual"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:868
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:876
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:876
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:914
 msgid "DAC Bias for reSID"
 msgstr "Distorsión DAC para reSID"
 
@@ -687,6 +724,7 @@ msgstr "Distorsión DAC para reSID"
 #: C:/msys64/home/minini/musiqt/src/audio/input/mpg123Backend.cpp:454
 #: /mnt/devel/projects/musiqt/src/audio/input/mpg123Backend.cpp:433
 #: C:/msys64/home/minini/musiqt/src/audio/input/mpg123Backend.cpp:433
+#: /mnt/devel/projects/musiqt/src/audio/input/mpg123Backend.cpp:450
 msgid "Decoder"
 msgstr "Decodificador"
 
@@ -699,6 +737,7 @@ msgstr "Decodificador"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:697
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:705
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:705
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:734
 #, fuzzy
 msgid "Default C64 model"
 msgstr "Modelo C64"
@@ -712,6 +751,7 @@ msgstr "Modelo C64"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:753
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:761
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:761
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:790
 #, fuzzy
 msgid "Default SID model"
 msgstr "Modelo SID"
@@ -771,6 +811,14 @@ msgstr "Borrar marcador seleccionado"
 msgid "Delete session"
 msgstr "Borrar"
 
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:902
+msgid "Digiboost"
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:904
+msgid "Digiboost hack for 8580 samples"
+msgstr ""
+
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:179
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:164
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:160
@@ -793,6 +841,11 @@ msgstr "Editar"
 msgid "Edit playlist"
 msgstr "Editar la lista de reproducción"
 
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:895
+#, fuzzy
+msgid "Emulate SID filter"
+msgstr "Filtro\tEmula el filtro SID"
+
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:315
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:310
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:328
@@ -800,6 +853,7 @@ msgstr "Editar la lista de reproducción"
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:326
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:326
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:328
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:330
 msgid "Enable equalizer"
 msgstr ""
 
@@ -816,6 +870,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:235
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:236
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:236
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:258
 msgid "Enable/disable scrobbling"
 msgstr ""
 
@@ -828,6 +883,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:634
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:642
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:642
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:671
 msgid "Engine"
 msgstr "Motor"
 
@@ -838,6 +894,7 @@ msgstr "Motor"
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:324
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:324
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:326
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:328
 msgid "Equalizer"
 msgstr ""
 
@@ -850,6 +907,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:817
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:817
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:816
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:776
 msgid "Error"
 msgstr "Error"
 
@@ -862,11 +920,13 @@ msgstr "Error"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:817
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:817
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:816
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:776
 msgid "Error saving playlist"
 msgstr "Error guardando la lista de reproducción"
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:605
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:605
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:623
 #, fuzzy
 msgid "Error!"
 msgstr "Error"
@@ -884,6 +944,8 @@ msgstr "Error"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:365
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:364
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:365
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:386
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:387
 msgid "Exit"
 msgstr "Salir"
 
@@ -896,6 +958,7 @@ msgstr "Salir"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:847
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:855
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:855
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:884
 #, fuzzy
 msgid "Fast sampling"
 msgstr "Remuestreo"
@@ -907,8 +970,14 @@ msgstr "Remuestreo"
 #: C:/msys64/home/minini/musiqt/src/audio/input/mpg123Backend.cpp:478
 #: /mnt/devel/projects/musiqt/src/audio/input/mpg123Backend.cpp:457
 #: C:/msys64/home/minini/musiqt/src/audio/input/mpg123Backend.cpp:457
+#: /mnt/devel/projects/musiqt/src/audio/input/mpg123Backend.cpp:474
 msgid "Fast scan"
 msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:886
+#, fuzzy
+msgid "Faster but inaccurate sampling"
+msgstr "Optimización\tMás rápido, pero inexacta emulación"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:720
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:710
@@ -919,6 +988,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:856
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:864
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:864
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:893
 msgid "Filter"
 msgstr "Filtro:"
 
@@ -931,7 +1001,13 @@ msgstr "Filtro:"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:891
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:899
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:899
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:947
 msgid "Filter curves for reSIDfp"
+msgstr "Curvas filtro para reSIDfp"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:993
+#, fuzzy
+msgid "Filter range for reSIDfp"
 msgstr "Curvas filtro para reSIDfp"
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:639
@@ -943,6 +1019,7 @@ msgstr "Curvas filtro para reSIDfp"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:743
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:751
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:751
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:780
 msgid "Force C64 model"
 msgstr "Fuerza modelo C64"
 
@@ -955,6 +1032,7 @@ msgstr "Fuerza modelo C64"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:787
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:795
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:795
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:824
 msgid "Force SID model"
 msgstr "Fuerza modelo SID"
 
@@ -975,6 +1053,8 @@ msgstr "Fuerza modelo SID"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:580
 #: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:295
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:580
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:312
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:609
 msgid "Frequency"
 msgstr "Frecuencia"
 
@@ -1031,6 +1111,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:345
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:348
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:348
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:370
 msgid "Go to next song"
 msgstr "Ir a la siguiente canción"
 
@@ -1041,6 +1122,7 @@ msgstr "Ir a la siguiente canción"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:216
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:217
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:217
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:239
 msgid "Go to next subtune"
 msgstr "Ir al siguiente subtono"
 
@@ -1051,6 +1133,7 @@ msgstr "Ir al siguiente subtono"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:341
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:344
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:344
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:366
 msgid "Go to previous song"
 msgstr "Ir a la canción anterior"
 
@@ -1061,6 +1144,7 @@ msgstr "Ir a la canción anterior"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:209
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:210
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:210
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:232
 msgid "Go to previous subtune"
 msgstr "Ir al subcanción anterior"
 
@@ -1073,6 +1157,7 @@ msgstr "Ir al subcanción anterior"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:937
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:945
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:945
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1082
 msgid "HVSC path:"
 msgstr "Ruta HVSC:"
 
@@ -1106,6 +1191,7 @@ msgstr "Inicio"
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:309
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:317
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:317
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:381
 msgid "Info"
 msgstr "&Info"
 
@@ -1118,6 +1204,7 @@ msgstr "&Info"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:963
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:971
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:971
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1108
 msgid "Kernal Rom:"
 msgstr "Rom Kernal:"
 
@@ -1155,6 +1242,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:583
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:583
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:582
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:542
 msgid "Loading..."
 msgstr "Cargando..."
 
@@ -1172,6 +1260,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:384
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:385
 #: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:385
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:402
 msgid "Master Gain"
 msgstr ""
 
@@ -1194,6 +1283,9 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:215
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:216
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:347
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:237
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:238
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:369
 msgid "Next"
 msgstr "Siguiente"
 
@@ -1207,6 +1299,7 @@ msgstr "Siguiente"
 #: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:322
 #: C:/msys64/home/minini/musiqt/src/gui/infoDialog.cpp:322
 #: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:321
+#: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:325
 msgid "No info"
 msgstr "Sin información"
 
@@ -1249,6 +1342,8 @@ msgstr "Ningún elemento seleccionado"
 #: /mnt/devel/projects/musiqt/src/audio/input/ffmpegBackend.cpp:424
 #: /mnt/devel/projects/musiqt/src/audio/input/mpcBackend.cpp:262
 #: C:/msys64/home/minini/musiqt/src/audio/input/ffmpegBackend.cpp:424
+#: /mnt/devel/projects/musiqt/src/audio/input/opusBackend.cpp:230
+#: /mnt/devel/projects/musiqt/src/audio/input/wvBackend.cpp:263
 msgid "No settings available"
 msgstr "Sin configuración disponible"
 
@@ -1267,6 +1362,7 @@ msgstr "Ninguna canción cargada"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:339
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:342
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:342
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:364
 msgid "P&revious"
 msgstr "Precedente"
 
@@ -1277,6 +1373,7 @@ msgstr "Precedente"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:838
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:838
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:837
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:797
 msgid "Path %1 does not exist"
 msgstr ""
 
@@ -1302,6 +1399,8 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:1064
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:393
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1064
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:395
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1201
 msgid "Path does not exists"
 msgstr ""
 
@@ -1312,6 +1411,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:486
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:489
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:489
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:511
 msgid "Pause"
 msgstr "Pausa"
 
@@ -1322,6 +1422,7 @@ msgstr "Pausa"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:508
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:511
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:511
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:533
 msgid "Paused"
 msgstr "Pausado"
 
@@ -1339,6 +1440,8 @@ msgstr "Pausado"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:484
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:351
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:484
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:373
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:506
 msgid "Play"
 msgstr "Reproducir"
 
@@ -1356,6 +1459,8 @@ msgstr "Reproducir todos los subtonos"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:580
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:574
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:580
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:592
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:598
 #, fuzzy
 msgid "Play mode"
 msgstr "Modo lista de reproducción"
@@ -1367,6 +1472,7 @@ msgstr "Modo lista de reproducción"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:349
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:352
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:352
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:374
 msgid "Play song"
 msgstr "Reproduciendo"
 
@@ -1377,6 +1483,7 @@ msgstr "Reproduciendo"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:504
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:507
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:507
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:529
 msgid "Playing"
 msgstr "Reproduciendo"
 
@@ -1395,6 +1502,7 @@ msgstr "Reproduciendo"
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:133
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:222
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:132
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:244
 msgid "Playlist"
 msgstr "Lista de reproducción"
 
@@ -1438,6 +1546,9 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:208
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:209
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:343
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:230
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:231
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:365
 msgid "Previous"
 msgstr "Precedente"
 
@@ -1448,6 +1559,7 @@ msgstr "Precedente"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:195
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:196
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:196
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:218
 msgid "Program settings"
 msgstr "Configuración del programa"
 
@@ -1468,6 +1580,7 @@ msgstr "valoración"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:716
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:716
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:715
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:675
 msgid "Remove item"
 msgstr "Eliminar elemento"
 
@@ -1480,6 +1593,7 @@ msgstr "Eliminar elemento"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:723
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:723
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:722
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:682
 msgid "Remove selected item from playlist"
 msgstr "Eliminar el elemento seleccionado de la lista de reproducción"
 
@@ -1501,6 +1615,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:356
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:357
 #: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:357
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:374
 msgid "Resampling"
 msgstr "Remuestreo"
 
@@ -1533,6 +1648,8 @@ msgstr "Volver a la lista de reproducción actual"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:498
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:484
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:498
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:513
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:527
 msgid "SID model"
 msgstr "Modelo SID"
 
@@ -1559,6 +1676,7 @@ msgstr "Frecuencia de muestreo"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:663
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:671
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:671
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:700
 msgid "Sampling method"
 msgstr "Método de muestreo"
 
@@ -1590,12 +1708,24 @@ msgstr "Guardar"
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:801
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:161
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:800
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:760
 msgid "Save playlist"
 msgstr "Guardar lista de reproducción"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/mpg123Backend.cpp:476
+#, fuzzy
+msgid ""
+"Scan only few frame of file,\n"
+"time detection may be inaccurate\n"
+"and pictures are not parsed"
+msgstr ""
+"Exploración rápida\tExplora sólo una parte de archivo, la detección de la "
+"duración puede ser inexacta"
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:233
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:234
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:234
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:256
 msgid "Scrobble"
 msgstr ""
 
@@ -1608,6 +1738,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:797
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:805
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:805
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:834
 msgid "Second SID address"
 msgstr "Posición segundo SID"
 
@@ -1620,6 +1751,7 @@ msgstr "Posición segundo SID"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:1043
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:1051
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1051
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1188
 msgid "Select %1 Rom file"
 msgstr "Selecciona la ficha Rom %1"
 
@@ -1637,8 +1769,19 @@ msgstr "Selecciona la ficha Rom %1"
 #: C:/msys64/home/minini/musiqt/src/audio/input/gmeBackend.cpp:404
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:402
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:406
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:408
 msgid "Select ASMA directory"
 msgstr "Selecciona el directorio ASMA"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1140
+#, fuzzy
+msgid "Select BASIC Rom file"
+msgstr "Selecciona la ficha Rom %1"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1158
+#, fuzzy
+msgid "Select Chargen Rom file"
+msgstr "&Explorar\tSeleciona la ficha Rom caracteres "
 
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:937
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:927
@@ -1649,8 +1792,15 @@ msgstr "Selecciona el directorio ASMA"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:955
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:963
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:963
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1096
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1100
 msgid "Select HVSC directory"
 msgstr "Selecciona directorio HVSC"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1122
+#, fuzzy
+msgid "Select Kernal Rom file"
+msgstr "&Explorar\tSelecciona la ficha Rom Kernal"
 
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:240
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:251
@@ -1679,6 +1829,8 @@ msgstr "Versión"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:194
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:195
 #: /mnt/devel/projects/musiqt/src/gui/settings.cpp:50
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:216
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:217
 msgid "Settings"
 msgstr "Configuración"
 
@@ -1691,6 +1843,7 @@ msgstr "Configuración"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:747
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:747
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:746
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:706
 msgid "Shuffle"
 msgstr "Aleatorio"
 
@@ -1701,6 +1854,7 @@ msgstr "Aleatorio"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:357
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:360
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:360
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:382
 msgid "Song info"
 msgstr "Información de la canción"
 
@@ -1722,6 +1876,7 @@ msgstr "Modo canción"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:248
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:249
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:249
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:271
 msgid "Songs"
 msgstr "Canción"
 
@@ -1743,6 +1898,8 @@ msgstr "Canción"
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:729
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:726
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:728
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:686
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:688
 msgid "Sort ascending"
 msgstr "Ordenación ascendente"
 
@@ -1764,6 +1921,8 @@ msgstr "Ordenación ascendente"
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:739
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:736
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:738
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:696
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:698
 msgid "Sort descending"
 msgstr "Ordenación descendente"
 
@@ -1776,6 +1935,7 @@ msgstr "Ordenación descendente"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:749
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:749
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:748
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:708
 msgid "Sort randomly"
 msgstr "Ordenación aleatoria"
 
@@ -1788,6 +1948,7 @@ msgstr "Ordenación aleatoria"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:763
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:763
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:762
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:722
 msgid "Sorting"
 msgstr "Ordenación"
 
@@ -1798,6 +1959,7 @@ msgstr "Ordenación"
 #: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:403
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:403
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:404
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:421
 msgid "Stereo Separation"
 msgstr ""
 
@@ -1814,6 +1976,8 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:356
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:355
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:356
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:377
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:378
 msgid "Stop"
 msgstr "Detener"
 
@@ -1838,6 +2002,9 @@ msgstr "Detener"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:254
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:373
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:503
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:276
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:395
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:525
 msgid "Stopped"
 msgstr "Detenido"
 
@@ -1848,6 +2015,7 @@ msgstr "Detenido"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:243
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:244
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:244
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:266
 msgid "Subtunes"
 msgstr "Subcanción"
 
@@ -1865,6 +2033,8 @@ msgstr "Subcanción"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:397
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:191
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:397
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:213
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:419
 msgid "Switch to compact view"
 msgstr "Cambiar a modo compacto"
 
@@ -1880,6 +2050,7 @@ msgstr "Cambiar a modo completo"
 
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:408
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:408
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:430
 #, fuzzy
 msgid "Switch to full view"
 msgstr "Cambiar a modo completo"
@@ -1892,6 +2063,7 @@ msgstr "Cambiar a modo completo"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:578
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:581
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:581
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:599
 msgid "Switch to playlist mode"
 msgstr "Cambiar a modo lista de reproducción"
 
@@ -1903,6 +2075,7 @@ msgstr "Cambiar a modo lista de reproducción"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:572
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:575
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:575
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:593
 msgid "Switch to song mode"
 msgstr "Cambiar a modo canción"
 
@@ -1914,6 +2087,7 @@ msgstr "Cambiar a modo canción"
 #: C:/msys64/home/minini/musiqt/src/gui/centralFrame.cpp:235
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:235
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:234
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:236
 msgid "System music location"
 msgstr ""
 
@@ -1926,6 +2100,7 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:817
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:825
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:825
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:854
 msgid "Third SID address"
 msgstr "Posición tercer SID"
 
@@ -1954,6 +2129,8 @@ msgstr ""
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:407
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:396
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:407
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:418
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:429
 #, fuzzy
 msgid "UI mode"
 msgstr "Modelo SID"
@@ -1986,6 +2163,7 @@ msgstr "Rom Kernal:"
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:260
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:262
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:262
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:284
 msgid "Volume"
 msgstr "Volumen"
 
@@ -1997,6 +2175,7 @@ msgstr "Volumen"
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:422
 #: C:/msys64/home/minini/musiqt/src/audio/input/openmptBackend.cpp:423
 #: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:423
+#: /mnt/devel/projects/musiqt/src/audio/input/openmptBackend.cpp:440
 #, fuzzy
 msgid "Volume Ramping"
 msgstr "Volumen"
@@ -2027,6 +2206,9 @@ msgstr "Volumen"
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1064
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:838
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:837
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:395
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1201
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:797
 msgid "Warning"
 msgstr "Advertencia"
 
@@ -2132,6 +2314,7 @@ msgstr "dumper"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:475
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:481
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:481
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:510
 msgid "file format"
 msgstr "formato de archivo"
 
@@ -2231,6 +2414,7 @@ msgstr "valoración"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:445
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:451
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:451
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:480
 msgid "released"
 msgstr "publicado"
 
@@ -2243,6 +2427,7 @@ msgstr "publicado"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:476
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:482
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:482
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:511
 msgid "song clock"
 msgstr "clock canción"
 
@@ -2255,6 +2440,7 @@ msgstr "clock canción"
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:474
 #: C:/msys64/home/minini/musiqt/src/audio/input/sidBackend.cpp:480
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:480
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:509
 msgid "speed"
 msgstr "velocidad"
 
@@ -2349,14 +2535,8 @@ msgstr "Año"
 #~ msgid "&Browse\tSelect ASMA directory"
 #~ msgstr "&Explorar\tSelecciona el directorio ASMA"
 
-#~ msgid "&Browse\tSelect Chargen Rom file"
-#~ msgstr "&Explorar\tSeleciona la ficha Rom caracteres "
-
 #~ msgid "&Browse\tSelect HVSC directory"
 #~ msgstr "&Explorar\tSeleciona el directorio HVSC"
-
-#~ msgid "&Browse\tSelect Kernal Rom file"
-#~ msgstr "&Explorar\tSelecciona la ficha Rom Kernal"
 
 #~ msgid "&Dirlist"
 #~ msgstr "&Explorador"
@@ -2409,20 +2589,8 @@ msgstr "Año"
 #~ msgid "Environment"
 #~ msgstr "Ambiente"
 
-#~ msgid "Fast sampling\tFaster but inaccurate sampling"
-#~ msgstr "Optimización\tMás rápido, pero inexacta emulación"
-
-#~ msgid ""
-#~ "Fast scan\tScan only few frame of file, time detection may be inaccurate"
-#~ msgstr ""
-#~ "Exploración rápida\tExplora sólo una parte de archivo, la detección de la "
-#~ "duración puede ser inexacta"
-
 #~ msgid "File exists, owerwrite?"
 #~ msgstr "El archivo ya existe, ¿sobrescribirlo?"
-
-#~ msgid "Filter\tEmulate SID filter"
-#~ msgstr "Filtro\tEmula el filtro SID"
 
 #~ msgid "General\tGeneral settings\tGeneral settings"
 #~ msgstr "General\tConfiguración general\tConfiguración general"
