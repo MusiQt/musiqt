@@ -263,8 +263,13 @@ static QDateTime QByteArrayToHttpDate(const QByteArray &value)
             dt = c.toDateTime(sansWeekday, QLatin1String("dd-MMM-yy hh:mm:ss 'GMT'"));
     }
 
-    if (dt.isValid())
+    if (dt.isValid()) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+        dt.setTimeZone(QTimeZone(QTimeZone::UTC));
+#else
         dt.setTimeSpec(Qt::UTC);
+#endif
+    }
     return dt;
 }
 

@@ -475,8 +475,15 @@ mpg123ConfigFrame::mpg123ConfigFrame(QWidget* win) :
     cBox->setChecked(MPGSETTINGS.fastscan);
     cBox->setToolTip(tr("Scan only few frame of file,\ntime detection may be inaccurate\nand pictures are not parsed"));
     vert->addWidget(cBox);
-    connect(cBox, &QCheckBox::stateChanged,
-        [](int val) {
+    connect(cBox,
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+            &QCheckBox::checkStateChanged,
+        [](Qt::CheckState val)
+#else
+            &QCheckBox::stateChanged,
+        [](int val)
+#endif
+        {
             MPGSETTINGS.fastscan = val == Qt::Checked;
         }
     );

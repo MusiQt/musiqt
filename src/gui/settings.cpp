@@ -81,8 +81,14 @@ settingsWindow::settingsWindow(QWidget* win) :
     QCheckBox* cBox = new QCheckBox(tr("&Play subtunes"), this);
     cBox->setToolTip(tr("Play all subtunes"));
     cBox->setCheckState(SETTINGS->m_subtunes ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, &QCheckBox::stateChanged,
+    connect(cBox,
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+            &QCheckBox::checkStateChanged,
+        [](Qt::CheckState val)
+#else
+            &QCheckBox::stateChanged,
         [](int val)
+#endif
         {
             SETTINGS->m_subtunes = (val == Qt::Checked);
         }
@@ -92,8 +98,14 @@ settingsWindow::settingsWindow(QWidget* win) :
     cBox = new QCheckBox(tr("&Bauer stereophonic-to-binaural DSP"), this);
     cBox->setToolTip(tr("Bauer stereophonic-to-binaural DSP"));
     cBox->setCheckState(SETTINGS->m_bs2b ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, &QCheckBox::stateChanged,
+    connect(cBox,
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+            &QCheckBox::checkStateChanged,
+        [](Qt::CheckState val)
+#else
+            &QCheckBox::stateChanged,
         [](int val)
+#endif
         {
             SETTINGS->m_bs2b = (val == Qt::Checked);
         }
@@ -106,8 +118,14 @@ settingsWindow::settingsWindow(QWidget* win) :
     cBox = new QCheckBox(tr("&Use system icons"), this);
     cBox->setToolTip(tr("Use icons from system theme (on next restart)"));
     cBox->setCheckState(SETTINGS->m_themeIcons ? Qt::Checked : Qt::Unchecked);
-    connect(cBox, &QCheckBox::stateChanged,
+    connect(cBox,
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+            &QCheckBox::checkStateChanged,
+        [](Qt::CheckState val)
+#else
+        &QCheckBox::stateChanged,
         [](int val)
+#endif
         {
             SETTINGS->m_themeIcons = (val == Qt::Checked);
         }
