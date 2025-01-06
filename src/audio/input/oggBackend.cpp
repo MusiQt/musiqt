@@ -98,6 +98,11 @@ size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize)
         read = ov_read(m_vf, (char*)buffer+n, bufferSize-n, 0,
                 (m_config.precision() == sample_t::S16) ? 2 : 1,
                 (m_config.precision() != sample_t::U8) ? 1 : 0, &current_section);
+        if (read < 0)
+        {
+            qWarning() << "Decoding error:" << read;
+            return 0;
+        }
         n += read;
     } while (read && (n < bufferSize));
 
