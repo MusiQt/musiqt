@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2023 Leandro Nini
+ *  Copyright (C) 2013-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 #include "syspaths.h"
 
 #define AUTHOR  "Leandro Nini"
-#define YEAR    "2006-2023"
+#define YEAR    "2006-2025"
 
 #define gettext(x) x
 
