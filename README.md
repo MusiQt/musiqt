@@ -151,6 +151,7 @@ The following build options are available:
 -DQT6=OFF :       enable building with Qt5 if found
 -DPORTABLE=ON :   only for Windows, build a portable app
 -DNLS=OFF :       disable Native Language Support
+-DLTO=OFF :       disable link time optimization
 -DLASTFM=OFF :    disable Last.fm scrobbling
 
 -DSNDFILE=OFF :   disable Sndfile backend

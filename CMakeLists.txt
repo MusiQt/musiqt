@@ -162,6 +162,23 @@ if(MINGW)
     target_link_libraries(musiqt debug -mconsole optimized -mwindows)
 endif()
 
+##################################################################
+# Check for LTO
+
+OPTION(LTO "Enable link time optimization" ON)
+if(LTO)
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT have_lto OUTPUT output LANGUAGES CXX)
+
+    if (have_lto)
+        message(STATUS "LTO enabled")
+        set_property(TARGET musiqt
+             PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+    else()
+        message(WARNING "LTO is not supported: ${output}")
+    endif()
+endif()
+
 #####################################################
 # Check for gettext
 
