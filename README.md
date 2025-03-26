@@ -130,9 +130,6 @@ https://bitbucket.org/mpyne/game-music-emu/
 libbs2b 3.x  
 http://bs2b.sourceforge.net/
 
-liblastfm 1.x  
-https://github.com/lastfm/liblastfm/
-
 ffmpeg >= 4.0  
 http://www.ffmpeg.org/
   - libavcodec >= 58
@@ -151,7 +148,7 @@ cmake --build .
 ```
 The following build options are available:
 ~~~
--DQT6=ON :        enable building with Qt6 if found
+-DQT6=OFF :       enable building with Qt5 if found
 -DPORTABLE=ON :   only for Windows, build a portable app
 -DNLS=OFF :       disable Native Language Support
 -DLASTFM=OFF :    disable Last.fm scrobbling
