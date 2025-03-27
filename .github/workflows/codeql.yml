@@ -26,11 +26,7 @@ jobs:
     - name: install_qt_deps
       run: |
         sudo apt-get update
-        sudo apt-get install libgstreamer-gl1.0-0
-    - uses: jurplel/install-qt-action@v4
-      with:
-        version: 6.6.*
-        modules: 'addons.qtmultimedia'
+        sudo apt-get install qt6-base-dev qt6-multimedia-dev
     - name: install_deps
       run: sudo apt-get install cmake gettext libsndfile1-dev libmpg123-dev libvorbis-dev libopusfile-dev libgme-dev libsidplayfp-dev libstilview-dev libopenmpt-dev libmpcdec-dev libwavpack-dev libavcodec-dev libavformat-dev libbs2b-dev
     - name: Checkout repository
@@ -38,7 +34,7 @@ jobs:
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
@@ -55,6 +51,6 @@ jobs:
         cmake --build .
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
