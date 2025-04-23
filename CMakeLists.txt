@@ -223,7 +223,6 @@ IF (XGETTEXT_CMD)
             --package-name=${PROJECT_NAME}
             --package-version=${CMAKE_PROJECT_VERSION}
             ${SRC_FILES}
-        DEPENDS ${SRC_FILES}
         COMMENT "Extracting translatable messages to ${POT_FILE}"
     )
 endif()
@@ -237,7 +236,6 @@ if(GETTEXT_MSGMERGE_EXECUTABLE)
             POST_BUILD
             COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} -q -U ${PO_FILE}
                 ${CMAKE_SOURCE_DIR}/po/${PROJECT_NAME}.pot
-            DEPENDS ${CMAKE_SOURCE_DIR}/po/${PROJECT_NAME}.pot
             COMMENT "Updating translation ${PO_FILE}"
         )
     endforeach()
