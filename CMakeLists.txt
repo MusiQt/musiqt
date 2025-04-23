@@ -212,10 +212,10 @@ find_program(XGETTEXT_CMD xgettext)
 IF (XGETTEXT_CMD)
     SET(POT_FILE ${CMAKE_SOURCE_DIR}/po/${PROJECT_NAME}.pot)
     file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
-    add_custom_command( 
+    add_custom_command(
         TARGET update_pot
         PRE_BUILD
-        COMMAND ${XGETTEXT_CMD} -C -s -j
+        COMMAND ${XGETTEXT_CMD} -C -j
             -d ${PROJECT_NAME}
             -o ${POT_FILE}
             --from-code=utf-8
