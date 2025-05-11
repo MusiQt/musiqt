@@ -93,7 +93,7 @@ const char engines[][8] =
 #endif
 };
 
-const int sidAddresses[5] = { 0, 0xd420, 0xd500, 0xde00, 0xdf00 };
+const int sidAddresses[] = { 0, 0xd420, 0xd500, 0xde00, 0xdf00, 0xd440, 0xd600 };
 
 sidConfig_t sidConfig::m_settings;
 
