@@ -323,8 +323,9 @@ void sidBackend::createEmu()
     {
         ReSIDfpBuilder *tmpResid = new ReSIDfpBuilder("Musiqt reSIDfp");
         tmpResid->create(emu->info().maxsids());
-
+#ifndef FEAT_FILTER_DISABLE
         tmpResid->filter(m_config.filter());
+#endif
         tmpResid->filter6581Curve((double)m_config.filter6581Curve()/1000.);
 #ifdef FEAT_NEW_8580_FILTER
         tmpResid->filter8580Curve((double)m_config.filter8580Curve()/1000.);
@@ -346,8 +347,9 @@ void sidBackend::createEmu()
     {
         ReSIDBuilder *tmpResid = new ReSIDBuilder("Musiqt reSID");
         tmpResid->create(emu->info().maxsids());
-
+#ifndef FEAT_FILTER_DISABLE
         tmpResid->filter(m_config.filter());
+#endif
         tmpResid->bias((double)m_config.bias()/1000.0);
 
         emuSid = (sidbuilder*)tmpResid;
@@ -358,9 +360,9 @@ void sidBackend::createEmu()
     {
         HardSIDBuilder *tmpHardsid = new HardSIDBuilder("Musiqt hardSID");
         tmpHardsid->create(emu->info().maxsids());
-
+#ifndef FEAT_FILTER_DISABLE
         tmpHardsid->filter(m_config.filter());
-
+#endif
         emuSid = (sidbuilder*)tmpHardsid;
     }
 #endif
@@ -369,9 +371,9 @@ void sidBackend::createEmu()
     {
         exSIDBuilder *tmpExsid = new exSIDBuilder("Musiqt exSID");
         tmpExsid->create(emu->info().maxsids());
-
+#ifndef FEAT_FILTER_DISABLE
         tmpExsid->filter(m_config.filter());
-
+#endif
         emuSid = (sidbuilder*)tmpExsid;
     }
 #endif
@@ -404,6 +406,12 @@ void sidBackend::createEmu()
         throw loadError(emu->error());
     }
 
+#ifdef FEAT_FILTER_DISABLE
+    for (int chip=0; chip<3; chip++)
+    {
+        emu->filter(chip, m_config.filter());
+    }
+#endif
     m_sidplayfp = emu.release();
 }
 
