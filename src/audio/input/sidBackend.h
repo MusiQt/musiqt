@@ -50,7 +50,7 @@ struct sidConfig_t
     int bias;
     int filter6581Curve;
     int filter8580Curve;
-    double filter6581Range;
+    int filter6581Range;
 #ifdef FEAT_CW_STRENGTH
     SidConfig::sid_cw_t cwStrength;
 #endif

@@ -121,7 +121,7 @@ void sidConfig::loadSettings()
 #else
     m_settings.filter8580Curve = load("Filter 8580 Curve", 12500);
 #endif
-    m_settings.filter6581Range = load("Filter 6581 Range", 0.5);
+    m_settings.filter6581Range = load("Filter 6581 Range", 500);
 #ifdef FEAT_CW_STRENGTH
     m_settings.cwStrength = (SidConfig::sid_cw_t)load("Combined waveforms strength", SidConfig::AVERAGE);
 #endif
@@ -1016,8 +1016,8 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     knob->setMaximumSize(tf->height(), tf->height());
     connect(knob, &QDial::valueChanged,
         [tf](int val) {
-            SIDSETTINGS.filter6581Range = val/1000.;
-            tf->setNum(val/1000.);
+            SIDSETTINGS.filter6581Range = val;
+            tf->setNum(val);
         }
     );
 #ifndef FEAT_FILTER_RANGE
