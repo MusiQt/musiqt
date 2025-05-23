@@ -1,3 +1,9 @@
+* musiqt-3.2.1 - May 23, 2025
+sid: add more addresses, for 3SID tunes
+sid: fix filter range setting
+
+
+
 * musiqt-3.2.0 - Apr 6, 2025
 Enabled link time optimization
 ogg: handle decoding errors
