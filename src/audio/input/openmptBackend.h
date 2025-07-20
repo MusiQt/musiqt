@@ -136,7 +136,7 @@ public:
     unsigned int subtunes() const override { return m_module->get_num_subsongs(); }
 
     /// Current subtune
-    unsigned int subtune() const override { return m_module->get_selected_subsong(); }
+    unsigned int subtune() const override { return m_module->get_selected_subsong() + 1; }
 
     /// Change subtune
     bool subtune(const unsigned int i) override;
