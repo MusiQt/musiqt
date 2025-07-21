@@ -193,7 +193,7 @@ bool hvlBackend::rewind()
     return hvl_InitSubsong(m_tune, m_tune->ht_SongNum) == HVL_TRUE;
 }
 
-bool hvlBackend::subtune(const unsigned int i)
+bool hvlBackend::subtune(unsigned int i)
 {
     return hvl_InitSubsong(m_tune, i) == HVL_TRUE;
 }

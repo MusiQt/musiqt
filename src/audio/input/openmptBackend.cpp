@@ -294,7 +294,7 @@ bool openmptBackend::rewind()
     return true;
 }
 
-bool openmptBackend::subtune(const unsigned int i)
+bool openmptBackend::subtune(unsigned int i)
 {
     m_module->select_subsong(i-1);
     return true;
