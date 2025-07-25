@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(musiqt VERSION 3.2.1 HOMEPAGE_URL https://github.com/MusiQt/musiqt)
+project(musiqt VERSION 3.2.2 HOMEPAGE_URL https://github.com/MusiQt/musiqt)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 

@@ -1,3 +1,8 @@
+* musiqt-3.2.2 - Jul 25, 2025
+* openmpt: fixed a crash for invalid subtune
+
+
+
 * musiqt-3.2.1 - May 23, 2025
 sid: add more addresses, for 3SID tunes
 sid: fix filter range setting
