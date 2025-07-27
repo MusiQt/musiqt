@@ -201,6 +201,8 @@ void audio::seek(double pos)
 
 int audio::getPosition() const { return m_iw->getPosition(); }
 
+void audio::resetPosition() { m_iw->resetPosition(); }
+
 void audio::unload() { m_iw->unload(); }
 
 /*****************************************************************/

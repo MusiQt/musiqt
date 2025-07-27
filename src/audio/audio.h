@@ -91,6 +91,9 @@ public:
 
     /// Get current position in milliseconds
     int getPosition() const;
+
+    /// Reset position
+    void resetPosition();
 };
 
 /*****************************************************************/

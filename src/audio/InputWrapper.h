@@ -61,6 +61,8 @@ public:
     // Set position [0,1]
     void setPosition(double pos);
 
+    void resetPosition() { m_milliSeconds = 0; }
+
 private:
     input *m_currentSong;
     input *m_preloadedSong;

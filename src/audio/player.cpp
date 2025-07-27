@@ -216,5 +216,8 @@ void player::changeSubtune(dir_t dir)
         return;
 
     if (m_input->subtune(i))
+    {
         emit subtunechanged();
+        m_audio->resetPosition();
+    }
 }
