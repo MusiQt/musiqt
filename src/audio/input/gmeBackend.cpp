@@ -100,7 +100,7 @@ bool gmeBackend::init()
     return true;
 }
 
-QStringList gmeBackend::ext() { return QString(EXT).split("|"); }
+QStringList gmeBackend::ext() { return m_ext; }
 
 gmeBackend::gmeBackend(const QString& fileName) :
     m_currentTrack(0)
