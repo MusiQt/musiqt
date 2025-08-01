@@ -1,3 +1,9 @@
+* musiqt-3.2.3 - Aug 01, 2025
+* openmpt: fix subtune handling
+* gme: return actually supported extensions
+
+
+
 * musiqt-3.2.2 - Jul 25, 2025
 * openmpt: fixed a crash for invalid subtune
 
