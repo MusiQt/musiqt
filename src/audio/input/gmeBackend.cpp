@@ -33,7 +33,7 @@
 
 #include <string>
 
-#define EXT "ay|gbs|gym|hes|f|nsfe|nsf|sap|spc|vgm|vgz"
+#define EXT "ay|gbs|gym|hes|kss|nsfe|nsf|sap|spc|vgm|vgz"
 
 // ASMA path to STIL.
 #define ASMA_STIL "/Docs/STIL.txt"
