@@ -130,7 +130,8 @@ gmeBackend::gmeBackend(const QString& fileName) :
     checkRetCode(gme_start_track(m_emu, 0));
 
     QFileInfo fInfo(fileName);
-    gme_load_m3u(m_emu, QString("%1%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName()).toLocal8Bit().constData());
+    QString m3u = QString("%1/%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName());
+    gme_load_m3u(m_emu, m3u.toLocal8Bit().constData());
 
     openAsma(m_config.asmaPath());
 
