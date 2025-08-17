@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Leandro Nini
+ *  Copyright (C) 2021-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -215,9 +215,14 @@ void player::changeSubtune(dir_t dir)
     if ((i < 1) || (i > m_input->subtunes()))
         return;
 
+    bool const isPlaying = (state() == state_t::PLAY);
+    if (isPlaying)
+        pause();
     if (m_input->subtune(i))
     {
         emit subtunechanged();
         m_audio->resetPosition();
     }
+    if (isPlaying)
+        play();
 }
