@@ -99,19 +99,16 @@ bool player::tryPreload(const QString& song)
     if (songPreloaded.isEmpty())
         return false;
 
-    input* i = m_preload.release();
-    m_preload.reset(IFACTORY->get());
-
+    bool res = false;
     if (!songPreloaded.compare(song))
     {
-        m_input.reset(i);
+        m_input.reset(m_preload.get());
         emit songChanged();
-        return true;
+        res = true;
     }
-    else
-    {
-        return false;
-    }
+
+    m_preload.reset(IFACTORY->get());
+    return res;
 }
 
 void player::load(const QString& filename)

@@ -25,8 +25,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include <memory>
-
 class audio;
 class input;
 
@@ -45,7 +43,7 @@ class player : public QObject
 private:
     QScopedPointer<input> m_input;
     QScopedPointer<audio> m_audio;
-    std::unique_ptr<input> m_preload;
+    QScopedPointer<input> m_preload;
 
 private:
     player(const player&) = delete;
