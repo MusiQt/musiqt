@@ -1,11 +1,17 @@
+* musiqt-3.2.4 - Aug 18, 2025
+Pause player while changing subtune, avoids random crashes
+gme: fix loading of m3u files
+
+
+
 * musiqt-3.2.3 - Aug 01, 2025
-* openmpt: fix subtune handling
-* gme: return actually supported extensions
+openmpt: fix subtune handling
+gme: return actually supported extensions
 
 
 
 * musiqt-3.2.2 - Jul 25, 2025
-* openmpt: fixed a crash for invalid subtune
+openmpt: fixed a crash for invalid subtune
 
 
 
