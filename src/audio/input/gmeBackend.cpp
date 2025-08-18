@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -127,6 +127,9 @@ gmeBackend::gmeBackend(const QString& fileName) :
     }
 
     checkRetCode(gme_load_file(m_emu, fileName.toUtf8().constData()));
+    const char* w = gme_warning(m_emu);
+    if (w)
+        qWarning() << "Warning: " << w;
     checkRetCode(gme_start_track(m_emu, 0));
 
     QFileInfo fInfo(fileName);
