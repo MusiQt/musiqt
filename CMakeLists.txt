@@ -519,6 +519,22 @@ if(MPC)
 endif()
 
 ##################################################################
+# Check for libADLMIDI
+
+OPTION(ADLMIDI "Build ADLMIDI backend if available" ON)
+if(ADLMIDI)
+    pkg_check_modules(libADLMIDI IMPORTED_TARGET libADLMIDI>=1.0)
+    if(libADLMIDI_FOUND)
+        SET(HAVE_ADLMIDI 1)
+        target_sources(musiqt PRIVATE
+            src/audio/input/adlBackend.cpp
+            src/audio/input/adlBackend.h
+        )
+        target_link_libraries(musiqt PkgConfig::libADLMIDI)
+    endif()
+endif()
+
+##################################################################
 # Search for bs2b
 
 pkg_check_modules(libbs2b IMPORTED_TARGET libbs2b>=3.0)

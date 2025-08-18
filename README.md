@@ -70,6 +70,9 @@ __Hively__
 __Mpg123__
   - mp3
 
+__ADLMIDI__
+  - mid
+
 *Note*:
 ffmpeg backend is enabled only when needed libraries are found
 at runtime, so you need to install them on your own.
@@ -127,6 +130,9 @@ http://mpg123.org/
 game-music-emu >= 0.6  
 https://bitbucket.org/mpyne/game-music-emu/
 
+libADLMIDI >= 1.0  
+https://github.com/Wohlstand/libADLMIDI/
+
 libbs2b 3.x  
 http://bs2b.sourceforge.net/
 
@@ -164,5 +170,6 @@ The following build options are available:
 -DSIDPLAYFP=OFF : disable sidplayfp backend
 -DHVL=OFF :       disable Hively backend
 -DMPC=OFF :       disable Musepack backend
+-DADLMIDI=OFF :   disable ADLMIDI backend
 ~~~
 ********************************************************************

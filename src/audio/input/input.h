@@ -49,7 +49,7 @@ protected:
     /// Song is loaded
     void songLoaded(const QString& location);
 
-    /// Set song duration
+    /// Set song duration in milliseconds
     void setDuration(unsigned int newTime) { m_time = newTime; }
 
 public:

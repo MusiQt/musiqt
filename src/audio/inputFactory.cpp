@@ -51,6 +51,9 @@
 #ifdef HAVE_SNDFILE
 #  include "input/sndBackend.h"
 #endif
+#ifdef HAVE_ADLMIDI
+#  include "input/adlBackend.h"
+#endif
 #ifdef HAVE_FFMPEG
 #  include "input/ffmpegBackend.h"
 #endif
@@ -143,6 +146,11 @@ iFactory::iFactory()
 #ifdef HAVE_SNDFILE
     if (sndBackend::init())
         regBackend<sndBackend>();
+#endif
+
+#ifdef HAVE_ADLMIDI
+    if (adlBackend::init())
+        regBackend<adlBackend>();
 #endif
 }
 

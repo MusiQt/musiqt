@@ -15,6 +15,9 @@
 /* Define if using internal copy of lastfm. */
 #cmakedefine  INTERNAL_LIBLASTFM @INTERNAL_LIBLASTFM@
 
+/* Define if you have libADLMIDI (-lADLMIDI). */
+#cmakedefine  HAVE_ADLMIDI
+
 /* Define if you have libbs2b (-lbs2b). */
 #cmakedefine  HAVE_BS2B
 
