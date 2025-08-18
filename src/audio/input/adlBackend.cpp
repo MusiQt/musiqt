@@ -23,17 +23,13 @@
 
 #include <QComboBox>
 #include <QDebug>
-#include <QDial>
 #include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QMessageBox>
-#include <QGroupBox>
 
-#include <string>
-
-#define EXT "mid"
+#define EXT "mid|midi"
 
 #define CREDITS "libADLMIDI library<br>Copyright \302\251 Vitaly Novichkov."
 #define LINK    "https://github.com/Wohlstand/libADLMIDI/"
@@ -72,11 +68,13 @@ size_t adlBackend::fillBuffer(void* buffer, const size_t bufferSize)
 void adlConfig::loadSettings()
 {
     m_settings.samplerate = load("Samplerate", 48000);
+    m_settings.woplPath = load("WOPL bank", QString());
 }
 
 void adlConfig::saveSettings()
 {
     save("Samplerate", m_settings.samplerate);
+    save("WOPL bank", m_settings.woplPath);
 }
 
 /*****************************************************************/
@@ -99,6 +97,16 @@ adlBackend::adlBackend(const QString& fileName) :
     {
         qWarning() << "Warning: " << adl_errorString();
         throw loadError("Error creating gme emu");
+    }
+
+    if (!m_config.woplPath().isEmpty())
+    {
+        qDebug() << "Loading bank: " << m_config.woplPath();
+        int err = adl_openBankFile(m_player, m_config.woplPath().toUtf8().constData());
+        if (err < 0)
+        {
+            qWarning() << "Warning: " << adl_errorInfo(m_player);
+        }
     }
 
     int err = adl_openFile(m_player, fileName.toUtf8().constData());
@@ -203,4 +211,45 @@ adlConfigFrame::adlConfigFrame(QWidget* win) :
             }
         }
     );
+
+    QGridLayout *frame = new QGridLayout();
+    extraBottom()->addLayout(frame);
+
+    QPushButton* button;
+
+    frame->addWidget(new QLabel(tr("HVSC path:"), this), 0, 0);
+    QLineEdit *woplPath = new QLineEdit(this);
+    woplPath->setText(ADLSETTINGS.woplPath);
+    frame->addWidget(woplPath, 0, 1);
+    connect(woplPath, &QLineEdit::editingFinished,
+        [woplPath, this]() {
+            QString val = woplPath->text();
+            if (checkPath(val))
+            {
+                ADLSETTINGS.woplPath = val;
+            }
+        }
+    );
+    button = new QPushButton(GET_ICON(icon_documentopen), tr("&Browse"), this);
+    button->setToolTip(tr("Select WOPL bank"));
+    frame->addWidget(button, 0, 2);
+    connect(button, &QPushButton::clicked,
+        [woplPath, this]() {
+            QString dir = QFileDialog::getOpenFileName(this, tr("Select WOPL bank"), ADLSETTINGS.woplPath, tr("bank (*.wopl)"));
+            if (!dir.isNull())
+                ADLSETTINGS.woplPath = dir;
+
+            woplPath->setText(ADLSETTINGS.woplPath);
+        }
+    );
+}
+
+bool adlConfigFrame::checkPath(const QString& path)
+{
+    if (!path.isEmpty() && !QFileInfo(path).exists())
+    {
+        QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
+        return false;
+    }
+    return true;
 }

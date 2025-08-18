@@ -35,6 +35,7 @@
 struct adlConfig_t
 {
     int samplerate;
+    QString woplPath;
 };
 
 /*****************************************************************/
@@ -49,6 +50,9 @@ private:
     adlConfigFrame() {}
     adlConfigFrame(const adlConfigFrame&) = delete;
     adlConfigFrame& operator=(const adlConfigFrame&) = delete;
+
+private:
+    bool checkPath(const QString& path);
 
 public:
     adlConfigFrame(QWidget* win);
@@ -79,6 +83,8 @@ public:
     QWidget* config(QWidget* win) override { return new adlConfigFrame(win); }
 
     unsigned int samplerate() const { return m_settings.samplerate; }
+
+    QString woplPath() const { return m_settings.woplPath; }
 };
 
 /*****************************************************************/
