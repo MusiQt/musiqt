@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2024 Leandro Nini
+ *  Copyright (C) 2006-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -103,7 +103,41 @@ inputConfig* sidBackend::cFactory() { return new sidConfig(name, iconSid, 126); 
 
 size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
+#ifdef FEAT_NEW_PLAY_API
+    std::size_t pos = m_rem_buffer.size();
+    if (pos)
+    {
+        std::memcpy(buffer, m_rem_buffer.data(), pos);
+        m_rem_buffer.resize(0);
+    }
+
+    while (pos < bufferSize)
+    {
+        int res = m_sidplayfp->play(10000);
+        if (res < 0)
+        {
+            qWarning() << "Error:" << m_sidplayfp->error();
+            return 0;
+        }
+        m_mix_buffer.resize(static_cast<std::size_t>(res * m_config.channels()));
+        unsigned int samples = m_sidplayfp->mix(m_mix_buffer.data(), res);
+        samples *= sizeof(short);
+        unsigned int cnt = std::min(samples, static_cast<unsigned int>(bufferSize-pos));
+        std::memcpy((short*)buffer+pos/sizeof(short), m_mix_buffer.data(), cnt);
+        pos += cnt;
+        // save remaining samples, if any
+        unsigned int rem = samples - cnt;
+        if (rem)
+        {
+            m_rem_buffer.resize(static_cast<std::size_t>(rem));
+            std::memcpy(m_rem_buffer.data(), m_mix_buffer.data()+cnt/sizeof(short), rem);
+            break;
+        }
+    }
+    return pos;
+#else
     return m_sidplayfp->play((short*)buffer, bufferSize/sizeof(short))*2;
+#endif
 }
 
 /*****************************************************************/
@@ -279,6 +313,9 @@ sidBackend::sidBackend(const QString& fileName) :
     }
 #endif
 
+#ifdef FEAT_NEW_PLAY_API
+    m_sidplayfp->initMixer(m_config.channels() == 2);
+#endif
     songLoaded(fileName);
 }
 
@@ -434,7 +471,12 @@ const unsigned char* sidBackend::loadRom(const QString& romPath)
 
 bool sidBackend::rewind()
 {
+#ifdef FEAT_NEW_PLAY_API
+    m_rem_buffer.resize(0);
+    m_sidplayfp->reset();
+#else
     m_sidplayfp->stop();
+#endif
     return true;
 }
 
@@ -472,6 +514,9 @@ bool sidBackend::loadTune(int num)
         setDuration((songLength < 0) ? 0 : songLength);
     }
 
+#ifdef FEAT_NEW_PLAY_API
+    m_rem_buffer.resize(0);
+#endif
     return true;
 }
 

@@ -37,6 +37,8 @@
 #  include <stilview/stil.h>
 #endif
 
+#include <vector>
+
 
 /*****************************************************************/
 
@@ -177,6 +179,11 @@ private:
     bool m_newSonglengthDB;
 
     sidConfig m_config;
+
+#ifdef FEAT_NEW_PLAY_API
+    std::vector<short> m_rem_buffer;
+    std::vector<short> m_mix_buffer;
+#endif
 
 private:
     sidBackend(const QString& fileName);
