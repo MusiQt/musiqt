@@ -55,7 +55,7 @@ size_t adlBackend::fillBuffer(void* buffer, const size_t bufferSize)
                                    &m_format);
     if (samples_count <= 0)
     {
-        qWarning() << "Playback error";
+        qDebug() << "Playback error or song finished";
         return 0;
     }
 
@@ -92,12 +92,13 @@ adlBackend::adlBackend(const QString& fileName) :
     , m_config(name)
 {
     m_player = adl_init(m_config.samplerate());
-
-    if (m_player == nullptr)
+    if (!m_player)
     {
-        qWarning() << "Warning: " << adl_errorString();
-        throw loadError("Error creating gme emu");
+        QString error = QString("Error: %1").arg(adl_errorString());
+        throw loadError(error);
     }
+
+    qDebug() << "Using emulator: " << adl_chipEmulatorName(m_player);
 
     if (!m_config.woplPath().isEmpty())
     {
@@ -112,15 +113,15 @@ adlBackend::adlBackend(const QString& fileName) :
     int err = adl_openFile(m_player, fileName.toUtf8().constData());
     if (err < 0)
     {
-        qWarning() << "Warning: " <<  adl_errorInfo(m_player);
-        throw loadError("Error creating gme emu");
+        QString error = QString("Error: %1").arg(adl_errorInfo(m_player));
+        throw loadError(error);
     }
 
     m_format.type = ADLMIDI_SampleType_S16;
     m_format.containerSize = sizeof(int16_t);
     m_format.sampleOffset = sizeof(int16_t) * 2;
 
-    QString title = QString::fromLatin1(adl_metaMusicTitle(m_player));
+    QString title = QString::fromUtf8(adl_metaMusicTitle(m_player));
     m_metaData.addInfo(metaData::TITLE, title);
 
     m_subtunes = adl_getSongsCount(m_player);
@@ -224,7 +225,7 @@ adlConfigFrame::adlConfigFrame(QWidget* win) :
 
     QPushButton* button;
 
-    frame->addWidget(new QLabel(tr("HVSC path:"), this), 0, 0);
+    frame->addWidget(new QLabel(tr("WOPL bank path:"), this), 0, 0);
     QLineEdit *woplPath = new QLineEdit(this);
     woplPath->setText(ADLSETTINGS.woplPath);
     frame->addWidget(woplPath, 0, 1);
