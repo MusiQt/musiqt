@@ -23,6 +23,7 @@
 
 #include <QComboBox>
 #include <QDebug>
+#include <QDial>
 #include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
@@ -56,8 +57,13 @@ size_t adlBackend::fillBuffer(void* buffer, const size_t bufferSize)
         return 0;
     }
 
-    std::memcpy(buffer, buf, samples_count * m_format.containerSize);
-    return bufferSize;
+    float *dest = reinterpret_cast<float*>(buffer);
+    float *src = reinterpret_cast<float*>(buf);
+    // Apply gain
+    for (int i=0; i<samples_count; i++)
+        dest[i] = src[i] * m_config.gain();
+
+    return samples_count * m_format.containerSize;
 }
 
 /*****************************************************************/
@@ -65,12 +71,14 @@ size_t adlBackend::fillBuffer(void* buffer, const size_t bufferSize)
 void adlConfig::loadSettings()
 {
     m_settings.samplerate = load("Samplerate", 48000);
+    m_settings.gain = load("Gain", 2.f);
     m_settings.woplPath = load("WOPL bank", QString());
 }
 
 void adlConfig::saveSettings()
 {
     save("Samplerate", m_settings.samplerate);
+    save("Gain", m_settings.gain);
     save("WOPL bank", m_settings.woplPath);
 }
 
@@ -89,7 +97,9 @@ adlBackend::adlBackend(const QString& fileName) :
         throw loadError(error);
     }
 
-    qDebug() << "Using emulator: " << adl_chipEmulatorName(m_player);
+    qInfo() << "Using emulator: " << adl_chipEmulatorName(m_player);
+
+    qDebug() << "Volume model: " << adl_getVolumeRangeModel(m_player);
 
     if (!m_config.woplPath().isEmpty())
     {
@@ -108,12 +118,14 @@ adlBackend::adlBackend(const QString& fileName) :
         throw loadError(error);
     }
 
-    m_format.type = ADLMIDI_SampleType_S16;
-    m_format.containerSize = sizeof(int16_t);
-    m_format.sampleOffset = sizeof(int16_t) * 2;
+    m_format.type = ADLMIDI_SampleType_F32;
+    m_format.containerSize = sizeof(float);
+    m_format.sampleOffset = sizeof(float) * 2;
 
     QString title = QString::fromUtf8(adl_metaMusicTitle(m_player));
     m_metaData.addInfo(metaData::TITLE, title);
+    QString copyright = QString::fromUtf8(adl_metaMusicCopyright(m_player));
+    m_metaData.addInfo(gettext("copyright"), copyright);
 
     m_subtunes = adl_getSongsCount(m_player);
 
@@ -239,6 +251,37 @@ adlConfigFrame::adlConfigFrame(QWidget* win) :
                 ADLSETTINGS.woplPath = dir;
 
             woplPath->setText(ADLSETTINGS.woplPath);
+        }
+    );
+
+    QHBoxLayout *hf = new QHBoxLayout();
+    extraBottom()->addLayout(hf);
+
+    QLabel *tf;
+
+    hf->addStretch();
+
+    QGridLayout *mat = new QGridLayout();
+    hf->addLayout(mat);
+
+    hf->addStretch();
+
+    tf = new QLabel(tr("Gain"), this);
+    tf->setAlignment(Qt::AlignCenter);
+    mat->addWidget(tf, 0, 0);
+    QDial *knob = new QDial(this);
+    knob->setRange(0, 10);
+    knob->setValue(ADLSETTINGS.gain);
+    mat->addWidget(knob, 1, 0);
+    tf = new QLabel(this);
+    tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
+    tf->setAlignment(Qt::AlignCenter);
+    tf->setNum(ADLSETTINGS.gain);
+    mat->addWidget(tf, 2, 0);
+    connect(knob, &QDial::valueChanged,
+        [tf](int val) {
+            ADLSETTINGS.gain = val / 3.f;
+            tf->setNum(val);
         }
     );
 }

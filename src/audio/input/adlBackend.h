@@ -35,6 +35,7 @@
 struct adlConfig_t
 {
     int samplerate;
+    float gain;
     QString woplPath;
 };
 
@@ -80,6 +81,8 @@ public:
     QWidget* config(QWidget* win) override { return new adlConfigFrame(win); }
 
     unsigned int samplerate() const { return m_settings.samplerate; }
+
+    float gain() const { return m_settings.gain; }
 
     QString woplPath() const { return m_settings.woplPath; }
 };
@@ -139,7 +142,7 @@ public:
     unsigned int channels() const override { return 2; }
 
     /// Get precision
-    sample_t precision() const override { return sample_t::S16; }
+    sample_t precision() const override { return sample_t::SAMPLE_FLOAT; }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;
