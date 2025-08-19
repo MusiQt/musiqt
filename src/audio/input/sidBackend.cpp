@@ -48,6 +48,7 @@
 #include <QButtonGroup>
 
 #include <memory>
+#include <cstring>
 
 // created by reswrap from file sid.gif
 extern const unsigned char iconSid[126] =

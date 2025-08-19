@@ -27,6 +27,8 @@
 
 #include <QDebug>
 
+#include <cstring>
+
 /* created by reswrap from file wavpack.gif */
 extern const unsigned char iconWv[375] =
 {

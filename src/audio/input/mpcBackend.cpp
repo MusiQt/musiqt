@@ -29,6 +29,8 @@
 #include <QDebug>
 #include <QLabel>
 
+#include <cstring>
+
 // created by reswrap from file musepack.gif
 extern const unsigned char iconMpc[417] =
 {
