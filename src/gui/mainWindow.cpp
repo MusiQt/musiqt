@@ -620,6 +620,7 @@ void mainWindow::keyPressEvent(QKeyEvent *event)
 
 void mainWindow::showError(const QString& msg)
 {
-    m_trayIcon->showMessage(tr("Error!"), msg);
+    m_trayIcon->showMessage(tr("Error!"), msg, GET_ICON(icon_dialogerror));
     //statusBar()->showMessage(msg);
+    qWarning() << "Error: " << msg;
 }

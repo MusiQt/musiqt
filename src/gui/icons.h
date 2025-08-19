@@ -27,6 +27,7 @@ static constexpr const char *icon_backend             = ":/icons/backend.gif";
 static constexpr const char *icon_bookmark            = ":/icons/bookmark.gif";
 static constexpr const char *icon_currentplaylist     = ":/icons/current-playlist.gif";
 static constexpr const char *icon_dialogcancel        = ":/icons/dialog-cancel.gif";
+static constexpr const char *icon_dialogerror         = ":/icons/dialog-error.gif";
 static constexpr const char *icon_dialogok            = ":/icons/dialog-ok.gif";
 static constexpr const char *icon_documentopen        = ":/icons/document-open.gif";
 static constexpr const char *icon_documentproperties  = ":/icons/document-properties.gif";
