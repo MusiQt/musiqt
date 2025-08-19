@@ -83,9 +83,6 @@ private:
     sidConfigFrame(const sidConfigFrame&) = delete;
     sidConfigFrame& operator=(const sidConfigFrame&) = delete;
 
-private:
-    bool checkPath(const QString& path);
-
 public:
     sidConfigFrame(QWidget* win);
     ~sidConfigFrame() override = default;

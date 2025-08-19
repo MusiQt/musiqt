@@ -42,6 +42,8 @@ protected:
     QHBoxLayout* extraLeft() const { return m_extraLeft; }
     QVBoxLayout* extraBottom() const { return m_extraBottom; }
 
+    bool checkPath(const QString& path);
+
 public:
     configFrame(QWidget* p, const char* credits=nullptr, const char* link=nullptr);
     ~configFrame() override = default;

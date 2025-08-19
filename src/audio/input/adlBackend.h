@@ -51,9 +51,6 @@ private:
     adlConfigFrame(const adlConfigFrame&) = delete;
     adlConfigFrame& operator=(const adlConfigFrame&) = delete;
 
-private:
-    bool checkPath(const QString& path);
-
 public:
     adlConfigFrame(QWidget* win);
     ~adlConfigFrame() override = default;

@@ -27,7 +27,6 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QMessageBox>
 
 #define EXT "mid|midi"
 
@@ -250,14 +249,4 @@ adlConfigFrame::adlConfigFrame(QWidget* win) :
             woplPath->setText(ADLSETTINGS.woplPath);
         }
     );
-}
-
-bool adlConfigFrame::checkPath(const QString& path)
-{
-    if (!path.isEmpty() && !QFileInfo(path).exists())
-    {
-        QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
-        return false;
-    }
-    return true;
 }

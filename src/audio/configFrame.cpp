@@ -19,7 +19,9 @@
 #include "configFrame.h"
 #include "iconFactory.h"
 
+#include <QFileInfo>
 #include <QLabel>
+#include <QMessageBox>
 
 configFrame::configFrame(QWidget* p, const char* credits, const char* link) :
     QWidget(p)
@@ -62,4 +64,14 @@ configFrame::configFrame(QWidget* p, const char* credits, const char* link) :
     main->addLayout(m_extraBottom);
 
     main->addStretch();
+}
+
+bool configFrame::checkPath(const QString& path)
+{
+    if (!path.isEmpty() && !QFileInfo(path).exists())
+    {
+        QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
+        return false;
+    }
+    return true;
 }

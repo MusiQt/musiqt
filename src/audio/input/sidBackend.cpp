@@ -46,7 +46,6 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QButtonGroup>
-#include <QMessageBox>
 
 #include <memory>
 
@@ -1245,14 +1244,4 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
             romEdit->setText(*romPath);
         }
     );
-}
-
-bool sidConfigFrame::checkPath(const QString& path)
-{
-    if (!path.isEmpty() && !QFileInfo(path).exists())
-    {
-        QMessageBox::warning(this, tr("Warning"), tr("Path does not exists"));
-        return false;
-    }
-    return true;
 }
