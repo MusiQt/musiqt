@@ -109,7 +109,7 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
         }
         break;
     default:
-        memcpy(dest, src, length*4);
+        std::memcpy(dest, src, length*4);
     }
 }
 

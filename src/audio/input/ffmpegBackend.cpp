@@ -98,7 +98,7 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
             {
                 // AVERROR_EOF
                 qDebug() << "Last frame:" << static_cast<int>(decodedSize);
-                memcpy(buffer, m_decodeBuf, decodedSize);
+                std::memcpy(buffer, m_decodeBuf, decodedSize);
                 m_decodeBufOffset = 0;
                 return decodedSize;
             }
@@ -145,14 +145,14 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
                 {
                     for (int ch=0; ch<channels; ch++)
                     {
-                        memcpy(out, m_frame->data[ch]+idx, m_sampleSize);
+                        std::memcpy(out, m_frame->data[ch]+idx, m_sampleSize);
                         out += m_sampleSize;
                     }
                 }
             }
             else
             {
-                memcpy(out, m_frame->data[0], data_size);
+                std::memcpy(out, m_frame->data[0], data_size);
             }
 
             decodedSize += data_size;
@@ -168,9 +168,9 @@ size_t ffmpegBackend::fillBuffer(void* buffer, const size_t bufferSize)
         }
     }
 
-    memcpy((char*)buffer, m_decodeBuf, bufferSize);
+    std::memcpy((char*)buffer, m_decodeBuf, bufferSize);
     m_decodeBufOffset = decodedSize - bufferSize;
-    memmove(m_decodeBuf, m_decodeBuf+bufferSize, m_decodeBufOffset);
+    std::memmove(m_decodeBuf, m_decodeBuf+bufferSize, m_decodeBufOffset);
 
     return bufferSize;
 }

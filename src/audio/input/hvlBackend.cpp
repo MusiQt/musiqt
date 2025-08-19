@@ -114,7 +114,7 @@ size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize)
     // use what's left in the backing buffer
     if (m_left)
     {
-        memcpy(buffer, m_buffer+m_size-m_left, m_left);
+        std::memcpy(buffer, m_buffer+m_size-m_left, m_left);
         offset = m_left;
         m_left = 0;
     }
@@ -132,7 +132,7 @@ size_t hvlBackend::fillBuffer(void* buffer, const size_t bufferSize)
     if (bufferSpaceLeft)
     {
         hvl_DecodeFrame(m_tune, (int8*)m_buffer, ((int8*)m_buffer)+2, 4);
-        memcpy((char*)buffer+offset, m_buffer, bufferSpaceLeft);
+        std::memcpy((char*)buffer+offset, m_buffer, bufferSpaceLeft);
         m_left = m_size - bufferSpaceLeft;
     }
 

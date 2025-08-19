@@ -108,7 +108,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
         }
 
         const size_t num = qMin((size_t)(m_bufLen-m_bufIndex), bufferSize-n);
-        memcpy((char*)buffer+n, (char*)m_buffer+m_bufIndex, num);
+        std::memcpy((char*)buffer+n, (char*)m_buffer+m_bufIndex, num);
         n += num;
         m_bufIndex += num;
     } while (n < bufferSize);

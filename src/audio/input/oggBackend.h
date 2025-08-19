@@ -83,7 +83,7 @@ private:
     OggVorbis_File *m_vf;
 
     QFile m_file;
-    
+
     unsigned int m_samplerate;
     unsigned int m_channels;
 
