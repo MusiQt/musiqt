@@ -53,9 +53,9 @@ size_t adlBackend::fillBuffer(void* buffer, const size_t bufferSize)
                                    buf,
                                    buf + m_format.containerSize,
                                    &m_format);
-    if(samples_count <= 0)
+    if (samples_count <= 0)
     {
-        qWarning() << "Error:";
+        qWarning() << "Playback error";
         return 0;
     }
 
@@ -153,6 +153,13 @@ bool adlBackend::subtune(unsigned int i)
 
     qWarning() << "Invalid subtune" << i;
     return false;
+}
+
+bool adlBackend::seek(double pos)
+{
+    double len = adl_totalTimeLength(m_player);
+    adl_positionSeek(m_player, pos*len);
+    return true;
 }
 
 /*****************************************************************/

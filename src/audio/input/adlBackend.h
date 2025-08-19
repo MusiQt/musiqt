@@ -132,6 +132,12 @@ public:
     /// Change subtune
     bool subtune(unsigned int i) override;
 
+    /// Seek support
+    bool seekable() const override { return true; }
+
+    /// Seek specified position
+    bool seek(double pos) override;
+
     /// Get samplerate
     unsigned int samplerate() const override { return m_config.samplerate(); }
 
