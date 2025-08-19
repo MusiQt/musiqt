@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Leandro Nini
+ *  Copyright (C) 2021-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -101,9 +101,6 @@ public:
 
     /// Get volume
     int getVolume() const;
-
-    /// Check if gapless playback is supported
-    bool preload(input* const i);
 
     /// Get song info
     const metaData* getMetaData() const;

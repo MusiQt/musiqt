@@ -37,8 +37,6 @@ const char adlBackend::name[] = "ADL";
 
 adlConfig_t adlConfig::m_settings;
 
-QStringList adlBackend::m_ext;
-
 inputConfig* adlBackend::cFactory() { return new adlConfig(name); }
 
 /*****************************************************************/
@@ -78,13 +76,7 @@ void adlConfig::saveSettings()
 
 /*****************************************************************/
 
-bool adlBackend::init()
-{
-    m_ext = QString(EXT).split("|");
-    return true;
-}
-
-QStringList adlBackend::ext() { return m_ext; }
+QStringList adlBackend::ext() { return QString(EXT).split("|"); }
 
 adlBackend::adlBackend(const QString& fileName) :
     m_currentTrack(0)

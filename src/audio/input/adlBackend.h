@@ -94,7 +94,6 @@ private:
 
     int m_currentTrack;
     int m_subtunes;
-    static QStringList m_ext;
 
     std::vector<ADL_UInt8> m_buffer;
 
@@ -107,8 +106,6 @@ public:
     ~adlBackend() override;
 
     static const char name[];
-
-    static bool init();
 
     /// Factory method
     static input* factory(const QString& fileName) { return new adlBackend(fileName); }
