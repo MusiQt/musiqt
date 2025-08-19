@@ -564,7 +564,7 @@ void centralFrame::onUpdateTime()
 void centralFrame::onPreloadSong()
 {
     qDebug("centralFrame::onPreloadSong");
-    if (m_playMode && m_player->gapless() && isPlaylistDirSelected())
+    if (m_playlistMode && m_player->gapless() && isPlaylistDirSelected())
     {
         const int nextSong = m_playlist->currentIndex().row()+1;
         QModelIndex index = m_proxyModel->index(nextSong, 0);
@@ -584,7 +584,7 @@ void centralFrame::onSongEnded()
         return;
     }
 
-    if (m_playMode)
+    if (m_playlistMode)
     {
         QModelIndex index;
         if (isPlaylistDirSelected())

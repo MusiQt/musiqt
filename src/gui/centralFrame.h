@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2021 Leandro Nini
+ *  Copyright (C) 2013-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,13 +42,13 @@ class centralFrame : public QWidget
     Q_OBJECT
 
 public:
-    centralFrame(player* p, QWidget *parent = 0);
+    centralFrame(player* p, QWidget *parent = nullptr);
     ~centralFrame() override;
 
     void onSettingsChanged();
 
-    void setPlayMode(bool mode) { m_playMode = mode; }
-    bool getPlayMode() const { return m_playMode; }
+    void setPlayMode(bool mode) { m_playlistMode = mode; }
+    bool getPlayMode() const { return m_playlistMode; }
 
     void init();
 
@@ -100,7 +100,7 @@ private:
     player* m_player;
 
     // Play mode: true=playlist / false=single song
-    bool m_playMode;
+    bool m_playlistMode;
 
     QFileSystemModel *m_fsm;
     QTreeView *m_dirlist;
