@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2023 Leandro Nini
+ *  Copyright (C) 2008-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -56,8 +56,6 @@ class inputConfig;
 class settingsWindow : public QDialog
 {
 private:
-    QLabel *colorLabel;
-
     QList<inputConfig*> inputConfigs;
 
 private:
