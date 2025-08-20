@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 class metaData;
 class QImage;
 class QLabel;
+class QLineEdit;
 class QPlainTextEdit;
 class QPushButton;
 class QWidget;
@@ -60,6 +61,7 @@ private:
     QPushButton *m_commentButton;
     QPushButton *m_lyricsButton;
     QWidget *m_extra;
+    QLineEdit *m_location;
 
 private:
     infoDialog() {}

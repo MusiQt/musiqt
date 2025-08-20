@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2023 Leandro Nini
+ *  Copyright (C) 2006-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #include <QImage>
 #include <QImageReader>
 #include <QLabel>
+#include <QLineEdit>
 #include <QSize>
 #include <QPlainTextEdit>
 #include <QPushButton>
@@ -126,6 +127,25 @@ infoDialog::infoDialog(QWidget* w) :
     switcher->addWidget(m_lyrics);
 
     {
+        QWidget *matrix = new QWidget(this);
+        QGridLayout* gLayout2 = new QGridLayout();
+        matrix->setLayout(gLayout2);
+        main->addWidget(matrix);
+
+        QLabel *lbl = new QLabel(QString("<i>file</i>:"), m_matrix);
+        gLayout2->addWidget(lbl, 0, 0);
+        QPalette palette = lbl->palette();
+        QColor color = palette.color(lbl->foregroundRole());
+        color.setAlpha(128);
+        palette.setColor(lbl->foregroundRole(), color);
+        lbl->setPalette(palette);
+
+        m_location = new QLineEdit(m_matrix);
+        m_location->setReadOnly(true);
+        gLayout2->addWidget(m_location, 0, 1);
+    }
+
+    {
         QFrame* line = new QFrame();
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
@@ -160,6 +180,8 @@ void infoDialog::setInfo(const metaData* mtd)
         m_extra->hide();
         return;
     }
+
+    m_location->setText(location);
 
     m_commentButton->setEnabled(false);
     m_lyricsButton->setEnabled(false);
@@ -228,7 +250,7 @@ void infoDialog::setInfo(const metaData* mtd)
         }
         else
         {
-            // shot comments or other
+            // short comments or other
             QLabel *lbl = new QLabel(QString("<i>%1</i>:").arg(key), m_matrix);
             gLayout->addWidget(lbl, j, 0);
             QPalette palette = lbl->palette();
