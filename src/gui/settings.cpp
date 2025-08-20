@@ -269,7 +269,7 @@ settingsWindow::settingsWindow(QWidget* win) :
             backends->addItem(IFACTORY->name(i));
             inputConfig *ic = IFACTORY->getConfig(i);
             backends->setItemIcon(i, ic->icon());
-            inputConfigs.append(ic);
+            m_inputConfigs.append(ic);
             beSwitcher->addWidget(ic->config());
         }
         connect(backends, QOverload<int>::of(&QComboBox::currentIndexChanged), beSwitcher, &QStackedWidget::setCurrentIndex);
@@ -316,7 +316,7 @@ settingsWindow::settingsWindow(QWidget* win) :
         [this]()
         {
             //SETTINGS->load();
-            for (inputConfig* ic: inputConfigs)
+            for (inputConfig* ic: m_inputConfigs)
             {
                 ic->loadSettings();
                 delete ic;
@@ -328,7 +328,7 @@ settingsWindow::settingsWindow(QWidget* win) :
         [this]()
         {
             //SETTINGS->save();
-            for (inputConfig* ic: inputConfigs)
+            for (inputConfig* ic: m_inputConfigs)
             {
                 ic->saveSettings();
                 delete ic;

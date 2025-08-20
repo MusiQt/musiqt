@@ -56,7 +56,7 @@ class inputConfig;
 class settingsWindow : public QDialog
 {
 private:
-    QList<inputConfig*> inputConfigs;
+    QList<inputConfig*> m_inputConfigs;
 
 private:
     settingsWindow() {}
