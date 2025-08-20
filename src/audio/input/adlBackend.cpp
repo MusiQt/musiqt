@@ -172,6 +172,16 @@ bool adlBackend::seek(double pos)
 
 #define ADLSETTINGS adlConfig::m_settings
 
+inline float toDb(float val)
+{
+    return 20.f * std::log10(val);
+}
+
+inline float fromDb(float val)
+{
+    return std::pow(10.f, val/20.f);
+}
+
 adlConfigFrame::adlConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)
 {
@@ -266,21 +276,23 @@ adlConfigFrame::adlConfigFrame(QWidget* win) :
 
     hf->addStretch();
 
-    tf = new QLabel(tr("Gain"), this);
+    int const dbGain = static_cast<int>(toDb(ADLSETTINGS.gain));
+
+    tf = new QLabel(tr("Gain (dB)"), this);
     tf->setAlignment(Qt::AlignCenter);
     mat->addWidget(tf, 0, 0);
     QDial *knob = new QDial(this);
-    knob->setRange(0, 10);
-    knob->setValue(ADLSETTINGS.gain);
+    knob->setRange(0, 15);
+    knob->setValue(dbGain);
     mat->addWidget(knob, 1, 0);
     tf = new QLabel(this);
     tf->setFrameStyle(QFrame::Panel|QFrame::Sunken);
     tf->setAlignment(Qt::AlignCenter);
-    tf->setNum(ADLSETTINGS.gain);
+    tf->setNum(dbGain);
     mat->addWidget(tf, 2, 0);
     connect(knob, &QDial::valueChanged,
         [tf](int val) {
-            ADLSETTINGS.gain = val / 3.f;
+            ADLSETTINGS.gain = fromDb(val);
             tf->setNum(val);
         }
     );
