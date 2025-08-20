@@ -30,10 +30,10 @@ player::player() :
     m_audio(new audio),
     m_preload(IFACTORY->get())
 {
-    connect(m_audio.data(), &audio::updateTime,  this, &player::updateTime);
-    connect(m_audio.data(), &audio::songEnded,   this, &player::songEnded);
-    connect(m_audio.data(), &audio::preloadSong, this, &player::preloadSong);
-    connect(m_audio.data(), &audio::audioError,  this, &player::onError);
+    connect(m_audio.get(), &audio::updateTime,  this, &player::updateTime);
+    connect(m_audio.get(), &audio::songEnded,   this, &player::songEnded);
+    connect(m_audio.get(), &audio::preloadSong, this, &player::preloadSong);
+    connect(m_audio.get(), &audio::audioError,  this, &player::onError);
 }
 
 player::~player() = default;
@@ -48,7 +48,7 @@ void player::play()
 {
     try
     {
-        if (m_audio->play(m_input.data()))
+        if (m_audio->play(m_input.get()))
             emit stateChanged();
     }
     catch (audio::initError const &e)
@@ -102,7 +102,7 @@ bool player::tryPreload(const QString& song)
     bool res = false;
     if (!songPreloaded.compare(song))
     {
-        m_input.reset(m_preload.get());
+        m_input.reset(m_preload.release());
         emit songChanged();
         res = true;
     }

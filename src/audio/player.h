@@ -23,7 +23,8 @@
 #include "metaData.h"
 
 #include <QObject>
-#include <QScopedPointer>
+
+#include <memory>
 
 class audio;
 class input;
@@ -41,9 +42,9 @@ class player : public QObject
     Q_OBJECT
 
 private:
-    QScopedPointer<input> m_input;
-    QScopedPointer<audio> m_audio;
-    QScopedPointer<input> m_preload;
+    std::unique_ptr<input> m_input;
+    std::unique_ptr<audio> m_audio;
+    std::unique_ptr<input> m_preload;
 
 private:
     player(const player&) = delete;
