@@ -297,13 +297,13 @@ sidBackend::sidBackend(const QString& fileName) :
     {
         const char* fName = fileName.toUtf8().constData();
         qDebug() << "Retrieving STIL info";
-        QString comment = QString(m_stil->getAbsGlobalComment(fName));
+        QString comment = QString::fromLatin1(m_stil->getAbsGlobalComment(fName));
         if (!comment.isEmpty())
             comment.append('\n');
 
-        comment.append(QString(m_stil->getAbsEntry(fName)));
+        comment.append(QString::fromLatin1(m_stil->getAbsEntry(fName)));
 
-        QString bug = QString(m_stil->getAbsBug(fName));
+        QString bug = QString::fromLatin1(m_stil->getAbsBug(fName));
         if (!bug.isEmpty())
         {
             comment.append('\n');
@@ -550,7 +550,7 @@ void sidBackend::getInfo(const SidTuneInfo* tuneInfo) noexcept
         {
             if (!info.isEmpty())
                 info.append('\n');
-            info.append(tuneInfo->commentString(i));
+            info.append(QString::fromLatin1(tuneInfo->commentString(i)));
         }
 
         if (!info.isEmpty())

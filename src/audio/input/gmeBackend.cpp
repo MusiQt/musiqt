@@ -188,16 +188,16 @@ void gmeBackend::getInfo()
         return;
     }
 
-    m_metaData.addInfo(metaData::TITLE, ti->song);
-    m_metaData.addInfo(metaData::ARTIST, ti->author);
-    m_metaData.addInfo(gettext("copyright"), ti->copyright);
-    m_metaData.addInfo(gettext("system"), ti->system);
-    m_metaData.addInfo(gettext("game"), ti->game);
-    m_metaData.addInfo(gettext("dumper"), ti->dumper);
+    m_metaData.addInfo(metaData::TITLE, QString::fromLatin1(ti->song));
+    m_metaData.addInfo(metaData::ARTIST, QString::fromLatin1(ti->author));
+    m_metaData.addInfo(gettext("copyright"), QString::fromLatin1(ti->copyright));
+    m_metaData.addInfo(gettext("system"), QString::fromLatin1(ti->system));
+    m_metaData.addInfo(gettext("game"), QString::fromLatin1(ti->game));
+    m_metaData.addInfo(gettext("dumper"), QString::fromLatin1(ti->dumper));
 
     QString comment = m_metaData.getInfo(metaData::COMMENT);
     if (comment.isEmpty())
-        m_metaData.addInfo(metaData::COMMENT, ti->comment);
+        m_metaData.addInfo(metaData::COMMENT, QString::fromLatin1(ti->comment));
 
     // length is -1 if unknown
     if (ti->length > 0)
