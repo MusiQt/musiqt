@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2023 Leandro Nini
+ *  Copyright (C) 2006-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ void qaudioBackend::onStateChange(QAudio::State newState)
     switch (newState)
     {
     case QAudio::IdleState:
-        emit songEnded();
+        //emit songEnded();
         break;
     case QAudio::StoppedState:
         if (m_thread->isRunning())
