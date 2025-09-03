@@ -888,7 +888,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     QComboBox *sidAddress = new QComboBox(this);
     matrix()->addWidget(sidAddress);
     QStringList items;
-    items << "(none)" << "$D420" << "$D500" << "$DE00" << "$DF00";
+    items << "(none)" << "$D420" << "$D500" << "$DE00" << "$DF00" << "$D440" << "$D600";
     sidAddress->addItems(items);
     sidAddress->setMaxVisibleItems(5);
     val = 5;
