@@ -361,8 +361,8 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
     );
 
 #if QT_VERSION >= 0x060700
-    QStringList codecs = QStringConverter::availableCodecs();
-    // TODO remove UTF*
+    QRegularExpression regex("^(?!UTF)", QRegularExpression::CaseInsensitiveOption);
+    QStringList  codecs = QStringConverter::availableCodecs().filter(regex);
 #elif QT_VERSION >= 0x060000
     QStringList codecs;
     codecs << "ISO-8859-1";
@@ -370,7 +370,8 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
     QList<QByteArray> c = QTextCodec::availableCodecs();
     QStringList codecs;
     for (const QByteArray &item: c) {
-        codecs.append(QString::fromLatin1(item));
+        if (!item.startsWith("UTF", Qt::CaseInsensitive)
+            codecs.append(QString::fromLatin1(item));
     }
 #endif
     codecs.sort(Qt::CaseInsensitive);
