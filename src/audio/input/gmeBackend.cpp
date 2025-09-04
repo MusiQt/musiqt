@@ -197,7 +197,11 @@ void gmeBackend::getInfo()
     }
 
 #if QT_VERSION >= 0x060000
+#  if QT_VERSION >= 0x060800
     auto toUtf16 = QStringDecoder(m_config.encoding());
+#  else
+    auto toUtf16 = QStringDecoder(m_config.encoding().toUtf8());
+#  endif
 
     QString title     = toUtf16(QByteArray(ti->song));
     QString artist    = toUtf16(QByteArray(ti->author));
