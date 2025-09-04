@@ -360,8 +360,12 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
         }
     );
 
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= 0x060700
     QStringList codecs = QStringConverter::availableCodecs();
+    // TODO remove UTF*
+#elif QT_VERSION >= 0x060000
+    QStringList codecs;
+    codecs << "ISO-8859-1";
 #else
     QList<QByteArray> c = QTextCodec::availableCodecs();
     QStringList codecs;
