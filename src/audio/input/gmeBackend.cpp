@@ -30,6 +30,12 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QGroupBox>
+#if QT_VERSION >= 0x060000
+#  include <QStringConverter>
+#  include <QStringDecoder>
+#else
+#  include <QTextCodec>
+#endif
 
 #include <string>
 
@@ -72,6 +78,7 @@ void gmeConfig::loadSettings()
     m_settings.treble_dB = load("Treble dB", 0.0);
     m_settings.bass_freq = load("Bass freq", 90.0);
     m_settings.asmaPath = load("ASMA", QString());
+    m_settings.encoding = load("Metadata encoding", QString());
 }
 
 void gmeConfig::saveSettings()
@@ -81,6 +88,7 @@ void gmeConfig::saveSettings()
     save("Treble dB", m_settings.treble_dB);
     save("Bass freq", m_settings.bass_freq);
     save("ASMA", m_settings.asmaPath);
+    save("Metadata encoding", m_settings.encoding);
 }
 
 /*****************************************************************/
@@ -188,16 +196,37 @@ void gmeBackend::getInfo()
         return;
     }
 
-    m_metaData.addInfo(metaData::TITLE, QString::fromLatin1(ti->song));
-    m_metaData.addInfo(metaData::ARTIST, QString::fromLatin1(ti->author));
-    m_metaData.addInfo(gettext("copyright"), QString::fromLatin1(ti->copyright));
-    m_metaData.addInfo(gettext("system"), QString::fromLatin1(ti->system));
-    m_metaData.addInfo(gettext("game"), QString::fromLatin1(ti->game));
-    m_metaData.addInfo(gettext("dumper"), QString::fromLatin1(ti->dumper));
+#if QT_VERSION >= 0x060000
+    auto toUtf16 = QStringDecoder(m_config.encoding());
 
-    QString comment = m_metaData.getInfo(metaData::COMMENT);
-    if (comment.isEmpty())
-        m_metaData.addInfo(metaData::COMMENT, QString::fromLatin1(ti->comment));
+    QString title     = toUtf16(QByteArray(ti->song));
+    QString artist    = toUtf16(QByteArray(ti->author));
+    QString copyright = toUtf16(QByteArray(ti->copyright));
+    QString system    = toUtf16(QByteArray(ti->system));
+    QString game      = toUtf16(QByteArray(ti->game));
+    QString dumper    = toUtf16(QByteArray(ti->dumper));
+    QString comment   = toUtf16(QByteArray(ti->comment));
+#else
+    QTextCodec *codec = QTextCodec::codecForName(m_config.encoding().toLatin1());
+
+    QString title     = codec->toUnicode(QByteArray(ti->song));
+    QString artist    = codec->toUnicode(QByteArray(ti->author));
+    QString copyright = codec->toUnicode(QByteArray(ti->copyright));
+    QString system    = codec->toUnicode(QByteArray(ti->system));
+    QString game      = codec->toUnicode(QByteArray(ti->game));
+    QString dumper    = codec->toUnicode(QByteArray(ti->dumper));
+    QString comment   = codec->toUnicode(QByteArray(ti->comment));
+#endif
+    m_metaData.addInfo(metaData::TITLE, title);
+    m_metaData.addInfo(metaData::ARTIST, artist);
+    m_metaData.addInfo(gettext("copyright"), copyright);
+    m_metaData.addInfo(gettext("system"), system);
+    m_metaData.addInfo(gettext("game"), game);
+    m_metaData.addInfo(gettext("dumper"), dumper);
+
+    QString stilComment = m_metaData.getInfo(metaData::COMMENT);
+    if (stilComment.isEmpty())
+        m_metaData.addInfo(metaData::COMMENT, comment);
 
     // length is -1 if unknown
     if (ti->length > 0)
@@ -327,8 +356,31 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
         }
     );
 
+#if QT_VERSION >= 0x060000
+    QStringList codecs = QStringConverter::availableCodecs();
+#else
+    QList<QByteArray> c = QTextCodec::availableCodecs();
+    QStringList codecs;
+    for (const QByteArray &item: c) {
+        codecs.append(QString::fromLatin1(item));
+    }
+#endif
+    codecs.sort(Qt::CaseInsensitive);
+    matrix()->addWidget(new QLabel(tr("String encoding"), this), 1, 0);
+    QComboBox *encodings = new QComboBox(this);
+    encodings->addItems(codecs);
+    encodings->setMaxVisibleItems(5);
+    matrix()->addWidget(encodings, 1, 1);
+
+    encodings->setCurrentText(GMESETTINGS.encoding);
+    connect(encodings, &QComboBox::currentTextChanged,
+        [](const QString &text) {
+            GMESETTINGS.encoding = text;
+        }
+    );
+
     {
-        QVBoxLayout *equalizerBox = new QVBoxLayout();
+        QVBoxLayout *equalizerBox = new QVBoxLayout(this);
         QGroupBox *group = new QGroupBox(tr("Equalizer"));
         group->setCheckable(true);
         group->setToolTip(tr("Enable equalizer"));
@@ -340,7 +392,7 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
             }
         );
 
-        QGridLayout* mat = new QGridLayout();
+        QGridLayout* mat = new QGridLayout(this);
         equalizerBox->addLayout(mat);
         mat->addWidget(new QLabel("Treble DB", this), 0, 0, 1, 1, Qt::AlignCenter);
         mat->addWidget(new QLabel("Bass frequency", this), 0, 1, 1, 1, Qt::AlignCenter);
@@ -384,7 +436,7 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
         matrix()->addWidget(group);
     }
 
-    QHBoxLayout *hf = new QHBoxLayout();
+    QHBoxLayout *hf = new QHBoxLayout(this);
     extraBottom()->addLayout(hf);
 
     hf->addWidget(new QLabel(tr("ASMA path:"), this));
@@ -420,4 +472,5 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
      asmaPath->setEnabled(false);
      button->setEnabled(false);
 #endif
+     
 }
