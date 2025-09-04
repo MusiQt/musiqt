@@ -42,6 +42,7 @@ struct gmeConfig_t
     double treble_dB;
     double bass_freq;
     QString asmaPath;
+    QString encoding;
 };
 
 /*****************************************************************/
@@ -97,6 +98,8 @@ public:
     double bass_freq() const { return m_settings.bass_freq; }
 
     QString asmaPath() const { return m_settings.asmaPath; }
+
+    QString encoding() const { return m_settings.encoding; }
 };
 
 /*****************************************************************/
