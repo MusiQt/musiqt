@@ -370,8 +370,9 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
     QList<QByteArray> c = QTextCodec::availableCodecs();
     QStringList codecs;
     for (const QByteArray &item: c) {
-        if (!item.startsWith("UTF", Qt::CaseInsensitive)
-            codecs.append(QString::fromLatin1(item));
+        QString s = QString::fromLatin1(item);
+        if (!s.startsWith("UTF", Qt::CaseInsensitive))
+            codecs.append(s);
     }
 #endif
     codecs.sort(Qt::CaseInsensitive);
