@@ -1,3 +1,14 @@
+* musiqt-3.3.0 - Aug xx, 2025
+Added new midi backend based on libADLMIDI
+Added file location to info dialog
+Fixed random song skipping
+Prevent possible memory leak
+gme: allow selecting metadata encoding
+sid: actually show addresses for 3SID tunes
+gme/sid: use correct encoding for metadata
+
+
+
 * musiqt-3.2.4 - Aug 18, 2025
 Pause player while changing subtune, avoids random crashes
 gme: fix loading of m3u files
