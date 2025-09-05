@@ -61,9 +61,9 @@ infoDialog::infoDialog(QWidget* w) :
     QDialog(w),
     m_imgFrame(nullptr)
 {
-    QVBoxLayout *main = new QVBoxLayout();
+    QVBoxLayout *main = new QVBoxLayout(this);
     setLayout(main);
-    QHBoxLayout *container = new QHBoxLayout();
+    QHBoxLayout *container = new QHBoxLayout(this);
     main->addLayout(container);
 
     m_imgFrame = new QLabel(this);
@@ -73,23 +73,23 @@ infoDialog::infoDialog(QWidget* w) :
     container->addWidget(m_imgFrame);
 
     m_matrix = new QWidget(this);
-    QGridLayout* gLayout = new QGridLayout();
+    QGridLayout* gLayout = new QGridLayout(this);
     m_matrix->setLayout(gLayout);
     container->addWidget(m_matrix);
 
     /******************************************/
 
-    m_extra = new QWidget();
+    m_extra = new QWidget(this);
     main->addWidget(m_extra);
 
-    QVBoxLayout *extra = new QVBoxLayout();
+    QVBoxLayout *extra = new QVBoxLayout(this);
     extra->setContentsMargins(0,0,0,0);
     m_extra->setLayout(extra);
 
     QStackedWidget *switcher = new QStackedWidget(this);
     extra->addWidget(switcher);
 
-    QHBoxLayout *buttons = new QHBoxLayout();
+    QHBoxLayout *buttons = new QHBoxLayout(this);
     buttons->setContentsMargins(0,0,0,0);
     buttons->setSpacing(0);
     extra->addLayout(buttons);
@@ -114,21 +114,21 @@ infoDialog::infoDialog(QWidget* w) :
     QFont font("monospace");
     font.setStyleHint(QFont::TypeWriter);
 
-    m_comment = new QPlainTextEdit();
+    m_comment = new QPlainTextEdit(this);
     m_comment->setReadOnly(true);
     m_comment->setFont(font);
     //m_comment->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     //m_comment->setLineWrapColumnOrWidth(80);
     switcher->addWidget(m_comment);
 
-    m_lyrics = new QPlainTextEdit();
+    m_lyrics = new QPlainTextEdit(this);
     m_lyrics->setReadOnly(true);
     m_lyrics->setFont(font);
     switcher->addWidget(m_lyrics);
 
     {
         QWidget *matrix = new QWidget(this);
-        QGridLayout* gLayout2 = new QGridLayout();
+        QGridLayout* gLayout2 = new QGridLayout(this);
         matrix->setLayout(gLayout2);
         main->addWidget(matrix);
 
@@ -146,7 +146,7 @@ infoDialog::infoDialog(QWidget* w) :
     }
 
     {
-        QFrame* line = new QFrame();
+        QFrame* line = new QFrame(this);
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         main->addWidget(line);

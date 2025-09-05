@@ -113,7 +113,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     creditsArea->setAlignment(Qt::AlignCenter);
 
     // License
-    QTextEdit *licenseLabel = new QTextEdit();
+    QTextEdit *licenseLabel = new QTextEdit(this);
     licenseLabel->setReadOnly(true);
     {
         QFile file(":/resources/GPL_TEXT");
@@ -123,7 +123,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
     }
 
     // Log view
-    QTextEdit *logLabel = new QTextEdit();
+    QTextEdit *logLabel = new QTextEdit(this);
     logLabel->setReadOnly(true);
     {
         const QString logFileName(QString("%1/musiqt.log").arg(syspaths::getStateDir()));
