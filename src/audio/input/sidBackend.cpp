@@ -253,6 +253,7 @@ const char* getClockString(SidTuneInfo::clock_t clock)
 QStringList sidBackend::ext() { return QString(EXT).split("|"); }
 
 sidBackend::sidBackend(const QString& fileName) :
+    input(name),
 #ifdef HAVE_STILVIEW
     m_stil(nullptr),
 #endif

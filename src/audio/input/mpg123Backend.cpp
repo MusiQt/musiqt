@@ -73,7 +73,7 @@ extern const unsigned char iconMpg123[560] =
 #define CREDITS "MPEG Audio Decoder library<br>Copyright \302\251 the mpg123 project"
 #define LINK    "http://mpg123.org/"
 
-const char mpg123Backend::name[] = "Mpg123";
+const char  mpg123Backend::name[] = "Mpg123";
 
 QStringList mpg123Backend::m_decoders;
 
@@ -138,6 +138,7 @@ bool mpg123Backend::init()
 QStringList mpg123Backend::ext() { return QStringList(EXT); }
 
 mpg123Backend::mpg123Backend(const QString& fileName) :
+    input(name),
     m_handle(nullptr),
     m_config(name, iconMpg123, 560)
 {

@@ -143,6 +143,17 @@ infoDialog::infoDialog(QWidget* w) :
         m_location = new QLineEdit(m_matrix);
         m_location->setReadOnly(true);
         gLayout2->addWidget(m_location, 0, 1);
+
+        lbl = new QLabel(QString("<i>backend</i>:"), m_matrix);
+        gLayout2->addWidget(lbl, 1, 0);
+        palette = lbl->palette();
+        color = palette.color(lbl->foregroundRole());
+        color.setAlpha(128);
+        palette.setColor(lbl->foregroundRole(), color);
+        lbl->setPalette(palette);
+
+        m_backend = new QLabel(m_matrix);
+        gLayout2->addWidget(m_backend, 1, 1);
     }
 
     {
@@ -182,6 +193,7 @@ void infoDialog::setInfo(const metaData* mtd)
     }
 
     m_location->setText(location);
+    m_backend->setText(mtd->getBackendName());
 
     m_commentButton->setEnabled(false);
     m_lyricsButton->setEnabled(false);

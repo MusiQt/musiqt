@@ -67,6 +67,7 @@
 class nullInput : public input
 {
 public:
+    nullInput() : input("null") {}
     unsigned int samplerate() const override { return 0; }
     unsigned int channels() const override { return 0; }
     sample_t precision() const override { return sample_t::S16; }

@@ -158,6 +158,7 @@ void hvlConfig::saveSettings()
 QStringList hvlBackend::ext() { return QString(EXT).split("|"); }
 
 hvlBackend::hvlBackend(const QString& fileName) :
+    input(name),
     m_buffer(nullptr),
     m_config(name, iconHvl, 1006)
 {

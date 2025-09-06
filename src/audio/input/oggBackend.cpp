@@ -126,6 +126,7 @@ void oggConfig::saveSettings()
 QStringList oggBackend::ext() { return QString(EXT).split("|"); }
 
 oggBackend::oggBackend(const QString& fileName) :
+    input(name),
     m_config(name, iconOgg, 523)
 {
     m_file.setFileName(fileName);

@@ -134,6 +134,7 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
 QStringList opusBackend::ext() { return QStringList(EXT); }
 
 opusBackend::opusBackend(const QString& fileName) :
+    input(name),
     m_config(name, iconOpus, 952)
 {
     m_file.setFileName(fileName);

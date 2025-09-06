@@ -61,6 +61,7 @@ bool sndBackend::init()
 }
 
 sndBackend::sndBackend(const QString& fileName) :
+    input(name),
     m_config(name)
 {
     m_si.format = 0;

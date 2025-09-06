@@ -123,6 +123,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
 QStringList mpcBackend::ext() { return QStringList(EXT); }
 
 mpcBackend::mpcBackend(const QString& fileName) :
+    input(name),
     m_config(name, iconMpc, 417)
 {
     m_file.setFileName(fileName);

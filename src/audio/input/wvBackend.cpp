@@ -120,6 +120,7 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
 QStringList wvBackend::ext() { return QStringList(EXT); }
 
 wvBackend::wvBackend(const QString& fileName) :
+    input(name),
     m_config(name, iconWv, 375)
 {
     char tmp[255];

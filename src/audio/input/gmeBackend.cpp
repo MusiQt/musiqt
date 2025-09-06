@@ -111,6 +111,7 @@ bool gmeBackend::init()
 QStringList gmeBackend::ext() { return m_ext; }
 
 gmeBackend::gmeBackend(const QString& fileName) :
+    input(name),
     m_currentTrack(0)
 #ifdef HAVE_STILVIEW
     , m_stil(nullptr)

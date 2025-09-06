@@ -102,7 +102,7 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
 
     addToolBar(createControlBar());
     addToolBarBreak();
-    addToolBar(createSecondaryBar());  
+    addToolBar(createSecondaryBar());
     addToolBar(Qt::BottomToolBarArea, createInfoBar());
 
     setWindowTitle(PACKAGE_NAME);
@@ -297,7 +297,7 @@ QToolBar *mainWindow::createSecondaryBar()
     secondaryBar->addWidget(m_subtunes);
     secondaryBar->addAction(nexttune);
     secondaryBar->addWidget(m_statusLed);
-    
+
     secondaryBar->addWidget(songs);
     secondaryBar->addAction(m_playlist);
 #ifdef HAVE_LASTFM

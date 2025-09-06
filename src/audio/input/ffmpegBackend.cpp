@@ -255,6 +255,7 @@ bool ffmpegBackend::init()
 QStringList ffmpegBackend::ext() { return m_ext; }
 
 ffmpegBackend::ffmpegBackend(const QString& fileName) :
+    input(name),
     m_formatContext(nullptr),
     m_codecContext(nullptr),
     m_needData(true),

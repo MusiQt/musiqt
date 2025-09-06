@@ -87,8 +87,9 @@ void adlConfig::saveSettings()
 QStringList adlBackend::ext() { return QString(EXT).split("|"); }
 
 adlBackend::adlBackend(const QString& fileName) :
-    m_currentTrack(0)
-    , m_config(name)
+    input(name),
+    m_currentTrack(0),
+    m_config(name)
 {
     m_player = adl_init(m_config.samplerate());
     if (!m_player)

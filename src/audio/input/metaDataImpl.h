@@ -34,12 +34,17 @@ private:
 
 private:
     StringDict m_infos;
+    QString    m_backend;
 
     QByteArray *m_img;
 
 public:
     metaDataImpl() : m_img(nullptr) {}
     ~metaDataImpl() { delete m_img; }
+
+    // Backend info
+    void setbackendName(const char* name) { m_backend = name; }
+    QString getBackendName() const override { return m_backend; }
 
     /// Append song info
     void addInfo(QString type, QString info);

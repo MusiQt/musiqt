@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2023 Leandro Nini
+ *  Copyright (C) 2006-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,11 +40,18 @@ public:
 private:
     unsigned int m_time;
 
+private:
+    input() = delete;
+
 protected:
     metaDataImpl m_metaData;
 
 protected:
-    input() : m_time(0) {}
+    input(const char *name) :
+        m_time(0)
+    {
+        m_metaData.setbackendName(name);
+    }
 
     /// Song is loaded
     void songLoaded(const QString& location);

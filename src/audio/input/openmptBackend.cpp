@@ -175,6 +175,7 @@ bool openmptBackend::init()
 }
 
 openmptBackend::openmptBackend(const QString& fileName) :
+    input(name),
     m_config(name, iconOpenmpt, 990)
 {
     bool tmpFile = false;

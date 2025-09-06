@@ -62,6 +62,7 @@ private:
     QPushButton *m_lyricsButton;
     QWidget *m_extra;
     QLineEdit *m_location;
+    QLabel *m_backend;
 
 private:
     infoDialog() {}
