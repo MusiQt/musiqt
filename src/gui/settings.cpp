@@ -44,7 +44,7 @@
 #include <QStatusBar>
 #include <QHBoxLayout>
 
-settingsWindow::settingsWindow(QWidget* win) :
+settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
     QDialog(win)
 {
     setWindowTitle(tr("Settings"));
@@ -273,6 +273,8 @@ settingsWindow::settingsWindow(QWidget* win) :
             beSwitcher->addWidget(ic->config());
         }
         connect(backends, QOverload<int>::of(&QComboBox::currentIndexChanged), beSwitcher, &QStackedWidget::setCurrentIndex);
+
+        backends->setCurrentText(bkName);
 
         QWidget *w = new QWidget(this);
         QHBoxLayout *backendSelection = new QHBoxLayout(w);

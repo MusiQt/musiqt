@@ -453,7 +453,8 @@ void mainWindow::onAbout()
 
 void mainWindow::onConfig()
 {
-    settingsWindow *config = new settingsWindow(this);
+    const metaData* data = m_player->getMetaData();
+    settingsWindow *config = new settingsWindow(this, data->getBackendName());
     config->open();
     connect(config, &settingsWindow::finished,
         [config, this](int result)

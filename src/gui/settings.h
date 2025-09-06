@@ -67,7 +67,7 @@ protected:
     bool event(QEvent *e) override;
 
 public:
-    settingsWindow(QWidget* win);
+    settingsWindow(QWidget* win, const QString& bkName);
     ~settingsWindow() override = default;
 };
 
