@@ -1,6 +1,7 @@
-* musiqt-3.3.0 - Aug xx, 2025
+* musiqt-3.3.0 - Sep 23, 2025
 Added new midi backend based on libADLMIDI
-Added file location to info dialog
+Added file location and backend name to info dialog
+Select current backend in config dialog
 Fixed random song skipping
 Prevent possible memory leak
 gme: allow selecting metadata encoding
