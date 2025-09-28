@@ -391,19 +391,18 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
     );
 
     {
-        QVBoxLayout *equalizerBox = new QVBoxLayout(this);
         QGroupBox *group = new QGroupBox(tr("Equalizer"));
+        QVBoxLayout *equalizerBox = new QVBoxLayout(group);
         group->setCheckable(true);
         group->setToolTip(tr("Enable equalizer"));
         group->setChecked(GMESETTINGS.equalizer);
-        group->setLayout(equalizerBox);
         connect(group, &QGroupBox::toggled,
             [](bool val) {
                 GMESETTINGS.equalizer = val;
             }
         );
 
-        QGridLayout* mat = new QGridLayout(this);
+        QGridLayout* mat = new QGridLayout();
         equalizerBox->addLayout(mat);
         mat->addWidget(new QLabel("Treble DB", this), 0, 0, 1, 1, Qt::AlignCenter);
         mat->addWidget(new QLabel("Bass frequency", this), 0, 1, 1, 1, Qt::AlignCenter);
@@ -447,7 +446,7 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
         matrix()->addWidget(group);
     }
 
-    QHBoxLayout *hf = new QHBoxLayout(this);
+    QHBoxLayout *hf = new QHBoxLayout();
     extraBottom()->addLayout(hf);
 
     hf->addWidget(new QLabel(tr("ASMA path:"), this));

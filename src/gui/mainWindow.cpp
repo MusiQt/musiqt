@@ -57,6 +57,8 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
     m_player(p),
     m_infoDialog(nullptr)
 {
+    setObjectName("Main Window");
+
     connect(m_player, &player::subtunechanged, this, &mainWindow::setDisplay);
     connect(m_player, &player::stateChanged,   this, &mainWindow::setPlayButton);
     connect(m_player, &player::audioError,     this, &mainWindow::showError);

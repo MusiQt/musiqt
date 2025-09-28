@@ -464,7 +464,7 @@ mpg123ConfigFrame::mpg123ConfigFrame(QWidget* win) :
     );
 
     {
-        QFrame* line = new QFrame();
+        QFrame* line = new QFrame(this);
         line->setFrameShape(QFrame::VLine);
         line->setFrameShadow(QFrame::Sunken);
         extraLeft()->addWidget(line);

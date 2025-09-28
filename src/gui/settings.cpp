@@ -47,10 +47,11 @@
 settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
     QDialog(win)
 {
+    setObjectName("Settings Dialog");
+
     setWindowTitle(tr("Settings"));
 
-    QVBoxLayout* main = new QVBoxLayout();
-    setLayout(main);
+    QVBoxLayout* main = new QVBoxLayout(this);
 
     QSizePolicy sizePol(QSizePolicy::Minimum, QSizePolicy::Fixed);
     //QSizePolicy sizeMin(QSizePolicy::Expanding, QSizePolicy::Maximum);
@@ -67,12 +68,11 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
 
     // General settings
     QWidget* optionpane = new QWidget();
-    QVBoxLayout* optionLayout = new QVBoxLayout();
-    optionpane->setLayout(optionLayout);
+    QVBoxLayout* optionLayout = new QVBoxLayout(optionpane);
     optionLayout->addWidget(new QLabel(tr("General settings"), this));
 
     {
-        QFrame* line = new QFrame();
+        QFrame* line = new QFrame(this);
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         optionLayout->addWidget(line);
@@ -136,12 +136,11 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
 #endif
 
     {
-        QVBoxLayout *replayGainBox = new QVBoxLayout();
         QGroupBox *group = new QGroupBox(tr("Replaygain"));
+        QVBoxLayout *replayGainBox = new QVBoxLayout(group);
         group->setCheckable(true);
         group->setToolTip(tr("Enable replaygain loudness normalization"));
         group->setChecked(SETTINGS->m_replayGain);
-        group->setLayout(replayGainBox);
         connect(group, &QGroupBox::toggled,
             [](bool val)
             {
@@ -190,9 +189,8 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
     buttons->addWidget(button);
 
     // Audio settings
-    QWidget* audiopane = new QWidget();
-    QVBoxLayout* audioLayout = new QVBoxLayout();
-    audiopane->setLayout(audioLayout);
+    QWidget* audiopane = new QWidget(this);
+    QVBoxLayout* audioLayout = new QVBoxLayout(audiopane);
     audioLayout->addWidget(new QLabel(tr("Audio settings"), this));
 
     {
@@ -219,9 +217,8 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
     audioLayout->addStretch();
 #ifdef HAVE_LASTFM
     // Last.fm settings
-    QWidget* lastfmpane = new QWidget();
-    QVBoxLayout* lastfmLayout = new QVBoxLayout();
-    lastfmpane->setLayout(lastfmLayout);
+    QWidget* lastfmpane = new QWidget(this);
+    QVBoxLayout* lastfmLayout = new QVBoxLayout(lastfmpane);
     lastfmLayout->addWidget(new QLabel(tr("Last.fm settings"), this));
 
     {
@@ -248,22 +245,21 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
     lastfmLayout->addStretch();
 #endif
     // Backend settings
-    QWidget* backendpane = new QWidget();
-    QVBoxLayout* backendLayout = new QVBoxLayout();
-    backendpane->setLayout(backendLayout);
+    QWidget* backendpane = new QWidget(this);
+    QVBoxLayout* backendLayout = new QVBoxLayout(backendpane);
     backendLayout->addWidget(new QLabel(tr("Backend settings"), this));
 
     {
-        QFrame* line = new QFrame();
+        QFrame* line = new QFrame(this);
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         backendLayout->addWidget(line);
     }
 
-    QStackedWidget *beSwitcher = new QStackedWidget();
+    QStackedWidget *beSwitcher = new QStackedWidget(this);
 
     {
-        QComboBox *backends = new QComboBox();
+        QComboBox *backends = new QComboBox(this);
         for (int i=0; i<IFACTORY->num(); i++)
         {
             backends->addItem(IFACTORY->name(i));
@@ -301,7 +297,7 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
     buttons->addWidget(button);
 
     {
-        QFrame* line = new QFrame();
+        QFrame* line = new QFrame(this);
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         main->addWidget(line);

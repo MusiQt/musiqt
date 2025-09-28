@@ -927,7 +927,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
 #endif
 
     {
-        QFrame* line = new QFrame();
+        QFrame* line = new QFrame(this);
         line->setFrameShape(QFrame::VLine);
         line->setFrameShadow(QFrame::Sunken);
         extraLeft()->addWidget(line);
@@ -987,7 +987,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
     );
 
     {
-        QFrame* line = new QFrame();
+        QFrame* line = new QFrame(this);
         line->setFrameShape(QFrame::VLine);
         line->setFrameShadow(QFrame::Sunken);
         extraLeft()->addWidget(line);

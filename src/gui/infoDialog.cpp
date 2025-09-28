@@ -61,9 +61,10 @@ infoDialog::infoDialog(QWidget* w) :
     QDialog(w),
     m_imgFrame(nullptr)
 {
+    setObjectName("Info Dialog");
+
     QVBoxLayout *main = new QVBoxLayout(this);
-    setLayout(main);
-    QHBoxLayout *container = new QHBoxLayout(this);
+    QHBoxLayout *container = new QHBoxLayout();
     main->addLayout(container);
 
     m_imgFrame = new QLabel(this);
@@ -73,8 +74,7 @@ infoDialog::infoDialog(QWidget* w) :
     container->addWidget(m_imgFrame);
 
     m_matrix = new QWidget(this);
-    QGridLayout* gLayout = new QGridLayout(this);
-    m_matrix->setLayout(gLayout);
+    QGridLayout* gLayout = new QGridLayout(m_matrix);
     container->addWidget(m_matrix);
 
     /******************************************/
@@ -82,14 +82,13 @@ infoDialog::infoDialog(QWidget* w) :
     m_extra = new QWidget(this);
     main->addWidget(m_extra);
 
-    QVBoxLayout *extra = new QVBoxLayout(this);
+    QVBoxLayout *extra = new QVBoxLayout(m_extra);
     extra->setContentsMargins(0,0,0,0);
-    m_extra->setLayout(extra);
 
     QStackedWidget *switcher = new QStackedWidget(this);
     extra->addWidget(switcher);
 
-    QHBoxLayout *buttons = new QHBoxLayout(this);
+    QHBoxLayout *buttons = new QHBoxLayout();
     buttons->setContentsMargins(0,0,0,0);
     buttons->setSpacing(0);
     extra->addLayout(buttons);
@@ -128,8 +127,7 @@ infoDialog::infoDialog(QWidget* w) :
 
     {
         QWidget *matrix = new QWidget(this);
-        QGridLayout* gLayout2 = new QGridLayout(this);
-        matrix->setLayout(gLayout2);
+        QGridLayout* gLayout2 = new QGridLayout(matrix);
         main->addWidget(matrix);
 
         QLabel *lbl = new QLabel(QString("<i>file</i>:"), m_matrix);

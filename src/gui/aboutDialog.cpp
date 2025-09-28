@@ -50,6 +50,8 @@ const char* qtString = gettext("This program uses Qt version %1<br><br><a href=\
 aboutDialog::aboutDialog(QWidget *parent) :
     QDialog(parent)
 {
+    setObjectName("About Dialog");
+
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(QString(tr("About %1")).arg(PACKAGE_NAME));
 
@@ -146,7 +148,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
 
     //QLabel *iconLabel = new QLabel(this);
     //iconLabel->setPixmap(QPixmap(":/icons/musiqt.png"));
-    
+
     QWidget *bottomWidget = new QWidget(this);
     QHBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget);
     //bottomLayout->addWidget(iconLabel);

@@ -55,6 +55,8 @@ centralFrame::centralFrame(player* p, QWidget *parent) :
     QWidget(parent),
     m_player(p)
 {
+    setObjectName("Central Frame");
+
     //connect(m_audio, &audio::outputError, this, &onPlaybackStopped);
     connect(m_player, &player::stateChanged, this, &centralFrame::changeState);
 
