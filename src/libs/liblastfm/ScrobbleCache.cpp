@@ -83,7 +83,9 @@ lastfm::ScrobbleCachePrivate::read( QDomDocument& xml )
     m_tracks.clear();
 
     QFile file( m_path );
-    file.open( QFile::Text | QFile::ReadOnly );
+    bool res = file.open( QFile::Text | QFile::ReadOnly );
+    if (!res)
+        return;
     QTextStream stream( &file );
 #if QT_VERSION >= 0x060000
     stream.setEncoding( QStringConverter::Utf8 );
@@ -118,7 +120,9 @@ lastfm::ScrobbleCachePrivate::write()
         xml.appendChild( e );
 
         QFile file( m_path );
-        file.open( QIODevice::WriteOnly | QIODevice::Text );
+        bool res = file.open( QIODevice::WriteOnly | QIODevice::Text );
+        if (!res)
+            return;
 
         QTextStream stream( &file );
 #if QT_VERSION >= 0x060000

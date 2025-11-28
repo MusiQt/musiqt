@@ -101,14 +101,16 @@ aboutDialog::aboutDialog(QWidget *parent) :
     creditsLabel->setAlignment(Qt::AlignCenter);
     {
         QFile file(":/resources/CREDITS");
-        file.open(QFile::ReadOnly|QFile::Text);
-        QTextStream ts(&file);
+        bool res = file.open(QFile::ReadOnly|QFile::Text);
+        if (res) {
+            QTextStream ts(&file);
 #if QT_VERSION >= 0x060000
-        ts.setEncoding(QStringConverter::Utf8);
+            ts.setEncoding(QStringConverter::Utf8);
 #else
-        ts.setCodec("UTF-8");
+            ts.setCodec("UTF-8");
 #endif
-        creditsLabel->setText(ts.readAll());
+            creditsLabel->setText(ts.readAll());
+        }
     }
     QScrollArea* creditsArea = new QScrollArea(this);
     creditsArea->setWidget(creditsLabel);
@@ -119,9 +121,11 @@ aboutDialog::aboutDialog(QWidget *parent) :
     licenseLabel->setReadOnly(true);
     {
         QFile file(":/resources/GPL_TEXT");
-        file.open(QFile::ReadOnly|QFile::Text);
-        QTextStream ts(&file);
-        licenseLabel->setPlainText(ts.readAll());
+        bool res = file.open(QFile::ReadOnly|QFile::Text);
+        if (res) {
+            QTextStream ts(&file);
+            licenseLabel->setPlainText(ts.readAll());
+        }
     }
 
     // Log view
@@ -130,9 +134,11 @@ aboutDialog::aboutDialog(QWidget *parent) :
     {
         const QString logFileName(QString("%1/musiqt.log").arg(syspaths::getStateDir()));
         QFile file(logFileName);
-        file.open(QFile::ReadOnly|QFile::Text);
-        QTextStream ts(&file);
-        logLabel->setPlainText(ts.readAll());
+        bool res = file.open(QFile::ReadOnly|QFile::Text);
+        if (res) {
+            QTextStream ts(&file);
+            logLabel->setPlainText(ts.readAll());
+        }
     }
 
     //
