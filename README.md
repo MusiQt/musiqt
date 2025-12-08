@@ -101,7 +101,7 @@ http://www.qt.io/
 libopenmpt >= 0.3  
 http://lib.openmpt.org/libopenmpt/
 
-zlib 1.2.x  
+zlib >= 1.2.x  
 http://www.zlib.org/
 
 libsidplayfp >= 1.0  
@@ -114,12 +114,12 @@ libopusfile >= 0.7
 http://opus-codec.org/
 
 libsndfile 1.0.x  
-https://github.com/libsndfile/libsndfile
+https://github.com/libsndfile/libsndfile/
 
 libmpcdec 1.2.x (SV7)
 or
 libmpcs 0.1 (SV8)  
-http://www.musepack.com/
+https://www.musepack.net/
 
 WavPack >= 4.x  
 http://www.wavpack.com/
@@ -128,7 +128,7 @@ libmpg123 >= 1.6.x
 http://mpg123.org/
 
 game-music-emu >= 0.6  
-https://bitbucket.org/mpyne/game-music-emu/
+https://github.com/libgme/game-music-emu/
 
 libADLMIDI >= 1.0  
 https://github.com/Wohlstand/libADLMIDI/
