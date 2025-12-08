@@ -72,7 +72,7 @@ deviceList_t qaudioBackend::getDevices()
 
 QList<QAudioDeviceInfo> devices;
 
-QStringList qaudioBackend::getDevices()
+deviceList_t qaudioBackend::getDevices()
 {
     if (devices.empty())
     {

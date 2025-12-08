@@ -27,6 +27,7 @@
 #include <QPointer>
 #include <QRunnable>
 #include <QThread>
+#include <QVariant>
 
 /*****************************************************************/
 
@@ -43,14 +44,21 @@ struct device_t
     QString name;
     QString id;
 
-    inline bool operator==(const device_t &other) {
-        return this->id.compare(other.id) == 0;
-    }
+    device_t(QString device) :
+        name(device),
+        id(device)
+    {}
 };
 
+#if QT_VERSION >= 0x060000
 inline bool operator==(const device_t &lhs, const QString &rhs) {
     return lhs.id.compare(rhs) == 0;
 }
+#else
+inline bool operator==(const device_t &lhs, const device_t &rhs) {
+    return lhs.id.compare(rhs.id) == 0;
+}
+#endif
 
 using deviceList_t = QList<device_t>;
 
