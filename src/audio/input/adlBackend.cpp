@@ -29,6 +29,8 @@
 #include <QLineEdit>
 #include <QPushButton>
 
+#include <cmath>
+
 #define EXT "mid|midi"
 
 #define CREDITS "libADLMIDI library<br>Copyright \302\251 Vitaly Novichkov."
