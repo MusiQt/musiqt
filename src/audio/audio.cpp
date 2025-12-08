@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2023 Leandro Nini
+ *  Copyright (C) 2006-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -215,19 +215,30 @@ audioConfig::audioConfig(QWidget* win) :
     matrix()->addWidget(cardList);
 
     {
-        const QStringList deviceNames = qaudioBackend::getDevices();
-        int devices = deviceNames.size();
-        cardList->addItems(deviceNames);
-        cardList->setMaxVisibleItems((devices > 5) ? 5 : devices);
+        // Get a list of audio devices
+        const deviceList_t devices = qaudioBackend::getDevices();
+        for (auto device: devices)
+            cardList->addItem(device.name.replace("\n", " - "), device.id);
 
-        int val = cardList->findText(SETTINGS->card());
-        if (val >= 0)
+        int deviceCnt = devices.size();
+        cardList->setMaxVisibleItems((deviceCnt > 5) ? 5 : deviceCnt);
+
+        // Find configured device in list
+        QString card = SETTINGS->card();
+        int val = cardList->findData(card);
+        if (val >= 0) {
             cardList->setCurrentIndex(val);
+        } else {
+            // backward compatibility
+            val = cardList->findText(card.replace("\n", " - "));
+            if (val >= 0)
+                cardList->setCurrentIndex(val);
+        }
     }
 
     connect(cardList, QOverload<int>::of(&QComboBox::currentIndexChanged),
         [cardList, this](int val) {
-            QString card = cardList->itemText(val);
+            QString card = cardList->itemData(val).toString();
 
             qDebug() << "onCmdCard" << card;
 
