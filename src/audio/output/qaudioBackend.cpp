@@ -44,7 +44,7 @@ void deviceLoader::run()
 
 QList<QAudioDevice> devices;
 
-QStringList qaudioBackend::getDevices()
+deviceList_t qaudioBackend::getDevices()
 {
     if (devices.empty())
     {
@@ -58,11 +58,11 @@ QStringList qaudioBackend::getDevices()
         }
     }
 
-    QStringList deviceNames;
+    deviceList_t deviceNames;
 
     for (const QAudioDevice &device: devices)
     {
-        deviceNames.append(device.description());
+        deviceNames.append({device.description(), QString(device.id())});
     }
 
     return deviceNames;
@@ -72,7 +72,7 @@ QStringList qaudioBackend::getDevices()
 
 QList<QAudioDeviceInfo> devices;
 
-QStringList qaudioBackend::getDevices()
+deviceList_t qaudioBackend::getDevices()
 {
     if (devices.empty())
     {
@@ -85,11 +85,12 @@ QStringList qaudioBackend::getDevices()
         }
     }
 
-    QStringList deviceNames;
+    deviceList_t deviceNames;
 
     for (const QAudioDeviceInfo &deviceInfo: devices)
     {
-        deviceNames.append(deviceInfo.deviceName().toUtf8().constData());
+        QString name = deviceInfo.deviceName();
+        deviceNames.append({name, name});
     }
 
     return deviceNames;

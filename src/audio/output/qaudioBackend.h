@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2023 Leandro Nini
+ *  Copyright (C) 2006-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include <QPointer>
 #include <QRunnable>
 #include <QThread>
+#include <QVariant>
 
 /*****************************************************************/
 
@@ -37,6 +38,29 @@ public:
 };
 
 /*****************************************************************/
+
+struct device_t
+{
+    QString name;
+    QString id;
+
+    device_t(QString device) :
+        name(device),
+        id(device)
+    {}
+};
+
+#if QT_VERSION >= 0x060000
+inline bool operator==(const device_t &lhs, const QString &rhs) {
+    return lhs.id.compare(rhs) == 0;
+}
+#else
+inline bool operator==(const device_t &lhs, const device_t &rhs) {
+    return lhs.id.compare(rhs.id) == 0;
+}
+#endif
+
+using deviceList_t = QList<device_t>;
 
 /**
  * QAudio output backend
@@ -66,7 +90,7 @@ public:
 
     ~qaudioBackend() override;
 
-    static QStringList getDevices();
+    static deviceList_t getDevices();
 
     /// init audio
     /// @throws initError
