@@ -62,7 +62,8 @@ deviceList_t qaudioBackend::getDevices()
 
     for (const QAudioDevice &device: devices)
     {
-        deviceNames.append({device.description(), QString(device.id())});
+        device_t d = {device.description(), QString(device.id())};
+        deviceNames.append(d);
     }
 
     return deviceNames;
@@ -89,8 +90,8 @@ deviceList_t qaudioBackend::getDevices()
 
     for (const QAudioDeviceInfo &deviceInfo: devices)
     {
-        QString name = deviceInfo.deviceName();
-        deviceNames.append({name, name});
+        device_t d = {deviceInfo.deviceName()};
+        deviceNames.append(d);
     }
 
     return deviceNames;

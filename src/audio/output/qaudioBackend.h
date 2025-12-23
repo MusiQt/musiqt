@@ -48,17 +48,16 @@ struct device_t
         name(device),
         id(device)
     {}
-};
 
-#if QT_VERSION >= 0x060000
-inline bool operator==(const device_t &lhs, const QString &rhs) {
-    return lhs.id.compare(rhs) == 0;
-}
-#else
-inline bool operator==(const device_t &lhs, const device_t &rhs) {
-    return lhs.id.compare(rhs.id) == 0;
-}
-#endif
+    device_t(QString device, QString id) :
+        name(device),
+        id(id)
+    {}
+
+    inline bool operator==(const device_t &other) const {
+        return this->id.compare(other.id) == 0;
+    }
+};
 
 using deviceList_t = QList<device_t>;
 
