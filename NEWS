@@ -1,3 +1,9 @@
+* musiqt-3.3.1 - Dec 23, 2025
+Fixed display of sound card list
+Few minor fixes
+
+
+
 * musiqt-3.3.0 - Sep 23, 2025
 Added new midi backend based on libADLMIDI
 Added file location and backend name to info dialog
