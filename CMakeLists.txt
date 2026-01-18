@@ -33,13 +33,14 @@ endif()
 
 add_executable(musiqt)
 
-target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/audio)
-target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/gui)
-target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/trackList)
-target_include_directories(musiqt PRIVATE ${CMAKE_SOURCE_DIR}/src/utils)
-target_include_directories(musiqt PRIVATE ${CMAKE_BINARY_DIR}/src)
-target_include_directories(musiqt PRIVATE ${CMAKE_BINARY_DIR})
+target_include_directories(musiqt PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/audio
+    ${CMAKE_SOURCE_DIR}/src/gui
+    ${CMAKE_SOURCE_DIR}/src/trackList
+    ${CMAKE_SOURCE_DIR}/src/utils
+    ${CMAKE_BINARY_DIR}/src
+    ${CMAKE_BINARY_DIR})
 
 target_sources(musiqt PRIVATE
     src/resources.qrc
