@@ -252,7 +252,7 @@ void centralFrame::createHomeMenu()
         if (!musicDir.isEmpty())
         {
             QString name = IFACTORY->name(i);
-            QAction *action = menu->addAction(ic->icon(), name.append(tr(" music location")));
+            QAction *action = menu->addAction(ic->icon(), QString(tr("%1 music location").arg(name)));
             action->setData(musicDir);
             action->setStatusTip(musicDir);
             homeGroup->addAction(action);
