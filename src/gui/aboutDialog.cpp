@@ -38,7 +38,7 @@
 #include "syspaths.h"
 
 #define AUTHOR  "Leandro Nini"
-#define YEAR    "2006-2025"
+#define YEAR    "2006-2026"
 
 #define gettext(x) x
 
