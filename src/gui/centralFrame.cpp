@@ -51,6 +51,8 @@
 #include <QWidgetAction>
 #include <QDebug>
 
+#include <memory>
+
 centralFrame::centralFrame(player* p, QWidget *parent) :
     QWidget(parent),
     m_player(p)
@@ -244,7 +246,7 @@ void centralFrame::createHomeMenu()
 
     for (int i=0; i<IFACTORY->num(); i++)
     {
-        inputConfig* ic = IFACTORY->getConfig(i);
+        std::unique_ptr<inputConfig> ic(IFACTORY->getConfig(i));
 
         QString musicDir = ic->getMusicDir();
         if (!musicDir.isEmpty())
@@ -255,8 +257,6 @@ void centralFrame::createHomeMenu()
             action->setStatusTip(musicDir);
             homeGroup->addAction(action);
         }
-
-        delete ic;
     }
     connect(homeGroup, &QActionGroup::triggered, this, &centralFrame::onHome);
 }
