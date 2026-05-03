@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(musiqt VERSION 3.3.1 HOMEPAGE_URL https://github.com/MusiQt/musiqt)
+project(musiqt VERSION 3.3.2 HOMEPAGE_URL https://github.com/MusiQt/musiqt)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -288,6 +288,7 @@ if(ZLIB_FOUND)
     add_compile_definitions(NOUNCRYPT)
     SET(HAVE_LIBZ 1)
     target_sources(musiqt PRIVATE
+        src/libs/unzip/ints.h
         src/libs/unzip/ioapi.h
         src/libs/unzip/ioapi.c
         src/libs/unzip/unzip.h
