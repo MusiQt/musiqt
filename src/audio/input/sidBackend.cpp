@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2025 Leandro Nini
+ *  Copyright (C) 2006-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -360,7 +360,9 @@ void sidBackend::createEmu()
     if (!m_config.engine().compare(engines[eng++]))
     {
         ReSIDfpBuilder *tmpResid = new ReSIDfpBuilder("Musiqt reSIDfp");
+#ifndef FEAT_NO_CREATE
         tmpResid->create(emu->info().maxsids());
+#endif
 #ifndef FEAT_FILTER_DISABLE
         tmpResid->filter(m_config.filter());
 #endif
@@ -384,7 +386,9 @@ void sidBackend::createEmu()
     if (!m_config.engine().compare(engines[eng++]))
     {
         ReSIDBuilder *tmpResid = new ReSIDBuilder("Musiqt reSID");
+#ifndef FEAT_NO_CREATE
         tmpResid->create(emu->info().maxsids());
+#endif
 #ifndef FEAT_FILTER_DISABLE
         tmpResid->filter(m_config.filter());
 #endif
@@ -397,7 +401,9 @@ void sidBackend::createEmu()
     if (!m_config.engine().compare(engines[eng++]))
     {
         HardSIDBuilder *tmpHardsid = new HardSIDBuilder("Musiqt hardSID");
+#ifndef FEAT_NO_CREATE
         tmpHardsid->create(emu->info().maxsids());
+#endif
 #ifndef FEAT_FILTER_DISABLE
         tmpHardsid->filter(m_config.filter());
 #endif
@@ -408,7 +414,9 @@ void sidBackend::createEmu()
     if (!m_config.engine().compare(engines[eng++]))
     {
         exSIDBuilder *tmpExsid = new exSIDBuilder("Musiqt exSID");
+#ifndef FEAT_NO_CREATE
         tmpExsid->create(emu->info().maxsids());
+#endif
 #ifndef FEAT_FILTER_DISABLE
         tmpExsid->filter(m_config.filter());
 #endif
@@ -426,7 +434,9 @@ void sidBackend::createEmu()
     cfg.forceC64Model = m_config.forceC64Model();
     cfg.defaultSidModel = m_config.sidModel();
     cfg.forceSidModel = m_config.forceSidModel();
+#ifndef FEAT_NEW_PLAY_API
     cfg.playback = (m_config.channels() == 2) ? SidConfig::STEREO : SidConfig::MONO;
+#endif
     cfg.frequency = m_config.samplerate();
     cfg.secondSidAddress = m_config.secondSidAddress();
 #ifdef FEAT_THIRD_SID
@@ -437,7 +447,9 @@ void sidBackend::createEmu()
 #endif
     cfg.sidEmulation = emuSid;
     cfg.samplingMethod = m_config.samplingMethod();
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
     cfg.fastSampling = m_config.fastSampling();
+#endif
     if (!emu->config(cfg))
     {
         delete emuSid;

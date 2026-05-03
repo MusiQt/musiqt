@@ -54,4 +54,8 @@
 #  define FEAT_NEW_PLAY_API
 #endif
 
+#if LIBSIDPLAYFP_VERSION_MAJ > 2
+#  define FEAT_NO_CREATE
+#endif
+
 #endif
