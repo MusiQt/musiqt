@@ -38,7 +38,7 @@ private:
     wvConfigFrame& operator=(const wvConfigFrame&) = delete;
 
 public:
-    wvConfigFrame(QWidget* win);
+    explicit wvConfigFrame(QWidget* win);
     ~wvConfigFrame() override = default;
 };
 
@@ -76,7 +76,7 @@ private:
     void getId3Tag(const char* tag, metaData::mpris_t meta);
 
 private:
-    wvBackend(const QString& fileName);
+    explicit wvBackend(const QString& fileName);
 
     wvBackend(const wvBackend&) = delete;
     wvBackend& operator=(wvBackend) = delete;

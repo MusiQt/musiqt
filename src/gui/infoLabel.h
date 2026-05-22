@@ -31,7 +31,7 @@ private:
     infoLabel &operator=(const infoLabel&) = delete;
 
 public:
-    infoLabel(QWidget* p) :
+    explicit infoLabel(QWidget* p) :
         QLabel(p) {}
 
     void setInfo(const metaData *data);

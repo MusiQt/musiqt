@@ -53,7 +53,7 @@ private:
     adlConfigFrame& operator=(const adlConfigFrame&) = delete;
 
 public:
-    adlConfigFrame(QWidget* win);
+    explicit adlConfigFrame(QWidget* win);
     ~adlConfigFrame() override = default;
 };
 
@@ -67,7 +67,7 @@ private:
     static adlConfig_t m_settings;
 
 public:
-    adlConfig(const char name[]) :
+    explicit adlConfig(const char name[]) :
         inputConfig(name)
     {
         loadSettings();
@@ -103,7 +103,7 @@ private:
     adlConfig m_config;
 
 private:
-    adlBackend(const QString& fileName);
+    explicit adlBackend(const QString& fileName);
 
     adlBackend(const adlBackend&) = delete;
     adlBackend& operator=(adlBackend) = delete;

@@ -26,7 +26,7 @@
 class trackListDir final : public trackListBackend
 {
 public:
-    trackListDir(const QString &path) : trackListBackend(path) {}
+    explicit trackListDir(const QString &path) : trackListBackend(path) {}
 
     /// Load playlist
     tracks_t load() override

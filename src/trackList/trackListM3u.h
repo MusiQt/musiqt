@@ -26,7 +26,7 @@
 class trackListM3u final : public trackListBackend
 {
 public:
-    trackListM3u(const QString &path) : trackListBackend(path) {}
+    explicit trackListM3u(const QString &path) : trackListBackend(path) {}
 
     /// Load playlist
     tracks_t load() override

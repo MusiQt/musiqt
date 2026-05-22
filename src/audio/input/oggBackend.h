@@ -45,7 +45,7 @@ private:
     oggConfigFrame& operator=(const oggConfigFrame&) = delete;
 
 public:
-    oggConfigFrame(QWidget* win);
+    explicit oggConfigFrame(QWidget* win);
     ~oggConfigFrame() override = default;
 };
 
@@ -100,7 +100,7 @@ private:
     static long tell_func(void *datasource);
 
 private:
-    oggBackend(const QString& fileName);
+    explicit oggBackend(const QString& fileName);
 
     oggBackend(const oggBackend&) = delete;
     oggBackend& operator=(oggBackend) = delete;

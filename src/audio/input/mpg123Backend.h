@@ -46,7 +46,7 @@ private:
     mpg123ConfigFrame& operator=(const mpg123ConfigFrame&) = delete;
 
 public:
-    mpg123ConfigFrame(QWidget* win);
+    explicit mpg123ConfigFrame(QWidget* win);
     ~mpg123ConfigFrame() override = default;
 };
 
@@ -99,7 +99,7 @@ public:
     static QStringList m_decoders;
 
 private:
-    mpg123Backend(const QString& fileName);
+    explicit mpg123Backend(const QString& fileName);
 
     mpg123Backend(const mpg123Backend&) = delete;
     mpg123Backend& operator=(mpg123Backend) = delete;

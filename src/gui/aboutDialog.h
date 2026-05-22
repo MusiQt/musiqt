@@ -24,7 +24,7 @@
 class aboutDialog : public QDialog
 {
 public:
-    aboutDialog(QWidget *parent);
+    explicit aboutDialog(QWidget *parent);
 };
 
 #endif

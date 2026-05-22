@@ -59,7 +59,7 @@ private:
     gmeConfigFrame& operator=(const gmeConfigFrame&) = delete;
 
 public:
-    gmeConfigFrame(QWidget* win);
+    explicit gmeConfigFrame(QWidget* win);
     ~gmeConfigFrame() override = default;
 };
 
@@ -73,7 +73,7 @@ private:
     static gmeConfig_t m_settings;
 
 public:
-    gmeConfig(const char name[]) :
+    explicit gmeConfig(const char name[]) :
         inputConfig(name)
     {
         loadSettings();
@@ -117,7 +117,7 @@ private:
     gmeConfig m_config;
 
 private:
-    gmeBackend(const QString& fileName);
+    explicit gmeBackend(const QString& fileName);
 
     gmeBackend(const gmeBackend&) = delete;
     gmeBackend& operator=(gmeBackend) = delete;

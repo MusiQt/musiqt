@@ -30,7 +30,7 @@ extern "C" {
 class trackListCue final : public trackListBackend
 {
 public:
-    trackListCue(const QString &path) : trackListBackend(path) {}
+    explicit trackListCue(const QString &path) : trackListBackend(path) {}
 
     /// Load playlist
     tracks_t* load() override

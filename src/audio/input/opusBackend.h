@@ -38,7 +38,7 @@ private:
     opusConfigFrame& operator=(const opusConfigFrame&) = delete;
 
 public:
-    opusConfigFrame(QWidget* win);
+    explicit opusConfigFrame(QWidget* win);
     ~opusConfigFrame() override = default;
 };
 
@@ -79,7 +79,7 @@ private:
     static opus_int64 tell_func(void *_stream);
 
 private:
-    opusBackend(const QString& fileName);
+    explicit opusBackend(const QString& fileName);
 
     opusBackend(const opusBackend&) = delete;
     opusBackend& operator=(opusBackend) = delete;

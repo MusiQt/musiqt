@@ -31,7 +31,7 @@ private:
     AutoDLL &operator=(const AutoDLL&) = delete;
 
 public:
-    AutoDLL(const char* nm);
+    explicit AutoDLL(const char* nm);
 
     ~AutoDLL();
 

@@ -36,7 +36,7 @@ private:
     trackListBackend& operator= (const trackListBackend&) = delete;
 
 protected:
-    trackListBackend(const QString &path) : m_path(path) {}
+    explicit trackListBackend(const QString &path) : m_path(path) {}
 
     static void writeLine(QTextStream& outputStream, QString line)
     {

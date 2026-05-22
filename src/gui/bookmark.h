@@ -33,7 +33,7 @@ private:
     bookmark& operator=(const bookmark&) = delete;
 
 public:
-    bookmark(QWidget * parent) :
+    explicit bookmark(QWidget * parent) :
         QListWidget(parent)
     {
         setAcceptDrops(true);

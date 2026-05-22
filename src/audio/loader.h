@@ -37,7 +37,7 @@ signals:
     void loaded(input* res);
 
 public:
-    loader(QString name) :
+    explicit loader(QString name) :
         QThread(),
         m_fileName(name)
    {}

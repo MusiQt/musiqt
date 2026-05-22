@@ -44,7 +44,7 @@ private:
     sndConfigFrame& operator=(const sndConfigFrame&) = delete;
 
 public:
-    sndConfigFrame(QWidget* win);
+    explicit sndConfigFrame(QWidget* win);
     ~sndConfigFrame() override = default;
 };
 
@@ -53,7 +53,7 @@ public:
 class sndConfig final : public inputConfig
 {
 public:
-    sndConfig(const char name[]) :
+    explicit sndConfig(const char name[]) :
         inputConfig(name)
     {}
 
@@ -74,7 +74,7 @@ private:
     sndConfig m_config;
 
 private:
-    sndBackend(const QString& fileName);
+    explicit sndBackend(const QString& fileName);
 
     sndBackend(const sndBackend&) = delete;
     sndBackend& operator=(sndBackend) = delete;

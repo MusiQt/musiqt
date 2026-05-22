@@ -55,7 +55,7 @@ private:
     ffmpegConfigFrame& operator=(const ffmpegConfigFrame&) = delete;
 
 public:
-    ffmpegConfigFrame(QWidget* win);
+    explicit ffmpegConfigFrame(QWidget* win);
     ~ffmpegConfigFrame() override = default;
 };
 
@@ -127,7 +127,7 @@ private:
     static AVRational (*dl_av_get_time_base_q)();
 
 private:
-    ffmpegBackend(const QString& fileName);
+    explicit ffmpegBackend(const QString& fileName);
 
     ffmpegBackend(const ffmpegBackend&) = delete;
     ffmpegBackend& operator=(ffmpegBackend) = delete;

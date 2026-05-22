@@ -45,7 +45,7 @@ protected:
     bool checkPath(const QString& path);
 
 public:
-    configFrame(QWidget* p, const char* credits=nullptr, const char* link=nullptr);
+    explicit configFrame(QWidget* p, const char* credits=nullptr, const char* link=nullptr);
     ~configFrame() override = default;
 };
 

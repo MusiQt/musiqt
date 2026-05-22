@@ -50,7 +50,7 @@ private:
     mpcConfigFrame& operator=(const mpcConfigFrame&) = delete;
 
 public:
-    mpcConfigFrame(QWidget* win);
+    explicit mpcConfigFrame(QWidget* win);
     ~mpcConfigFrame() override = default;
 };
 
@@ -103,7 +103,7 @@ private:
     static mpc_bool_t canseek_func(DATAPARM);
 
 private:
-    mpcBackend(const QString& fileName);
+    explicit mpcBackend(const QString& fileName);
 
     mpcBackend(const mpcBackend&) = delete;
     mpcBackend& operator=(mpcBackend) = delete;

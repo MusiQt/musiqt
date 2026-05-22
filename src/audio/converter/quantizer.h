@@ -66,7 +66,7 @@ private:
     int get32(const int sample, const unsigned int channel);
 
 public:
-    quantizerFixed(const unsigned int fract);
+    explicit quantizerFixed(const unsigned int fract);
     ~quantizerFixed() override = default;
 
     /// Get dithered sample
@@ -82,7 +82,7 @@ protected:
     unsigned int _random[2][2];
 
 private:
-    quantizerFloat(const quantizerFloat<O>&);
+    explicit quantizerFloat(const quantizerFloat<O>&);
     quantizerFloat<O>& operator=(const quantizerFloat<O>&);
 
     int get32(const float sample, const unsigned int channel, const int max);

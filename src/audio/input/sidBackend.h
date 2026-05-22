@@ -84,7 +84,7 @@ private:
     sidConfigFrame& operator=(const sidConfigFrame&) = delete;
 
 public:
-    sidConfigFrame(QWidget* win);
+    explicit sidConfigFrame(QWidget* win);
     ~sidConfigFrame() override = default;
 };
 
@@ -183,7 +183,7 @@ private:
 #endif
 
 private:
-    sidBackend(const QString& fileName);
+    explicit sidBackend(const QString& fileName);
 
     sidBackend(const sidBackend&) = delete;
     sidBackend& operator=(sidBackend) = delete;

@@ -47,7 +47,7 @@ private:
     hvlConfigFrame& operator=(const hvlConfigFrame&);
 
 public:
-    hvlConfigFrame(QWidget* win);
+    explicit hvlConfigFrame(QWidget* win);
     ~hvlConfigFrame() override = default;
 };
 
@@ -95,7 +95,7 @@ private:
     hvlConfig m_config;
 
 private:
-    hvlBackend(const QString& fileName);
+    explicit hvlBackend(const QString& fileName);
 
     hvlBackend(const hvlBackend&) = delete;
     hvlBackend& operator=(hvlBackend) = delete;

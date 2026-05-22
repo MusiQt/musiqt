@@ -46,7 +46,7 @@ protected:
     qint64 bytesAvailable() const override;
 
 public:
-    InputWrapper(input* song);
+    explicit InputWrapper(input* song);
     ~InputWrapper() override;
 
     bool tryPreload(input* newSong);

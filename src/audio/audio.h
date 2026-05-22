@@ -110,7 +110,7 @@ private:
     void setCards();
 
 public:
-    audioConfig(QWidget* win);
+    explicit audioConfig(QWidget* win);
     ~audioConfig() override = default;
 };
 

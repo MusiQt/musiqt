@@ -54,7 +54,7 @@ private:
     openmptConfigFrame& operator=(const openmptConfigFrame&) = delete;
 
 public:
-    openmptConfigFrame(QWidget* win);
+    explicit openmptConfigFrame(QWidget* win);
     ~openmptConfigFrame() override = default;
 };
 
@@ -106,7 +106,7 @@ private:
     openmptConfig m_config;
 
 private:
-    openmptBackend(const QString& fileName);
+    explicit openmptBackend(const QString& fileName);
 
     openmptBackend(const openmptBackend&) = delete;
     openmptBackend& operator=(openmptBackend) = delete;

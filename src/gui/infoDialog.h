@@ -41,7 +41,7 @@ public:
     void run() override;
 
 public:
-    imageLoader(const QString& file) :
+    explicit imageLoader(const QString& file) :
         m_name(file)
     {}
 
@@ -72,7 +72,7 @@ private:
     void setDefaultImage() const;
 
 public:
-    infoDialog(QWidget*);
+    explicit infoDialog(QWidget*);
     ~infoDialog() override;
 
     void setInfo(const metaData*);
