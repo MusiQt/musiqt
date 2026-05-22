@@ -40,7 +40,7 @@ private:
     QSettings m_settings;
 
 private:
-    inline QString section(const char* key) { return QString("%1 Settings/%2").arg(name()).arg(key); }
+    inline QString section(const char* key) const { return QString("%1 Settings/%2").arg(name()).arg(key); }
 
 protected:
     const char* name() const { return m_name; }

@@ -43,7 +43,7 @@ protected:
         outputStream << line << '\n';
     }
 
-    QString getAbsolutePath(const QString &file)
+    QString getAbsolutePath(const QString &file) const
     {
         QFileInfo fileInfo(file);
         if (fileInfo.isAbsolute())

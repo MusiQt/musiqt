@@ -95,7 +95,7 @@ size_t wvBackend::fillBuffer(void* buffer, const size_t bufferSize)
     return bufferSize;
 }
 
-void wvBackend::copyBuffer(char* dest, const int* src, size_t length)
+void wvBackend::copyBuffer(char* dest, const int* src, size_t length) const
 {
     switch (m_precision)
     {

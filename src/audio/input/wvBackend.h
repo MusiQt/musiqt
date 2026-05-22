@@ -71,7 +71,7 @@ private:
     wvConfig m_config;
 
 private:
-    void copyBuffer(char* dest, const int* src, size_t length);
+    void copyBuffer(char* dest, const int* src, size_t length) const;
     void getApeTag(const char* tag, metaData::mpris_t meta);
     void getId3Tag(const char* tag, metaData::mpris_t meta);
 
