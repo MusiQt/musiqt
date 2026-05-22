@@ -76,6 +76,9 @@ private:
 private:
     sndBackend(const QString& fileName);
 
+    sndBackend(const sndBackend&) = delete;
+    sndBackend& operator=(sndBackend) = delete;
+
 public:
     ~sndBackend() override;
 

@@ -78,6 +78,9 @@ private:
 private:
     wvBackend(const QString& fileName);
 
+    wvBackend(const wvBackend&) = delete;
+    wvBackend& operator=(wvBackend) = delete;
+
 public:
     ~wvBackend() override;
 

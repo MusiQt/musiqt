@@ -185,6 +185,9 @@ private:
 private:
     sidBackend(const QString& fileName);
 
+    sidBackend(const sidBackend&) = delete;
+    sidBackend& operator=(sidBackend) = delete;
+
     void createEmu();
 
     void deleteEmu();

@@ -101,6 +101,9 @@ public:
 private:
     mpg123Backend(const QString& fileName);
 
+    mpg123Backend(const mpg123Backend&) = delete;
+    mpg123Backend& operator=(mpg123Backend) = delete;
+
 public:
     ~mpg123Backend() override;
 

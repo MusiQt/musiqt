@@ -129,6 +129,9 @@ private:
 private:
     ffmpegBackend(const QString& fileName);
 
+    ffmpegBackend(const ffmpegBackend&) = delete;
+    ffmpegBackend& operator=(ffmpegBackend) = delete;
+
     /// Open selected stream
     void openStream();
 

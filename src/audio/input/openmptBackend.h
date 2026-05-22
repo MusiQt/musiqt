@@ -108,6 +108,9 @@ private:
 private:
     openmptBackend(const QString& fileName);
 
+    openmptBackend(const openmptBackend&) = delete;
+    openmptBackend& operator=(openmptBackend) = delete;
+
     /// Get temp file name
     const QString tempFile(const QString& fileName)
     {

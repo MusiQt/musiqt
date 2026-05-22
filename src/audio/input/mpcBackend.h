@@ -105,6 +105,9 @@ private:
 private:
     mpcBackend(const QString& fileName);
 
+    mpcBackend(const mpcBackend&) = delete;
+    mpcBackend& operator=(mpcBackend) = delete;
+
 public:
     ~mpcBackend() override;
 

@@ -97,6 +97,9 @@ private:
 private:
     hvlBackend(const QString& fileName);
 
+    hvlBackend(const hvlBackend&) = delete;
+    hvlBackend& operator=(hvlBackend) = delete;
+
 public:
     ~hvlBackend() override;
 

@@ -102,6 +102,9 @@ private:
 private:
     oggBackend(const QString& fileName);
 
+    oggBackend(const oggBackend&) = delete;
+    oggBackend& operator=(oggBackend) = delete;
+
 public:
     ~oggBackend() override;
 

@@ -81,6 +81,9 @@ private:
 private:
     opusBackend(const QString& fileName);
 
+    opusBackend(const opusBackend&) = delete;
+    opusBackend& operator=(opusBackend) = delete;
+
 public:
     ~opusBackend() override;
 

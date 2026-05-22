@@ -105,6 +105,9 @@ private:
 private:
     adlBackend(const QString& fileName);
 
+    adlBackend(const adlBackend&) = delete;
+    adlBackend& operator=(adlBackend) = delete;
+
 public:
     ~adlBackend() override;
 

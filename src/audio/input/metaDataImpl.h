@@ -38,6 +38,10 @@ private:
 
     QByteArray *m_img;
 
+private:
+    metaDataImpl(const metaDataImpl&) = delete;
+    metaDataImpl& operator=(metaDataImpl) = delete;
+
 public:
     metaDataImpl() : m_img(nullptr) {}
     ~metaDataImpl() { delete m_img; }

@@ -119,6 +119,9 @@ private:
 private:
     gmeBackend(const QString& fileName);
 
+    gmeBackend(const gmeBackend&) = delete;
+    gmeBackend& operator=(gmeBackend) = delete;
+
     void openAsma(const QString& asmaPath);
 
     void getInfo();
