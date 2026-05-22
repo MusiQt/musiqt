@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2024 Leandro Nini
+ *  Copyright (C) 2006-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,6 +55,9 @@ struct sidConfig_t
     int filter6581Range;
 #ifdef FEAT_CW_STRENGTH
     SidConfig::sid_cw_t cwStrength;
+#endif
+#ifdef FEAT_RESID_CAPS
+    bool old6581caps;
 #endif
     SidConfig::c64_model_t c64Model;
     bool forceC64Model;
@@ -129,6 +132,9 @@ public:
     int filter6581Range() const { return m_settings.filter6581Range; }
 #ifdef FEAT_CW_STRENGTH
     SidConfig::sid_cw_t cwStrength() const { return m_settings.cwStrength; }
+#endif
+#ifdef FEAT_RESID_CAPS
+    bool old6581caps() const { return m_settings.old6581caps; }
 #endif
     SidConfig::c64_model_t c64Model() const { return m_settings.c64Model; }
 

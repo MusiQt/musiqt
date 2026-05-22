@@ -56,6 +56,7 @@
 
 #if LIBSIDPLAYFP_VERSION_MAJ > 2
 #  define FEAT_NO_CREATE
+#  define FEAT_RESID_CAPS
 #endif
 
 #endif

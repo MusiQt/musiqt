@@ -159,6 +159,9 @@ void sidConfig::loadSettings()
 #ifdef FEAT_CW_STRENGTH
     m_settings.cwStrength = (SidConfig::sid_cw_t)load("Combined waveforms strength", SidConfig::AVERAGE);
 #endif
+#ifdef FEAT_RESID_CAPS
+    m_settings.old6581caps = load("Old 6581 capacitors", false);
+#endif
     m_settings.c64Model = (SidConfig::c64_model_t)load("C64 Model", SidConfig::PAL);
     m_settings.sidModel = (SidConfig::sid_model_t)load("SID model", SidConfig::MOS6581);
     m_settings.forceC64Model = load("Force C64 Model", false);
@@ -186,6 +189,9 @@ void sidConfig::saveSettings()
     save("Filter 6581 Range", m_settings.filter6581Range);
 #ifdef FEAT_CW_STRENGTH
     save("Combined waveforms strength", m_settings.cwStrength);
+#endif
+#ifdef FEAT_RESID_CAPS
+    save("Old 6581 capacitors", m_settings.old6581caps);
 #endif
     save("C64 Model", m_settings.c64Model);
     save("SID model", m_settings.sidModel);
@@ -377,6 +383,9 @@ void sidBackend::createEmu()
 #endif
 #ifdef FEAT_CW_STRENGTH
         tmpResid->combinedWaveformsStrength(m_config.cwStrength());
+#endif
+#ifdef FEAT_RESID_CAPS
+        tmpResid->enableOld6581caps(m_config.old6581caps());
 #endif
 
         emuSid = (sidbuilder*)tmpResid;
@@ -974,6 +983,19 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
             SIDSETTINGS.digiboost = val;
         }
     );
+    cBox = new QCheckBox(tr("Old 6581 caps"));
+    cBox->setChecked(SIDSETTINGS.old6581caps);
+    cBox->setToolTip(tr("Old 2200pF capacitors for 6581 filter, in place of the standard 470pF ones.\nWhen enabled the filter cutoff is lower."));
+    vert->addWidget(cBox);
+#ifdef FEAT_RESID_CAPS
+    connect(cBox, &QCheckBox::toggled,
+        [](bool val) {
+            SIDSETTINGS.old6581caps = val;
+        }
+    );
+#else
+    cBox->setDisabled(true);
+#endif
 
     QVBoxLayout *biasFrame = new QVBoxLayout();
     vert->addLayout(biasFrame);
