@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2023 Leandro Nini
+ *  Copyright (C) 2009-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,20 +22,8 @@
 #include "converter.h"
 #include "inputTypes.h"
 
-#define CFACTORY cFactory::instance()
-
-class cFactory
+namespace cFactory
 {
-protected:
-    cFactory() {}
-    cFactory(const cFactory&);
-    cFactory& operator= (const cFactory&);
-    ~cFactory() = default;
-
-public:
-    /// Get singleton instance
-    static cFactory* instance();
-
     /// Instantiate backend
     converter* get(audioFormat_t inFormat, audioFormat_t outFormat,
         unsigned int fract);

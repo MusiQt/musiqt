@@ -226,7 +226,7 @@ bool InputWrapper::setFormat(audioFormat_t format)
     songFormat.sampleType = m_currentSong->precision();
 
     // Check if soundcard supports requested samplerate
-    m_audioConverter = CFACTORY->get(songFormat, format, m_currentSong->fract());
+    m_audioConverter = cFactory::get(songFormat, format, m_currentSong->fract());
 
     return true;
 }

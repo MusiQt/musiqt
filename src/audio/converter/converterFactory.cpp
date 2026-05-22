@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2023 Leandro Nini
+ *  Copyright (C) 2009-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,13 +24,10 @@
 
 #include "converters.h"
 
-cFactory* cFactory::instance()
+namespace cFactory
 {
-    static cFactory o;
-    return &o;
-}
 
-converter* cFactory::get(audioFormat_t inFormat, audioFormat_t outFormat,
+converter* get(audioFormat_t inFormat, audioFormat_t outFormat,
         unsigned int fract)
 {
     switch (inFormat.sampleType)
@@ -117,4 +114,6 @@ converter* cFactory::get(audioFormat_t inFormat, audioFormat_t outFormat,
     default:
         return nullptr;
     }
+}
+
 }
