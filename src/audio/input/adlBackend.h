@@ -45,7 +45,7 @@ struct adlConfig_t
 
 class QLineEdit;
 
-class adlConfigFrame : public configFrame
+class adlConfigFrame final : public configFrame
 {
 private:
     adlConfigFrame() {}
@@ -59,7 +59,7 @@ public:
 
 /*****************************************************************/
 
-class adlConfig : public inputConfig
+class adlConfig final : public inputConfig
 {
     friend class adlConfigFrame;
 
@@ -89,7 +89,7 @@ public:
 
 /*****************************************************************/
 
-class adlBackend : public input
+class adlBackend final : public input
 {
 private:
     struct ADL_MIDIPlayer *m_player;

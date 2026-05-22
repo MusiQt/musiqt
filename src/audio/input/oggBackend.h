@@ -37,7 +37,7 @@ struct oggConfig_t
 
 #include "configFrame.h"
 
-class oggConfigFrame : public configFrame
+class oggConfigFrame final : public configFrame
 {
 private:
     oggConfigFrame() {}
@@ -51,7 +51,7 @@ public:
 
 /*****************************************************************/
 
-class oggConfig : public inputConfig
+class oggConfig final : public inputConfig
 {
     friend class oggConfigFrame;
 
@@ -77,7 +77,7 @@ public:
 
 /*****************************************************************/
 
-class oggBackend : public input
+class oggBackend final : public input
 {
 private:
     OggVorbis_File *m_vf;

@@ -36,7 +36,7 @@
 
 #include "configFrame.h"
 
-class sndConfigFrame : public configFrame
+class sndConfigFrame final : public configFrame
 {
 private:
     sndConfigFrame() {}
@@ -50,7 +50,7 @@ public:
 
 /*****************************************************************/
 
-class sndConfig : public inputConfig
+class sndConfig final : public inputConfig
 {
 public:
     sndConfig(const char name[]) :
@@ -63,7 +63,7 @@ public:
 
 /*****************************************************************/
 
-class sndBackend : public input
+class sndBackend final : public input
 {
 private:
     SNDFILE *m_sf;

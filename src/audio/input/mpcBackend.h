@@ -42,7 +42,7 @@
 
 #include "configFrame.h"
 
-class mpcConfigFrame : public configFrame
+class mpcConfigFrame final : public configFrame
 {
 private:
     mpcConfigFrame() {}
@@ -56,7 +56,7 @@ public:
 
 /*****************************************************************/
 
-class mpcConfig : public inputConfig
+class mpcConfig final : public inputConfig
 {
 public:
     mpcConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
@@ -69,7 +69,7 @@ public:
 
 /*****************************************************************/
 
-class mpcBackend : public input
+class mpcBackend final : public input
 {
     friend class mpcConfigFrame;
 

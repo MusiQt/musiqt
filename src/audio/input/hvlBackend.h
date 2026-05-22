@@ -37,7 +37,7 @@ struct hvlConfig_t
 
 #include "configFrame.h"
 
-class hvlConfigFrame : public configFrame
+class hvlConfigFrame final : public configFrame
 {
     Q_OBJECT
 
@@ -53,7 +53,7 @@ public:
 
 /*****************************************************************/
 
-class hvlConfig : public inputConfig
+class hvlConfig final : public inputConfig
 {
     friend class hvlConfigFrame;
 
@@ -79,7 +79,7 @@ public:
 
 /*****************************************************************/
 
-class hvlBackend : public input
+class hvlBackend final : public input
 {
     friend class hvlConfigFrame;
 

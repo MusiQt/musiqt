@@ -76,7 +76,7 @@ struct sidConfig_t
 
 class QLineEdit;
 
-class sidConfigFrame : public configFrame
+class sidConfigFrame final : public configFrame
 {
 private:
     sidConfigFrame() {}
@@ -90,7 +90,7 @@ public:
 
 /*****************************************************************/
 
-class sidConfig : public inputConfig
+class sidConfig final : public inputConfig
 {
     friend class sidConfigFrame;
 
@@ -161,7 +161,7 @@ public:
 
 /*****************************************************************/
 
-class sidBackend : public input
+class sidBackend final : public input
 {
 private:
     sidplayfp *m_sidplayfp;

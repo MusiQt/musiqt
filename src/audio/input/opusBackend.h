@@ -30,7 +30,7 @@
 
 #include "configFrame.h"
 
-class opusConfigFrame : public configFrame
+class opusConfigFrame final : public configFrame
 {
 private:
     opusConfigFrame() {}
@@ -44,7 +44,7 @@ public:
 
 /*****************************************************************/
 
-class opusConfig : public inputConfig
+class opusConfig final : public inputConfig
 {
     friend class opusConfigFrame;
 
@@ -59,7 +59,7 @@ public:
 
 /*****************************************************************/
 
-class opusBackend : public input
+class opusBackend final : public input
 {
 private:
     OggOpusFile *m_of;

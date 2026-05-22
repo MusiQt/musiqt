@@ -30,7 +30,7 @@ extern "C" {
 
 #include "configFrame.h"
 
-class wvConfigFrame : public configFrame
+class wvConfigFrame final : public configFrame
 {
 private:
     wvConfigFrame() {}
@@ -44,7 +44,7 @@ public:
 
 /*****************************************************************/
 
-class wvConfig : public inputConfig
+class wvConfig final : public inputConfig
 {
 public:
     wvConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
@@ -57,7 +57,7 @@ public:
 
 /*****************************************************************/
 
-class wvBackend : public input
+class wvBackend final : public input
 {
 private:
     WavpackContext *m_wvContext;

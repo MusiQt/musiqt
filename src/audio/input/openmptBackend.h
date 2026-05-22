@@ -46,7 +46,7 @@ struct openmptConfig_t
 #include <QFile>
 #include <QFileInfo>
 
-class openmptConfigFrame : public configFrame
+class openmptConfigFrame final : public configFrame
 {
 private:
     openmptConfigFrame() {}
@@ -60,7 +60,7 @@ public:
 
 /*****************************************************************/
 
-class openmptConfig : public inputConfig
+class openmptConfig final : public inputConfig
 {
     friend class openmptConfigFrame;
 
@@ -96,7 +96,7 @@ public:
 
 /*****************************************************************/
 
-class openmptBackend : public input
+class openmptBackend final : public input
 {
 private:
     openmpt::module *m_module;

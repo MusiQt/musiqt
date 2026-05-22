@@ -51,7 +51,7 @@ struct gmeConfig_t
 
 class QLineEdit;
 
-class gmeConfigFrame : public configFrame
+class gmeConfigFrame final : public configFrame
 {
 private:
     gmeConfigFrame() {}
@@ -65,7 +65,7 @@ public:
 
 /*****************************************************************/
 
-class gmeConfig : public inputConfig
+class gmeConfig final : public inputConfig
 {
     friend class gmeConfigFrame;
 
@@ -104,7 +104,7 @@ public:
 
 /*****************************************************************/
 
-class gmeBackend : public input
+class gmeBackend final : public input
 {
 private:
     Music_Emu *m_emu;

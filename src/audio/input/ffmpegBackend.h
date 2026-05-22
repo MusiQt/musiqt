@@ -47,7 +47,7 @@ extern "C" {
 
 #include "configFrame.h"
 
-class ffmpegConfigFrame : public configFrame
+class ffmpegConfigFrame final : public configFrame
 {
 private:
     ffmpegConfigFrame() {}
@@ -61,7 +61,7 @@ public:
 
 /*****************************************************************/
 
-class ffmpegConfig : public inputConfig
+class ffmpegConfig final : public inputConfig
 {
 public:
     ffmpegConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
@@ -74,7 +74,7 @@ public:
 
 /*****************************************************************/
 
-class ffmpegBackend : public input
+class ffmpegBackend final : public input
 {
 private:
     AVStream *m_audioStream;

@@ -38,7 +38,7 @@ struct mpg123Config_t
 
 #include "configFrame.h"
 
-class mpg123ConfigFrame : public configFrame
+class mpg123ConfigFrame final : public configFrame
 {
 private:
     mpg123ConfigFrame() {}
@@ -52,7 +52,7 @@ public:
 
 /*****************************************************************/
 
-class mpg123Config : public inputConfig
+class mpg123Config final : public inputConfig
 {
     friend class mpg123ConfigFrame;
 
