@@ -984,10 +984,10 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
         }
     );
     cBox = new QCheckBox(tr("Old 6581 caps"));
-    cBox->setChecked(SIDSETTINGS.old6581caps);
     cBox->setToolTip(tr("Old 2200pF capacitors for 6581 filter, in place of the standard 470pF ones.\nWhen enabled the filter cutoff is lower."));
     vert->addWidget(cBox);
 #ifdef FEAT_RESID_CAPS
+    cBox->setChecked(SIDSETTINGS.old6581caps);
     connect(cBox, &QCheckBox::toggled,
         [](bool val) {
             SIDSETTINGS.old6581caps = val;
