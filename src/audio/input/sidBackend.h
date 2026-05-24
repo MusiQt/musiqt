@@ -202,8 +202,6 @@ private:
 
     void openHvsc(const QString& hvscPath);
 
-    const unsigned char* loadRom(const QString& romPath);
-
     void getInfo(const SidTuneInfo* tuneInfo) noexcept;
 
     void loadWDS(const QString& musFileName, const char* ext);

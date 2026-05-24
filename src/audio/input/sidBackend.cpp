@@ -345,6 +345,23 @@ void sidBackend::deleteEmu()
     delete emuSid;
 }
 
+const unsigned char* loadRom(const QString& romPath)
+{
+    if (romPath.isEmpty())
+        return nullptr;
+
+    QFile f;
+    f.setFileName(romPath);
+    if (!f.open(QIODevice::ReadOnly))
+        return nullptr;
+
+    const long size = f.size();
+    char* data = new char[size];
+    f.read(data, size);
+    f.close();
+    return (const unsigned char*)data;
+}
+
 void sidBackend::createEmu()
 {
     std::unique_ptr<sidplayfp> emu(new sidplayfp());
@@ -472,23 +489,6 @@ void sidBackend::createEmu()
     }
 #endif
     m_sidplayfp = emu.release();
-}
-
-const unsigned char* sidBackend::loadRom(const QString& romPath)
-{
-    if (romPath.isEmpty())
-        return nullptr;
-
-    QFile f;
-    f.setFileName(romPath);
-    if (!f.open(QIODevice::ReadOnly))
-        return nullptr;
-
-    const long size = f.size();
-    char* data = new char[size];
-    f.read(data, size);
-    f.close();
-    return (const unsigned char*)data;
 }
 
 bool sidBackend::rewind()
