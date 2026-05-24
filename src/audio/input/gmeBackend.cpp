@@ -52,11 +52,9 @@
 
 const char gmeBackend::name[] = "Gme";
 
-gmeConfig_t gmeConfig::m_settings;
-
 QStringList gmeBackend::m_ext;
 
-inputConfig* gmeBackend::cfgFactory() { return new gmeConfig(name); }
+inputConfig* gmeBackend::cfgFactory() { return &gmeConfig::instance(); }
 
 /*****************************************************************/
 
@@ -116,22 +114,21 @@ gmeBackend::gmeBackend(const QString& fileName) :
 #ifdef HAVE_STILVIEW
     , m_stil(nullptr)
 #endif
-    , m_config(name)
 {
     gme_type_t fileType;
     checkRetCode(gme_identify_file(fileName.toUtf8().constData(), &fileType));
 
     qDebug() << "System" << gme_type_system(fileType);
 
-    m_emu = gme_new_emu(fileType, m_config.samplerate());
+    m_emu = gme_new_emu(fileType, gmeConfig::instance().samplerate());
     if (m_emu == nullptr)
         throw loadError("Error creating gme emu");
 
-    if (m_config.equalizer())
+    if (gmeConfig::instance().equalizer())
     {
         gme_equalizer_t eq;
-        eq.bass   = m_config.bass_freq();
-        eq.treble = m_config.treble_dB();
+        eq.bass   = gmeConfig::instance().bass_freq();
+        eq.treble = gmeConfig::instance().treble_dB();
         gme_set_equalizer(m_emu, &eq);
     }
 
@@ -145,7 +142,7 @@ gmeBackend::gmeBackend(const QString& fileName) :
     QString m3u = QString("%1/%2.m3u").arg(fInfo.canonicalPath()).arg(fInfo.completeBaseName());
     gme_load_m3u(m_emu, m3u.toLocal8Bit().constData());
 
-    openAsma(m_config.asmaPath());
+    openAsma(gmeConfig::instance().asmaPath());
 
 #ifdef HAVE_STILVIEW
     bool hasStilInfo = m_stil && !fInfo.suffix().compare("sap", Qt::CaseInsensitive);
@@ -199,9 +196,9 @@ void gmeBackend::getInfo()
 
 #if QT_VERSION >= 0x060000
 #  if QT_VERSION >= 0x060800
-    auto toUtf16 = QStringDecoder(m_config.encoding());
+    auto toUtf16 = QStringDecoder(gmeConfig::instance().encoding());
 #  else
-    auto toUtf16 = QStringDecoder(m_config.encoding().toUtf8());
+    auto toUtf16 = QStringDecoder(gmeConfig::instance().encoding().toUtf8());
 #  endif
 
     QString title     = toUtf16(QByteArray(ti->song));
@@ -212,7 +209,7 @@ void gmeBackend::getInfo()
     QString dumper    = toUtf16(QByteArray(ti->dumper));
     QString comment   = toUtf16(QByteArray(ti->comment));
 #else
-    QTextCodec *codec = QTextCodec::codecForName(m_config.encoding().toLatin1());
+    QTextCodec *codec = QTextCodec::codecForName(gmeConfig::instance().encoding().toLatin1());
 
     QString title     = codec->toUnicode(QByteArray(ti->song));
     QString artist    = codec->toUnicode(QByteArray(ti->author));
@@ -306,9 +303,15 @@ void gmeBackend::openAsma(const QString& asmaPath)
 
 /*****************************************************************/
 
+gmeConfig& gmeConfig::instance()
+{
+    static gmeConfig cfg(gmeBackend::name);
+    return cfg;
+}
+
 #include "iconFactory.h"
 
-#define GMESETTINGS gmeConfig::m_settings
+#define GMESETTINGS gmeConfig::instance().m_settings
 
 gmeConfigFrame::gmeConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

@@ -63,10 +63,16 @@ public:
 
 class ffmpegConfig final : public inputConfig
 {
-public:
+private:
     ffmpegConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {}
+
+    ffmpegConfig(const ffmpegConfig&) = delete;
+    ffmpegConfig& operator=(ffmpegConfig) = delete;
+
+public:
+    static ffmpegConfig& instance();
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new ffmpegConfigFrame(win); }
@@ -99,8 +105,6 @@ private:
     static const AutoDLL avutilDll;
 
     static QStringList m_ext;
-
-    ffmpegConfig m_config;
 
 private:
     static int (*dl_avformat_open_input)(AVFormatContext**, const char*, AVInputFormat*, AVDictionary**);

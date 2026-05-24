@@ -70,7 +70,7 @@ extern const unsigned char iconMpc[417] =
 
 const char mpcBackend::name[] = "Musepack";
 
-inputConfig* mpcBackend::cfgFactory() { return new mpcConfig(name, iconMpc, 417); }
+inputConfig* mpcBackend::cfgFactory() { return &mpcConfig::instance(); }
 
 /*****************************************************************/
 
@@ -123,8 +123,7 @@ size_t mpcBackend::fillBuffer(void* buffer, const size_t bufferSize)
 QStringList mpcBackend::ext() { return QStringList(EXT); }
 
 mpcBackend::mpcBackend(const QString& fileName) :
-    input(name),
-    m_config(name, iconMpc, 417)
+    input(name)
 {
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
@@ -258,6 +257,12 @@ mpc_bool_t mpcBackend::canseek_func([[maybe_unused]] DATAPARM)
 }
 
 /*****************************************************************/
+
+mpcConfig& mpcConfig::instance()
+{
+    static mpcConfig cfg(mpcBackend::name, iconMpc, 417);
+    return cfg;
+}
 
 mpcConfigFrame::mpcConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

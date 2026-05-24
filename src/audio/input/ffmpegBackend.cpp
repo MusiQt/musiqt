@@ -84,7 +84,7 @@ AVRational (*ffmpegBackend::dl_av_get_time_base_q)()=0;
 
 QStringList ffmpegBackend::m_ext;
 
-inputConfig* ffmpegBackend::cfgFactory() { return new ffmpegConfig(name, iconFfmpeg, 86); }
+inputConfig* ffmpegBackend::cfgFactory() { return &ffmpegConfig::instance(); }
 
 /*****************************************************************/
 
@@ -259,8 +259,7 @@ ffmpegBackend::ffmpegBackend(const QString& fileName) :
     m_formatContext(nullptr),
     m_codecContext(nullptr),
     m_needData(true),
-    m_decodeBufOffset(0),
-    m_config(name, iconFfmpeg, 86)
+    m_decodeBufOffset(0)
 {
     try
     {
@@ -420,6 +419,12 @@ void ffmpegBackend::openStream()
 }
 
 /*****************************************************************/
+
+ffmpegConfig& ffmpegConfig::instance()
+{
+    static ffmpegConfig cfg(ffmpegBackend::name, iconFfmpeg, 86);
+    return cfg;
+}
 
 ffmpegConfigFrame::ffmpegConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

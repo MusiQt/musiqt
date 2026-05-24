@@ -57,14 +57,20 @@ class mpg123Config final : public inputConfig
     friend class mpg123ConfigFrame;
 
 private:
-    static mpg123Config_t m_settings;
+    mpg123Config_t m_settings;
 
-public:
+private:
     mpg123Config(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {
         loadSettings();
     }
+
+    mpg123Config(const mpg123Config&) = delete;
+    mpg123Config& operator=(mpg123Config) = delete;
+
+public:
+    static mpg123Config& instance();
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new mpg123ConfigFrame(win); }
@@ -92,8 +98,6 @@ private:
 
     static ssize_t read_func(void*, void*, size_t);
     static off_t seek_func(void*, off_t, int);
-
-    mpg123Config m_config;
 
 public:
     static QStringList m_decoders;

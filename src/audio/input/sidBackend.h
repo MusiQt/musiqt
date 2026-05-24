@@ -98,14 +98,20 @@ class sidConfig final : public inputConfig
     friend class sidConfigFrame;
 
 private:
-    static sidConfig_t m_settings;
+    sidConfig_t m_settings;
 
-public:
+private:
     sidConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {
         loadSettings();
     }
+
+    sidConfig(const sidConfig&) = delete;
+    sidConfig& operator=(sidConfig) = delete;
+
+public:
+    static sidConfig& instance();
 
     /// Get Music directory
     const QString getMusicDir() const override { return hvscPath(); }
@@ -181,8 +187,6 @@ private:
     SidDatabase *m_db;
     bool m_newSonglengthDB;
 
-    sidConfig m_config;
-
 #ifdef FEAT_NEW_PLAY_API
     std::vector<short> m_rem_buffer;
     std::vector<short> m_mix_buffer;
@@ -231,10 +235,10 @@ public:
     bool subtune(unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return m_config.samplerate(); }
+    unsigned int samplerate() const override { return sidConfig::instance().samplerate(); }
 
     /// Get channels
-    unsigned int channels() const override { return m_config.channels(); }
+    unsigned int channels() const override { return sidConfig::instance().channels(); }
 
     /// Get precision
     sample_t precision() const override { return sample_t::S16; }

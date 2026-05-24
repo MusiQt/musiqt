@@ -246,7 +246,7 @@ void centralFrame::createHomeMenu()
 
     for (int i=0; i<IFACTORY->num(); i++)
     {
-        std::unique_ptr<inputConfig> ic(IFACTORY->getConfig(i));
+        inputConfig *ic = IFACTORY->getConfig(i);
 
         QString musicDir = ic->getMusicDir();
         if (!musicDir.isEmpty())

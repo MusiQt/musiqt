@@ -52,10 +52,16 @@ public:
 
 class sndConfig final : public inputConfig
 {
-public:
+private:
     explicit sndConfig(const char name[]) :
         inputConfig(name)
     {}
+
+    sndConfig(const sndConfig&) = delete;
+    sndConfig& operator=(sndConfig) = delete;
+
+public:
+    static sndConfig& instance();
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new sndConfigFrame(win); }
@@ -70,8 +76,6 @@ private:
     SF_INFO m_si;
 
     static QStringList m_ext;
-
-    sndConfig m_config;
 
 private:
     explicit sndBackend(const QString& fileName);

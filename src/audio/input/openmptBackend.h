@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2017 Leandro Nini
+ *  Copyright (C) 2006-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,14 +65,20 @@ class openmptConfig final : public inputConfig
     friend class openmptConfigFrame;
 
 private:
-    static openmptConfig_t m_settings;
+    openmptConfig_t m_settings;
 
-public:
+private:
     openmptConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {
         loadSettings();
     }
+
+    openmptConfig(const openmptConfig&) = delete;
+    openmptConfig& operator=(openmptConfig) = delete;
+
+public:
+    static openmptConfig& instance();
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new openmptConfigFrame(win); }
@@ -102,8 +108,6 @@ private:
     openmpt::module *m_module;
 
     static QStringList m_ext;
-
-    openmptConfig m_config;
 
 private:
     explicit openmptBackend(const QString& fileName);
@@ -145,10 +149,10 @@ public:
     bool subtune(unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return m_config.samplerate(); }
+    unsigned int samplerate() const override { return openmptConfig::instance().samplerate(); }
 
     /// Get channels
-    unsigned int channels() const override { return m_config.channels(); }
+    unsigned int channels() const override { return openmptConfig::instance().channels(); }
 
     /// Get precision
     sample_t precision() const override { return sample_t::SAMPLE_FLOAT; }

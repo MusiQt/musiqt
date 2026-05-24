@@ -64,14 +64,20 @@ class adlConfig final : public inputConfig
     friend class adlConfigFrame;
 
 private:
-    static adlConfig_t m_settings;
+    adlConfig_t m_settings;
 
-public:
+private:
     explicit adlConfig(const char name[]) :
         inputConfig(name)
     {
         loadSettings();
     }
+
+    adlConfig(const adlConfig&) = delete;
+    adlConfig& operator=(adlConfig) = delete;
+
+public:
+    static adlConfig& instance();
 
     void loadSettings() override;
 
@@ -99,8 +105,6 @@ private:
     int m_subtunes;
 
     std::vector<ADL_UInt8> m_buffer;
-
-    adlConfig m_config;
 
 private:
     explicit adlBackend(const QString& fileName);
@@ -139,7 +143,7 @@ public:
     bool seek(double pos) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return m_config.samplerate(); }
+    unsigned int samplerate() const override { return adlConfig::instance().samplerate(); }
 
     /// Get channels
     unsigned int channels() const override { return 2; }

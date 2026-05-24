@@ -101,9 +101,7 @@ const char engines[][8] =
 
 const int sidAddresses[] = { 0, 0xd420, 0xd500, 0xde00, 0xdf00, 0xd440, 0xd600 };
 
-sidConfig_t sidConfig::m_settings;
-
-inputConfig* sidBackend::cfgFactory() { return new sidConfig(name, iconSid, 126); }
+inputConfig* sidBackend::cfgFactory() { return &sidConfig::instance(); }
 
 /*****************************************************************/
 
@@ -125,7 +123,7 @@ size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
             qWarning() << "Error:" << m_sidplayfp->error();
             return 0;
         }
-        m_mix_buffer.resize(static_cast<std::size_t>(res * m_config.channels()));
+        m_mix_buffer.resize(static_cast<std::size_t>(res * sidConfig::instance().channels()));
         unsigned int samples = m_sidplayfp->mix(m_mix_buffer.data(), res);
         samples *= sizeof(short);
         unsigned int cnt = std::min(samples, static_cast<unsigned int>(bufferSize-pos));
@@ -270,8 +268,7 @@ sidBackend::sidBackend(const QString& fileName) :
     m_stil(nullptr),
 #endif
     m_db(nullptr),
-    m_newSonglengthDB(false),
-    m_config(name, iconSid, 126)
+    m_newSonglengthDB(false)
 {
     createEmu();
 
@@ -283,7 +280,7 @@ sidBackend::sidBackend(const QString& fileName) :
         throw loadError(error);
     }
 
-    openHvsc(m_config.hvscPath());
+    openHvsc(sidConfig::instance().hvscPath());
 
     if (fileName.endsWith(".mus"))
     {
@@ -327,7 +324,7 @@ sidBackend::sidBackend(const QString& fileName) :
 #endif
 
 #ifdef FEAT_NEW_PLAY_API
-    m_sidplayfp->initMixer(m_config.channels() == 2);
+    m_sidplayfp->initMixer(sidConfig::instance().channels() == 2);
 #endif
     songLoaded(fileName);
 }
@@ -373,9 +370,9 @@ void sidBackend::createEmu()
     std::unique_ptr<sidplayfp> emu(new sidplayfp());
 
     {
-        const unsigned char* kernal = loadRom(m_config.kernalPath());
-        const unsigned char* basic = loadRom(m_config.basicPath());
-        const unsigned char* chargen = loadRom(m_config.chargenPath());
+        const unsigned char* kernal = loadRom(sidConfig::instance().kernalPath());
+        const unsigned char* basic = loadRom(sidConfig::instance().basicPath());
+        const unsigned char* chargen = loadRom(sidConfig::instance().chargenPath());
         emu->setRoms(kernal, basic, chargen);
         delete [] kernal;
         delete [] basic;
@@ -386,29 +383,29 @@ void sidBackend::createEmu()
 
     int eng = 0;
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
-    if (!m_config.engine().compare(engines[eng++]))
+    if (!sidConfig::instance().engine().compare(engines[eng++]))
     {
         ReSIDfpBuilder *tmpResid = new ReSIDfpBuilder("Musiqt reSIDfp");
 #ifndef FEAT_NO_CREATE
         tmpResid->create(emu->info().maxsids());
 #endif
 #ifndef FEAT_FILTER_DISABLE
-        tmpResid->filter(m_config.filter());
+        tmpResid->filter(sidConfig::instance().filter());
 #endif
-        tmpResid->filter6581Curve((double)m_config.filter6581Curve()/1000.);
+        tmpResid->filter6581Curve((double)sidConfig::instance().filter6581Curve()/1000.);
 #ifdef FEAT_NEW_8580_FILTER
-        tmpResid->filter8580Curve((double)m_config.filter8580Curve()/1000.);
+        tmpResid->filter8580Curve((double)sidConfig::instance().filter8580Curve()/1000.);
 #else
-        tmpResid->filter8580Curve((double)m_config.filter8580Curve());
+        tmpResid->filter8580Curve((double)sidConfig::instance().filter8580Curve());
 #endif
 #ifdef FEAT_FILTER_RANGE
-        tmpResid->filter6581Range((double)m_config.filter6581Range()/1000.);
+        tmpResid->filter6581Range((double)sidConfig::instance().filter6581Range()/1000.);
 #endif
 #ifdef FEAT_CW_STRENGTH
-        tmpResid->combinedWaveformsStrength(m_config.cwStrength());
+        tmpResid->combinedWaveformsStrength(sidConfig::instance().cwStrength());
 #endif
 #ifdef FEAT_RESID_CAPS
-        tmpResid->enableOld6581caps(m_config.old6581caps());
+        tmpResid->enableOld6581caps(sidConfig::instance().old6581caps());
 #endif
 
         emuSid = (sidbuilder*)tmpResid;
@@ -429,42 +426,42 @@ void sidBackend::createEmu()
     }
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-    if (!m_config.engine().compare(engines[eng++]))
+    if (!sidConfig::instance().engine().compare(engines[eng++]))
     {
         ReSIDBuilder *tmpResid = new ReSIDBuilder("Musiqt reSID");
 #ifndef FEAT_NO_CREATE
         tmpResid->create(emu->info().maxsids());
 #endif
 #ifndef FEAT_FILTER_DISABLE
-        tmpResid->filter(m_config.filter());
+        tmpResid->filter(sidConfig::instance().filter());
 #endif
-        tmpResid->bias((double)m_config.bias()/1000.0);
+        tmpResid->bias((double)sidConfig::instance().bias()/1000.0);
 
         emuSid = (sidbuilder*)tmpResid;
     }
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-    if (!m_config.engine().compare(engines[eng++]))
+    if (!sidConfig::instance().engine().compare(engines[eng++]))
     {
         HardSIDBuilder *tmpHardsid = new HardSIDBuilder("Musiqt hardSID");
 #ifndef FEAT_NO_CREATE
         tmpHardsid->create(emu->info().maxsids());
 #endif
 #ifndef FEAT_FILTER_DISABLE
-        tmpHardsid->filter(m_config.filter());
+        tmpHardsid->filter(sidConfig::instance().filter());
 #endif
         emuSid = (sidbuilder*)tmpHardsid;
     }
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-    if (!m_config.engine().compare(engines[eng++]))
+    if (!sidConfig::instance().engine().compare(engines[eng++]))
     {
         exSIDBuilder *tmpExsid = new exSIDBuilder("Musiqt exSID");
 #ifndef FEAT_NO_CREATE
         tmpExsid->create(emu->info().maxsids());
 #endif
 #ifndef FEAT_FILTER_DISABLE
-        tmpExsid->filter(m_config.filter());
+        tmpExsid->filter(sidConfig::instance().filter());
 #endif
         emuSid = (sidbuilder*)tmpExsid;
     }
@@ -472,29 +469,29 @@ void sidBackend::createEmu()
 
     if (emuSid == nullptr)
     {
-        throw loadError(QString("Error creating emu engine %1").arg(m_config.engine()));
+        throw loadError(QString("Error creating emu engine %1").arg(sidConfig::instance().engine()));
     }
 
     SidConfig cfg;
-    cfg.defaultC64Model = m_config.c64Model();
-    cfg.forceC64Model = m_config.forceC64Model();
-    cfg.defaultSidModel = m_config.sidModel();
-    cfg.forceSidModel = m_config.forceSidModel();
+    cfg.defaultC64Model = sidConfig::instance().c64Model();
+    cfg.forceC64Model = sidConfig::instance().forceC64Model();
+    cfg.defaultSidModel = sidConfig::instance().sidModel();
+    cfg.forceSidModel = sidConfig::instance().forceSidModel();
 #ifndef FEAT_NEW_PLAY_API
-    cfg.playback = (m_config.channels() == 2) ? SidConfig::STEREO : SidConfig::MONO;
+    cfg.playback = (sidConfig::instance().channels() == 2) ? SidConfig::STEREO : SidConfig::MONO;
 #endif
-    cfg.frequency = m_config.samplerate();
-    cfg.secondSidAddress = m_config.secondSidAddress();
+    cfg.frequency = sidConfig::instance().samplerate();
+    cfg.secondSidAddress = sidConfig::instance().secondSidAddress();
 #ifdef FEAT_THIRD_SID
-    cfg.thirdSidAddress = m_config.thirdSidAddress();
+    cfg.thirdSidAddress = sidConfig::instance().thirdSidAddress();
 #endif
 #ifdef FEAT_DIGIBOOST
-    cfg.digiBoost = m_config.digiboost();
+    cfg.digiBoost = sidConfig::instance().digiboost();
 #endif
     cfg.sidEmulation = emuSid;
-    cfg.samplingMethod = m_config.samplingMethod();
+    cfg.samplingMethod = sidConfig::instance().samplingMethod();
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-    cfg.fastSampling = m_config.fastSampling();
+    cfg.fastSampling = sidConfig::instance().fastSampling();
 #endif
     if (!emu->config(cfg))
     {
@@ -505,7 +502,7 @@ void sidBackend::createEmu()
 #ifdef FEAT_FILTER_DISABLE
     for (int chip=0; chip<3; chip++)
     {
-        emu->filter(chip, m_config.filter());
+        emu->filter(chip, sidConfig::instance().filter());
     }
 #endif
     m_sidplayfp = emu.release();
@@ -685,9 +682,15 @@ void sidBackend::loadWDS(const QString& musFileName, const char* ext)
 
 /*****************************************************************/
 
+sidConfig& sidConfig::instance()
+{
+    static sidConfig cfg(sidBackend::name, iconSid, 126);
+    return cfg;
+}
+
 #include "iconFactory.h"
 
-#define SIDSETTINGS sidConfig::m_settings
+#define SIDSETTINGS sidConfig::instance().m_settings
 
 enum
 {

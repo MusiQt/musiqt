@@ -83,9 +83,7 @@ ov_callbacks oggBackend::vorbis_callbacks =
 
 const char oggBackend::name[] = "Ogg-Vorbis";
 
-oggConfig_t oggConfig::m_settings;
-
-inputConfig* oggBackend::cfgFactory() { return new oggConfig(name, iconOgg, 523); }
+inputConfig* oggBackend::cfgFactory() { return &oggConfig::instance(); }
 
 /*****************************************************************/
 
@@ -96,8 +94,8 @@ size_t oggBackend::fillBuffer(void* buffer, const size_t bufferSize)
     do {
         int current_section;
         read = ov_read(m_vf, (char*)buffer+n, bufferSize-n, 0,
-                (m_config.precision() == sample_t::S16) ? 2 : 1,
-                (m_config.precision() != sample_t::U8) ? 1 : 0, &current_section);
+                (oggConfig::instance().precision() == sample_t::S16) ? 2 : 1,
+                (oggConfig::instance().precision() != sample_t::U8) ? 1 : 0, &current_section);
         if (read < 0)
         {
             qWarning() << "Decoding error:" << read;
@@ -126,8 +124,7 @@ void oggConfig::saveSettings()
 QStringList oggBackend::ext() { return QString(EXT).split("|"); }
 
 oggBackend::oggBackend(const QString& fileName) :
-    input(name),
-    m_config(name, iconOgg, 523)
+    input(name)
 {
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
@@ -227,7 +224,13 @@ long oggBackend::tell_func(void *datasource)
 
 /*****************************************************************/
 
-#define OGGSETTINGS	oggConfig::m_settings
+oggConfig& oggConfig::instance()
+{
+    static oggConfig cfg(oggBackend::name, iconOgg, 523);
+    return cfg;
+}
+
+#define OGGSETTINGS	oggConfig::instance().m_settings
 
 oggConfigFrame::oggConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

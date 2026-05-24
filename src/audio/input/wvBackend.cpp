@@ -67,7 +67,7 @@ extern const unsigned char iconWv[375] =
 
 const char wvBackend::name[] = "Wavpack";
 
-inputConfig* wvBackend::cfgFactory() { return new wvConfig(name, iconWv, 375); }
+inputConfig* wvBackend::cfgFactory() { return &wvConfig::instance(); }
 
 /*****************************************************************/
 
@@ -120,8 +120,7 @@ void wvBackend::copyBuffer(char* dest, const int* src, size_t length) const
 QStringList wvBackend::ext() { return QStringList(EXT); }
 
 wvBackend::wvBackend(const QString& fileName) :
-    input(name),
-    m_config(name, iconWv, 375)
+    input(name)
 {
     char tmp[255];
     m_wvContext = WavpackOpenFileInput(fileName.toUtf8().constData(), tmp, OPEN_WVC|OPEN_TAGS|OPEN_2CH_MAX|OPEN_NORMALIZE, 0);
@@ -259,6 +258,12 @@ bool wvBackend::seek(double pos)
 }
 
 /*****************************************************************/
+
+wvConfig& wvConfig::instance()
+{
+    static wvConfig cfg(wvBackend::name, iconWv, 375);
+    return cfg;
+}
 
 wvConfigFrame::wvConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

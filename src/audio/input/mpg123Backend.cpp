@@ -77,9 +77,7 @@ const char  mpg123Backend::name[] = "Mpg123";
 
 QStringList mpg123Backend::m_decoders;
 
-mpg123Config_t mpg123Config::m_settings;
-
-inputConfig* mpg123Backend::cfgFactory() { return new mpg123Config(name, iconMpg123, 560); }
+inputConfig* mpg123Backend::cfgFactory() { return &mpg123Config::instance(); }
 
 /*****************************************************************/
 
@@ -139,8 +137,7 @@ QStringList mpg123Backend::ext() { return QStringList(EXT); }
 
 mpg123Backend::mpg123Backend(const QString& fileName) :
     input(name),
-    m_handle(nullptr),
-    m_config(name, iconMpg123, 560)
+    m_handle(nullptr)
 {
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
@@ -149,9 +146,9 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
     }
 
     int err;
-    qDebug() << "Setting mpg123 decoder:" << m_config.decoder();
-    const char *decoder = QString::compare(m_config.decoder(), "auto")
-        ? m_config.decoder().toLocal8Bit().constData()
+    qDebug() << "Setting mpg123 decoder:" << mpg123Config::instance().decoder();
+    const char *decoder = QString::compare(mpg123Config::instance().decoder(), "auto")
+        ? mpg123Config::instance().decoder().toLocal8Bit().constData()
         : nullptr;
 
     try
@@ -170,7 +167,7 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
             throw loadError(mpg123_strerror(m_handle));
         }
 
-        if (!m_config.fastscan())
+        if (!mpg123Config::instance().fastscan())
         {
             err = mpg123_param(m_handle, MPG123_ADD_FLAGS, MPG123_PICTURE, 0.);
 
@@ -443,7 +440,13 @@ off_t mpg123Backend::seek_func(void* handle, off_t offset, int whence)
 
 /*****************************************************************/
 
-#define MPGSETTINGS	mpg123Config::m_settings
+mpg123Config& mpg123Config::instance()
+{
+    static mpg123Config cfg(mpg123Backend::name, iconMpg123, 560);
+    return cfg;
+}
+
+#define MPGSETTINGS	mpg123Config::instance().m_settings
 
 mpg123ConfigFrame::mpg123ConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

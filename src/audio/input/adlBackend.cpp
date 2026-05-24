@@ -38,9 +38,7 @@
 
 const char adlBackend::name[] = "ADL";
 
-adlConfig_t adlConfig::m_settings;
-
-inputConfig* adlBackend::cfgFactory() { return new adlConfig(name); }
+inputConfig* adlBackend::cfgFactory() { return &adlConfig::instance(); }
 
 /*****************************************************************/
 
@@ -63,7 +61,7 @@ size_t adlBackend::fillBuffer(void* buffer, const size_t bufferSize)
     float *src = reinterpret_cast<float*>(buf);
     // Apply gain
     for (int i=0; i<samples_count; i++)
-        dest[i] = src[i] * m_config.gain();
+        dest[i] = src[i] * adlConfig::instance().gain();
 
     return samples_count * m_format.containerSize;
 }
@@ -90,10 +88,9 @@ QStringList adlBackend::ext() { return QString(EXT).split("|"); }
 
 adlBackend::adlBackend(const QString& fileName) :
     input(name),
-    m_currentTrack(0),
-    m_config(name)
+    m_currentTrack(0)
 {
-    m_player = adl_init(m_config.samplerate());
+    m_player = adl_init(adlConfig::instance().samplerate());
     if (!m_player)
     {
         QString error = QString("Error: %1").arg(adl_errorString());
@@ -104,10 +101,10 @@ adlBackend::adlBackend(const QString& fileName) :
 
     qDebug() << "Volume model: " << adl_getVolumeRangeModel(m_player);
 
-    if (!m_config.woplPath().isEmpty())
+    if (!adlConfig::instance().woplPath().isEmpty())
     {
-        qDebug() << "Loading bank: " << m_config.woplPath();
-        int err = adl_openBankFile(m_player, m_config.woplPath().toUtf8().constData());
+        qDebug() << "Loading bank: " << adlConfig::instance().woplPath();
+        int err = adl_openBankFile(m_player, adlConfig::instance().woplPath().toUtf8().constData());
         if (err < 0)
         {
             qWarning() << "Warning: " << adl_errorInfo(m_player);
@@ -171,9 +168,15 @@ bool adlBackend::seek(double pos)
 
 /*****************************************************************/
 
+adlConfig& adlConfig::instance()
+{
+    static adlConfig cfg(adlBackend::name);
+    return cfg;
+}
+
 #include "iconFactory.h"
 
-#define ADLSETTINGS adlConfig::m_settings
+#define ADLSETTINGS adlConfig::instance().m_settings
 
 inline float toDb(float val)
 {

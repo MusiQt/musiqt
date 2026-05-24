@@ -56,14 +56,20 @@ class oggConfig final : public inputConfig
     friend class oggConfigFrame;
 
 private:
-    static oggConfig_t m_settings;
+    oggConfig_t m_settings;
 
-public:
+private:
     oggConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {
         loadSettings();
     }
+
+    oggConfig(const oggConfig&) = delete;
+    oggConfig& operator=(oggConfig) = delete;
+
+public:
+    static oggConfig& instance();
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new oggConfigFrame(win); }
@@ -88,8 +94,6 @@ private:
     unsigned int m_channels;
 
     bool m_seekable;
-
-    oggConfig m_config;
 
 private:
     static ov_callbacks vorbis_callbacks;
@@ -130,7 +134,7 @@ public:
     unsigned int channels() const override { return m_channels; }
 
     /// Get precision
-    sample_t precision() const override { return m_config.precision(); }
+    sample_t precision() const override { return oggConfig::instance().precision(); }
 
     /// Callback function
     size_t fillBuffer(void* buffer, const size_t bufferSize) override;

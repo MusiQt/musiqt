@@ -100,9 +100,7 @@ extern const unsigned char iconHvl[1006] =
 
 const char hvlBackend::name[] = "Hively";
 
-hvlConfig_t hvlConfig::m_settings;
-
-inputConfig* hvlBackend::cfgFactory() { return new hvlConfig(name, iconHvl, 1006); }
+inputConfig* hvlBackend::cfgFactory() { return &hvlConfig::instance(); }
 
 /*****************************************************************/
 
@@ -159,12 +157,11 @@ QStringList hvlBackend::ext() { return QString(EXT).split("|"); }
 
 hvlBackend::hvlBackend(const QString& fileName) :
     input(name),
-    m_buffer(nullptr),
-    m_config(name, iconHvl, 1006)
+    m_buffer(nullptr)
 {
     hvl_InitReplayer();
 
-    m_tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), m_config.samplerate(), 2);
+    m_tune = hvl_LoadTune((TEXT*)fileName.toUtf8().constData(), hvlConfig::instance().samplerate(), 2);
 
     if (m_tune == nullptr)
         throw loadError("Error loading tune");
@@ -179,7 +176,7 @@ hvlBackend::hvlBackend(const QString& fileName) :
     m_metaData.addInfo(metaData::COMMENT, comment.trimmed());
 
     m_left = 0;
-    m_size = (m_config.samplerate()*4) / 50;
+    m_size = (hvlConfig::instance().samplerate()*4) / 50;
     m_buffer = new char[m_size];
 
     songLoaded(fileName);
@@ -203,7 +200,13 @@ bool hvlBackend::subtune(unsigned int i)
 
 /*****************************************************************/
 
-#define HVLSETTINGS hvlConfig::m_settings
+hvlConfig& hvlConfig::instance()
+{
+    static hvlConfig cfg(hvlBackend::name, iconHvl, 1006);
+    return cfg;
+}
+
+#define HVLSETTINGS hvlConfig::instance().m_settings
 
 hvlConfigFrame::hvlConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)
