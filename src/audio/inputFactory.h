@@ -37,7 +37,7 @@ class iFactory
         const char* name;
         extFunc supportedExt;
         inputFactory factory;
-        configFactory cFactory;
+        configFactory cfgFactory;
     };
 
 private:

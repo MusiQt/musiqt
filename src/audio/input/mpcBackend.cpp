@@ -70,7 +70,7 @@ extern const unsigned char iconMpc[417] =
 
 const char mpcBackend::name[] = "Musepack";
 
-inputConfig* mpcBackend::cFactory() { return new mpcConfig(name, iconMpc, 417); }
+inputConfig* mpcBackend::cfgFactory() { return new mpcConfig(name, iconMpc, 417); }
 
 /*****************************************************************/
 

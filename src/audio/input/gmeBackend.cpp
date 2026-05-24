@@ -56,7 +56,7 @@ gmeConfig_t gmeConfig::m_settings;
 
 QStringList gmeBackend::m_ext;
 
-inputConfig* gmeBackend::cFactory() { return new gmeConfig(name); }
+inputConfig* gmeBackend::cfgFactory() { return new gmeConfig(name); }
 
 /*****************************************************************/
 

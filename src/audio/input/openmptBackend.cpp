@@ -121,7 +121,7 @@ openmptConfig_t openmptConfig::m_settings;
 
 QStringList openmptBackend::m_ext;
 
-inputConfig* openmptBackend::cFactory() { return new openmptConfig(name, iconOpenmpt, 990); }
+inputConfig* openmptBackend::cfgFactory() { return new openmptConfig(name, iconOpenmpt, 990); }
 
 /*****************************************************************/
 

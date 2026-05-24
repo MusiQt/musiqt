@@ -92,7 +92,7 @@ void iFactory::regBackend()
     temp.name = backend::name;
     temp.supportedExt = backend::ext;
     temp.factory = &backend::factory;
-    temp.cFactory = &backend::cFactory;
+    temp.cfgFactory = &backend::cfgFactory;
     m_inputs.append(temp);
 }
 
@@ -203,5 +203,5 @@ input* iFactory::get(const QString& fileName)
 
 inputConfig* iFactory::getConfig(const int i)
 {
-    return m_inputs[i].cFactory();
+    return m_inputs[i].cfgFactory();
 }

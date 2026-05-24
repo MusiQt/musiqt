@@ -85,7 +85,7 @@ const char oggBackend::name[] = "Ogg-Vorbis";
 
 oggConfig_t oggConfig::m_settings;
 
-inputConfig* oggBackend::cFactory() { return new oggConfig(name, iconOgg, 523); }
+inputConfig* oggBackend::cfgFactory() { return new oggConfig(name, iconOgg, 523); }
 
 /*****************************************************************/
 

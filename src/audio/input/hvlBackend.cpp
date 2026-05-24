@@ -102,7 +102,7 @@ const char hvlBackend::name[] = "Hively";
 
 hvlConfig_t hvlConfig::m_settings;
 
-inputConfig* hvlBackend::cFactory() { return new hvlConfig(name, iconHvl, 1006); }
+inputConfig* hvlBackend::cfgFactory() { return new hvlConfig(name, iconHvl, 1006); }
 
 /*****************************************************************/
 

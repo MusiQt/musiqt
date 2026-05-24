@@ -79,7 +79,7 @@ QStringList mpg123Backend::m_decoders;
 
 mpg123Config_t mpg123Config::m_settings;
 
-inputConfig* mpg123Backend::cFactory() { return new mpg123Config(name, iconMpg123, 560); }
+inputConfig* mpg123Backend::cfgFactory() { return new mpg123Config(name, iconMpg123, 560); }
 
 /*****************************************************************/
 

@@ -30,7 +30,7 @@ QStringList sndBackend::m_ext;
 
 const char sndBackend::name[] = "Sndfile";
 
-inputConfig* sndBackend::cFactory() { return new sndConfig(name); }
+inputConfig* sndBackend::cfgFactory() { return new sndConfig(name); }
 
 /*****************************************************************/
 

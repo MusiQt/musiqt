@@ -103,7 +103,7 @@ const int sidAddresses[] = { 0, 0xd420, 0xd500, 0xde00, 0xdf00, 0xd440, 0xd600 }
 
 sidConfig_t sidConfig::m_settings;
 
-inputConfig* sidBackend::cFactory() { return new sidConfig(name, iconSid, 126); }
+inputConfig* sidBackend::cfgFactory() { return new sidConfig(name, iconSid, 126); }
 
 /*****************************************************************/
 
