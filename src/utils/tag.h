@@ -87,7 +87,7 @@ public:
     static int getFrameSize(const char* frame, bool synchsafe);
 
 public:
-    tag(QFile* file);
+    explicit tag(QFile* file);
     ~tag() = default;
 
     /// Get offset from beginning
