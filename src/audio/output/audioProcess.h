@@ -77,7 +77,7 @@ public:
 
 /*****************************************************************/
 
-class audioProcess8 : public audioProcess
+class audioProcess8 final : public audioProcess
 {
     void init(int sampleRate) override
     {
@@ -98,7 +98,7 @@ class audioProcess8 : public audioProcess
 
 /*****************************************************************/
 
-class audioProcess16 : public audioProcess
+class audioProcess16 final : public audioProcess
 {
     void init(int sampleRate) override
     {
@@ -131,7 +131,7 @@ class audioProcess16 : public audioProcess
 
 /*****************************************************************/
 
-class audioProcess32 : public audioProcess
+class audioProcess32 final : public audioProcess
 {
     void init(int sampleRate) override
     {
@@ -164,7 +164,7 @@ class audioProcess32 : public audioProcess
 
 /*****************************************************************/
 
-class audioProcessFloat : public audioProcess
+class audioProcessFloat final : public audioProcess
 {
     void init(int sampleRate) override
     {

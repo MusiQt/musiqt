@@ -76,10 +76,10 @@ public:
 
 /*****************************************************************/
 
-iFactory* iFactory::instance()
+iFactory& iFactory::instance()
 {
     static iFactory i;
-    return &i;
+    return i;
 }
 
 template <class backend>

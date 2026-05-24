@@ -47,7 +47,7 @@ const char* sampleTypeString(sample_t sampleType)
 }
 
 audio::audio() :
-    m_iw(new InputWrapper(IFACTORY->get())),
+    m_iw(new InputWrapper(IFACTORY.get())),
     m_audioOutput(new qaudioBackend()),
     m_state(state_t::STOP)
 {
@@ -179,7 +179,7 @@ bool audio::stop()
 
     m_state = state_t::STOP;
 
-    m_iw.reset(new InputWrapper(IFACTORY->get()));
+    m_iw.reset(new InputWrapper(IFACTORY.get()));
 
     return true;
 }

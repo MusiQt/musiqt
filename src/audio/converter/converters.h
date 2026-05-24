@@ -23,7 +23,7 @@
 #include "quantizer.h"
 
 template <typename I, typename O>
-class resampler : public resamplerBackend
+class resampler final : public resamplerBackend
 {
     quantizer<I, O>* _quantizer;
 
@@ -45,7 +45,7 @@ public:
 /******************************************************************************/
 
 template <typename I, typename O>
-class converterDecimal : public converterBackend
+class converterDecimal final : public converterBackend
 {
     quantizer<I, O>* _quantizer;
 

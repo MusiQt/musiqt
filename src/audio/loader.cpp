@@ -24,7 +24,7 @@
 
 void loader::run()
 {
-    input *i = IFACTORY->get(m_fileName);
+    input *i = IFACTORY.get(m_fileName);
     if (SETTINGS.subtunes() && (i != nullptr))
         i->subtune(1);
 

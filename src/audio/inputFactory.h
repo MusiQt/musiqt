@@ -56,7 +56,7 @@ protected:
 
 public:
     /// Get singleton instance
-    static iFactory* instance();
+    static iFactory& instance();
 
     /// Get number of registered backends
     int num() const { return m_inputs.size(); }

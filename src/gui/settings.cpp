@@ -260,10 +260,10 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
 
     {
         QComboBox *backends = new QComboBox(this);
-        for (int i=0; i<IFACTORY->num(); i++)
+        for (int i=0; i<IFACTORY.num(); i++)
         {
-            backends->addItem(IFACTORY->name(i));
-            inputConfig &ic = IFACTORY->getConfig(i);
+            backends->addItem(IFACTORY.name(i));
+            inputConfig &ic = IFACTORY.getConfig(i);
             backends->setItemIcon(i, ic.icon());
             m_inputConfigs.append(&ic);
             beSwitcher->addWidget(ic.config());

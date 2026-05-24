@@ -244,14 +244,14 @@ void centralFrame::createHomeMenu()
         }
     }
 
-    for (int i=0; i<IFACTORY->num(); i++)
+    for (int i=0; i<IFACTORY.num(); i++)
     {
-        inputConfig &ic = IFACTORY->getConfig(i);
+        inputConfig &ic = IFACTORY.getConfig(i);
 
         QString musicDir = ic.getMusicDir();
         if (!musicDir.isEmpty())
         {
-            QString name = IFACTORY->name(i);
+            QString name = IFACTORY.name(i);
             QAction *action = menu->addAction(ic.icon(), QString(tr("%1 music location").arg(name)));
             action->setData(musicDir);
             action->setStatusTip(musicDir);
@@ -830,7 +830,7 @@ void centralFrame::init()
 
 QString centralFrame::getFilter() const
 {
-    QString filter(IFACTORY->getExtensions().join("|"));
+    QString filter(IFACTORY.getExtensions().join("|"));
     filter.prepend(".*\\.(").append(")$");
     qDebug() << "filter:" << filter;
     return filter;
@@ -839,7 +839,7 @@ QString centralFrame::getFilter() const
 QStringList centralFrame::getPattern() const
 {
     QStringList result;
-    for (QString str: IFACTORY->getExtensions())
+    for (QString str: IFACTORY.getExtensions())
     {
         result << str.prepend("*.");
     }
