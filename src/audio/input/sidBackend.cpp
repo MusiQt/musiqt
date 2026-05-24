@@ -101,7 +101,7 @@ const char engines[][8] =
 
 const int sidAddresses[] = { 0, 0xd420, 0xd500, 0xde00, 0xdf00, 0xd440, 0xd600 };
 
-inputConfig* sidBackend::cfgFactory() { return &sidConfig::instance(); }
+inputConfig& sidBackend::cfgFactory() { return sidConfig::instance(); }
 
 /*****************************************************************/
 

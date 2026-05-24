@@ -54,7 +54,7 @@ const char gmeBackend::name[] = "Gme";
 
 QStringList gmeBackend::m_ext;
 
-inputConfig* gmeBackend::cfgFactory() { return &gmeConfig::instance(); }
+inputConfig& gmeBackend::cfgFactory() { return gmeConfig::instance(); }
 
 /*****************************************************************/
 

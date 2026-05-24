@@ -67,7 +67,7 @@ extern const unsigned char iconWv[375] =
 
 const char wvBackend::name[] = "Wavpack";
 
-inputConfig* wvBackend::cfgFactory() { return &wvConfig::instance(); }
+inputConfig& wvBackend::cfgFactory() { return wvConfig::instance(); }
 
 /*****************************************************************/
 

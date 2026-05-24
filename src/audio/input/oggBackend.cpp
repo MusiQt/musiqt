@@ -83,7 +83,7 @@ ov_callbacks oggBackend::vorbis_callbacks =
 
 const char oggBackend::name[] = "Ogg-Vorbis";
 
-inputConfig* oggBackend::cfgFactory() { return &oggConfig::instance(); }
+inputConfig& oggBackend::cfgFactory() { return oggConfig::instance(); }
 
 /*****************************************************************/
 

@@ -84,7 +84,7 @@ AVRational (*ffmpegBackend::dl_av_get_time_base_q)()=0;
 
 QStringList ffmpegBackend::m_ext;
 
-inputConfig* ffmpegBackend::cfgFactory() { return &ffmpegConfig::instance(); }
+inputConfig& ffmpegBackend::cfgFactory() { return ffmpegConfig::instance(); }
 
 /*****************************************************************/
 

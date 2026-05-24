@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2021 Leandro Nini
+ *  Copyright (C) 2007-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ class inputConfig;
 class iFactory
 {
     using inputFactory = input*(*)(const QString& fileName);
-    using configFactory = inputConfig*(*)();
+    using configFactory = inputConfig&(*)();
     using extFunc = QStringList(*)();
 
     struct inputs_t
@@ -74,7 +74,7 @@ public:
     input* get(const QString& filename);
 
     /// Instantiate backend config
-    inputConfig* getConfig(const int i);
+    inputConfig& getConfig(const int i);
 };
 
 #endif

@@ -108,7 +108,7 @@ protected:
 
 public:
     /// Get singleton instance
-    static settings* instance();
+    static settings& instance();
 
     /// Load setting
     void load(const QSettings& appSettings);

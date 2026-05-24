@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2023 Leandro Nini
+ *  Copyright (C) 2020-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ qint64 InputWrapper::bytesAvailable() const
     if (m_finished)
         return 0;
 
-    const int bytes = SETTINGS->bufLen() * m_bytePerMilliSec;
+    const int bytes = SETTINGS.bufLen() * m_bytePerMilliSec;
     return bytes + QIODevice::bytesAvailable();
 }
 

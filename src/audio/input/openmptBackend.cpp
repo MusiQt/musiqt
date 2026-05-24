@@ -119,7 +119,7 @@ const char openmptBackend::name[] = "Openmpt";
 
 QStringList openmptBackend::m_ext;
 
-inputConfig* openmptBackend::cfgFactory() { return &openmptConfig::instance(); }
+inputConfig& openmptBackend::cfgFactory() { return openmptConfig::instance(); }
 
 /*****************************************************************/
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2023 Leandro Nini
+ *  Copyright (C) 2008-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ QIcon iconFactory::get(const char* icon)
     if (icon == nullptr)
         return QIcon();
 
-    if (SETTINGS->themeIcons()) {
+    if (SETTINGS.themeIcons()) {
         QFileInfo fi(icon);
         if (QIcon::hasThemeIcon(fi.baseName())) {
             QIcon themed = QIcon::fromTheme(fi.baseName());

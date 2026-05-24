@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2023 Leandro Nini
+ *  Copyright (C) 2013-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -246,13 +246,13 @@ void centralFrame::createHomeMenu()
 
     for (int i=0; i<IFACTORY->num(); i++)
     {
-        inputConfig *ic = IFACTORY->getConfig(i);
+        inputConfig &ic = IFACTORY->getConfig(i);
 
-        QString musicDir = ic->getMusicDir();
+        QString musicDir = ic.getMusicDir();
         if (!musicDir.isEmpty())
         {
             QString name = IFACTORY->name(i);
-            QAction *action = menu->addAction(ic->icon(), QString(tr("%1 music location").arg(name)));
+            QAction *action = menu->addAction(ic.icon(), QString(tr("%1 music location").arg(name)));
             action->setData(musicDir);
             action->setStatusTip(musicDir);
             homeGroup->addAction(action);
@@ -580,7 +580,7 @@ void centralFrame::onPreloadSong()
 void centralFrame::onSongEnded()
 {
     qDebug("centralFrame::onSongEnded");
-    if (SETTINGS->subtunes() && (m_player->subtune()<m_player->subtunes()))
+    if (SETTINGS.subtunes() && (m_player->subtune()<m_player->subtunes()))
     {
         m_player->changeSubtune(dir_t::ID_NEXT);
         return;

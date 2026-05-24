@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2023 Leandro Nini
+ *  Copyright (C) 2009-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -77,7 +77,7 @@ const char  mpg123Backend::name[] = "Mpg123";
 
 QStringList mpg123Backend::m_decoders;
 
-inputConfig* mpg123Backend::cfgFactory() { return &mpg123Config::instance(); }
+inputConfig& mpg123Backend::cfgFactory() { return mpg123Config::instance(); }
 
 /*****************************************************************/
 
@@ -192,8 +192,8 @@ mpg123Backend::mpg123Backend(const QString& fileName) :
         }
 
         err = mpg123_param(m_handle, MPG123_RVA,
-            SETTINGS->replayGain()
-                ? (SETTINGS->replayGainMode() == settings::rg_t::Track) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
+            SETTINGS.replayGain()
+                ? (SETTINGS.replayGainMode() == settings::rg_t::Track) ? MPG123_RVA_ALBUM : MPG123_RVA_MIX
                 : MPG123_RVA_OFF,
             0.);
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2023 Leandro Nini
+ *  Copyright (C) 2008-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
 
     QCheckBox* cBox = new QCheckBox(tr("&Play subtunes"), this);
     cBox->setToolTip(tr("Play all subtunes"));
-    cBox->setCheckState(SETTINGS->m_subtunes ? Qt::Checked : Qt::Unchecked);
+    cBox->setCheckState(SETTINGS.m_subtunes ? Qt::Checked : Qt::Unchecked);
     connect(cBox,
 #if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
             &QCheckBox::checkStateChanged,
@@ -90,14 +90,14 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
         [](int val)
 #endif
         {
-            SETTINGS->m_subtunes = (val == Qt::Checked);
+            SETTINGS.m_subtunes = (val == Qt::Checked);
         }
     );
     optionLayout->addWidget(cBox);
 
     cBox = new QCheckBox(tr("&Bauer stereophonic-to-binaural DSP"), this);
     cBox->setToolTip(tr("Bauer stereophonic-to-binaural DSP"));
-    cBox->setCheckState(SETTINGS->m_bs2b ? Qt::Checked : Qt::Unchecked);
+    cBox->setCheckState(SETTINGS.m_bs2b ? Qt::Checked : Qt::Unchecked);
     connect(cBox,
 #if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
             &QCheckBox::checkStateChanged,
@@ -107,7 +107,7 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
         [](int val)
 #endif
         {
-            SETTINGS->m_bs2b = (val == Qt::Checked);
+            SETTINGS.m_bs2b = (val == Qt::Checked);
         }
     );
     optionLayout->addWidget(cBox);
@@ -117,7 +117,7 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
 
     cBox = new QCheckBox(tr("&Use system icons"), this);
     cBox->setToolTip(tr("Use icons from system theme (on next restart)"));
-    cBox->setCheckState(SETTINGS->m_themeIcons ? Qt::Checked : Qt::Unchecked);
+    cBox->setCheckState(SETTINGS.m_themeIcons ? Qt::Checked : Qt::Unchecked);
     connect(cBox,
 #if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
             &QCheckBox::checkStateChanged,
@@ -127,7 +127,7 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
         [](int val)
 #endif
         {
-            SETTINGS->m_themeIcons = (val == Qt::Checked);
+            SETTINGS.m_themeIcons = (val == Qt::Checked);
         }
     );
     optionLayout->addWidget(cBox);
@@ -140,11 +140,11 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
         QVBoxLayout *replayGainBox = new QVBoxLayout(group);
         group->setCheckable(true);
         group->setToolTip(tr("Enable replaygain loudness normalization"));
-        group->setChecked(SETTINGS->m_replayGain);
+        group->setChecked(SETTINGS.m_replayGain);
         connect(group, &QGroupBox::toggled,
             [](bool val)
             {
-                SETTINGS->m_replayGain = val;
+                SETTINGS.m_replayGain = val;
             }
         );
 
@@ -152,12 +152,12 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
 
         QRadioButton* radio = new QRadioButton(tr("Album gain"), this);
         radio->setToolTip(tr("Preserve album dynamics"));
-        radio->setChecked(SETTINGS->m_replayGainMode==settings::rg_t::Album);
+        radio->setChecked(SETTINGS.m_replayGainMode==settings::rg_t::Album);
         replayGainBox->layout()->addWidget(radio);
         radioGroup->addButton(radio, 0);
         radio = new QRadioButton(tr("Track gain"), this);
         radio->setToolTip(tr("All tracks equal loudness"));
-        radio->setChecked(SETTINGS->m_replayGainMode==settings::rg_t::Track);
+        radio->setChecked(SETTINGS.m_replayGainMode==settings::rg_t::Track);
         replayGainBox->layout()->addWidget(radio);
         radioGroup->addButton(radio, 1);
         replayGainBox->addStretch(1);
@@ -166,7 +166,7 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
         connect(radioGroup, &QButtonGroup::idClicked,
             [](int val)
             {
-                SETTINGS->m_replayGainMode = val == 0 ? settings::rg_t::Album : settings::rg_t::Track;
+                SETTINGS.m_replayGainMode = val == 0 ? settings::rg_t::Album : settings::rg_t::Track;
             }
         );
     }
@@ -263,10 +263,10 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
         for (int i=0; i<IFACTORY->num(); i++)
         {
             backends->addItem(IFACTORY->name(i));
-            inputConfig *ic = IFACTORY->getConfig(i);
-            backends->setItemIcon(i, ic->icon());
-            m_inputConfigs.append(ic);
-            beSwitcher->addWidget(ic->config());
+            inputConfig &ic = IFACTORY->getConfig(i);
+            backends->setItemIcon(i, ic.icon());
+            m_inputConfigs.append(&ic);
+            beSwitcher->addWidget(ic.config());
         }
         connect(backends, QOverload<int>::of(&QComboBox::currentIndexChanged), beSwitcher, &QStackedWidget::setCurrentIndex);
 
@@ -313,11 +313,10 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
     connect(b, &QPushButton::clicked,
         [this]()
         {
-            //SETTINGS->load();
+            //SETTINGS.load();
             for (inputConfig* ic: m_inputConfigs)
             {
                 ic->loadSettings();
-                delete ic;
             }
             reject();
         }
@@ -325,11 +324,10 @@ settingsWindow::settingsWindow(QWidget* win, const QString& bkName) :
     connect(initial, &QPushButton::clicked,
         [this]()
         {
-            //SETTINGS->save();
+            //SETTINGS.save();
             for (inputConfig* ic: m_inputConfigs)
             {
                 ic->saveSettings();
-                delete ic;
             }
             accept();
         }
@@ -353,10 +351,10 @@ bool settingsWindow::event(QEvent *e)
 
 /*****************************************************************/
 
-settings* SETTINGS
+settings& settings::instance()
 {
     static settings s;
-    return &s;
+    return s;
 }
 
 void settings::load(const QSettings& appSettings)
@@ -368,11 +366,11 @@ void settings::load(const QSettings& appSettings)
 
     m_subtunes = appSettings.value(config::GENERAL_SUBTUNES, false).toBool();
     m_replayGain = appSettings.value(config::GENERAL_REPLAYGAIN, false).toBool();
-    QString replayGainMode=appSettings.value(config::GENERAL_RG_MODE, "Album").toString();
+    QString replayGainMode = appSettings.value(config::GENERAL_RG_MODE, "Album").toString();
     m_replayGainMode = (!replayGainMode.compare("Album")) ? settings::rg_t::Album : settings::rg_t::Track;
 
-    m_bs2b=appSettings.value(config::GENERAL_BAUERDSP, false).toBool();
-    m_themeIcons=appSettings.value(config::GENERAL_ICONTHEME, false).toBool();
+    m_bs2b = appSettings.value(config::GENERAL_BAUERDSP, false).toBool();
+    m_themeIcons = appSettings.value(config::GENERAL_ICONTHEME, false).toBool();
 }
 
 void settings::save(QSettings& appSettings)

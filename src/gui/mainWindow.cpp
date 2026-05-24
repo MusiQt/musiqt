@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013-2023 Leandro Nini
+ *  Copyright (C) 2013-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
     connect(m_player, &player::audioError,     this, &mainWindow::showError);
 
     // Read settings
-    SETTINGS->load(m_settings);
+    SETTINGS.load(m_settings);
 
     createActions();
 
@@ -132,7 +132,7 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
 mainWindow::~mainWindow()
 {
     // Save Settings
-    SETTINGS->save(m_settings);
+    SETTINGS.save(m_settings);
 
     if (!centralWidget()->isHidden())
     {
@@ -463,11 +463,11 @@ void mainWindow::onConfig()
             switch (result)
             {
             case QDialog::Accepted:
-                SETTINGS->save(m_settings);
+                SETTINGS.save(m_settings);
                 m_cFrame->onSettingsChanged();
                 break;
             case QDialog::Rejected:
-                SETTINGS->load(m_settings);
+                SETTINGS.load(m_settings);
                 break;
             }
             config->deleteLater();

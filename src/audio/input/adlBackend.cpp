@@ -38,7 +38,7 @@
 
 const char adlBackend::name[] = "ADL";
 
-inputConfig* adlBackend::cfgFactory() { return &adlConfig::instance(); }
+inputConfig& adlBackend::cfgFactory() { return adlConfig::instance(); }
 
 /*****************************************************************/
 

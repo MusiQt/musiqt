@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2022 Leandro Nini
+ *  Copyright (C) 2006-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ extern const unsigned char iconMpc[417] =
 
 const char mpcBackend::name[] = "Musepack";
 
-inputConfig* mpcBackend::cfgFactory() { return &mpcConfig::instance(); }
+inputConfig& mpcBackend::cfgFactory() { return mpcConfig::instance(); }
 
 /*****************************************************************/
 
@@ -175,17 +175,17 @@ mpcBackend::mpcBackend(const QString& fileName) :
     qDebug("FLOAT");
 #endif
 
-    if (SETTINGS->replayGain())
+    if (SETTINGS.replayGain())
     {
         // Replaygain reference level (is this correct?)
         const double referenceLevel = 89.0;
 #ifdef MPCDEC_SV8
         mpc_set_replay_level(m_demux, referenceLevel, MPC_TRUE,
-                (SETTINGS->replayGainMode() == settings::rg_t::Track) ? MPC_FALSE : MPC_TRUE,
+                (SETTINGS.replayGainMode() == settings::rg_t::Track) ? MPC_FALSE : MPC_TRUE,
                 MPC_TRUE);
 #else
-        float peak = SETTINGS->replayGainMode() ? m_si.peak_album : m_si.peak_title;
-        float gain = SETTINGS->replayGainMode() ? m_si.gain_album : m_si.gain_title;
+        float peak = SETTINGS.replayGainMode() ? m_si.peak_album : m_si.peak_title;
+        float gain = SETTINGS.replayGainMode() ? m_si.gain_album : m_si.gain_title;
 
         peak = peak == 0. ? 1. : (1<<15) / pow(10, peak/(20*256));
         gain = gain == 0. ? 1. : pow(10, (referenceLevel-gain/256)/20);

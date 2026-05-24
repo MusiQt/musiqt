@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Leandro Nini
+ *  Copyright (C) 2021-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 void loader::run()
 {
     input *i = IFACTORY->get(m_fileName);
-    if (SETTINGS->subtunes() && (i != nullptr))
+    if (SETTINGS.subtunes() && (i != nullptr))
         i->subtune(1);
 
     emit loaded(i);

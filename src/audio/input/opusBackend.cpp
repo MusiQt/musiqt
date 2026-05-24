@@ -108,7 +108,7 @@ OpusFileCallbacks opusBackend::opus_callbacks =
 
 const char opusBackend::name[] = "Opus";
 
-inputConfig* opusBackend::cfgFactory() { return &opusConfig::instance(); }
+inputConfig& opusBackend::cfgFactory() { return opusConfig::instance(); }
 
 /*****************************************************************/
 

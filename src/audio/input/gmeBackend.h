@@ -141,7 +141,7 @@ public:
 
     /// Factory method
     static input* factory(const QString& fileName) { return new gmeBackend(fileName); }
-    static inputConfig* cfgFactory();
+    static inputConfig& cfgFactory();
 
     /// Get supported extension
     static QStringList ext();

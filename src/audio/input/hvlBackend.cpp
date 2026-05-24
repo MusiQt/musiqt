@@ -100,7 +100,7 @@ extern const unsigned char iconHvl[1006] =
 
 const char hvlBackend::name[] = "Hively";
 
-inputConfig* hvlBackend::cfgFactory() { return &hvlConfig::instance(); }
+inputConfig& hvlBackend::cfgFactory() { return hvlConfig::instance(); }
 
 /*****************************************************************/
 
