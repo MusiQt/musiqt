@@ -60,6 +60,9 @@
 /* Define if you have the <sidplayfp/builders/residfp.h> header file. */
 #cmakedefine  HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 
+/* Define if you have the <sidplayfp/builders/sidlite.h> header file. */
+#cmakedefine  HAVE_SIDPLAYFP_BUILDERS_SIDLITE_H
+
 /* Define if you have the <sidplayfp/builders/resid.h> header file. */
 #cmakedefine  HAVE_SIDPLAYFP_BUILDERS_RESID_H
 

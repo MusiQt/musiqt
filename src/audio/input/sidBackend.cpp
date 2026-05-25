@@ -26,6 +26,9 @@
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 #  include <sidplayfp/builders/residfp.h>
 #endif
+#ifdef HAVE_SIDPLAYFP_BUILDERS_SIDLITE_H
+#  include <sidplayfp/builders/sidlite.h>
+#endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 #  include <sidplayfp/builders/resid.h>
 #endif
@@ -81,6 +84,9 @@ const char engines[][8] =
 {
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
     "reSIDfp",
+#endif
+#ifdef HAVE_SIDPLAYFP_BUILDERS_SIDLITE_H
+    "SIDLite",
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
     "reSID",
@@ -406,6 +412,20 @@ void sidBackend::createEmu()
 #endif
 
         emuSid = (sidbuilder*)tmpResid;
+    }
+#endif
+#ifdef HAVE_SIDPLAYFP_BUILDERS_SIDLITE_H
+    if (!m_config.engine().compare(engines[eng++]))
+    {
+        SIDLiteBuilder *tmpSidLite = new SIDLiteBuilder("Musiqt SIDLite");
+#ifndef FEAT_NO_CREATE
+        tmpSidLite->create(emu->info().maxsids());
+#endif
+#ifndef FEAT_FILTER_DISABLE
+        tmpSidLite->filter(m_config.filter());
+#endif
+
+        emuSid = (sidbuilder*)tmpSidLite;
     }
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
@@ -749,6 +769,9 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
 
     int eng = 0;
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
+    engBox->addItem(engines[eng++]);
+#endif
+#ifdef HAVE_SIDPLAYFP_BUILDERS_SIDLITE_H
     engBox->addItem(engines[eng++]);
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
