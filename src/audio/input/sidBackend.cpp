@@ -412,14 +412,14 @@ void sidBackend::createEmu()
     }
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_SIDLITE_H
-    if (!m_config.engine().compare(engines[eng++]))
+    if (!sidConfig::instance().engine().compare(engines[eng++]))
     {
         SIDLiteBuilder *tmpSidLite = new SIDLiteBuilder("Musiqt SIDLite");
 #ifndef FEAT_NO_CREATE
         tmpSidLite->create(emu->info().maxsids());
 #endif
 #ifndef FEAT_FILTER_DISABLE
-        tmpSidLite->filter(m_config.filter());
+        tmpSidLite->filter(sidConfig::instance().filter());
 #endif
 
         emuSid = (sidbuilder*)tmpSidLite;
