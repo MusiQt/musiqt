@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2022 Leandro Nini
+ *  Copyright (C) 2006-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,10 +58,16 @@ public:
 
 class mpcConfig final : public inputConfig
 {
-public:
+private:
     mpcConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {}
+
+    mpcConfig(const mpcConfig&) = delete;
+    mpcConfig& operator=(mpcConfig) = delete;
+
+public:
+    static mpcConfig& instance();
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new mpcConfigFrame(win); }
@@ -93,8 +99,6 @@ private:
 
     QFile m_file;
 
-    mpcConfig m_config;
-
 private:
     static mpc_int32_t read_func(DATAPARM, void *ptr, mpc_int32_t size);
     static mpc_bool_t  seek_func(DATAPARM, mpc_int32_t offset);
@@ -115,7 +119,7 @@ public:
 
     /// Factory method
     static input* factory(const QString& fileName) { return new mpcBackend(fileName); }
-    static inputConfig* cFactory();
+    static inputConfig& cfgFactory();
 
     /// Get supported extension
     static QStringList ext();

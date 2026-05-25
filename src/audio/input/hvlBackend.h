@@ -58,14 +58,20 @@ class hvlConfig final : public inputConfig
     friend class hvlConfigFrame;
 
 private:
-    static hvlConfig_t m_settings;
+    hvlConfig_t m_settings;
 
-public:
+private:
     hvlConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {
         loadSettings();
     }
+
+    hvlConfig(const hvlConfig&) = delete;
+    hvlConfig& operator=(hvlConfig) = delete;
+
+public:
+    static hvlConfig& instance();
 
     void loadSettings() override;
 
@@ -92,8 +98,6 @@ private:
     unsigned int m_size;
     char *m_buffer;
 
-    hvlConfig m_config;
-
 private:
     explicit hvlBackend(const QString& fileName);
 
@@ -107,7 +111,7 @@ public:
 
     /// Factory methods
     static input* factory(const QString& fileName) { return new hvlBackend(fileName); }
-    static inputConfig* cFactory();
+    static inputConfig& cfgFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -125,7 +129,7 @@ public:
     bool subtune(unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return m_config.samplerate(); }
+    unsigned int samplerate() const override { return hvlConfig::instance().samplerate(); }
 
     /// Get channels
     unsigned int channels() const override { return 2; }

@@ -30,7 +30,7 @@ QStringList sndBackend::m_ext;
 
 const char sndBackend::name[] = "Sndfile";
 
-inputConfig* sndBackend::cFactory() { return new sndConfig(name); }
+inputConfig& sndBackend::cfgFactory() { return sndConfig::instance(); }
 
 /*****************************************************************/
 
@@ -61,8 +61,7 @@ bool sndBackend::init()
 }
 
 sndBackend::sndBackend(const QString& fileName) :
-    input(name),
-    m_config(name)
+    input(name)
 {
     m_si.format = 0;
 #if defined (_WIN32) && defined (UNICODE)
@@ -118,6 +117,12 @@ bool sndBackend::seek(double pos)
 }
 
 /*****************************************************************/
+
+sndConfig& sndConfig::instance()
+{
+    static sndConfig cfg(sndBackend::name);
+    return cfg;
+}
 
 sndConfigFrame::sndConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

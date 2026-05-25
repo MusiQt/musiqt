@@ -46,10 +46,16 @@ public:
 
 class wvConfig final : public inputConfig
 {
-public:
+private:
     wvConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {}
+
+    wvConfig(const wvConfig&) = delete;
+    wvConfig& operator=(wvConfig) = delete;
+
+public:
+    static wvConfig& instance();
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new wvConfigFrame(win); }
@@ -67,8 +73,6 @@ private:
     int m_bps;
     int m_channels;
     sample_t m_precision;
-
-    wvConfig m_config;
 
 private:
     void copyBuffer(char* dest, const int* src, size_t length) const;
@@ -88,7 +92,7 @@ public:
 
     /// Factory method
     static input* factory(const QString& fileName) { return new wvBackend(fileName); }
-    static inputConfig* cFactory();
+    static inputConfig& cfgFactory();
 
     /// Get supported extension
     static QStringList ext();

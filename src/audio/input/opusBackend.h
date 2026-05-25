@@ -48,10 +48,16 @@ class opusConfig final : public inputConfig
 {
     friend class opusConfigFrame;
 
-public:
+private:
     opusConfig(const char name[], const unsigned char* iconType, unsigned int iconLen) :
         inputConfig(name, iconType, iconLen)
     {}
+
+    opusConfig(const opusConfig&) = delete;
+    opusConfig& operator=(opusConfig) = delete;
+
+public:
+    static opusConfig& instance();
 
     /// Open config dialog
     QWidget* config(QWidget* win) override { return new opusConfigFrame(win); }
@@ -65,8 +71,6 @@ private:
     OggOpusFile *m_of;
 
     QFile m_file;
-
-    opusConfig m_config;
 
     bool m_seekable;
 
@@ -91,7 +95,7 @@ public:
 
     /// Factory method
     static input* factory(const QString& fileName) { return new opusBackend(fileName); }
-    static inputConfig* cFactory();
+    static inputConfig& cfgFactory();
 
     /// Get supported extension
     static QStringList ext();

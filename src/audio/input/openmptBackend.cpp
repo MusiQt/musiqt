@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -117,21 +117,19 @@ extern const unsigned char iconOpenmpt[990] =
 
 const char openmptBackend::name[] = "Openmpt";
 
-openmptConfig_t openmptConfig::m_settings;
-
 QStringList openmptBackend::m_ext;
 
-inputConfig* openmptBackend::cFactory() { return new openmptConfig(name, iconOpenmpt, 990); }
+inputConfig& openmptBackend::cfgFactory() { return openmptConfig::instance(); }
 
 /*****************************************************************/
 
 size_t openmptBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
-    const size_t frameSize = sizeof(float) * m_config.channels();
+    const size_t frameSize = sizeof(float) * openmptConfig::instance().channels();
     size_t bufSize = bufferSize/frameSize;
-    return frameSize * (m_config.channels() == 2
-        ? m_module->read_interleaved_stereo(m_config.samplerate(), bufSize, (float*)buffer)
-        : m_module->read(m_config.samplerate(), bufSize, (float*)buffer));
+    return frameSize * (openmptConfig::instance().channels() == 2
+        ? m_module->read_interleaved_stereo(openmptConfig::instance().samplerate(), bufSize, (float*)buffer)
+        : m_module->read(openmptConfig::instance().samplerate(), bufSize, (float*)buffer));
 }
 
 /*****************************************************************/
@@ -175,8 +173,7 @@ bool openmptBackend::init()
 }
 
 openmptBackend::openmptBackend(const QString& fileName) :
-    input(name),
-    m_config(name, iconOpenmpt, 990)
+    input(name)
 {
     bool tmpFile = false;
     QString fName;
@@ -262,10 +259,14 @@ openmptBackend::openmptBackend(const QString& fileName) :
         throw loadError(e.what());
     }
 
-    m_module->set_render_param(openmpt::module::RENDER_INTERPOLATIONFILTER_LENGTH, m_config.resamplingMode());
-    m_module->set_render_param(openmpt::module::RENDER_MASTERGAIN_MILLIBEL, m_config.masterGain());
-    m_module->set_render_param(openmpt::module::RENDER_STEREOSEPARATION_PERCENT, m_config.stereoSeparation());
-    m_module->set_render_param(openmpt::module::RENDER_VOLUMERAMPING_STRENGTH, m_config.volumeRamping());
+    m_module->set_render_param(openmpt::module::RENDER_INTERPOLATIONFILTER_LENGTH,
+                               openmptConfig::instance().resamplingMode());
+    m_module->set_render_param(openmpt::module::RENDER_MASTERGAIN_MILLIBEL,
+                               openmptConfig::instance().masterGain());
+    m_module->set_render_param(openmpt::module::RENDER_STEREOSEPARATION_PERCENT,
+                               openmptConfig::instance().stereoSeparation());
+    m_module->set_render_param(openmpt::module::RENDER_VOLUMERAMPING_STRENGTH,
+                               openmptConfig::instance().volumeRamping());
 
     std::vector<std::string> metadata = m_module->get_metadata_keys();
     for(auto & it : metadata)
@@ -303,7 +304,13 @@ bool openmptBackend::subtune(unsigned int i)
 
 /*****************************************************************/
 
-#define MPTSETTINGS openmptConfig::m_settings
+openmptConfig& openmptConfig::instance()
+{
+    static openmptConfig cfg(openmptBackend::name, iconOpenmpt, 990);
+    return cfg;
+}
+
+#define MPTSETTINGS openmptConfig::instance().m_settings
 
 openmptConfigFrame::openmptConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

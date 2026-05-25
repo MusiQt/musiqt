@@ -108,7 +108,7 @@ OpusFileCallbacks opusBackend::opus_callbacks =
 
 const char opusBackend::name[] = "Opus";
 
-inputConfig* opusBackend::cFactory() { return new opusConfig(name, iconOpus, 952); }
+inputConfig& opusBackend::cfgFactory() { return opusConfig::instance(); }
 
 /*****************************************************************/
 
@@ -134,8 +134,7 @@ size_t opusBackend::fillBuffer(void* buffer, const size_t bufferSize)
 QStringList opusBackend::ext() { return QStringList(EXT); }
 
 opusBackend::opusBackend(const QString& fileName) :
-    input(name),
-    m_config(name, iconOpus, 952)
+    input(name)
 {
     m_file.setFileName(fileName);
     if (!m_file.open(QIODevice::ReadOnly))
@@ -224,6 +223,12 @@ int opusBackend::close_func(void *_stream)
 }
 
 /*****************************************************************/
+
+opusConfig& opusConfig::instance()
+{
+    static opusConfig cfg(opusBackend::name, iconOpus, 952);
+    return cfg;
+}
 
 opusConfigFrame::opusConfigFrame(QWidget* win) :
     configFrame(win, CREDITS, LINK)

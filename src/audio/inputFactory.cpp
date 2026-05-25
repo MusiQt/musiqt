@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2025 Leandro Nini
+ *  Copyright (C) 2007-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -76,10 +76,10 @@ public:
 
 /*****************************************************************/
 
-iFactory* iFactory::instance()
+iFactory& iFactory::instance()
 {
     static iFactory i;
-    return &i;
+    return i;
 }
 
 template <class backend>
@@ -92,7 +92,7 @@ void iFactory::regBackend()
     temp.name = backend::name;
     temp.supportedExt = backend::ext;
     temp.factory = &backend::factory;
-    temp.cFactory = &backend::cFactory;
+    temp.cfgFactory = &backend::cfgFactory;
     m_inputs.append(temp);
 }
 
@@ -201,7 +201,7 @@ input* iFactory::get(const QString& fileName)
     return nullptr;
 }
 
-inputConfig* iFactory::getConfig(const int i)
+inputConfig& iFactory::getConfig(const int i)
 {
-    return m_inputs[i].cFactory();
+    return m_inputs[i].cfgFactory();
 }

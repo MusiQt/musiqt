@@ -26,9 +26,9 @@
 #include <QDebug>
 
 player::player() :
-    m_input(IFACTORY->get()),
+    m_input(IFACTORY.get()),
     m_audio(new audio),
-    m_preload(IFACTORY->get())
+    m_preload(IFACTORY.get())
 {
     connect(m_audio.get(), &audio::updateTime,  this, &player::updateTime);
     connect(m_audio.get(), &audio::songEnded,   this, &player::songEnded);
@@ -107,7 +107,7 @@ bool player::tryPreload(const QString& song)
         res = true;
     }
 
-    m_preload.reset(IFACTORY->get());
+    m_preload.reset(IFACTORY.get());
     return res;
 }
 
@@ -136,7 +136,7 @@ void player::loaded(input* res)
     }
     else
     {
-        m_input.reset(IFACTORY->get());
+        m_input.reset(IFACTORY.get());
 
         loaded = false;
     }
@@ -176,7 +176,7 @@ void player::preloaded(input* res)
     }
     else
     {
-        m_preload.reset(IFACTORY->get());
+        m_preload.reset(IFACTORY.get());
 
         qDebug() << "Discard preloaded song";
     }

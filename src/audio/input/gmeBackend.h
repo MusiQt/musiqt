@@ -70,14 +70,20 @@ class gmeConfig final : public inputConfig
     friend class gmeConfigFrame;
 
 private:
-    static gmeConfig_t m_settings;
+    gmeConfig_t m_settings;
 
-public:
+private:
     explicit gmeConfig(const char name[]) :
         inputConfig(name)
     {
         loadSettings();
     }
+
+    gmeConfig(const gmeConfig&) = delete;
+    gmeConfig& operator=(gmeConfig) = delete;
+
+public:
+    static gmeConfig& instance();
 
     void loadSettings() override;
 
@@ -114,8 +120,6 @@ private:
 #endif
     static QStringList m_ext;
 
-    gmeConfig m_config;
-
 private:
     explicit gmeBackend(const QString& fileName);
 
@@ -137,7 +141,7 @@ public:
 
     /// Factory method
     static input* factory(const QString& fileName) { return new gmeBackend(fileName); }
-    static inputConfig* cFactory();
+    static inputConfig& cfgFactory();
 
     /// Get supported extension
     static QStringList ext();
@@ -155,7 +159,7 @@ public:
     bool subtune(unsigned int i) override;
 
     /// Get samplerate
-    unsigned int samplerate() const override { return m_config.samplerate(); }
+    unsigned int samplerate() const override { return gmeConfig::instance().samplerate(); }
 
     /// Get channels
     unsigned int channels() const override { return 2; }

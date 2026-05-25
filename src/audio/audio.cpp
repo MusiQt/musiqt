@@ -47,7 +47,7 @@ const char* sampleTypeString(sample_t sampleType)
 }
 
 audio::audio() :
-    m_iw(new InputWrapper(IFACTORY->get())),
+    m_iw(new InputWrapper(IFACTORY.get())),
     m_audioOutput(new qaudioBackend()),
     m_state(state_t::STOP)
 {
@@ -92,7 +92,7 @@ bool audio::play(input* i)
         format.sampleType = i->precision();
         break;
     case sample_t::SAMPLE_FIXED:
-        switch (SETTINGS->bits())
+        switch (SETTINGS.bits())
         {
         case 8:
             format.sampleType = sample_t::U8;
@@ -101,7 +101,7 @@ bool audio::play(input* i)
             format.sampleType = sample_t::S16;
             break;
         default:
-            throw initError(QString("Unhandled sample type %1").arg(SETTINGS->bits()));
+            throw initError(QString("Unhandled sample type %1").arg(SETTINGS.bits()));
         }
     }
 
@@ -112,7 +112,7 @@ bool audio::play(input* i)
     connect(m_iw.data(), &InputWrapper::updateTime,  this, &audio::updateTime);
     connect(m_iw.data(), &InputWrapper::preloadSong, this, &audio::preloadSong);
 
-    int const selectedCard = qaudioBackend::getDevices().indexOf(SETTINGS->card());
+    int const selectedCard = qaudioBackend::getDevices().indexOf(SETTINGS.card());
 
     try
     {
@@ -132,7 +132,7 @@ bool audio::play(input* i)
         throw initError(e.message());
     }
 
-    if (SETTINGS->bs2b() && (i->channels() == 2))
+    if (SETTINGS.bs2b() && (i->channels() == 2))
         m_iw->enableBs2b();
 
     m_audioOutput->setVolume(m_volume);
@@ -179,7 +179,7 @@ bool audio::stop()
 
     m_state = state_t::STOP;
 
-    m_iw.reset(new InputWrapper(IFACTORY->get()));
+    m_iw.reset(new InputWrapper(IFACTORY.get()));
 
     return true;
 }
@@ -224,7 +224,7 @@ audioConfig::audioConfig(QWidget* win) :
         cardList->setMaxVisibleItems((deviceCnt > 5) ? 5 : deviceCnt);
 
         // Find configured device in list
-        QString card = SETTINGS->card();
+        QString card = SETTINGS.card();
         int val = cardList->findData(card);
         if (val >= 0) {
             cardList->setCurrentIndex(val);
@@ -242,7 +242,7 @@ audioConfig::audioConfig(QWidget* win) :
 
             qDebug() << "onCmdCard" << card;
 
-            SETTINGS->m_card = card;
+            SETTINGS.m_card = card;
         }
     );
 
@@ -256,7 +256,7 @@ audioConfig::audioConfig(QWidget* win) :
 
     {
         unsigned int val;
-        switch (SETTINGS->bits())
+        switch (SETTINGS.bits())
         {
         case 8:
             val = 0;
@@ -275,10 +275,10 @@ audioConfig::audioConfig(QWidget* win) :
             switch (val)
             {
             case 0:
-                SETTINGS->m_bits = 8;
+                SETTINGS.m_bits = 8;
                 break;
             case 1:
-                SETTINGS->m_bits = 16;
+                SETTINGS.m_bits = 16;
                 break;
             }
         }
@@ -287,7 +287,7 @@ audioConfig::audioConfig(QWidget* win) :
     matrix()->addWidget(new QLabel(tr("Buffer length (ms)"), this));
     QLineEdit *bufLen = new QLineEdit(this);
     matrix()->addWidget(bufLen);
-    bufLen->setText(QString::number(SETTINGS->bufLen()));
+    bufLen->setText(QString::number(SETTINGS.bufLen()));
     bufLen->setValidator(new QIntValidator(5, 5000, this));
 
     connect(bufLen, &QLineEdit::editingFinished,
@@ -296,7 +296,7 @@ audioConfig::audioConfig(QWidget* win) :
             unsigned int bLen = val.toUInt();
             if (bLen)
             {
-                SETTINGS->m_bufLen = bLen;
+                SETTINGS.m_bufLen = bLen;
             }
         }
     );
