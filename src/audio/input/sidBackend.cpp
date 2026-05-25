@@ -763,7 +763,7 @@ sidConfigFrame::sidConfigFrame(QWidget* win) :
 
     const int numItems = engBox->count();
     engBox->setMaxVisibleItems(numItems);
-    const int curItem=engBox->findData(SIDSETTINGS.engine);
+    const int curItem = engBox->findText(SIDSETTINGS.engine);
     if (curItem >= 0)
         engBox->setCurrentIndex(curItem);
     connect(engBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
