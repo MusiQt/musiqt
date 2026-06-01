@@ -68,10 +68,10 @@ public:
     QStringList getExtensions() const;
 
     /// Instantiate empty backend
-    input* get();
+    static input* get();
 
     /// Instantiate backend
-    input* get(const QString& filename);
+    input* get(const QString& fileName);
 
     /// Instantiate backend config
     inputConfig& getConfig(const int i);

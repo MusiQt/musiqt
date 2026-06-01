@@ -156,6 +156,15 @@ void openmptConfig::saveSettings()
 
 /*****************************************************************/
 
+/// Get temp file name
+const QString tempFile(const QString& fileName)
+{
+    QFileInfo fInfo(fileName);
+    return QDir::tempPath() + QDir::separator() + fInfo.completeBaseName() + ".mod";
+}
+
+/*****************************************************************/
+
 bool openmptBackend::init()
 {
     std::vector<std::string> ext = openmpt::get_supported_extensions();

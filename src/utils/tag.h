@@ -50,25 +50,7 @@ private:
     int getID3v2Frame(char* buf, int ver);
 
     ///
-    int getExtHdrSize(const char* buf, int ver);
-
-    ///
-    bool checkID3v2(char* buf, bool header);
-
-    ///
-    bool parseID3v2header(char* buf, int& version, int& tagSize);
-
-    ///
-    int getLE32(const char* frame);
-
-    ///
-    bool getAPEItem(const char* orig, QString* dest, const char* tagName, int tagNameLen, int tagLen);
-
-    ///
     int parseAPETag(const char* buf);
-
-    ///
-    bool checkAPE(char* buf, int& itemsSize, int& tagSize);
 
 public:
     /**

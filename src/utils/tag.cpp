@@ -30,108 +30,7 @@ constexpr int ID3V2_EXT_HEADER_SIZE = 6;
 
 constexpr int APE_HEADER_SIZE = 32;
 
-tag::tag(QFile* file) :
-    m_offsBegin(0),
-    m_offsEnd(0),
-    m_img(nullptr)
-{
-    char buf[ID3V1_TAG_SIZE];
-    int id3v1Size = 0;
-
-    // Check for an APE tag at the end of file
-    // it may be confused as an ID3v1 tag
-    file->seek(file->size()-APE_HEADER_SIZE);
-    file->read(buf, 8);
-    if (!isFrame(buf, "APETAGEX"))
-    {
-        // Check for ID3v1 tag
-        file->seek(file->size()-ID3V1_TAG_SIZE);
-        file->read(buf, ID3V1_TAG_SIZE);
-        id3v1Size = getID3v1(buf);
-    }
-
-    // Check for ID3v2 tag
-    int version = 0;
-    int tagSize = 0;
-    int extHdrSize = 0;
-
-    file->seek(0);
-    file->read(buf, ID3V2_HEADER_SIZE);
-    if (checkID3v2(buf, true))
-    {
-        if (parseID3v2header(buf, version, tagSize))
-        {
-            qDebug() << "Extended header found";
-            file->read(buf, ID3V2_EXT_HEADER_SIZE);
-            extHdrSize = getExtHdrSize(buf, version);
-            if (extHdrSize)
-                file->seek(file->pos() + extHdrSize);
-        }
-    }
-    else
-    {
-        file->seek(file->size()-(ID3V2_HEADER_SIZE+id3v1Size));
-        file->read(buf, ID3V2_HEADER_SIZE);
-        if (checkID3v2(buf, false))
-        {
-            bool extHeader = parseID3v2header(buf, version, tagSize);
-            file->seek(file->pos() - (tagSize+ID3V2_HEADER_SIZE));
-            if (extHeader)
-            {
-                qDebug() << "Extended header found";
-                file->read(buf, ID3V2_EXT_HEADER_SIZE);
-                extHdrSize = getExtHdrSize(buf, version);
-                if (extHdrSize)
-                    file->seek(file->pos() + extHdrSize);
-            }
-        }
-    }
-
-    int id3v2Size = 0;
-    if (tagSize)
-    {
-        id3v2Size = ID3V2_HEADER_SIZE+tagSize;
-        if (extHdrSize)
-            id3v2Size += ID3V2_EXT_HEADER_SIZE+extHdrSize;
-
-        char *dataBuf = new char[tagSize];
-        file->read(dataBuf, tagSize);
-
-        int i = 0;
-        while ((i < tagSize) && dataBuf[i])
-            i += (version == 2) ? getID3v2_2Frame(dataBuf+i)+6 : getID3v2Frame(dataBuf+i, version)+10;
-
-        delete[] dataBuf;
-    }
-
-    if (id3v2Size)
-        return;
-
-    // Check for APE tag
-    file->seek(0);
-    file->read(buf, APE_HEADER_SIZE);
-
-    int itemsSize = 0;
-    if (!checkAPE(buf, itemsSize, tagSize))
-    {
-        file->seek(file->size()-(APE_HEADER_SIZE+id3v1Size));
-        file->read(buf, APE_HEADER_SIZE);
-        if (!checkAPE(buf, itemsSize, tagSize))
-            return;
-        file->seek(file->pos()-(APE_HEADER_SIZE+itemsSize));
-    }
-
-    char* dataBuf = new char[itemsSize];
-    file->read(dataBuf, itemsSize);
-
-    int i = 0;
-    while ((i < itemsSize) && dataBuf[i])
-        i += parseAPETag(dataBuf+i);
-
-    delete[] dataBuf;
-}
-
-/************************/
+/* static functions ***********************/
 
 bool tag::isFrame(const char* buf, const char* frame)
 {
@@ -154,6 +53,20 @@ int tag::getFrameSize(const char* frame, bool synchsafe)
             | ((unsigned int)((unsigned char)frame[1])<<16)
             | ((unsigned int)((unsigned char)frame[2])<<8)
             | ((unsigned int)((unsigned char)frame[3]));
+}
+
+int getExtHdrSize(const char* buf, int ver)
+{
+    switch (ver)
+    {
+    default:
+    case 2:
+        return 0;
+    case 3:
+        return tag::getFrameSize(buf, false);
+    case 4:
+        return tag::getFrameSize(buf, true);
+    }
 }
 
 /******** ID3v1 ********/
@@ -492,30 +405,16 @@ int tag::getID3v2Frame(char* buf, int ver)
     return size;
 }
 
-int tag::getExtHdrSize(const char* buf, int ver)
+bool checkID3v2(char* buf, bool header)
 {
-    switch (ver)
-    {
-    default:
-    case 2:
-        return 0;
-    case 3:
-        return getFrameSize(buf, false);
-    case 4:
-        return getFrameSize(buf, true);
-    }
-}
-
-bool tag::checkID3v2(char* buf, bool header)
-{
-    if (!isFrame(buf, header ? "ID3" : "3DI"))
+    if (!tag::isFrame(buf, header ? "ID3" : "3DI"))
         return false;
 
     qDebug() << "ID3v2 tag found at the" << (header ? "beginning" : "end") << "of file";
     return true;
 }
 
-bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
+bool parseID3v2header(char* buf, int& version, int& tagSize)
 {
     version = (int)buf[3];
     if ((version < 2) || (version > 4))
@@ -533,7 +432,7 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
         return false;
     }
 
-    tagSize = getFrameSize(buf+6, true);
+    tagSize = tag::getFrameSize(buf+6, true);
     qDebug() << "ID3v2 tag size: " << tagSize;
 
     const bool unsynch = flags & 0x80;
@@ -549,7 +448,7 @@ bool tag::parseID3v2header(char* buf, int& version, int& tagSize)
 
 /******** APE ********/
 
-int tag::getLE32(const char* frame)
+int getLE32(const char* frame)
 {
     return ((unsigned int)(unsigned char)frame[0])
         | ((unsigned int)(unsigned char)frame[1]<<8)
@@ -557,7 +456,7 @@ int tag::getLE32(const char* frame)
         | ((unsigned int)(unsigned char)frame[3]<<24);
 }
 
-bool tag::getAPEItem(const char* orig, QString* dest, const char* tagName, int tagNameLen, int tagLen)
+bool getAPEItem(const char* orig, QString* dest, const char* tagName, int tagNameLen, int tagLen)
 {
     if (qstricmp(orig, tagName))
         return false;
@@ -606,9 +505,9 @@ int tag::parseAPETag(const char* buf)
     return 8 + tagNameLength + itemSize;
 }
 
-bool tag::checkAPE(char* buf, int& itemsSize, int& tagSize)
+bool checkAPE(char* buf, int& itemsSize, int& tagSize)
 {
-    if (!isFrame(buf, "APETAGEX"))
+    if (!tag::isFrame(buf, "APETAGEX"))
         return false;
 
     qDebug() << "APE tag found";
@@ -633,4 +532,107 @@ bool tag::checkAPE(char* buf, int& itemsSize, int& tagSize)
     }
 
     return true;
+}
+
+/************************/
+
+tag::tag(QFile* file) :
+    m_offsBegin(0),
+    m_offsEnd(0),
+    m_img(nullptr)
+{
+    char buf[ID3V1_TAG_SIZE];
+    int id3v1Size = 0;
+
+    // Check for an APE tag at the end of file
+    // it may be confused as an ID3v1 tag
+    file->seek(file->size()-APE_HEADER_SIZE);
+    file->read(buf, 8);
+    if (!isFrame(buf, "APETAGEX"))
+    {
+        // Check for ID3v1 tag
+        file->seek(file->size()-ID3V1_TAG_SIZE);
+        file->read(buf, ID3V1_TAG_SIZE);
+        id3v1Size = getID3v1(buf);
+    }
+
+    // Check for ID3v2 tag
+    int version = 0;
+    int tagSize = 0;
+    int extHdrSize = 0;
+
+    file->seek(0);
+    file->read(buf, ID3V2_HEADER_SIZE);
+    if (checkID3v2(buf, true))
+    {
+        if (parseID3v2header(buf, version, tagSize))
+        {
+            qDebug() << "Extended header found";
+            file->read(buf, ID3V2_EXT_HEADER_SIZE);
+            extHdrSize = getExtHdrSize(buf, version);
+            if (extHdrSize)
+                file->seek(file->pos() + extHdrSize);
+        }
+    }
+    else
+    {
+        file->seek(file->size()-(ID3V2_HEADER_SIZE+id3v1Size));
+        file->read(buf, ID3V2_HEADER_SIZE);
+        if (checkID3v2(buf, false))
+        {
+            bool extHeader = parseID3v2header(buf, version, tagSize);
+            file->seek(file->pos() - (tagSize+ID3V2_HEADER_SIZE));
+            if (extHeader)
+            {
+                qDebug() << "Extended header found";
+                file->read(buf, ID3V2_EXT_HEADER_SIZE);
+                extHdrSize = getExtHdrSize(buf, version);
+                if (extHdrSize)
+                    file->seek(file->pos() + extHdrSize);
+            }
+        }
+    }
+
+    int id3v2Size = 0;
+    if (tagSize)
+    {
+        id3v2Size = ID3V2_HEADER_SIZE+tagSize;
+        if (extHdrSize)
+            id3v2Size += ID3V2_EXT_HEADER_SIZE+extHdrSize;
+
+        char *dataBuf = new char[tagSize];
+        file->read(dataBuf, tagSize);
+
+        int i = 0;
+        while ((i < tagSize) && dataBuf[i])
+            i += (version == 2) ? getID3v2_2Frame(dataBuf+i)+6 : getID3v2Frame(dataBuf+i, version)+10;
+
+        delete[] dataBuf;
+    }
+
+    if (id3v2Size)
+        return;
+
+    // Check for APE tag
+    file->seek(0);
+    file->read(buf, APE_HEADER_SIZE);
+
+    int itemsSize = 0;
+    if (!checkAPE(buf, itemsSize, tagSize))
+    {
+        file->seek(file->size()-(APE_HEADER_SIZE+id3v1Size));
+        file->read(buf, APE_HEADER_SIZE);
+        if (!checkAPE(buf, itemsSize, tagSize))
+            return;
+        file->seek(file->pos()-(APE_HEADER_SIZE+itemsSize));
+    }
+
+    char* dataBuf = new char[itemsSize];
+    file->read(dataBuf, itemsSize);
+
+    int i = 0;
+    while ((i < itemsSize) && dataBuf[i])
+        i += parseAPETag(dataBuf+i);
+
+    delete[] dataBuf;
 }

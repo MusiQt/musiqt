@@ -115,13 +115,6 @@ private:
     openmptBackend(const openmptBackend&) = delete;
     openmptBackend& operator=(openmptBackend) = delete;
 
-    /// Get temp file name
-    const QString tempFile(const QString& fileName)
-    {
-        QFileInfo fInfo(fileName);
-        return QDir::tempPath() + QDir::separator() + fInfo.completeBaseName() + ".mod";
-    }
-
 public:
     ~openmptBackend() override;
 

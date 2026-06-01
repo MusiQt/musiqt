@@ -47,7 +47,7 @@ public:
     trackList* get(const QString &path);
 
     /// Return supported playlist extensions
-    const QStringList plExt() const { return QString(EXT).split(","); }
+    static const QStringList plExt() { return QString(EXT).split(","); }
 };
 
 #endif
