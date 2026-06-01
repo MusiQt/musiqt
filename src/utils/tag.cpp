@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2021 Leandro Nini
+ *  Copyright (C) 2007-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
 
 #include <QDebug>
 
+#include <cstring>
+
 constexpr int ID3V1_TAG_SIZE = 128;
 
 constexpr int ID3V2_HEADER_SIZE = 10;
@@ -34,7 +36,8 @@ constexpr int APE_HEADER_SIZE = 32;
 
 bool tag::isFrame(const char* buf, const char* frame)
 {
-    for (unsigned int i=0; i<strlen(frame); i++)
+    size_t len = std::strlen(frame);
+    for (size_t i=0; i<len; i++)
     {
         if (buf[i] != frame[i])
             return false;
@@ -143,7 +146,7 @@ QString getID3v2Text(const char* buf, char encoding)
             unsigned char* bom = (unsigned char*)tempBuffer;
             bom[0] = 0xfe;
             bom[1] = 0xff;
-            memcpy((char*)(tempBuffer)+2, buf, size*2);
+            std::memcpy((char*)(tempBuffer)+2, buf, size*2);
             tmp = QString::fromUtf16(tempBuffer);
             delete [] tempBuffer;
         }
