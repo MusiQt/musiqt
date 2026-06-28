@@ -25,9 +25,7 @@
 
 #include <QString>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#endif
+#include <gettext.h>
 
 /**
  * base class for input backends
