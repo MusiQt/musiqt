@@ -23,7 +23,6 @@
 #include "AbstractType.h"
 
 #include "Artist.h"
-#include "Mbid.h"
 
 namespace lastfm
 {
@@ -31,7 +30,6 @@ namespace lastfm
     {
     public:
         Album();
-        explicit Album( Mbid mbid );
         Album( Artist artist, QString title );
         Album( const Album& album );
         ~Album() override;
@@ -51,7 +49,6 @@ namespace lastfm
         operator QString() const;
         QString title() const;
         Artist artist() const;
-        Mbid mbid() const;
 
         /** artist may have been set, since we allow that in the ctor, but should we handle untitled albums? */
         bool isNull() const;

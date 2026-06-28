@@ -153,7 +153,6 @@ public:
 
     uint trackNumber() const;
     uint duration() const; // in seconds
-    Mbid mbid() const;
     QUrl url() const;
     QDateTime timestamp() const;
     Source source() const;
@@ -272,7 +271,6 @@ public:
     void setSource( Source s );
     void setLoved( bool loved );
     
-    void setMbid( Mbid id );
     void setFingerprintId( uint id );
 
     void setScrobbleStatus( ScrobbleStatus scrobbleStatus );

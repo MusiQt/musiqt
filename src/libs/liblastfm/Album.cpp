@@ -30,7 +30,6 @@
 
 using lastfm::Album;
 using lastfm::Artist;
-using lastfm::Mbid;
 
 namespace lastfm
 {
@@ -39,7 +38,6 @@ namespace lastfm
         public:
             AlbumPrivate() {}
 
-            Mbid mbid;
             Artist artist;
             QString title;
             QMap<AbstractType::ImageSize, QUrl> images;
@@ -49,12 +47,6 @@ namespace lastfm
 Album::Album()
     :AbstractType(), d( new lastfm::AlbumPrivate )
 {
-}
-
-Album::Album( Mbid mbid )
-    :AbstractType(), d( new lastfm::AlbumPrivate )
-{
-    d->mbid = mbid;
 }
 
 Album::Album( Artist artist, QString title )
@@ -144,16 +136,10 @@ Album::artist() const
     return d->artist;
 }
 
-Mbid
-Album::mbid() const
-{
-    return d->mbid;
-}
-
 bool
 Album::isNull() const
 {
-    return d->title.isEmpty() && d->mbid.isNull();
+    return d->title.isEmpty();
 }
 
 

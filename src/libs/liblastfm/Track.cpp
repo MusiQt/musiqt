@@ -433,7 +433,6 @@ lastfm::Track::toDomElement( QDomDocument& xml ) const
     makeElement( "source", QString::number( d->source ) );
     makeElement( "rating", QString::number(d->rating) );
     makeElement( "fpId", QString::number(d->fpid) );
-    makeElement( "mbId", mbid() );
     makeElement( "loved", QString::number( d->loved ) );
     makeElement( "scrobbleStatus", QString::number( scrobbleStatus() ) );
     makeElement( "scrobbleError", QString::number( scrobbleError() ) );
@@ -861,7 +860,6 @@ lastfm::Track::scrobble(const QList<lastfm::Track>& tracks)
         if ( !tracks[i].album().isNull() ) map["album[" + QString::number(i)  + "]"] = tracks[i].album();
         map["artist[" + QString::number(i) + "]"] = tracks[i].artist();
         map["albumArtist[" + QString::number(i) + "]"] = tracks[i].albumArtist();
-        if ( !tracks[i].mbid().isNull() ) map["mbid[" + QString::number(i)  + "]"] = tracks[i].mbid();
         map["chosenByUser[" + QString::number(i) + "]"] = tracks[i].source() == Track::LastFmRadio ? "0" : "1";
     }
 
@@ -927,10 +925,6 @@ lastfm::Track::duration() const
     return d->duration;
 }
 
-lastfm::Mbid
-lastfm::Track::mbid() const
-{
-    return lastfm::Mbid(d->mbid); }
 QUrl
 lastfm::Track::url() const
 {
@@ -1115,12 +1109,6 @@ void
 lastfm::MutableTrack::setLoved( bool loved )
 {
     d->loved = loved ? Loved : Unloved;
-}
-
-void
-lastfm::MutableTrack::setMbid( Mbid id )
-{
-    d->mbid = id;
 }
 
 void

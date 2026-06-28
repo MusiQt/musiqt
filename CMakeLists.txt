@@ -587,7 +587,6 @@ if(LASTFM)
             src/libs/liblastfm/User.cpp
             src/libs/liblastfm/Track.cpp
             src/libs/liblastfm/Tag.cpp
-            src/libs/liblastfm/Mbid.cpp
             src/libs/liblastfm/Artist.cpp
             src/libs/liblastfm/Album.cpp
             src/libs/liblastfm/ScrobbleCache.cpp
