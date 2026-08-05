@@ -75,6 +75,7 @@ infoDialog::infoDialog(QWidget* w) :
 
     m_matrix = new QWidget(this);
     QGridLayout* gLayout = new QGridLayout(m_matrix);
+    Q_UNUSED(gLayout);
     container->addWidget(m_matrix);
 
     /******************************************/
