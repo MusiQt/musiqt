@@ -115,7 +115,9 @@ const char* getErrorString(QAudio::Error error)
     switch (error)
     {
     case QAudio::IOError:       return "Error reading from audio device";
+#if QT_VERSION < 0x061100
     case QAudio::UnderrunError: return "Underrun error";
+#endif
     case QAudio::FatalError:    return "Non-recoverable error";
     default:                    return "Unknown error";
     }
@@ -128,6 +130,10 @@ void qaudioBackend::onStateChange(QAudio::State newState)
     {
     case QAudio::IdleState:
         //emit songEnded();
+#if QT_VERSION >= 0x061100
+        qDebug() << "IdleState: underrun";
+        //emit audioError("Underrun error");
+#endif
         break;
     case QAudio::StoppedState:
         if (m_thread->isRunning())
