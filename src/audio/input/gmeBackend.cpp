@@ -30,7 +30,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QGroupBox>
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #  include <QStringConverter>
 #  include <QStringDecoder>
 #else
@@ -194,8 +194,8 @@ void gmeBackend::getInfo()
         return;
     }
 
-#if QT_VERSION >= 0x060000
-#  if QT_VERSION >= 0x060800
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#  if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     auto toUtf16 = QStringDecoder(gmeConfig::instance().encoding());
 #  else
     auto toUtf16 = QStringDecoder(gmeConfig::instance().encoding().toUtf8());
@@ -364,10 +364,10 @@ gmeConfigFrame::gmeConfigFrame(QWidget* win) :
         }
     );
 
-#if QT_VERSION >= 0x060700
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
     QRegularExpression regex("^(?!UTF)", QRegularExpression::CaseInsensitiveOption);
     QStringList  codecs = QStringConverter::availableCodecs().filter(regex);
-#elif QT_VERSION >= 0x060000
+#elif QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QStringList codecs;
     codecs << "ISO-8859-1";
 #else

@@ -87,7 +87,7 @@ lastfm::ScrobbleCachePrivate::read( QDomDocument& xml )
     if (!res)
         return;
     QTextStream stream( &file );
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     stream.setEncoding( QStringConverter::Utf8 );
 #else
     stream.setCodec( "UTF-8" );
@@ -125,7 +125,7 @@ lastfm::ScrobbleCachePrivate::write()
             return;
 
         QTextStream stream( &file );
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         stream.setEncoding( QStringConverter::Utf8 );
 #else
         stream.setCodec( "UTF-8" );

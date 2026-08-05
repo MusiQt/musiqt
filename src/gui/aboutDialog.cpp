@@ -104,7 +104,7 @@ aboutDialog::aboutDialog(QWidget *parent) :
         bool res = file.open(QFile::ReadOnly|QFile::Text);
         if (res) {
             QTextStream ts(&file);
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             ts.setEncoding(QStringConverter::Utf8);
 #else
             ts.setCodec("UTF-8");

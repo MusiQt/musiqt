@@ -185,7 +185,7 @@ void player::preloaded(input* res)
 void player::playOnLoad()
 {
     // Start playing once a song is loaded
-#if QT_VERSION >= 0x060000 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0) 
     connect(this, &player::songLoaded, this, [=] (bool res) { if (res) play(); }, Qt::SingleShotConnection);
 #else
     QObject* ctx = new QObject();

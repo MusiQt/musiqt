@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2025 Leandro Nini
+ *  Copyright (C) 2006-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 #include <QtGlobal>
 
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #  include <QAudioDevice>
 #  include <QMediaDevices>
 #else
@@ -40,7 +40,7 @@ void deviceLoader::run()
 
 /*****************************************************************/
 
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 
 QList<QAudioDevice> devices;
 
@@ -115,7 +115,7 @@ const char* getErrorString(QAudio::Error error)
     switch (error)
     {
     case QAudio::IOError:       return "Error reading from audio device";
-#if QT_VERSION < 0x061100
+#if QT_VERSION < QT_VERSION_CHECK(6, 11, 0)
     case QAudio::UnderrunError: return "Underrun error";
 #endif
     case QAudio::FatalError:    return "Non-recoverable error";
@@ -130,7 +130,7 @@ void qaudioBackend::onStateChange(QAudio::State newState)
     {
     case QAudio::IdleState:
         //emit songEnded();
-#if QT_VERSION >= 0x061100
+#if QT_VERSION >= QT_VERSION_CHECK(6, 11, 0)
         qDebug() << "IdleState: underrun";
         //emit audioError("Underrun error");
 #endif
@@ -155,7 +155,7 @@ void qaudioBackend::onStateChange(QAudio::State newState)
 
 audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
 {
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QAudioFormat::SampleFormat sampleFormat;
 
     switch (format.sampleType)
@@ -208,7 +208,7 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
     QAudioFormat qFormat;
     qFormat.setSampleRate(format.sampleRate);
     qFormat.setChannelCount(format.channels);
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     qFormat.setSampleFormat(sampleFormat);
 #else
     qFormat.setSampleSize(sampleSize);
@@ -219,7 +219,7 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
 
     audioFormat_t outputFormat;
 
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QAudioDevice deviceInfo = card != -1 ? devices[card] : QMediaDevices::defaultAudioOutput();
     if (deviceInfo.isFormatSupported(qFormat))
     {
@@ -276,7 +276,7 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
     m_audioOutput->moveToThread(m_thread);
     m_thread->start();
 
-#if QT_VERSION >= 0x060000
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDevice, deviceInfo), Q_ARG(QAudioFormat, qFormat));
 #else
     QMetaObject::invokeMethod(m_audioOutput, "init", Q_ARG(QAudioDeviceInfo, deviceInfo), Q_ARG(QAudioFormat, qFormat));
