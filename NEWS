@@ -1,3 +1,8 @@
+* musiqt-3.4.1 - Aug 05, 2026
+Fix compile with nls disabled
+
+
+
 * musiqt-3.4.0 - Jun 06, 2026
 sid: enable feature from latest version
 internal refactoring
