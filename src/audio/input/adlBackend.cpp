@@ -127,7 +127,8 @@ adlBackend::adlBackend(const QString& fileName) :
     QString copyright = QString::fromUtf8(adl_metaMusicCopyright(m_player));
     m_metaData.addInfo(gettext("copyright"), copyright);
 
-    m_subtunes = adl_getSongsCount(m_player);
+    int songs = adl_getSongsCount(m_player);
+    m_subtunes = (songs > 1) ? songs : 1;
 
     setDuration(adl_totalTimeLength(m_player) * 1000.);
 

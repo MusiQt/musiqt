@@ -102,7 +102,7 @@ private:
     struct ADLMIDI_AudioFormat m_format;
 
     int m_currentTrack;
-    int m_subtunes;
+    unsigned int m_subtunes;
 
     std::vector<ADL_UInt8> m_buffer;
 
