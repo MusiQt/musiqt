@@ -39,3 +39,51 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Debug ${{ matrix.param }} ..
         cmake --build .
+
+  build-mingw:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    strategy:
+      matrix:
+        sys: [UCRT64]
+
+    steps:
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        install: >-
+          git
+          base-devel
+        pacboy: >-
+          toolchain:p
+          cmake:p
+          gettext:p
+          qt6-base:p
+          qt6-shadertools:p
+          qt6-multimedia:p
+          libsndfile:p
+          mpg123:p
+          libvorbis:p
+          opusfile:p
+          libgme:p
+          libmpcdec:p
+          wavpack:p
+          ffmpeg:p
+          libbs2b:p
+          libsidplayfp:p
+          libopenmpt:p
+          libadlmidi:p
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+    - name: build
+      run: |
+        export CXXFLAGS="-DUNICODE -D_UNICODE"
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        cmake --build .
