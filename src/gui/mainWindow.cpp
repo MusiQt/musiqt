@@ -119,6 +119,8 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
         m_trayIcon->setToolTip(PACKAGE_STRING);
         m_trayIcon->show();
     }
+    else
+        m_trayIcon = nullptr;
 
     qApp->setStyleSheet("QMainWindow > QPushButton,QToolButton { margin:0; padding:0; }");
 
@@ -194,7 +196,7 @@ void mainWindow::onMessage(QString msg)
 
 void mainWindow::notify(const QString& title, const QString &text)
 {
-    m_trayIcon->showMessage(title, text);
+    if (m_trayIcon) m_trayIcon->showMessage(title, text);
 }
 
 QToolBar *mainWindow::createControlBar()
@@ -563,7 +565,7 @@ void mainWindow::setDisplay()
     if (!artist.isEmpty())
         artist.append('\n');
 
-    m_trayIcon->setToolTip(artist+songTitle);
+    if (m_trayIcon) m_trayIcon->setToolTip(artist+songTitle);
 
     m_songInfo->setInfo(data);
 
@@ -577,7 +579,7 @@ void mainWindow::clearDisplay(const QString& text)
     m_songTime->reset();
 
     setWindowTitle(QString(PACKAGE_STRING));
-    m_trayIcon->setToolTip(PACKAGE_STRING);
+    if (m_trayIcon) m_trayIcon->setToolTip(PACKAGE_STRING);
 
     m_songInfo->setText(text);
     m_songInfo->setToolTip(QString());
@@ -622,7 +624,7 @@ void mainWindow::keyPressEvent(QKeyEvent *event)
 
 void mainWindow::showError(const QString& msg)
 {
-    m_trayIcon->showMessage(tr("Error!"), msg, GET_ICON(icon_dialogerror));
+    if (m_trayIcon) m_trayIcon->showMessage(tr("Error!"), msg, GET_ICON(icon_dialogerror));
     //statusBar()->showMessage(msg);
     qWarning() << "Error: " << msg;
 }
