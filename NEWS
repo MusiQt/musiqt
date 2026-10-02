@@ -1,3 +1,9 @@
+* musiqt-3.4.2 - Oct 02, 2026
+Fixed crash when systray is not available (#22)
+Warning fixes
+
+
+
 * musiqt-3.4.1 - Aug 05, 2026
 Fix compile with nls disabled
 
