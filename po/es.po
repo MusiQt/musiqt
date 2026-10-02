@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-05 22:09+0200\n"
+"POT-Creation-Date: 2026-09-28 20:19+0200\n"
 "PO-Revision-Date: 2018-09-04 21:19+0200\n"
 "Last-Translator: Dr. Fiemost\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -39,6 +39,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:337
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:359
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:360
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:362
 msgid "&About"
 msgstr "Acerca de"
 
@@ -164,6 +165,7 @@ msgstr "&Contato"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:380
 #: /mnt/devel/projects/musiqt/src/gui/aboutDialog.cpp:146
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:381
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:383
 msgid "&Info"
 msgstr "&Info"
 
@@ -189,6 +191,7 @@ msgstr "&Licencia"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:346
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:368
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:369
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:371
 msgid "&Next"
 msgstr "Siguiente"
 
@@ -212,6 +215,7 @@ msgstr "&Aceptar"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:350
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:372
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:373
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:375
 msgid "&Play"
 msgstr "Reproducir"
 
@@ -238,6 +242,7 @@ msgstr "&Qt"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:363
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:385
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:386
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:388
 msgid "&Quit"
 msgstr ""
 
@@ -250,6 +255,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:354
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:376
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:377
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:379
 msgid "&Stop"
 msgstr "Detener"
 
@@ -387,6 +393,8 @@ msgstr "Ruta ASMA:"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:360
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:361
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:362
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:363
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:364
 msgid "About"
 msgstr "Acerca de"
 
@@ -769,6 +777,8 @@ msgstr "Comentario"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:211
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:212
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:213
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:214
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:215
 msgid "Compact"
 msgstr "Modo compacto"
 
@@ -986,6 +996,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:236
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:258
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:259
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:261
 msgid "Enable/disable scrobbling"
 msgstr ""
 
@@ -1050,6 +1061,7 @@ msgstr "Error guardando la lista de reproducción"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:605
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:623
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:625
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:627
 #, fuzzy
 msgid "Error!"
 msgstr "Error"
@@ -1070,6 +1082,8 @@ msgstr "Error"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:386
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:387
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:388
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:389
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:390
 msgid "Exit"
 msgstr "Salir"
 
@@ -1267,6 +1281,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:348
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:370
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:371
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:373
 msgid "Go to next song"
 msgstr "Ir a la siguiente canción"
 
@@ -1279,6 +1294,7 @@ msgstr "Ir a la siguiente canción"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:217
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:239
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:240
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:242
 msgid "Go to next subtune"
 msgstr "Ir al siguiente subtono"
 
@@ -1291,6 +1307,7 @@ msgstr "Ir al siguiente subtono"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:344
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:366
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:367
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:369
 msgid "Go to previous song"
 msgstr "Ir a la canción anterior"
 
@@ -1303,6 +1320,7 @@ msgstr "Ir a la canción anterior"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:210
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:232
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:233
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:235
 msgid "Go to previous subtune"
 msgstr "Ir al subcanción anterior"
 
@@ -1356,6 +1374,7 @@ msgstr "Inicio"
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:317
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:381
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:382
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:384
 msgid "Info"
 msgstr "&Info"
 
@@ -1463,6 +1482,9 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:369
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:239
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:370
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:240
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:241
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:372
 msgid "Next"
 msgstr "Siguiente"
 
@@ -1555,6 +1577,7 @@ msgstr "Ninguna canción cargada"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:342
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:364
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:365
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:367
 msgid "P&revious"
 msgstr "Precedente"
 
@@ -1609,6 +1632,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:489
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:511
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:513
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:515
 msgid "Pause"
 msgstr "Pausa"
 
@@ -1621,6 +1645,7 @@ msgstr "Pausa"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:511
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:533
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:535
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:537
 msgid "Paused"
 msgstr "Pausado"
 
@@ -1642,6 +1667,8 @@ msgstr "Pausado"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:506
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:374
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:508
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:376
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:510
 msgid "Play"
 msgstr "Reproducir"
 
@@ -1663,6 +1690,8 @@ msgstr "Reproducir todos los subtonos"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:598
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:594
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:600
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:596
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:602
 #, fuzzy
 msgid "Play mode"
 msgstr "Modo lista de reproducción"
@@ -1676,6 +1705,7 @@ msgstr "Modo lista de reproducción"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:352
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:374
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:375
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:377
 msgid "Play song"
 msgstr "Reproduciendo"
 
@@ -1688,6 +1718,7 @@ msgstr "Reproduciendo"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:507
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:529
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:531
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:533
 msgid "Playing"
 msgstr "Reproduciendo"
 
@@ -1709,6 +1740,7 @@ msgstr "Reproduciendo"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:244
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:136
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:245
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:247
 msgid "Playlist"
 msgstr "Lista de reproducción"
 
@@ -1758,6 +1790,9 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:365
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:232
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:366
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:233
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:234
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:368
 msgid "Previous"
 msgstr "Precedente"
 
@@ -1770,6 +1805,7 @@ msgstr "Precedente"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:196
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:218
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:219
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:221
 msgid "Program settings"
 msgstr "Configuración del programa"
 
@@ -1963,6 +1999,7 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:234
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:256
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:257
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:259
 msgid "Scrobble"
 msgstr ""
 
@@ -2095,6 +2132,8 @@ msgstr "Versión"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:217
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:218
 #: /mnt/devel/projects/musiqt/src/gui/settings.cpp:52
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:219
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:220
 msgid "Settings"
 msgstr "Configuración"
 
@@ -2121,6 +2160,7 @@ msgstr "Aleatorio"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:360
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:382
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:383
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:385
 msgid "Song info"
 msgstr "Información de la canción"
 
@@ -2144,6 +2184,7 @@ msgstr "Modo canción"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:249
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:271
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:272
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:274
 msgid "Songs"
 msgstr "Canción"
 
@@ -2252,6 +2293,8 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:377
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:378
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:379
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:380
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:381
 msgid "Stop"
 msgstr "Detener"
 
@@ -2282,6 +2325,9 @@ msgstr "Detener"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:277
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:396
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:527
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:279
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:398
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:529
 msgid "Stopped"
 msgstr "Detenido"
 
@@ -2294,6 +2340,7 @@ msgstr "Detenido"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:244
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:266
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:267
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:269
 msgid "Subtunes"
 msgstr "Subcanción"
 
@@ -2315,6 +2362,8 @@ msgstr "Subcanción"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:419
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:214
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:420
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:216
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:422
 msgid "Switch to compact view"
 msgstr "Cambiar a modo compacto"
 
@@ -2332,6 +2381,7 @@ msgstr "Cambiar a modo completo"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:408
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:430
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:431
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:433
 #, fuzzy
 msgid "Switch to full view"
 msgstr "Cambiar a modo completo"
@@ -2346,6 +2396,7 @@ msgstr "Cambiar a modo completo"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:581
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:599
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:601
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:603
 msgid "Switch to playlist mode"
 msgstr "Cambiar a modo lista de reproducción"
 
@@ -2359,6 +2410,7 @@ msgstr "Cambiar a modo lista de reproducción"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:575
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:593
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:595
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:597
 msgid "Switch to song mode"
 msgstr "Cambiar a modo canción"
 
@@ -2421,6 +2473,8 @@ msgstr ""
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:429
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:419
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:430
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:421
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:432
 #, fuzzy
 msgid "UI mode"
 msgstr "Modelo SID"
@@ -2456,6 +2510,7 @@ msgstr "Rom Kernal:"
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:262
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:284
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:285
+#: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:287
 msgid "Volume"
 msgstr "Volumen"
 
