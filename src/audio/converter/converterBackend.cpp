@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2023 Leandro Nini
+ *  Copyright (C) 2009-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
 
 #include <QDebug>
 
+#include <cstdint>
+
 resamplerBackend::resamplerBackend(unsigned int srIn, unsigned int srOut,
         unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision) :
     converter(channels, inputPrecision, outputPrecision),
@@ -27,9 +29,9 @@ resamplerBackend::resamplerBackend(unsigned int srIn, unsigned int srOut,
     m_inputFrameSize(inputPrecision*m_channels),
     m_outputFrameSize(outputPrecision*m_channels)
 {
-    qDebug() << "Conversion ratio " << (float)(srIn/srOut);
+    qDebug() << "Conversion ratio " << static_cast<float>(srIn)/srOut;
 
-    m_rate = (((unsigned int)srIn)<<16)/srOut;
+    m_rate = (static_cast<uint64_t>(srIn) << 16) / srOut;
     qDebug() << "m_rate " << m_rate;
 }
 
@@ -40,7 +42,7 @@ void resamplerBackend::setBufferSize(size_t size)
     m_inputSize = size;
 
     size_t const frames = size / m_outputFrameSize;
-    unsigned long tmp = ((unsigned long)frames * (unsigned long)m_rate);
+    uint64_t tmp = static_cast<uint64_t>(frames) * static_cast<uint64_t>(m_rate);
     if (tmp & 0xFFFFll)
         tmp += 0x10000ll;
 
