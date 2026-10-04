@@ -57,7 +57,7 @@ size_t resamplerBackend::bufSize(size_t size)
     {
         setBufferSize(size);
     }
-    return (size*m_frameRatio)-m_dataPos;
+    return m_buffer.size()-m_dataPos;
 }
 
 /******************************************************************************/
@@ -84,5 +84,5 @@ size_t converterBackend::bufSize(size_t size)
     {
         setBufferSize(size);
     }
-    return size*m_frameRatio;
+    return m_buffer.size();
 }
