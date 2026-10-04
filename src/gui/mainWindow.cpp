@@ -120,7 +120,10 @@ mainWindow::mainWindow(player* p, QWidget *parent) :
         m_trayIcon->show();
     }
     else
+    {
+        m_trayStatus = nullptr;
         m_trayIcon = nullptr;
+    }
 
     qApp->setStyleSheet("QMainWindow > QPushButton,QToolButton { margin:0; padding:0; }");
 
@@ -540,8 +543,11 @@ void mainWindow::setPlayButton()
             Q_UNREACHABLE();
         }
 
-        m_trayStatus->setIcon(QPixmap(icon));
-        m_trayStatus->setText(label);
+        if (m_trayStatus)
+        {
+            m_trayStatus->setIcon(QPixmap(icon));
+            m_trayStatus->setText(label);
+        }
         m_statusLed->setPixmap(QPixmap(icon));
         m_statusLed->setStatusTip(label);
     }
