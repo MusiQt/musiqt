@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2006-2021 Leandro Nini
+ *  Copyright (C) 2006-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -132,7 +132,7 @@ oggBackend::oggBackend(const QString& fileName) :
         throw loadError(m_file.errorString());
     }
 
-    std::unique_ptr<OggVorbis_File> ovFile(new OggVorbis_File());
+    std::unique_ptr<OggVorbis_File> ovFile = std::make_unique<OggVorbis_File>();
     int error = ov_open_callbacks(&m_file, ovFile.get(), NULL, 0, vorbis_callbacks);
     if (error < 0)
     {

@@ -27,7 +27,7 @@
 
 player::player() :
     m_input(IFACTORY.get()),
-    m_audio(new audio),
+    m_audio(std::make_unique<audio>()),
     m_preload(IFACTORY.get())
 {
     connect(m_audio.get(), &audio::updateTime,  this, &player::updateTime);

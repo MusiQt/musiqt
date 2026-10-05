@@ -272,7 +272,7 @@ sidBackend::sidBackend(const QString& fileName) :
 {
     createEmu();
 
-    std::unique_ptr<SidTune> sidTune(new SidTune(fileName.toUtf8().constData()));
+    std::unique_ptr<SidTune> sidTune = std::make_unique<SidTune>(fileName.toUtf8().constData());
     if (!sidTune->getStatus())
     {
         QString error(sidTune->statusString());
@@ -367,7 +367,7 @@ const unsigned char* loadRom(const QString& romPath)
 
 void sidBackend::createEmu()
 {
-    std::unique_ptr<sidplayfp> emu(new sidplayfp());
+    std::unique_ptr<sidplayfp> emu = std::make_unique<sidplayfp>();
 
     {
         const unsigned char* kernal = loadRom(sidConfig::instance().kernalPath());
