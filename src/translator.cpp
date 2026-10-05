@@ -51,8 +51,7 @@ translator::translator(QObject* parent) :
 
 translator::~translator() = default;
 
-QString translator::translate([[maybe_unused]] const char* context, const char* sourceText,
-    [[maybe_unused]] const char* disambiguation, [[maybe_unused]] int n) const
+QString translator::translate(const char*, const char* sourceText, const char*, int) const
 {
     return QString::fromUtf8(gettext(sourceText));
 }

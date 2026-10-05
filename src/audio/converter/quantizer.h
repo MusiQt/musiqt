@@ -28,7 +28,7 @@ public:
     virtual ~quantizer() = default;
 
     /// Get dithered sample
-    virtual O get(const I sample, const unsigned int channel) =0;
+    virtual O get(const I sample, unsigned int channel) =0;
 };
 
 /******************************************************************************/
@@ -44,7 +44,7 @@ public:
     ~quantizerVoid() override = default;
 
     /// Get dithered sample
-    inline T get(const T sample, [[maybe_unused]] const unsigned int channel) override { return sample; }
+    inline T get(T sample, unsigned int) override { return sample; }
 };
 
 /******************************************************************************/
@@ -63,14 +63,14 @@ private:
     quantizerFixed(const quantizerFixed&);
     quantizerFixed& operator=(const quantizerFixed&);
 
-    int get32(const int sample, const unsigned int channel);
+    int get32(int sample, unsigned int channel);
 
 public:
-    explicit quantizerFixed(const unsigned int fract);
+    explicit quantizerFixed(unsigned int fract);
     ~quantizerFixed() override = default;
 
     /// Get dithered sample
-    O get(const int sample, const unsigned int channel) override;
+    O get(int sample, unsigned int channel) override;
 };
 
 /******************************************************************************/
@@ -85,14 +85,14 @@ private:
     explicit quantizerFloat(const quantizerFloat<O>&);
     quantizerFloat<O>& operator=(const quantizerFloat<O>&);
 
-    int get32(const float sample, const unsigned int channel, const int max);
+    int get32(float sample, unsigned int channel, int max);
 
 public:
     quantizerFloat();
     ~quantizerFloat() override = default;
 
     /// Get dithered sample
-    O get(const float sample, const unsigned int channel) override;
+    O get(float sample, unsigned int channel) override;
 };
 
 #endif

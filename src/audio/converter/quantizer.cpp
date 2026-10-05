@@ -28,7 +28,7 @@ unsigned int random(unsigned int val)
 }
 
 template<typename O>
-quantizerFixed<O>::quantizerFixed(const unsigned int fract)
+quantizerFixed<O>::quantizerFixed(unsigned int fract)
 {
     _random[0][0] = 3686734;
     _random[0][1] = 86526882;
@@ -41,11 +41,11 @@ quantizerFixed<O>::quantizerFixed(const unsigned int fract)
     _clip = (1L<<fract);
 }
 
-template quantizerFixed<unsigned char>::quantizerFixed(const unsigned int fract);
-template quantizerFixed<short>::quantizerFixed(const unsigned int fract);
+template quantizerFixed<unsigned char>::quantizerFixed(unsigned int fract);
+template quantizerFixed<short>::quantizerFixed(unsigned int fract);
 
 template<typename O>
-inline int quantizerFixed<O>::get32(const int sample, const unsigned int channel)
+inline int quantizerFixed<O>::get32(int sample, unsigned int channel)
 {
     _random[channel][0] = random(_random[channel][0]);
     _random[channel][1] = random(_random[channel][1]);
@@ -57,13 +57,13 @@ inline int quantizerFixed<O>::get32(const int sample, const unsigned int channel
 }
 
 template<>
-unsigned char quantizerFixed<unsigned char>::get(const int sample, const unsigned int channel)
+unsigned char quantizerFixed<unsigned char>::get(int sample, unsigned int channel)
 {
     return (unsigned char)(get32(sample, channel)>>_scalebits)+128;
 }
 
 template<>
-short quantizerFixed<short>::get(const int sample, const unsigned int channel)
+short quantizerFixed<short>::get(int sample, unsigned int channel)
 {
     return (short)(get32(sample, channel)>>_scalebits);
 }
@@ -85,7 +85,7 @@ template quantizerFloat<unsigned char>::quantizerFloat();
 template quantizerFloat<short>::quantizerFloat();
 
 template<typename O>
-inline int quantizerFloat<O>::get32(const float sample, const unsigned int channel, const int max)
+inline int quantizerFloat<O>::get32(float sample, unsigned int channel, int max)
 {
     _random[channel][0] = random(_random[channel][0]);
     _random[channel][1] = random(_random[channel][1]);
@@ -100,13 +100,13 @@ inline int quantizerFloat<O>::get32(const float sample, const unsigned int chann
 }
 
 template<>
-unsigned char quantizerFloat<unsigned char>::get(const float sample, const unsigned int channel)
+unsigned char quantizerFloat<unsigned char>::get(float sample, unsigned int channel)
 {
     return (unsigned char)(get32(sample, channel, 128))+128;
 }
 
 template<>
-short quantizerFloat<short>::get(const float sample, const unsigned int channel)
+short quantizerFloat<short>::get(float sample, unsigned int channel)
 {
     return (short)(get32(sample, channel, 32768));
 }
