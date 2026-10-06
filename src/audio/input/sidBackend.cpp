@@ -108,7 +108,7 @@ inputConfig& sidBackend::cfgFactory() { return sidConfig::instance(); }
 size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
 {
 #ifdef FEAT_NEW_PLAY_API
-    std::size_t pos = m_rem_buffer.size();
+    std::size_t pos = m_rem_buffer.size() * sizeof(short);
     if (pos)
     {
         std::memcpy(buffer, m_rem_buffer.data(), pos);
@@ -133,7 +133,7 @@ size_t sidBackend::fillBuffer(void* buffer, const size_t bufferSize)
         unsigned int rem = samples - cnt;
         if (rem)
         {
-            m_rem_buffer.resize(static_cast<std::size_t>(rem));
+            m_rem_buffer.resize(static_cast<std::size_t>(rem / sizeof(short)));
             std::memcpy(m_rem_buffer.data(), m_mix_buffer.data()+cnt/sizeof(short), rem);
             break;
         }
