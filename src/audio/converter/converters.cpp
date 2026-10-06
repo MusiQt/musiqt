@@ -53,11 +53,7 @@ size_t resampler<I, O>::convert(const void* buf, size_t len, size_t ilen)
     if (idx_i < l)
     {
         m_dataPos = (l-idx_i)*sizeof(I);
-        for (size_t j=idx_i; j<l; j+=m_channels)
-        {
-            for (unsigned int c=0; c<m_channels; c++)
-                in[c] = in[j+c];
-        }
+        std::memmove(in, in+idx_i, m_dataPos*m_channels);
     }
     else
         m_dataPos = 0;
