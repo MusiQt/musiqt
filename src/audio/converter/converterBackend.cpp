@@ -20,44 +20,46 @@
 
 #include <QDebug>
 
+#include <cmath>
 #include <cstdint>
 
 resamplerBackend::resamplerBackend(unsigned int srIn, unsigned int srOut,
         unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision) :
     converter(channels, inputPrecision, outputPrecision),
-    m_dataPos(0),
     m_inputFrameSize(inputPrecision*m_channels),
     m_outputFrameSize(outputPrecision*m_channels)
 {
-    qDebug() << "Conversion ratio " << static_cast<float>(srIn)/srOut;
 
-    m_rate = (static_cast<uint64_t>(srIn) << 16) / srOut;
-    qDebug() << "m_rate " << m_rate;
+    m_rate = static_cast<float>(srIn) / srOut;
+    qDebug() << "Conversion ratio " << m_rate;
 }
 
 resamplerBackend::~resamplerBackend() = default;
 
-void resamplerBackend::setBufferSize(size_t size)
+size_t resamplerBackend::getBufferSize(size_t size)
 {
-    m_inputSize = size;
-
     size_t const frames = size / m_outputFrameSize;
-    uint64_t tmp = static_cast<uint64_t>(frames) * static_cast<uint64_t>(m_rate);
-    if (tmp & 0xFFFFll)
-        tmp += 0x10000ll;
+    size_t tmp = static_cast<size_t>(std::ceil(frames * m_rate));
 
-    size_t const bufferSize = (tmp>>16) * m_inputFrameSize;
+    return tmp * m_inputFrameSize;
+}
+
+void resamplerBackend::increaseBufferSize(size_t size)
+{
+    m_outputSize = size;
+
+    size_t bufferSize = getBufferSize(size);
     qDebug() << "resampler buffer size:" << bufferSize;
     m_buffer.resize(bufferSize);
 }
 
 size_t resamplerBackend::bufSize(size_t size)
 {
-    if (size > m_inputSize)
+    if (size > m_outputSize)
     {
-        setBufferSize(size);
+        increaseBufferSize(size);
     }
-    return m_buffer.size()-m_dataPos;
+    return getBufferSize(size) - m_dataPos;
 }
 
 /******************************************************************************/
@@ -69,20 +71,25 @@ converterBackend::converterBackend(unsigned int channels,
 
 converterBackend::~converterBackend() = default;
 
-void converterBackend::setBufferSize(size_t size)
+size_t converterBackend::getBufferSize(size_t size)
 {
-    m_inputSize = size;
+    return size * m_frameRatio;
+}
 
-    size_t const bufferSize = size * m_frameRatio;
+void converterBackend::increaseBufferSize(size_t size)
+{
+    m_outputSize = size;
+
+    size_t bufferSize = getBufferSize(size);
     qDebug() << "converter buffer size:" << bufferSize;
     m_buffer.resize(bufferSize);
 }
 
 size_t converterBackend::bufSize(size_t size)
 {
-    if (size > m_inputSize)
+    if (size > m_outputSize)
     {
-        setBufferSize(size);
+        increaseBufferSize(size);
     }
-    return m_buffer.size();
+    return getBufferSize(size);
 }

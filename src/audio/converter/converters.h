@@ -27,6 +27,8 @@ class resampler final : public resamplerBackend
 {
     quantizer<I, O>* _quantizer;
 
+    float error = 0.f;
+
 private:
     void init(unsigned int fract);
 
@@ -39,7 +41,7 @@ public:
     ~resampler() override { delete _quantizer; }
 
     /// Do the conversion
-    size_t convert(const void* buf, size_t len) override;
+    size_t convert(const void* buf, size_t len, size_t ilen) override;
 };
 
 /******************************************************************************/
@@ -60,7 +62,7 @@ public:
     ~converterDecimal() override { delete _quantizer; }
 
     /// Do the conversion
-    size_t convert(const void* buf, size_t len) override;
+    size_t convert(const void* buf, size_t len, size_t ilen) override;
 };
 
 #endif

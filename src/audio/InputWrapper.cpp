@@ -82,7 +82,7 @@ PROFILE_START
     {
         size_t const bufSize = m_audioConverter->bufSize(maxSize);
         size_t const size = m_currentSong->fillBuffer(m_audioConverter->buffer(), bufSize);
-        n = m_audioConverter->convert(data, size);
+        n = m_audioConverter->convert(data, maxSize, size);
     }
     else
     {
