@@ -26,7 +26,7 @@ class resamplerBackend : public converter
 protected:
     float m_rate;
 
-    unsigned int m_dataPos = 0;
+    size_t m_dataPos = 0;
 
     const unsigned int m_inputFrameSize;
     const unsigned int m_outputFrameSize;
