@@ -555,6 +555,7 @@ bool sidBackend::loadTune(int num)
 
 #ifdef FEAT_NEW_PLAY_API
     m_rem_buffer.resize(0);
+    m_sidplayfp->initMixer(sidConfig::instance().channels() == 2);
 #endif
     return true;
 }
