@@ -30,6 +30,10 @@ msgstr ""
 msgid " music location"
 msgstr ""
 
+#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:255
+msgid "%1 music location"
+msgstr ""
+
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:289
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:289
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:288
@@ -1234,6 +1238,11 @@ msgstr "Frecuencia"
 msgid "Full mode"
 msgstr "Modo completo"
 
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:284
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:288
+msgid "Gain (dB)"
+msgstr ""
+
 #: /mnt/devel/projects/musiqt/src/gui/settings.cpp:129
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:127
 #: C:/msys64/home/minini/musiqt/src/gui/settings.cpp:147
@@ -1567,6 +1576,16 @@ msgstr "Sin configuración disponible"
 #: /mnt/devel/projects/musiqt/src/gui/infoDialog.cpp:188
 msgid "No song loaded"
 msgstr "Ninguna canción cargada"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1013
+msgid ""
+"Old 2200pF capacitors for 6581 filter, in place of the standard 470pF ones.\n"
+"When enabled the filter cutoff is lower."
+msgstr ""
+
+#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1012
+msgid "Old 6581 caps"
+msgstr ""
 
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:294
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:294
@@ -2101,6 +2120,12 @@ msgstr "Selecciona directorio HVSC"
 msgid "Select Kernal Rom file"
 msgstr "&Explorar\tSelecciona la ficha Rom Kernal"
 
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:258
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:262
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:266
+msgid "Select WOPL bank"
+msgstr ""
+
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:240
 #: C:/msys64/home/minini/musiqt/src/utils/lastfm.cpp:251
 #: /mnt/devel/projects/musiqt/src/utils/lastfm.cpp:251
@@ -2331,6 +2356,12 @@ msgstr "Detener"
 msgid "Stopped"
 msgstr "Detenido"
 
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:380
+#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:383
+#, fuzzy
+msgid "String encoding"
+msgstr "Ordenación ascendente"
+
 #: /mnt/devel/projects/musiqt/src/gui/mainWindow.cpp:207
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:207
 #: C:/msys64/home/minini/musiqt/src/gui/mainWindow.cpp:206
@@ -2529,6 +2560,11 @@ msgstr "Volumen"
 msgid "Volume Ramping"
 msgstr "Volumen"
 
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:244
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:248
+msgid "WOPL bank path:"
+msgstr ""
+
 #: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:422
 #: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1016
 #: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:338
@@ -2605,6 +2641,11 @@ msgstr "Artista"
 #: C:/msys64/home/minini/musiqt/src/audio/input/metaData.cpp:38
 msgid "arturl"
 msgstr "Rutaimagen"
+
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:262
+#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:266
+msgid "bank (*.wopl)"
+msgstr ""
 
 #: /mnt/devel/projects/musiqt/src/audio/input/metaData.cpp:35
 #: C:/msys64/home/minini/musiqt/src/audio/input/metaData.cpp:35
@@ -2887,47 +2928,6 @@ msgstr "valoración"
 #: /mnt/devel/projects/musiqt/src/audio/input/metaDataImpl.cpp:38
 msgid "year"
 msgstr "Año"
-
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:244
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:248
-msgid "WOPL bank path:"
-msgstr ""
-
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:258
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:262
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:266
-msgid "Select WOPL bank"
-msgstr ""
-
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:262
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:266
-msgid "bank (*.wopl)"
-msgstr ""
-
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:284
-#: /mnt/devel/projects/musiqt/src/audio/input/adlBackend.cpp:288
-msgid "Gain (dB)"
-msgstr ""
-
-#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:380
-#: /mnt/devel/projects/musiqt/src/audio/input/gmeBackend.cpp:383
-#, fuzzy
-msgid "String encoding"
-msgstr "Ordenación ascendente"
-
-#: /mnt/devel/projects/musiqt/src/gui/centralFrame.cpp:255
-msgid "%1 music location"
-msgstr ""
-
-#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1012
-msgid "Old 6581 caps"
-msgstr ""
-
-#: /mnt/devel/projects/musiqt/src/audio/input/sidBackend.cpp:1013
-msgid ""
-"Old 2200pF capacitors for 6581 filter, in place of the standard 470pF ones.\n"
-"When enabled the filter cutoff is lower."
-msgstr ""
 
 #~ msgid "\t\tSave playlist"
 #~ msgstr "\t\tGuardar la lista de reproducción"

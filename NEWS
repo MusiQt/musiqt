@@ -1,3 +1,11 @@
+* musiqt-3.4.3 - Oct 07, 2026
+Definitely fixed crash when systray is not available (#23)
+sid: corrected buffer overallocation (#25)
+sid: fixed broken sound on subtune change
+Support samplerate conversion (#24)
+
+
+
 * musiqt-3.4.2 - Oct 02, 2026
 Fixed crash when systray is not available (#22)
 Warning fixes
