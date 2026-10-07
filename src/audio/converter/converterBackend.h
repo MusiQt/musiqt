@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2023 Leandro Nini
+ *  Copyright (C) 2009-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,9 +24,9 @@
 class resamplerBackend : public converter
 {
 protected:
-    unsigned int m_rate;
+    float m_rate;
 
-    unsigned int m_dataPos;
+    size_t m_dataPos = 0;
 
     const unsigned int m_inputFrameSize;
     const unsigned int m_outputFrameSize;
@@ -40,13 +40,14 @@ protected:
     resamplerBackend(unsigned int srIn, unsigned int srOut,
         unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
 
-    void setBufferSize(size_t size);
+    size_t getBufferSize(size_t size);
+    void increaseBufferSize(size_t size);
 
 public:
     ~resamplerBackend() override;
 
     /// Get pointer to buffer
-    char* buffer() override { return m_buffer.data()+m_dataPos; }
+    char* buffer() override { return m_buffer.data() + m_dataPos; }
 
     /// Get buffer size
     size_t bufSize(size_t size) override;
@@ -64,7 +65,8 @@ private:
 protected:
     converterBackend(unsigned int channels, unsigned int inputPrecision, unsigned int outputPrecision);
 
-    void setBufferSize(size_t size);
+    size_t getBufferSize(size_t size);
+    void increaseBufferSize(size_t size);
 
 public:
     ~converterBackend() override;

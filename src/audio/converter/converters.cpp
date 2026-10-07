@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2021 Leandro Nini
+ *  Copyright (C) 2009-2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,60 +18,66 @@
 
 #include "converters.h"
 
+#include <cstring>
+
 template <typename I, typename O>
-size_t resampler<I, O>::convert(const void* buf, size_t len)
+size_t resampler<I, O>::convert(const void* buf, size_t len, size_t ilen)
 {
     I* const in = (I*)m_buffer.data();
     O* const out = (O*)buf;
 
-    size_t idx = 0;
-    unsigned int error = 0;
-    const size_t samples = len/sizeof(I);
-    for (size_t j=0; j<samples; j+=m_channels)
+    const size_t samples = len/sizeof(O);
+    size_t idx_i = 0;
+    size_t idx_o = 0;
+    while (idx_o < samples)
     {
         for (unsigned int c=0; c<m_channels; c++)
         {
-            const I val = in[idx+c];
-            out[j+c] = _quantizer->get(val+(I)(((unsigned int)(in[idx+c+m_channels]-val)*error)>>16), c);
+            const float a = (float)in[idx_i+c];
+            const float b = (float)in[idx_i+m_channels+c];
+            const I lerp = (I)(a + ((b-a)*error));
+            out[idx_o+c] = _quantizer->get(lerp, c);
         }
+        idx_o += m_channels;
         error += m_rate;
-        while (error >= 0x10000)
+        while (error >= 1.f)
         {
-            error -= 0x10000;
-            idx += m_channels;
+            error -= 1.f;
+            idx_i += m_channels;
         }
     }
 
-    const size_t l = m_buffer.size()/sizeof(I);
-    qDebug().nospace() << "resamplerDecimal idx: " << static_cast<int>(idx) << ", l: " << static_cast<int>(l);
+    const size_t l = ilen/sizeof(I);
+    qDebug().nospace() << "resamplerDecimal idx_i: " << static_cast<int>(idx_i) << ", l: " << static_cast<int>(l);
 
-    m_dataPos = (l < idx) ? (l-idx)*sizeof(I) : 0;
-    for (size_t j=idx; j<l; j+=m_channels)
+    if (idx_i < l)
     {
-        for (unsigned int c=0; c<m_channels; c++)
-            in[c] = in[j+c];
+        m_dataPos = (l-idx_i)*sizeof(I);
+        std::memmove(in, in+idx_i, m_dataPos*m_channels);
     }
+    else
+        m_dataPos = 0;
 
-    return samples * sizeof(O);
+    return idx_o * sizeof(O);
 }
 
-template size_t resampler<unsigned char, unsigned char>::convert(const void* buf, const size_t len);
-template size_t resampler<short, short>::convert(const void* buf, const size_t len);
-template size_t resampler<int, unsigned char>::convert(const void* buf, const size_t len);
-template size_t resampler<int, short>::convert(const void* buf, const size_t len);
-template size_t resampler<float, unsigned char>::convert(const void* buf, const size_t len);
-template size_t resampler<float, short>::convert(const void* buf, const size_t len);
-template size_t resampler<float, float>::convert(const void* buf, const size_t len);
+template size_t resampler<unsigned char, unsigned char>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t resampler<short, short>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t resampler<int, unsigned char>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t resampler<int, short>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t resampler<float, unsigned char>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t resampler<float, short>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t resampler<float, float>::convert(const void* buf, const size_t len, size_t ilen);
 
 /******************************************************************************/
 
 template <typename I, typename O>
-size_t converterDecimal<I, O>::convert(const void* buf, size_t len)
+size_t converterDecimal<I, O>::convert(const void* buf, size_t, size_t ilen)
 {
     I* const in = (I*)m_buffer.data();
     O* const out = (O*)buf;
 
-    const size_t samples = len/sizeof(I);
+    const size_t samples = ilen/sizeof(I);
     for (size_t j=0; j<samples; j+=m_channels)
     {
         for (unsigned int c=0; c<m_channels; c++)
@@ -83,7 +89,7 @@ size_t converterDecimal<I, O>::convert(const void* buf, size_t len)
     return samples * sizeof(O);
 }
 
-template size_t converterDecimal<int, unsigned char>::convert(const void* buf, const size_t len);
-template size_t converterDecimal<int, short>::convert(const void* buf, const size_t len);
-template size_t converterDecimal<float, unsigned char>::convert(const void* buf, const size_t len);
-template size_t converterDecimal<float, short>::convert(const void* buf, const size_t len);
+template size_t converterDecimal<int, unsigned char>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t converterDecimal<int, short>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t converterDecimal<float, unsigned char>::convert(const void* buf, const size_t len, size_t ilen);
+template size_t converterDecimal<float, short>::convert(const void* buf, const size_t len, size_t ilen);

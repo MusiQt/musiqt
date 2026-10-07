@@ -226,7 +226,18 @@ audioFormat_t qaudioBackend::init(int card, audioFormat_t format)
         outputFormat = format;
     }
     else
-        throw initError("Audio format not supported");
+    {
+        int sRate = deviceInfo.preferredFormat().sampleRate();
+        qFormat.setSampleRate(sRate);
+        if (deviceInfo.isFormatSupported(qFormat))
+        {
+            qWarning() << "Audio format not supported, using" << sRate << "Hz";
+            format.sampleRate = sRate;
+            outputFormat = format;
+        }
+        else
+            throw initError("Audio format not supported");
+    }
 #else
     QAudioDeviceInfo deviceInfo = card != -1 ? devices[card] : QAudioDeviceInfo::defaultInputDevice();
 
